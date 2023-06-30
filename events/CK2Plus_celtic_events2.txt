@@ -1,0 +1,1818 @@
+#reserved: Plus.800 to Plus.899
+
+namespace = Plus
+
+#######################################
+# CELTIC EVENTS
+#######################################
+### CELTIC PAGAN EVENTS###
+
+## CELTIC HEADHUNTER EVENTS
+# Celtic character takes an enemy head
+character_event = {
+	id = Plus.800
+	picture = GFX_evt_headhunter
+	border = GFX_event_normal_frame_war
+
+	desc = {
+		text = EVTDESC_Plus_800
+		trigger = {
+			NOT = { trait = head4 }
+		}
+	}
+	desc = {
+		text = EVTDESC_Plus_801
+		trigger = { trait = head4 }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = {
+			text = EVTOPTA_Plus_800
+			trigger = {
+				NOT = { trait = head4 }
+			}
+		}
+		name = {
+			text = EVTOPTA_Plus_801
+			trigger = { trait = head4 }
+		}
+
+		trigger_switch = {
+			on_trigger = trait
+
+			head5 = {
+				prestige = 5
+				piety = 2
+			}
+
+			head4 = {
+				remove_trait = head4
+				add_trait = head5
+			}
+
+			head3 = {
+				remove_trait = head3
+				add_trait = head4
+			}
+
+			head2 = {
+				remove_trait = head2
+				add_trait = head3
+			}
+
+			head1 = {
+				remove_trait = head1
+				add_trait = head2
+			}
+
+			fallback = { add_trait = head1 }
+		}
+	}
+}
+
+## CHANGELINGS
+# Baby stolen by the Fairies - variation on vanilla Old Gods pagan demon child event chain
+character_event = {
+	id = Plus.804
+
+	ai = yes
+	max_age = 5
+	prisoner = no
+	has_dlc = "The Old Gods"
+
+	is_triggered_only = yes # on_yearly_childhood_pulse, random_events
+	hide_window = yes
+
+	trigger = {
+		religion_openly_celtic_or_reformed_trigger = yes
+
+		OR = {
+			guardian = { trait = envious }
+			mother_even_if_dead = { trait = envious }
+			father_even_if_dead = { trait = envious }
+		}
+
+		OR = {
+			guardian = { ai = no }
+
+			has_game_rule = {
+				name = supernatural_events
+				value = unrestricted
+			}
+		}
+
+		NOR = {
+			has_game_rule = {
+				name = supernatural_events
+				value = off
+			}
+
+			any_sibling = { has_character_flag = changeling_child }
+		}
+	}
+
+	immediate = {
+		random_list = {
+			25 = {
+				set_character_flag = changeling_child
+				set_character_flag = seelie
+			}
+
+			25 = {
+				set_character_flag = changeling_child
+				set_character_flag = unseelie
+			}
+
+			50 = { set_character_flag = changeling_child_fake }
+		}
+	}
+}
+
+# Changeling child acting strange
+character_event = {
+	id = Plus.805
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	has_character_flag = changeling_child
+	min_age = 4
+	max_age = 15
+	ai = yes
+	prisoner = no
+
+	trigger = {
+		NOT = { has_character_flag = changeling_child_strange_3 }
+	}
+
+	immediate = {
+		if = { # First time
+			limit = {
+				NOR = {
+					has_character_flag = changeling_child_strange_1
+					has_character_flag = changeling_child_strange_2
+				}
+			}
+			set_character_flag = changeling_child_strange_1
+		}
+		else_if = { # Second time
+			limit = {
+				has_character_flag = changeling_child_strange_1
+				NOT = { has_character_flag = changeling_child_strange_2 }
+			}
+			clr_character_flag = changeling_child_strange_1
+			set_character_flag = changeling_child_strange_2
+		}
+		else_if = { # Third time
+			limit = {
+				has_character_flag = changeling_child_strange_2
+			}
+			clr_character_flag = changeling_child_strange_2
+			set_character_flag = changeling_child_strange_3
+		}
+		else = { # Error Catching
+			clr_character_flag = changeling_child_strange_1
+			clr_character_flag = changeling_child_strange_2
+			clr_character_flag = changeling_child_strange_3
+			set_character_flag = changeling_child_strange_3
+		}
+
+		# Notify guardian
+		guardian = { character_event = { id = Plus.806 } }
+	}
+}
+
+# Notify Guardian of Changeling Behavior
+character_event = {
+	id = Plus.806
+	picture = GFX_evt_child_play
+	border = GFX_event_normal_frame_religion
+
+	desc = { # First time
+		text = EVTDESCA_Plus_806
+		trigger = { FROM = { has_character_flag = changeling_child_strange_1 } }
+	}
+	desc = { # Second time
+		text = EVTDESCB_Plus_806
+		trigger = { FROM = { has_character_flag = changeling_child_strange_2 } }
+	}
+	desc = { # Third time
+		text = EVTDESCC_Plus_806
+		trigger = { FROM = { has_character_flag = changeling_child_strange_3 } }
+	}
+
+	is_triggered_only = yes
+
+	option = { # First time
+		name = EVTOPTA_Plus_806 # ancrel_0217
+
+		trigger = { FROM = { has_character_flag = changeling_child_strange_1 } }
+
+		custom_tooltip = { text = changeling_child_acts_strange }
+	}
+
+	option = { # Second time
+		name = EVTOPTB_Plus_806
+
+		trigger = { FROM = { has_character_flag = changeling_child_strange_2 } }
+	}
+
+	option = { # Third time
+		name = EVTOPTC_Plus_806
+
+		trigger = { FROM = { has_character_flag = changeling_child_strange_3 } }
+	}
+}
+
+# Changeling murders Courtier
+character_event = {
+	id = Plus.807
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	has_character_flag = changeling_child
+	ai = yes
+	min_age = 4
+	max_age = 15
+	prisoner = no
+
+	trigger = {
+		OR = {
+			has_character_flag = changeling_child_strange_1
+			has_character_flag = changeling_child_strange_2
+			has_character_flag = changeling_child_strange_3
+		}
+
+		NOT = { has_character_flag = changeling_child_kills_3 }
+
+		guardian = {
+			any_courtier = {
+				ai = yes
+				is_primary_heir = no
+				is_pretender = no
+				prisoner = no
+				age >= 13
+				in_command_trigger = no
+
+				NOR = {
+					character = ROOT
+					is_close_relative = ROOT
+				}
+
+				host = {
+					is_liege_of = PREV
+					prisoner = no
+					NOT = { is_married = PREV }
+				}
+			}
+		}
+	}
+
+	immediate = {
+		if = { # First time
+			limit = {
+				NOR = {
+					has_character_flag = changeling_child_kills_1
+					has_character_flag = changeling_child_kills_2
+				}
+			}
+			set_character_flag = changeling_child_kills_1
+		}
+		else_if = { # Second time
+			limit = {
+				has_character_flag = changeling_child_kills_1
+				NOT = { has_character_flag = changeling_child_kills_2 }
+			}
+			clr_character_flag = changeling_child_kills_1
+			set_character_flag = changeling_child_kills_2
+		}
+		else_if = { # Third time
+			limit = { has_character_flag = changeling_child_kills_2 }
+			clr_character_flag = changeling_child_kills_2
+			set_character_flag = changeling_child_kills_3
+		}
+		else = { # Error catching
+			clr_character_flag = changeling_child_kills_1
+			clr_character_flag = changeling_child_kills_2
+			clr_character_flag = changeling_child_kills_3
+			set_character_flag = changeling_child_kills_3
+		}
+
+		guardian = {
+			random_courtier = {
+				limit = {
+					ai = yes
+					is_primary_heir = no
+					is_pretender = no
+					prisoner = no
+					age >= 13
+					in_command_trigger = no
+
+					NOR = {
+						character = ROOT
+						is_close_relative = ROOT
+					}
+
+					host = {
+						is_liege_of = PREV
+						prisoner = no
+						NOT = { is_married = PREV }
+					}
+				}
+
+				save_event_target_as = changeling_victim
+
+				liege = {
+					character_event = { id = Plus.809 }
+				}
+			}
+		}
+	}
+}
+
+# Notify Guardian of Courtier death
+character_event = {
+	id = Plus.809
+	picture = GFX_evt_viking_funeral_oldgods
+	border = GFX_event_normal_frame_religion
+
+	desc = { # First time
+		text = EVTDESCA_Plus_809
+		trigger = { FROM = { has_character_flag = changeling_child_kills_1 } }
+	}
+	desc = { # Second time
+		text = EVTDESCB_Plus_809
+		trigger = { FROM = { has_character_flag = changeling_child_kills_2 } }
+	}
+	desc = { # Third time
+		text = EVTDESCC_Plus_809
+		trigger = { FROM = { has_character_flag = changeling_child_kills_3 } }
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		event_target:changeling_victim = {
+			death = { death_reason = death_murder_unknown }
+		}
+	}
+
+	option = { # First time
+		name = {
+			text = EVTOPTA_Plus_809
+			trigger = { FROM = { has_character_flag = changeling_child_kills_1 } }
+		}
+		name = {
+			text = EVTOPTB_Plus_809
+			trigger = { FROM = { has_character_flag = changeling_child_kills_2 } }
+		}
+		name = {
+			text = EVTOPTC_Plus_809
+			trigger = { FROM = { has_character_flag = changeling_child_kills_3 } }
+		}
+	}
+}
+
+# Druid offers to save child (Setup)
+character_event = {
+	id = Plus.810
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	ai = yes
+	min_age = 5
+	max_age = 15
+
+	trigger = {
+		OR = {
+			has_character_flag = changeling_child
+			has_character_flag = changeling_child_fake
+		}
+
+		NOT = { has_character_flag = changeling_trade }
+
+		guardian = {
+			any_courtier = {
+				OR = {
+					trait = druid
+					trait = bad_druid
+				}
+
+				ai = yes
+				NOT = { character = PREV }
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = changeling_trade
+		save_event_target_as = changeling_child
+
+		guardian = {
+			random_courtier = {
+				limit = {
+					ai = yes
+					NOT = { character = PREV }
+
+					OR = {
+						trait = druid
+						trait = bad_druid
+					}
+				}
+
+				save_event_target_as = changeling_trade_druid
+			}
+		}
+
+		# Temporary, for easier checks below
+		father_even_if_dead = { save_event_target_as = changelings_father }
+		mother_even_if_dead = { save_event_target_as = changelings_mother }
+
+		# Check which parent to give the event to
+		if = { # Check the Father
+			limit = {
+				father_even_if_dead = {
+					is_alive = yes
+
+					OR = {
+						# Patrilineally married to the child's mother
+						AND = {
+							is_married = event_target:changelings_mother
+							is_married_matrilineally = no
+						}
+
+						# Not married to the child's mother and is a ruler while she is not
+						AND = {
+							is_ruler = yes
+							higher_real_tier_than = event_target:changelings_mother
+							NOT = { is_married = event_target:changelings_mother }
+						}
+
+						# Is a player and mother is not
+						AND = {
+							ai = no
+							event_target:changelings_mother = { ai = yes }
+						}
+					}
+				}
+			}
+
+			father = { save_event_target_as = changeling_trade_parent }
+		}
+		else_if = { # Check the Mother
+			limit = {
+				mother_even_if_dead = {
+					is_alive = yes
+
+					OR = {
+						# Matrilineally married to the child's father
+						AND = {
+							is_married = event_target:changelings_father
+							is_married_matrilineally = yes
+						}
+
+						# Not married to the child's father and is a ruler while he is not
+						AND = {
+							is_ruler = yes
+							higher_real_tier_than = event_target:changelings_father
+							NOT = { is_married = event_target:changelings_father }
+						}
+
+						# Is a player and father is not
+						AND = {
+							ai = no
+							event_target:changelings_father = { ai = yes }
+						}
+					}
+				}
+			}
+			mother = { save_event_target_as = changeling_trade_parent }
+		}
+		else = { #Give it to the guardian if they're equally qualified or neither is
+			guardian = { save_event_target_as = changeling_trade_parent }
+		}
+
+		clear_event_target = changelings_father
+		clear_event_target = changelings_mother
+
+		event_target:changeling_trade_parent = {
+			character_event = { id = Plus.812 }
+		}
+	}
+}
+
+# Druid offeres to save child (Parent receives offer)
+character_event = {
+	id = Plus.812
+	desc = EVTDESC_Plus_812
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_religion
+	is_triggered_only = yes
+
+	option = { # Yes
+		name = EVTOPTA_Plus_812
+
+		character_event = {
+			id = Plus.813
+			days = 7
+			tooltip = changeling_trade_approved
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 2
+
+				religion_openly_celtic_or_reformed_trigger = yes
+				trait = zealous
+			}
+		}
+	}
+
+	option = { # No
+		name = EVTOPTB_Plus_812
+
+		custom_tooltip = { text = changeling_trade_denied }
+
+		reverse_opinion = {
+			name = opinion_very_disappointed
+			who = event_target:changeling_trade_druid
+			years = 2
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 2
+
+				OR = {
+					event_target:changeling_trade_druid = { trait = bad_druid }
+					trait = cynical
+				}
+			}
+		}
+	}
+}
+
+# Trade begins
+character_event = {
+	id = Plus.813
+	desc = EVTDESC_Plus_813
+	picture = GFX_evt_pagan
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	option = {
+		name = EVTOPTA_Plus_813
+
+		character_event = {
+			id = Plus.815
+			days = 3
+			tooltip = changeling_trade_begins
+		}
+	}
+}
+
+# Parent notified of trade completion
+character_event = {
+	id = Plus.815
+	picture = GFX_evt_pagan
+	border = GFX_event_normal_frame_religion
+
+	desc = { # Success
+		text = EVTDESCA_Plus_815
+		trigger = { has_character_flag = changeling_trade_successful }
+	}
+	desc = { # Druid died
+		text = EVTDESCB_Plus_815
+		trigger = { has_character_flag = changeling_trade_druid_dies }
+	}
+	desc = { # Child died
+		text = EVTDESCC_Plus_815
+		trigger = { has_character_flag = changeling_trade_child_dies }
+	}
+	desc = { # Child hurt
+		text = EVTDESCD_Plus_815
+		trigger = { has_character_flag = changeling_trade_child_injured }
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		random_list = {
+			50 = { #Success
+				trigger = { #If the kid was never really a changeling and the druid sucks, you're going to have a bad time
+					NAND = {
+						event_target:changeling_trade_druid = { trait = bad_druid }
+						event_target:changeling_child = { has_character_flag = changeling_child_fake }
+					}
+				}
+
+				set_character_flag = changeling_trade_successful
+			}
+
+			10 = { # Druid Dies
+				event_target:changeling_trade_druid = {
+					death = { death_reason = death_murder_unknown }
+				}
+
+				set_character_flag = changeling_trade_druid_dies
+			}
+
+			20 = { # Child dies
+				mult_modifier = { # Incompentence breeds failure
+					factor = 2
+					event_target:changeling_trade_druid = { trait = bad_druid }
+				}
+
+				event_target:changeling_child = {
+					death = { death_reason = death_sacrificed }
+				}
+
+				set_character_flag = changeling_trade_child_dies
+			}
+
+			20 = { # Child is hurt
+				mult_modifier = { #Incompentence breeds failure
+					factor = 2
+					event_target:changeling_trade_druid = { trait = bad_druid }
+				}
+
+				event_target:changeling_child = {
+					add_trait = wounded
+				}
+
+				set_character_flag = changeling_trade_child_injured
+			}
+		}
+	}
+
+	option = { # Success! Remove possessed effect from child
+		name = EVTOPTA_Plus_815
+
+		trigger = { has_character_flag = changeling_trade_successful }
+
+		clr_character_flag = changeling_trade_successful
+
+		event_target:changeling_child = {
+			show_scope_change = no
+			remove_possessed_effect = yes
+		}
+	}
+
+	option = { # Druid died
+		name = EVTOPTB_Plus_815
+
+		trigger = { has_character_flag = changeling_trade_druid_dies }
+
+		hidden_effect  = { # Flags removed, no more events
+			clr_character_flag = changeling_trade_druid_dies
+			event_target:changeling_child = { clr_character_flag = changeling_trade }
+		}
+	}
+
+	option = { # Child died, execute the druid
+		name = EVTOPTC_Plus_815
+
+		trigger = { has_character_flag = changeling_trade_child_dies }
+
+		event_target:changeling_trade_druid = {
+			show_scope_change = no
+
+			death = {
+				death_reason = death_execution
+				killer = ROOT
+			}
+		}
+
+		clr_character_flag = changeling_trade_child_dies
+	}
+
+	option = { # Child died, banish the druid
+		name = EVTOPTD_Plus_815
+
+		trigger = { has_character_flag = changeling_trade_child_dies }
+
+		reverse_banish = event_target:changeling_trade_druid
+		clr_character_flag = changeling_trade_child_dies
+	}
+
+	option = { # Child died, do nothing to the druid
+		name = EVTOPTE_Plus_815
+
+		trigger = { has_character_flag = changeling_trade_child_dies }
+
+		clr_character_flag = changeling_trade_child_dies
+	}
+
+	option = { # Succeeded but child injured, banish the druid
+		name = EVTOPTD_Plus_815
+
+		trigger = { has_character_flag = changeling_trade_child_injured }
+
+		event_target:changeling_child = {
+			show_scope_change = no
+			remove_possessed_effect = yes
+		}
+
+		reverse_banish = event_target:changeling_trade_druid
+		clr_character_flag = changeling_trade_child_injured
+	}
+
+	option = { # Succeeded but child injured, do nothing to the druid
+		name = EVTOPTE_Plus_815
+
+		trigger = { has_character_flag = changeling_trade_child_injured }
+
+		event_target:changeling_child = {
+			show_scope_change = no
+			remove_possessed_effect = yes
+		}
+
+		clr_character_flag = changeling_trade_child_injured
+	}
+}
+
+# Changeling child becomes adult
+character_event = {
+	id = Plus.816
+	desc = EVTDESC_Plus_816
+	picture = GFX_evt_the_changeling_fuseli
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	has_character_flag = changeling_child
+
+	immediate = {
+		# Note: This event MAY need to be balanced further, but it is currently far better than it was
+		clr_character_flag = changeling_child
+		clr_character_flag = changeling_child_fake
+		clr_character_flag = changeling_trade
+
+		# Remove boring human physical traits
+		remove_trait = dull
+		remove_trait = slow
+		remove_trait = imbecile
+		remove_trait = weak
+		remove_trait = frail
+
+		# Generally considered to be beautiful and smart. Also lefthanded for fun.
+		add_trait = attractive
+		add_trait = quick
+		add_trait = lefthanded
+
+		# Give character physical attributes attributed to fey court they belong to
+		if = { # Unseelie
+			limit = { has_character_flag = unseelie }
+			add_trait = imposing
+			add_trait = powerful_voice
+			clr_character_flag = unseelie
+		}
+		else_if = { # Seelie
+			limit = { has_character_flag = seelie }
+			add_trait = agile
+			add_trait = melodious_voice
+			clr_character_flag = seelie
+		}
+		else = { # Character somehow didn't have the flag. 50% chance of either
+			random_list = {
+				50 = {
+					add_trait = imposing
+					add_trait = powerful_voice
+				}
+
+				50 = {
+					add_trait = agile
+					add_trait = melodious_voice
+				}
+			}
+		}
+
+		random = {
+			chance = 10
+			add_trait = lunatic
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_816
+
+		add_trait = changeling
+	}
+}
+
+## DIVINATION
+
+# Summon Vassals
+character_event = {
+	id = Plus.817
+	desc = EVTDESC_ancrel_0020
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	only_playable = yes
+	religion_group = pagan_group
+	has_character_flag = planning_divination
+	war = no
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		religion_openly_celtic_or_reformed_trigger = yes
+		is_inaccessible_trigger = no
+		month >= 5
+		month < 11
+	}
+
+	fail_trigger_effect = {
+		if = {
+			limit = { has_character_flag = planning_divination }
+
+			repeat_event = {
+				id = Plus.817
+				months = 1
+			}
+		}
+	}
+
+	immediate = {
+		save_event_target_as = divination_liege
+		clr_character_flag = planning_divination
+		set_character_flag = holding_divination
+
+		any_vassal = {
+			limit = { block_general_event_trigger = no }
+			character_event = { id = Plus.818 } # Vassal summoned
+		}
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 100
+			hidden = yes
+		}
+
+		character_event = {
+			id = Plus.820 # Divination begins
+			days = 10
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0020
+	}
+}
+
+# Vassal summoned to Divination
+character_event = {
+	id = Plus.818
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_ancrel_0021
+		trigger = { religion_openly_celtic_or_reformed_trigger = yes }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0022
+		trigger = { religion_openly_celtic_or_reformed_trigger = no }
+	}
+
+	is_triggered_only = yes
+
+	option = { # Going
+		name = EVTOPTA_ancrel_0021
+
+		trigger = { religion_openly_celtic_or_reformed_trigger = yes }
+
+		set_character_flag = attending_divination
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 100
+			hidden = yes
+		}
+	}
+
+	option = { # Not going, paying to skip
+		name = EVTOPTA_ancrel_0022
+
+		trigger = {
+			religion_openly_celtic_or_reformed_trigger = no
+			wealth >= 20
+		}
+
+		transfer_scaled_wealth = {
+			to = FROM
+			value = 1
+			min = 20
+			max = 20
+		}
+
+		set_character_flag = divination_skip_pay
+
+		event_target:divination_liege = {
+			show_scope_change = no
+
+			character_event = {
+				id = Plus.819
+				tooltip = EVTTOOLTIP_ancrel_0023
+			}
+		}
+	}
+
+	option = { # Not going, not paying
+		name = EVTOPTB_ancrel_0022
+
+		trigger = { religion_openly_celtic_or_reformed_trigger = no }
+
+		event_target:divination_liege = {
+			show_scope_change = no
+
+			character_event = {
+				id = Plus.819
+				tooltip = EVTTOOLTIP_ancrel_0056
+			}
+
+			tooltip = {
+				opinion = {
+					name = opinion_refused_divination
+					who = ROOT
+				}
+
+				any_vassal = {
+					show_scope_change = no
+
+					limit = { has_character_flag = attending_divination }
+
+					opinion = {
+						name = opinion_refused_divination
+						who = ROOT
+					}
+				}
+			}
+		}
+	}
+}
+
+# Non-believers inform liege they will not attend
+character_event = {
+	id = Plus.819
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_ancrel_0023
+		trigger = { FROM = { has_character_flag = divination_skip_pay } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0056
+		trigger = {
+			FROM = {
+				NOR = {
+					has_character_flag = attending_divination
+					has_character_flag = divination_skip_pay
+				}
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0023
+
+		trigger = { FROM = { has_character_flag = divination_skip_pay } }
+
+		tooltip = {
+			transfer_scaled_wealth = {
+				from = FROM
+				value = 1
+				min = 20
+				max = 20
+			}
+		}
+
+		FROM = { clr_character_flag = divination_skip_pay }
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0056
+
+		trigger = {
+			FROM = {
+				NOR = {
+					has_character_flag = attending_divination
+					has_character_flag = divination_skip_pay
+				}
+			}
+		}
+
+		opinion = {
+			name = opinion_refused_divination
+			who = FROM
+		}
+
+		any_vassal = {
+			show_scope_change = no
+
+			limit = { has_character_flag = attending_divination }
+
+			opinion = {
+				name = opinion_refused_divination
+				who = FROM
+			}
+		}
+	}
+}
+
+# Divination begins (Liege)
+character_event = {
+	id = Plus.820
+	desc = EVTDESC_ancrel_0024
+	picture = GFX_evt_druidic_sacrifice
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	immediate = {
+		# Trigger the vassals Divination event
+		any_vassal = {
+			limit = { has_character_flag = attending_divination }
+			character_event = { id = Plus.821 }
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0024
+
+		character_event = {
+			id = Plus.831
+			days = 5
+			tooltip = divination_begin
+		}
+	}
+}
+
+# Divination begins (Vassals)
+character_event = {
+	id = Plus.821
+	picture = GFX_evt_druidic_sacrifice
+	border = GFX_event_normal_frame_religion
+	desc = EVTDESC_ancrel_0025
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0025
+	}
+}
+
+# Prisoner selection
+character_event = {
+	id = Plus.831
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		clear_flags_with_prefix = divination_sacrifice_
+
+		if = {
+			limit = {
+				check_variable = {
+					which = local_sacrifice_count
+					value < 4
+				}
+
+				any_courtier = {
+					prisoner = yes
+					is_adult = yes
+					host = { character = ROOT }
+				}
+			}
+
+			change_variable = {
+				which = local_sacrifice_count
+				value = 1
+			}
+
+			random_courtier = {
+				limit = {
+					prisoner = yes
+					is_adult = yes
+					host = { character = ROOT }
+				}
+
+				# Setup for sacrifice event flavour, to avoid duplicating logic in triggered descriptions
+				if = {
+					limit = { sibling = ROOT }
+
+					if = {
+						limit = { is_female = no }
+						ROOT = { set_character_flag = divination_sacrifice_brother }
+					}
+					else = {
+						ROOT = { set_character_flag = divination_sacrifice_sister }
+					}
+				}
+				else_if = {
+					limit = { is_parent_of = ROOT }
+
+					if = {
+						limit = { is_female = no }
+						ROOT = { set_character_flag = divination_sacrifice_father }
+					}
+					else = {
+						ROOT = { set_character_flag = divination_sacrifice_mother }
+					}
+				}
+				else_if = {
+					limit = { is_child_of = ROOT }
+
+					if = {
+						limit = { is_female = no }
+						ROOT = { set_character_flag = divination_sacrifice_son }
+					}
+					else = {
+						ROOT = { set_character_flag = divination_sacrifice_daughter }
+					}
+				}
+				else_if = {
+					limit = { is_married = ROOT }
+					ROOT = { set_character_flag = divination_sacrifice_spouse }
+				}
+				else_if = {
+					limit = { dynasty = ROOT }
+					ROOT = { set_character_flag = divination_sacrifice_kin }
+				}
+				else_if = {
+					limit = { religion_group = christian }
+					ROOT = { set_character_flag = divination_sacrifice_christian }
+				}
+				else_if = {
+					limit = { religion_group = muslim }
+					ROOT = { set_character_flag = divination_sacrifice_muslim }
+				}
+				else_if = {
+					limit = {
+						religion_openly_aztec_or_reformed_trigger = yes
+						culture = nahua
+					}
+
+					ROOT = { set_character_flag = divination_sacrifice_aztec }
+				}
+				else = {
+					ROOT = { set_character_flag = divination_sacrifice_generic }
+				}
+
+				character_event = { id = Plus.823 }
+			}
+		}
+
+		# Only sacrifice slaves once, then move on to resolution
+		else_if = {
+			limit = {
+				check_variable = {
+					which = local_sacrifice_count
+					value == 0
+				}
+			}
+
+			character_event = {
+				id = Plus.822 # Sacrifice slaves
+				days = 5
+			}
+		}
+
+		# Move on to resolution
+		else = {
+			random_list = {
+				50 = { set_character_flag = positive_divination }
+				50 = { set_character_flag = negative_divination }
+			}
+
+			character_event = {
+				id = Plus.827
+				days = 5
+			}
+		}
+	}
+}
+
+# No Prisoners, Slaves sacrificed
+character_event = {
+	id = Plus.822
+	desc = EVTDESC_ancrel_0054
+	picture = GFX_evt_druidic_sacrifice
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	immediate = {
+		set_character_flag = sacrificed_slaves
+
+		any_vassal = {
+			limit = { has_character_flag = attending_divination }
+			character_event = { id = Plus.825 }
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0054
+
+		wealth = -50
+		prestige = 50
+		piety = 50
+
+		character_event = {
+			id = Plus.827
+			days = 5
+		}
+	}
+}
+
+# Sacrifices (Prisoners)
+character_event = {
+	id = Plus.823
+	desc = EVTDESC_ancrel_0026
+	picture = GFX_evt_druidic_sacrifice
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0026
+
+		FROM = {
+			character_event = { id = Plus.824 }
+		}
+	}
+}
+
+# Sacrifices (Liege)
+character_event = {
+	id = Plus.824
+	picture = GFX_evt_druidic_sacrifice
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_ancrel_0030 # Generic 1
+		trigger = { has_character_flag = blot_sacrifice_generic }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0100 # Generic 2
+		trigger = { has_character_flag = blot_sacrifice_generic }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0101 # Generic 3
+		trigger = { has_character_flag = blot_sacrifice_generic }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0102 # Generic 4
+		trigger = { has_character_flag = blot_sacrifice_generic }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0031
+		trigger = { has_character_flag = blot_sacrifice_christian }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0032
+		trigger = { has_character_flag = blot_sacrifice_muslim }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0041
+		trigger = { has_character_flag = blot_sacrifice_aztec }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0033
+		trigger = { has_character_flag = blot_sacrifice_brother }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0034
+		trigger = { has_character_flag = blot_sacrifice_sister }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0035
+		trigger = { has_character_flag = blot_sacrifice_father }
+	}
+	desc = {
+		text = EVTOPTA_ancrel_0036
+		trigger = { has_character_flag = blot_sacrifice_mother }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0037
+		trigger = { has_character_flag = blot_sacrifice_son }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0038
+		trigger = { has_character_flag = blot_sacrifice_daughter }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0039
+		trigger = { has_character_flag = blot_sacrifice_kin }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0040
+		trigger = { has_character_flag = blot_sacrifice_spouse }
+	}
+
+	is_triggered_only = yes
+
+	option = { # Do It
+		name = {
+			text = EVTOPTA_ancrel_0030
+			trigger = { has_character_flag = blot_sacrifice_generic }
+		}
+		name = {
+			text = EVTOPTA_ancrel_0031
+			trigger = { has_character_flag = blot_sacrifice_christian }
+		}
+		name = {
+			text = EVTOPTA_ancrel_0032
+			trigger = { has_character_flag = blot_sacrifice_muslim }
+		}
+		name = {
+			text = EVTOPTA_ancrel_0041
+			trigger = { has_character_flag = blot_sacrifice_aztec }
+		}
+		name = {
+			text = EVTOPTA_ancrel_0033
+			trigger = { has_character_flag = blot_sacrifice_brother }
+		}
+		name = {
+			text = EVTOPTA_ancrel_0034
+			trigger = { has_character_flag = blot_sacrifice_sister }
+		}
+		name = {
+			text = EVTOPTA_ancrel_0035
+			trigger = { has_character_flag = blot_sacrifice_father }
+		}
+		name = {
+			text = EVTOPTA_ancrel_0036
+			trigger = { has_character_flag = blot_sacrifice_mother }
+		}
+		name = {
+			text = EVTOPTA_ancrel_0037
+			trigger = { has_character_flag = blot_sacrifice_son }
+		}
+		name = {
+			text = EVTOPTA_ancrel_0038
+			trigger = { has_character_flag = blot_sacrifice_daughter }
+		}
+		name = {
+			text = EVTOPTA_ancrel_0039
+			trigger = { has_character_flag = blot_sacrifice_kin }
+		}
+		name = {
+			text = EVTOPTA_ancrel_0040
+			trigger = { has_character_flag = blot_sacrifice_spouse }
+		}
+
+		prestige = 25
+		piety = 15
+
+		if = { # A kinslayer is a kinslayer, no matter the circumstance
+			limit = {
+				FROM = {
+					OR = {
+						sibling = ROOT
+						is_child_of = ROOT
+						is_parent_of = ROOT
+					}
+				}
+			}
+
+			FROM = { save_event_target_as = kinslayer_target }
+			add_kinslayer_trait_effect = yes
+			character_event = { id = 38287 } # Notify Kinslayer
+		}
+
+		if = { # Reward for sacrificing a religion head
+			limit = {
+				FROM = {
+					controls_religion = yes
+					NOT = { religion = celtic_pagan_reformed }
+				}
+			}
+
+			prestige = 250
+			piety = 100
+
+			religion_authority = {
+				name = sacrificed_head_good
+				years = 20
+			}
+
+			FROM = {
+				show_scope_change = no
+
+				religion_authority = {
+					name = sacrificed_head_bad
+					years = 20
+				}
+			}
+		}
+
+		FROM = { # Kill the sacrifice
+			show_scope_change = no
+
+			death = {
+				death_reason = death_sacrificed
+				killer = ROOT
+			}
+		}
+
+		hidden_effect = { # Make the vassals watch
+			any_vassal = {
+				limit = { has_character_flag = attending_divination }
+				character_event = { id = Plus.825 }
+			}
+		}
+	}
+
+	option = { # Change Mind
+		name = {
+			text = EVTOPTB_ancrel_0030
+			trigger = { has_character_flag = blot_sacrifice_generic }
+		}
+		name = {
+			text = EVTOPTB_ancrel_0031
+			trigger = { has_character_flag = blot_sacrifice_christian }
+		}
+		name = {
+			text = EVTOPTB_ancrel_0032
+			trigger = { has_character_flag = blot_sacrifice_muslim }
+		}
+		name = {
+			text = EVTOPTB_ancrel_0041
+			trigger = { has_character_flag = blot_sacrifice_aztec }
+		}
+		name = {
+			text = EVTOPTB_ancrel_0033
+			trigger = { has_character_flag = blot_sacrifice_brother }
+		}
+		name = {
+			text = EVTOPTB_ancrel_0034
+			trigger = { has_character_flag = blot_sacrifice_sister }
+		}
+		name = {
+			text = EVTOPTB_ancrel_0035
+			trigger = { has_character_flag = blot_sacrifice_father }
+		}
+		name = {
+			text = EVTOPTB_ancrel_0036
+			trigger = { has_character_flag = blot_sacrifice_mother }
+		}
+		name = {
+			text = EVTOPTB_ancrel_0037
+			trigger = { has_character_flag = blot_sacrifice_son }
+		}
+		name = {
+			text = EVTOPTB_ancrel_0038
+			trigger = { has_character_flag = blot_sacrifice_daughter }
+		}
+		name = {
+			text = EVTOPTB_ancrel_0039
+			trigger = { has_character_flag = blot_sacrifice_kin }
+		}
+		name = {
+			text = EVTOPTB_ancrel_0040
+			trigger = { has_character_flag = blot_sacrifice_spouse }
+		}
+
+		piety = -25
+
+		# Notify prisoner that they get to live
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = Plus.826
+				tooltip = EVTTOOLTIP_ancrel_0057
+			}
+		}
+	}
+}
+
+# Sacrifices (Vassals)
+character_event = {
+	id = Plus.825
+	picture = GFX_evt_druidic_sacrifice
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_ancrel_0042
+		trigger = { FROM = { has_character_flag = blot_sacrifice_generic } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0043
+		trigger = { FROM = { has_character_flag = blot_sacrifice_christian } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0044
+		trigger = { FROM = { has_character_flag = blot_sacrifice_muslim } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0053
+		trigger = { FROM = { has_character_flag = blot_sacrifice_aztec } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0045
+		trigger = { FROM = { has_character_flag = blot_sacrifice_brother } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0046
+		trigger = { FROM = { has_character_flag = blot_sacrifice_sister } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0047
+		trigger = { FROM = { has_character_flag = blot_sacrifice_father } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0048
+		trigger = { FROM = { has_character_flag = blot_sacrifice_mother } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0049
+		trigger = { FROM = { has_character_flag = blot_sacrifice_son } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0050
+		trigger = { FROM = { has_character_flag = blot_sacrifice_daughter } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0051
+		trigger = { FROM = { has_character_flag = blot_sacrifice_kin } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0052
+		trigger = { FROM = { has_character_flag = blot_sacrifice_spouse } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0055
+		trigger = { FROM = { has_character_flag = sacrificed_slaves } }
+	}
+
+	is_triggered_only = yes
+
+	option = { # Reaction
+		name = { # Slaves
+			text = EVTOPTA_ancrel_0055
+			trigger = { FROM = { has_character_flag = sacrificed_slaves } }
+		}
+		name = { # Prisoner
+			text = EVTOPTA_ancrel_0042
+			trigger = { FROM = { NOT = { has_character_flag = sacrificed_slaves } } }
+		}
+
+		if = {
+			limit = {
+				FROM = { NOT = { has_character_flag = sacrificed_slaves } }
+			}
+
+			tooltip = {
+				FROMFROM = {
+					show_scope_change = no
+
+					death = {
+						death_reason = death_sacrificed
+						killer = FROM
+					}
+				}
+			}
+		}
+	}
+}
+
+# Liege changed mind (Prisoner)
+character_event = {
+	id = Plus.826
+	desc = EVTDESC_ancrel_0057
+	picture = GFX_evt_druidic_sacrifice
+	border = GFX_event_normal_frame_religion
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0057
+	}
+}
+
+# Divination result (Liege)
+character_event = {
+	id = Plus.827
+	picture = GFX_evt_ollamh_laws
+	border = GFX_event_normal_frame_religion
+
+	desc = { # Good 1
+		text = EVTDESC_ancrel_0060
+		trigger = { has_character_flag = positive_divination }
+	}
+	desc = { # Good 2
+		text = EVTDESC_ancrel_0061
+		trigger = { has_character_flag = positive_divination }
+	}
+	desc = { # Good 3
+		text = EVTDESC_ancrel_0064
+		trigger = { has_character_flag = positive_divination }
+	}
+	desc = { # Bad 1
+		text = EVTDESC_ancrel_0065
+		trigger = { has_character_flag = negative_divination }
+	}
+	desc = { # Bad 2
+		text = EVTDESC_ancrel_0066
+		trigger = { has_character_flag = negative_divination }
+	}
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	immediate = {
+		if = { # Give negative modifier for bad divination if bad result
+			limit = { has_character_flag = negative_divination }
+
+			any_vassal = {
+				limit = {
+					has_character_flag = attending_divination
+					NOT = { trait = cynical }
+				}
+
+				opinion = {
+					name = opinion_held_bad_divination
+					who = event_target:divination_liege
+				}
+			}
+		}
+
+		any_vassal = { # Notify Vassals of result
+			limit = { has_character_flag = attending_divination }
+			character_event = { id = Plus.828 }
+		}
+
+		character_event = {
+			id = Plus.829 # End the damn thing already
+			days = 1
+		}
+	}
+
+	option = { # Good
+		name = EVTOPTA_ancrel_0061
+
+		trigger = {
+			has_character_flag = positive_divination
+			NOT = { trait = cynical }
+		}
+
+		add_character_modifier = {
+			name = promised_victory
+			years = 3
+		}
+	}
+
+	option = { # Bad
+		name = EVTOPTA_ancrel_0065
+
+		trigger = {
+			has_character_flag = negative_divination
+			NOT = { trait = cynical }
+		}
+
+		custom_tooltip = { text = divination_bad }
+		prestige = -200
+	}
+
+	option = { # Cynical
+		name = EVTOPTC_Plus_827
+		tooltip_info = cynical
+
+		trigger = { trait = cynical }
+	}
+}
+
+# Divination result (Vassal)
+character_event = {
+	id = Plus.828
+	picture = GFX_evt_ollamh_laws
+	border = GFX_event_normal_frame_religion
+
+	desc = { # Good 1
+		text = EVTDESC_ancrel_0067
+		trigger = { event_target:divination_liege = { has_character_flag = positive_divination } }
+	}
+	desc = { # Good 2
+		text = EVTDESC_ancrel_0068
+		trigger = { event_target:divination_liege = { has_character_flag = positive_divination } }
+	}
+	desc = { # Good 3
+		text = EVTDESC_ancrel_0069
+		trigger = { event_target:divination_liege = { has_character_flag = positive_divination } }
+	}
+	desc = { # Bad 1
+		text = EVTDESC_ancrel_0070
+		trigger = { event_target:divination_liege = { has_character_flag = negative_divination } }
+	}
+	desc = { # Bad 2
+		text = EVTDESC_ancrel_0071
+		trigger = { event_target:divination_liege = { has_character_flag = negative_divination } }
+	}
+
+	is_triggered_only = yes
+
+	option = { # Good
+		name = EVTOPTA_ancrel_0068
+
+		trigger = {
+			event_target:divination_liege = { has_character_flag = positive_divination }
+			NOT = { trait = cynical }
+		}
+
+		add_character_modifier = {
+			name = promised_victory
+			years = 3
+		}
+	}
+
+	option = { # Bad
+		name = EVTOPTA_ancrel_0070
+
+		trigger = {
+			event_target:divination_liege = { has_character_flag = negative_divination }
+			NOT = { trait = cynical }
+		}
+	}
+
+	option = { # Cynical
+		name = EVTOPTC_Plus_828
+		tooltip_info = cynical
+
+		trigger = { trait = cynical }
+	}
+}
+
+# End the divination for liege
+character_event = {
+	id = Plus.829
+	desc = EVTDESC_ancrel_0062
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	immediate = {
+		any_vassal = {
+			limit = { has_character_flag = attending_divination }
+			character_event = { id = Plus.830 } # FINISH HIM
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0062
+
+		add_character_modifier = {
+			name = held_divination_timer
+			years = 7
+			hidden = yes
+		}
+
+		hidden_effect = {
+			remove_do_not_disturb_effect = yes
+			clr_character_flag = holding_divination
+		}
+	}
+}
+
+# It's finally over
+character_event = {
+	id = Plus.830
+	desc = EVTDESC_ancrel_0063
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0062
+
+		hidden_effect = {
+			remove_do_not_disturb_effect = yes
+			clr_character_flag = attending_divination
+		}
+	}
+}

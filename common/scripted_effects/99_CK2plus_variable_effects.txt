@@ -1,0 +1,307 @@
+# Dishonorable
+dishonorable_degrade_effect = {
+	if = {
+		limit = {
+			check_variable = {
+				which = dishonorable
+				value > 0
+			}
+		}
+
+		subtract_variable = {
+			which = dishonorable
+			value = 1
+		}
+
+		dishonorable_trait_effect = yes
+	}
+}
+
+dishonorable_plus_1_effect = {
+	hidden_effect = {
+		change_variable = {
+			which = dishonorable
+			value = 20
+		}
+	}
+
+	dishonorable_trait_effect = yes
+}
+
+# Imperial Decadence
+imperial_decadence_minus_1_effect = {
+	if = {
+		limit = { uses_imperial_decadence_trigger = yes }
+
+		custom_tooltip = {
+			text = IMPERIAL_DECADENCE_MINUS_1
+
+			primary_title = {
+				change_variable = {
+					which = imperial_decadence
+					value = -1
+				}
+			}
+
+			character_event = { id = Plus.1852 }
+		}
+	}
+}
+
+imperial_decadence_minus_2_effect = {
+	if = {
+		limit = { uses_imperial_decadence_trigger = yes }
+
+		custom_tooltip = {
+			text = IMPERIAL_DECADENCE_MINUS_2
+
+			primary_title = {
+				change_variable = {
+					which = imperial_decadence
+					value = -2
+				}
+			}
+
+			character_event = { id = Plus.1852 }
+		}
+	}
+}
+
+imperial_decadence_plus_1_effect = {
+	if = {
+		limit = { uses_imperial_decadence_trigger = yes }
+
+		custom_tooltip = {
+			text = IMPERIAL_DECADENCE_PLUS_1
+
+			primary_title = {
+				change_variable = {
+					which = imperial_decadence
+					value = 1
+				}
+			}
+
+			character_event = { id = Plus.1852 }
+		}
+	}
+}
+imperial_decadence_plus_2_effect = {
+	if = {
+		limit = { uses_imperial_decadence_trigger = yes }
+
+		custom_tooltip = {
+			text = IMPERIAL_DECADENCE_PLUS_2
+
+			primary_title = {
+				change_variable = {
+					which = imperial_decadence
+					value = 2
+				}
+			}
+
+			character_event = { id = Plus.1852 }
+		}
+	}
+}
+
+# Loan Amount (TODO: Rework this)
+take_loan_effect = {
+	if = { # 50g loan
+		limit = { monthly_income < 2.5 }
+
+		wealth = 50
+
+		hidden_tooltip = {
+			change_variable = {
+				which = loan_amount
+				value = 50
+			}
+		}
+	}
+	else_if = { # 100g loan
+		limit = {
+			monthly_income >= 2.5
+			monthly_income < 5
+		}
+
+		wealth = 100
+
+		hidden_tooltip = {
+			change_variable = {
+				which = loan_amount
+				value = 100
+			}
+		}
+	}
+	else_if = { # 200g loan
+		limit = {
+			monthly_income >= 5
+			monthly_income < 10
+		}
+
+		wealth = 200
+
+		hidden_tooltip = {
+			change_variable = {
+				which = loan_amount
+				value = 200
+			}
+		}
+	}
+	else_if = { #400g loan
+		limit = {
+			monthly_income >= 10
+			monthly_income < 15
+		}
+
+		wealth = 400
+
+		hidden_tooltip = {
+			change_variable = {
+				which = loan_amount
+				value = 400
+			}
+		}
+	}
+	else_if = { # 600g loan
+		limit = {
+			monthly_income >= 15
+			monthly_income < 20
+		}
+
+		wealth = 600
+
+		hidden_tooltip = {
+			change_variable = {
+				which = loan_amount
+				value = 600
+			}
+		}
+	}
+	else_if = { # 800g loan
+		limit = {
+			monthly_income >= 20
+			monthly_income < 25
+		}
+
+		wealth = 800
+
+		hidden_tooltip = {
+			change_variable = {
+				which = loan_amount
+				value = 800
+			}
+		}
+	}
+	else_if = { # 1000g loan
+		limit = {
+			monthly_income >= 25
+		}
+
+		wealth = 1000
+
+		hidden_tooltip = {
+			change_variable = {
+				which = loan_amount
+				value = 1000
+			}
+		}
+	}
+	else = {
+		log = "ERROR: monthly_income invalid value, no loan given"
+	}
+
+	add_character_modifier = {
+		name = "loan_timer"
+		years = 2
+	}
+}
+
+# Peaceful Years
+peaceful_years_increment_effect = {
+	if = {
+		limit = {
+			is_ruler = yes
+			war = no
+		}
+
+		change_variable = {
+			which = years_of_peace
+			value = 1
+		}
+	}
+}
+
+peaceful_years_reset_effect = {
+	FROM = {
+		set_variable = {
+			which = years_of_peace
+			value = 0
+		}
+	}
+
+	ROOT = {
+		set_variable = {
+			which = years_of_peace
+			value = 0
+		}
+	}
+}
+
+# Tyrant
+tyrant_degrade_effect = {
+	if = {
+		limit = {
+			check_variable = {
+				which = tyrant
+				value > 0
+			}
+		}
+
+		subtract_variable = {
+			which = tyrant
+			value = 1
+		}
+
+		tyrant_trait_effect = yes
+	}
+}
+
+tyrant_plus_1_effect = {
+	custom_tooltip = {
+		text = TYRANNY_INCREASE_1
+
+		change_variable = {
+			which = tyrant
+			value = 1
+		}
+	}
+
+	tyrant_trait_effect = yes
+}
+
+tyrant_plus_2_effect = {
+	custom_tooltip = {
+		text = TYRANNY_INCREASE_2
+
+		change_variable = {
+			which = tyrant
+			value = 2
+		}
+	}
+
+	tyrant_trait_effect = yes
+}
+
+tyrant_plus_4_effect = {
+	custom_tooltip = {
+		text = TYRANNY_INCREASE_4
+
+		change_variable = {
+			which = tyrant
+			value = 4
+		}
+	}
+
+	tyrant_trait_effect = yes
+}

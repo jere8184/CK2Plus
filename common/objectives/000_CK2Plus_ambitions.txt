@@ -1,0 +1,5812 @@
+###############
+#Plus Ambitions:
+#
+#Total = 45
+###############
+
+obj_find_lover = {
+	type = character
+
+	potential = {
+		has_lover = no
+		is_adult = yes
+		prisoner = no
+		is_priest = no
+		is_incapable = no
+		NOT = { trait = celibate }
+		NOT = { trait = eunuch }
+
+		trigger_if = {
+			limit = { is_ruler = yes }
+			demesne_size >= 1
+		}
+
+		trigger_if = {
+			limit = { ai = yes }
+			NOT = { has_character_flag = obj_find_lover }
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		has_lover = yes
+	}
+
+	effect = {
+		hidden_effect = {
+			change_variable = {
+				which = lifestyle_diplomacy
+				value = 1
+			}
+
+			if = {
+				limit = { ai = yes }
+				remove_character_modifier = ai_objective_timer
+			}
+		}
+
+		if = {
+			limit = { has_character_flag = obj_find_lover }
+			prestige = 25
+		}
+		else = {
+			change_diplomacy = 1
+			set_character_flag = obj_find_lover
+		}
+	}
+
+	abort = {
+		OR = {
+			prisoner = yes
+			is_priest = yes
+			is_incapable = yes
+			trait = celibate
+			trait = eunuch
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 100
+
+		mult_modifier = {
+			factor = 0.5
+			is_ruler = no
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			spouse = { practical_age >= 40 }
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			spouse = { practical_age < 30 }
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			is_married = yes # Here to suppress asserts in error.log
+
+			opinion = {
+				who = spouse
+				value >= 25
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			is_married = yes # Here to suppress asserts in error.log
+
+			opinion = {
+				who = spouse
+				value >= 50
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			is_married = yes # Here to suppress asserts in error.log
+
+			opinion = {
+				who = spouse
+				value >= 75
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = chaste
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = shy
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = lustful
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = hedonist
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = decadent
+		}
+	}
+}
+
+obj_become_independent = {
+	type = character
+
+	potential = {
+		ai = no
+		independent = no
+		is_landed = yes
+		prisoner = no
+		is_adult = yes
+		is_incapable = no
+
+		liege = {
+			independent = yes
+
+			OR = {
+				is_feudal = yes
+				is_tribal = yes
+			}
+		}
+	}
+
+	creation_effect = {
+	}
+
+	success = {
+		independent = yes
+		war = no
+	}
+
+	effect = {
+		if = {
+			limit = { has_character_flag = obj_independence }
+			prestige = 50
+			set_character_flag = obj_independence
+		}
+		else = {
+			prestige = 200
+		}
+	}
+
+	abort = {
+		OR = {
+			prisoner = yes
+			ai = yes
+			is_incapable = yes
+
+			liege = {
+				OR = {
+					independent = no
+					is_theocracy = yes
+					is_nomadic = yes
+					is_republic = yes
+				}
+			}
+		}
+	}
+
+	abort_effect = {
+	}
+
+	chance = {
+		factor = 0
+	}
+}
+
+obj_five_children = {
+	type = character
+
+	fertility = 0.1
+
+	potential = {
+		is_marriage_adult = yes
+		num_of_children >= 1
+		num_of_children < 5
+
+		OR = {
+			is_married = yes
+			is_senior_consort_party = yes
+		}
+
+		OR = {
+			is_ruler = yes
+			spouse = { is_ruler = yes }
+		}
+
+		trigger_if = {
+			limit = { is_female = yes }
+			practical_age < 45
+		}
+		trigger_else = {
+			practical_age < 75
+		}
+
+		prisoner = no
+		is_incapable = no
+
+		NOR = {
+			trait = celibate
+			trait = eunuch
+			has_character_flag = obj_have_child_3
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		num_of_children >= 5
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		pf_court_plus1_effect = yes
+
+		if = {
+			limit = { religion_group = muslim }
+			prestige = 50
+		}
+		else = {
+			prestige = 100
+		}
+
+		set_character_flag = obj_have_child_3
+	}
+
+	abort = {
+		OR = {
+			prisoner = yes
+			is_incapable = yes
+			trait = celibate
+			trait = eunuch
+
+			AND = {
+				is_married = no
+				is_senior_consort_party = no
+			}
+
+			trigger_if = {
+				limit = { is_female = yes }
+				practical_age > 45
+			}
+			trigger_else = {
+				practical_age >= 75
+			}
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		mult_modifier = {
+			factor = 0.5
+			is_female = no
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = lustful
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			num_of_children >= 2
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			num_of_children >= 3
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			num_of_children >= 4
+		}
+	}
+}
+
+obj_ten_children = {
+	type = character
+
+	fertility = 0.1
+
+	potential = {
+		is_adult = yes
+		is_married = yes
+		num_of_children >= 5
+		num_of_children < 10
+
+		OR = {
+			is_ruler = yes
+			spouse = { is_ruler = yes }
+		}
+
+		trigger_if = {
+			limit = { is_female = yes }
+			practical_age < 45
+		}
+		trigger_else = {
+			practical_age < 75
+		}
+
+		prisoner = no
+		is_incapable = no
+
+		NOR = {
+			trait = celibate
+			trait = eunuch
+			has_character_flag = obj_have_child_4
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		num_of_children >= 10
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		pf_court_plus1_effect = yes
+
+		if = {
+			limit = { religion_group = muslim }
+			prestige = 50
+		}
+		else = {
+			prestige = 100
+		}
+
+		set_character_flag = obj_have_child_4
+	}
+
+	abort = {
+		OR = {
+			prisoner = yes
+			is_incapable = yes
+			trait = celibate
+			trait = eunuch
+
+			AND = {
+				is_married = no
+				is_senior_consort_party = no
+			}
+
+			trigger_if = {
+				limit = { is_female = yes }
+				practical_age > 45
+			}
+			trigger_else = {
+				practical_age >= 75
+			}
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		mult_modifier = {
+			factor = 0.5
+			is_female = no
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = lustful
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			num_of_children >= 6
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			num_of_children >= 7
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			num_of_children >= 8
+		}
+	}
+}
+
+obj_fifteen_children = {
+	type = character
+
+	fertility = 0.1
+
+	potential = {
+		is_adult = yes
+		is_married = yes
+		num_of_children >= 10
+		num_of_children < 15
+
+		trigger_if = {
+			limit = { is_female = yes }
+			practical_age < 45
+		}
+		trigger_else = {
+			practical_age < 75
+		}
+
+		OR = {
+			is_ruler = yes
+			spouse = { is_ruler = yes }
+		}
+
+		prisoner = no
+		is_incapable = no
+
+		NOR = {
+			has_character_flag = obj_have_child_5
+			trait = celibate
+			trait = eunuch
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		num_of_children >= 15
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		pf_court_plus1_effect = yes
+
+		if = {
+			limit = { religion_group = muslim }
+			prestige = 50
+		}
+		else = {
+			prestige = 100
+		}
+
+		set_character_flag = obj_have_child_5
+	}
+
+	abort = {
+		OR = {
+			prisoner = yes
+			is_incapable = yes
+			trait = celibate
+			trait = eunuch
+
+			AND = {
+				is_married = no
+				is_senior_consort_party = no
+			}
+
+			trigger_if = {
+				limit = { is_female = yes }
+				practical_age > 45
+			}
+			trigger_else = {
+				practical_age >= 75
+			}
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		mult_modifier = {
+			factor = 0.5
+			is_female = no
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = lustful
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			num_of_children >= 11
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			num_of_children >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			num_of_children >= 13
+		}
+	}
+}
+
+obj_twenty_children = {
+	type = character
+
+	fertility = 0.1
+
+	potential = {
+		is_adult = yes
+		is_married = yes
+		num_of_children >= 15
+		num_of_children < 20
+
+		trigger_if = {
+			limit = { is_female = yes }
+			practical_age < 45
+		}
+		trigger_else = {
+			practical_age < 75
+		}
+
+		OR = {
+			is_ruler = yes
+			spouse = { is_ruler = yes }
+		}
+
+		prisoner = no
+		is_incapable = no
+
+		NOR = {
+			has_character_flag = obj_have_child_5
+			trait = celibate
+			trait = eunuch
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		num_of_children >= 20
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		pf_court_plus2_effect = yes
+
+		if = {
+			limit = {
+				religion_group = christian
+				has_nickname = no
+			}
+
+			give_nickname = nick_the_quiverfull
+		}
+
+		if = {
+			limit = { religion_group = muslim }
+			prestige = 50
+		}
+		else = {
+			prestige = 100
+		}
+
+		set_character_flag = obj_have_child_6
+	}
+
+	abort = {
+		OR = {
+			prisoner = yes
+			is_incapable = yes
+			trait = celibate
+			trait = eunuch
+
+			AND = {
+				is_married = no
+				is_senior_consort_party = no
+			}
+
+			trigger_if = {
+				limit = { is_female = yes }
+				practical_age > 45
+			}
+			trigger_else = {
+				practical_age >= 75
+			}
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		mult_modifier = {
+			factor = 0.5
+			is_female = no
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = lustful
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			num_of_children = 16
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			num_of_children = 17
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			num_of_children = 18
+		}
+	}
+}
+
+obj_cta_0 = {
+	type = character
+
+	potential = {
+		# If you can command armies for your liege/yourself (and meet the base criteria),
+		# then this ambition is for you too.
+		OR = {
+			is_ruler = yes
+			has_job_title = job_marshal
+			has_minor_title = title_commander
+			can_hold_title = title_commander
+		}
+
+		is_adult = yes
+		practical_age < 50
+		prisoner = no
+		is_incapable = no
+
+		NOR = {
+			trait = poor_warrior
+			trait = trained_warrior
+			trait = skilled_warrior
+			trait = master_warrior
+			has_character_flag = cta_done # Weird things happen (cta_done is not normally set for the 0->1 tier transition)
+			trait = blinded
+		}
+	}
+
+	creation_effect = {
+	}
+
+	success = {
+		OR = { # CTA only advances 1 level, but external code or console might jump the trait higher
+			trait = poor_warrior
+			trait = trained_warrior
+			trait = skilled_warrior
+			trait = master_warrior
+		}
+	}
+
+	effect = {
+		prestige >= 25
+	}
+
+	abort = {
+		OR = {
+			is_adult = no # Strange stuff happens
+			practical_age >= 50
+			prisoner = yes
+			is_incapable = yes
+			trait = blinded
+
+			# Also abort if conditions change such that they can no longer command armies
+			NOR = {
+				is_ruler = yes
+				has_job_title = job_marshal
+				has_minor_title = title_commander
+				can_hold_title = title_commander
+			}
+		}
+	}
+
+	abort_effect = {
+		# (optional) possibly notify the player of why the ambition aborted in certain cases (prison, reaching age 50-- the rest is obvious)
+	}
+
+	chance = {
+		factor = 100
+
+		trigger = {
+			martial >= 8
+		}
+
+		mult_modifier = {
+			factor = 10
+			has_job_title = job_marshal
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			practical_age >= 40
+		}
+
+		mult_modifier = {
+			factor = 0.333
+			practical_age >= 45
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = patient
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = diligent
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			trait = diligent
+			martial >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 1.5
+
+			trait = ambitious
+			martial >= 12
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			trait = crusader
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			trait = mujahid
+		}
+
+		mult_modifier = {
+			factor = 1.75
+
+			# Already has proven battle experience, likely candidate to be in future battles
+			OR = {
+				trait = scarred
+				trait = scarred_female
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.75
+			trait = agile
+		}
+
+		mult_modifier = {
+			factor = 2
+			is_strong_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 6
+			trait = duelist
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			trait = hunter
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = hedonist
+		}
+
+		mult_modifier = {
+			factor = 0.333
+			is_weak_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 0.333
+			trait = clubfooted
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = craven
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = slothful
+		}
+
+		mult_modifier = {
+			factor = 0.667
+
+			OR = {
+				trait = elusive_shadow
+				trait = intricate_webweaver
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.333
+
+			OR = {
+				trait = flamboyant_schemer
+				trait = amateurish_plotter
+			}
+		}
+
+		mult_modifier = {
+			factor = 8
+			trait = brilliant_strategist
+		}
+
+		mult_modifier = {
+			factor = 5
+			trait = skilled_tactician
+		}
+
+		mult_modifier = {
+			factor = 3
+			trait = tough_soldier
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = misguided_warrior
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			martial < 10 # implies martial = 8 or 9 (martial < 8 is disabled for AI)
+		}
+
+		# TODO: martial scaling should be less coarse-grained
+		mult_modifier = {
+			factor = 1.5
+			martial >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 15
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 18
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 21
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 24
+		}
+	}
+}
+
+obj_cta_1 = {
+	type = character
+
+	potential = {
+		trait = poor_warrior
+
+		# If you can command armies for your liege/yourself (and meet the base criteria),
+		# then this ambition is for you too.
+		OR = {
+			is_ruler = yes
+			has_job_title = job_marshal
+			has_minor_title = title_commander
+			can_hold_title = title_commander
+		}
+
+		is_adult = yes
+		practical_age < 50
+		prisoner = no
+		is_incapable = no
+
+		NOR = {
+			trait = trained_warrior
+			trait = skilled_warrior
+			trait = master_warrior
+			has_character_flag = cta_done # Weird things happen (cta_done is not normally set for the 0->1 tier transition)
+			trait = blinded
+		}
+	}
+
+	creation_effect = {
+	}
+
+	success = {
+		OR = {
+			trait = trained_warrior
+			trait = skilled_warrior
+			trait = master_warrior
+		}
+	}
+
+	effect = {
+		prestige = 50
+	}
+
+	abort = {
+		OR = {
+			is_adult = no # Strange stuff happens
+			practical_age >= 50
+			prisoner = yes
+			is_incapable = yes
+			trait = blinded
+
+			# Also abort if conditions change such that they can no longer command armies
+			NOR = {
+				is_ruler = yes
+				has_job_title = job_marshal
+				has_minor_title = title_commander
+				can_hold_title = title_commander
+			}
+
+			# External code might demote a character
+			NOR = {
+				trait = poor_warrior
+				trait = trained_warrior
+				trait = skilled_warrior
+				trait = master_warrior
+			}
+		}
+	}
+
+	abort_effect = {
+		# (optional) possibly notify the player of why the ambition aborted in certain cases (prison, reaching age 50-- the rest is obvious)
+	}
+
+	chance = {
+		factor = 100
+
+		trigger = {
+			martial >= 8
+		}
+
+		mult_modifier = {
+			factor = 10
+			has_job_title = job_marshal
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			practical_age >= 40
+		}
+
+		mult_modifier = {
+			factor = 0.333
+			practical_age >= 45
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = patient
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = diligent
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			trait = diligent
+			martial >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 1.5
+
+			trait = ambitious
+			martial >= 12
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			has_crusade_trait_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 1.75
+
+			# Already has proven battle experience, likely candidate to be in future battles
+			OR = {
+				trait = scarred
+				trait = scarred_female
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.75
+			trait = agile
+		}
+
+		mult_modifier = {
+			factor = 2
+			is_strong_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 6
+			trait = duelist
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			trait = hunter
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = hedonist
+		}
+
+		mult_modifier = {
+			factor = 0.333
+			is_weak_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 0.333
+			trait = clubfooted
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = craven
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = slothful
+		}
+
+		mult_modifier = {
+			factor = 0.667
+
+			OR = {
+				trait = elusive_shadow
+				trait = intricate_webweaver
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.333
+
+			OR = {
+				trait = flamboyant_schemer
+				trait = amateurish_plotter
+			}
+		}
+
+		mult_modifier = {
+			factor = 8
+			trait = brilliant_strategist
+		}
+
+		mult_modifier = {
+			factor = 5
+			trait = skilled_tactician
+		}
+
+		mult_modifier = {
+			factor = 3
+			trait = tough_soldier
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = misguided_warrior
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			martial < 10 # implies martial = 8 or 9 (martial < 8 is disabled for AI)
+		}
+
+		# TODO: martial scaling should be less coarse-grained
+		mult_modifier = {
+			factor = 1.5
+			martial >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 15
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 18
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 21
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 24
+		}
+	}
+}
+
+obj_cta_2 = {
+	type = character
+
+	potential = {
+		trait = trained_warrior
+
+		# If you can command armies for your liege/yourself (and meet the base criteria),
+		# then this ambition is for you too.
+		OR = {
+			is_ruler = yes
+			has_job_title = job_marshal
+			has_minor_title = title_commander
+			can_hold_title = title_commander
+		}
+
+		is_adult = yes
+		practical_age < 50
+		prisoner = no
+		is_incapable = no
+
+		NOR = {
+			trait = poor_warrior
+			trait = skilled_warrior
+			trait = master_warrior
+			has_character_flag = cta_done # Weird things happen (cta_done is not normally set for the 0->1 tier transition)
+			trait = blinded
+		}
+	}
+
+	creation_effect = {
+	}
+
+	success = {
+		OR = {
+			trait = skilled_warrior
+			trait = master_warrior
+		}
+	}
+
+	effect = {
+		prestige = 75
+	}
+
+	abort = {
+		OR = {
+			is_adult = no # Strange stuff happens
+			practical_age >= 50
+			prisoner = yes
+			is_incapable = yes
+			trait = blinded
+
+			# Also abort if conditions change such that they can no longer command armies
+			NOR = {
+				is_ruler = yes
+				has_job_title = job_marshal
+				has_minor_title = title_commander
+				can_hold_title = title_commander
+			}
+
+			# External code might demote a character
+			trait = poor_warrior
+
+			NOR = {
+				trait = poor_warrior
+				trait = trained_warrior
+				trait = skilled_warrior
+				trait = master_warrior
+			}
+		}
+	}
+
+	abort_effect = {
+		# (optional) possibly notify the player of why the ambition aborted in certain cases (prison, reaching age 50-- the rest is obvious)
+	}
+
+	chance = {
+		factor = 100
+
+		trigger = {
+			martial >= 8
+		}
+
+		mult_modifier = {
+			factor = 10
+			has_job_title = job_marshal
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			practical_age >= 40
+		}
+
+		mult_modifier = {
+			factor = 0.333
+			practical_age >= 45
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = patient
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = diligent
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			trait = diligent
+			martial >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 1.5
+
+			trait = ambitious
+			martial >= 12
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			has_crusade_trait_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 1.75
+
+			# Already has proven battle experience, likely candidate to be in future battles
+			OR = {
+				trait = scarred
+				trait = scarred_female
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.75
+			trait = agile
+		}
+
+		mult_modifier = {
+			factor = 2
+			is_strong_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 6
+			trait = duelist
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			trait = hunter
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = hedonist
+		}
+
+		mult_modifier = {
+			factor = 0.333
+			is_weak_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 0.333
+			trait = clubfooted
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = craven
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = slothful
+		}
+
+		mult_modifier = {
+			factor = 0.667
+
+			OR = {
+				trait = elusive_shadow
+				trait = intricate_webweaver
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.333
+
+			OR = {
+				trait = flamboyant_schemer
+				trait = amateurish_plotter
+			}
+		}
+
+		mult_modifier = {
+			factor = 8
+			trait = brilliant_strategist
+		}
+
+		mult_modifier = {
+			factor = 5
+			trait = skilled_tactician
+		}
+
+		mult_modifier = {
+			factor = 3
+			trait = tough_soldier
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = misguided_warrior
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			martial < 10 # implies martial = 8 or 9 (martial < 8 is disabled for AI)
+		}
+
+		# TODO: martial scaling should be less coarse-grained
+		mult_modifier = {
+			factor = 1.5
+			martial >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 15
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 18
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 21
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 24
+		}
+	}
+}
+
+obj_cta_3 = {
+	type = character
+
+	potential = {
+		trait = skilled_warrior
+
+		# If you can command armies for your liege/yourself (and meet the base criteria),
+		# then this ambition is for you too.
+		OR = {
+			is_ruler = yes
+			has_job_title = job_marshal
+			has_minor_title = title_commander
+			can_hold_title = title_commander
+		}
+
+		is_adult = yes
+		practical_age < 50
+		prisoner = no
+		is_incapable = no
+
+		NOR = {
+			trait = poor_warrior
+			trait = trained_warrior
+			trait = master_warrior
+			has_character_flag = cta_done # Weird things happen (cta_done is not normally set for the 0->1 tier transition)
+			trait = blinded
+		}
+	}
+
+	creation_effect = {
+	}
+
+	success = {
+		trait = master_warrior
+	}
+
+	effect = {
+		prestige = 100
+	}
+
+	abort = {
+		OR = {
+			is_adult = no # Strange stuff happens
+			practical_age >= 50
+			prisoner = yes
+			is_incapable = yes
+			trait = blinded
+
+			# Also abort if conditions change such that they can no longer command armies
+			NOR = {
+				is_ruler = yes
+				has_job_title = job_marshal
+				has_minor_title = title_commander
+				can_hold_title = title_commander
+			}
+
+			# External code might demote a character
+			trait = poor_warrior
+			trait = trained_warrior
+
+			NOR = {
+				trait = poor_warrior
+				trait = trained_warrior
+				trait = skilled_warrior
+				trait = master_warrior
+			}
+		}
+	}
+
+	abort_effect = {
+		# (optional) possibly notify the player of why the ambition aborted in certain cases (prison, reaching age 50-- the rest is obvious)
+	}
+
+	chance = {
+		factor = 100
+
+		trigger = {
+			martial >= 8
+		}
+
+		mult_modifier = {
+			factor = 10
+			has_job_title = job_marshal
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			practical_age >= 40
+		}
+
+		mult_modifier = {
+			factor = 0.333
+			practical_age >= 45
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = patient
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = diligent
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			trait = diligent
+			martial >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 1.5
+
+			trait = ambitious
+			martial >= 12
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			has_crusade_trait_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 1.75
+
+			# Already has proven battle experience, likely candidate to be in future battles
+			OR = {
+				trait = scarred
+				trait = scarred_female
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.75
+			trait = agile
+		}
+
+		mult_modifier = {
+			factor = 2
+			is_strong_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 6
+			trait = duelist
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			trait = hunter
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = hedonist
+		}
+
+		mult_modifier = {
+			factor = 0.333
+			is_weak_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 0.333
+			trait = clubfooted
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = craven
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = slothful
+		}
+
+		mult_modifier = {
+			factor = 0.667
+
+			OR = {
+				trait = elusive_shadow
+				trait = intricate_webweaver
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.333
+
+			OR = {
+				trait = flamboyant_schemer
+				trait = amateurish_plotter
+			}
+		}
+
+		mult_modifier = {
+			factor = 8
+			trait = brilliant_strategist
+		}
+
+		mult_modifier = {
+			factor = 5
+			trait = skilled_tactician
+		}
+
+		mult_modifier = {
+			factor = 3
+			trait = tough_soldier
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = misguided_warrior
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			martial < 10 # implies martial = 8 or 9 (martial < 8 is disabled for AI)
+		}
+
+		# TODO: martial scaling should be less coarse-grained
+		mult_modifier = {
+			factor = 1.5
+			martial >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 15
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 18
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 21
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 24
+		}
+	}
+}
+
+obj_increase_demesne_1 = {
+	type = character
+
+	potential = {
+		is_playable = yes
+		demesne_size = 1
+		NOT = { demesne_size = 2 }
+		is_landed = yes
+		is_adult = yes
+		over_max_demesne_size < 0
+		is_incapable = no
+
+		trigger_if = {
+			limit = { ai = yes }
+			NOT = { has_character_flag = obj_demesne }
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		demesne_size >= 2
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		if = {
+			limit = { has_character_flag = obj_demesne }
+
+			prestige = 25
+			set_character_flag = obj_demesne
+		}
+		else = {
+			change_stewardship = 1
+
+			if = {
+				limit = { independent = no }
+
+				opinion = {
+					name = opinion_happy
+					who = liege
+					years = 10
+				}
+			}
+		}
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			is_ruler = no
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		trigger = {
+			NOT = { trait = content }
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 100
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 250
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 400
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 10.0
+			trait = ambitious
+		}
+	}
+}
+
+obj_increase_demesne_2 = {
+	type = character
+
+	potential = {
+		is_playable = yes
+		demesne_size = 2
+		NOT = { demesne_size = 3 }
+		is_landed = yes
+		is_adult = yes
+		over_max_demesne_size < 0
+		is_incapable = no
+
+		trigger_if = {
+			limit = { ai = yes }
+			NOT = { has_character_flag = obj_demesne }
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		demesne_size >= 3
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		if = {
+			limit = { has_character_flag = obj_demesne }
+
+			prestige = 25
+			set_character_flag = obj_demesne
+		}
+		else = {
+			change_stewardship = 1
+
+			if = {
+				limit = { independent = no }
+
+				opinion = {
+					name = opinion_happy
+					who = liege
+					years = 10
+				}
+			}
+		}
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			is_ruler = no
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		trigger = {
+			NOT = { trait = content }
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 100
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 250
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 400
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 10.0
+			trait = ambitious
+		}
+	}
+}
+
+obj_increase_demesne_3 = {
+	type = character
+
+	potential = {
+		is_playable = yes
+		demesne_size = 3
+		NOT = { demesne_size = 4 }
+		is_landed = yes
+		is_adult = yes
+		over_max_demesne_size < 0
+		is_incapable = no
+
+		trigger_if = {
+			limit = { ai = yes }
+			NOT = { has_character_flag = obj_demesne }
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		demesne_size >= 4
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		if = {
+			limit = { has_character_flag = obj_demesne }
+
+			prestige = 25
+			set_character_flag = obj_demesne
+		}
+		else = {
+			change_stewardship = 1
+
+			if = {
+				limit = { independent = no }
+
+				opinion = {
+					name = opinion_happy
+					who = liege
+					years = 10
+				}
+			}
+		}
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			is_ruler = no
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		trigger = {
+			NOT = { trait = content }
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 100
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 250
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 400
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 10.0
+			trait = ambitious
+		}
+	}
+}
+
+obj_increase_demesne_4 = {
+	type = character
+
+	potential = {
+		is_playable = yes
+		demesne_size = 4
+		NOT = { demesne_size = 5 }
+		is_landed = yes
+		is_adult = yes
+		over_max_demesne_size < 0
+		is_incapable = no
+
+		trigger_if = {
+			limit = { ai = yes }
+			NOT = { has_character_flag = obj_demesne }
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		demesne_size >= 5
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		if = {
+			limit = { has_character_flag = obj_demesne }
+
+			prestige = 25
+			set_character_flag = obj_demesne
+		}
+		else = {
+			change_stewardship = 1
+
+			if = {
+				limit = { independent = no }
+
+				opinion = {
+					name = opinion_happy
+					who = liege
+					years = 10
+				}
+			}
+		}
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			is_ruler = no
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		trigger = {
+			NOT = { trait = content }
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 100
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 250
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 400
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 10.0
+			trait = ambitious
+		}
+	}
+}
+
+obj_increase_demesne_5 = {
+	type = character
+
+	potential = {
+		is_playable = yes
+		demesne_size = 5
+		NOT = { demesne_size = 6 }
+		is_landed = yes
+		is_adult = yes
+		over_max_demesne_size < 0
+		is_incapable = no
+
+		trigger_if = {
+			limit = { ai = yes }
+			NOT = { has_character_flag = obj_demesne }
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		demesne_size >= 6
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		if = {
+			limit = { has_character_flag = obj_demesne }
+
+			prestige = 25
+			set_character_flag = obj_demesne
+		}
+		else = {
+			change_stewardship = 1
+
+			if = {
+				limit = { independent = no }
+
+				opinion = {
+					name = opinion_happy
+					who = liege
+					years = 10
+				}
+			}
+		}
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			is_ruler = no
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		trigger = {
+			NOT = { trait = content }
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 100
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 250
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 400
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 10.0
+			trait = ambitious
+		}
+	}
+}
+
+obj_increase_demesne_6 = {
+	type = character
+
+	potential = {
+		is_playable = yes
+		demesne_size = 6
+		NOT = { demesne_size = 7 }
+		is_landed = yes
+		is_adult = yes
+		over_max_demesne_size < 0
+		is_incapable = no
+
+		trigger_if = {
+			limit = { ai = yes }
+			NOT = { has_character_flag = obj_demesne }
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		demesne_size >= 7
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		if = {
+			limit = { has_character_flag = obj_demesne }
+
+			prestige = 25
+			set_character_flag = obj_demesne
+		}
+		else = {
+			change_stewardship = 1
+
+			if = {
+				limit = { independent = no }
+
+				opinion = {
+					name = opinion_happy
+					who = liege
+					years = 10
+				}
+			}
+		}
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			is_ruler = no
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		trigger = {
+			NOT = { trait = content }
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 100
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 250
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 400
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 10.0
+			trait = ambitious
+		}
+	}
+}
+
+obj_increase_demesne_7 = {
+	type = character
+
+	potential = {
+		is_playable = yes
+		demesne_size = 7
+		NOT = { demesne_size = 8 }
+		is_landed = yes
+		is_adult = yes
+		over_max_demesne_size < 0
+		is_incapable = no
+
+		trigger_if = {
+			limit = { ai = yes }
+			NOT = { has_character_flag = obj_demesne }
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		demesne_size >= 8
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		if = {
+			limit = { has_character_flag = obj_demesne }
+
+			prestige = 25
+			set_character_flag = obj_demesne
+		}
+		else = {
+			change_stewardship = 1
+
+			if = {
+				limit = { independent = no }
+
+				opinion = {
+					name = opinion_happy
+					who = liege
+					years = 10
+				}
+			}
+		}
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			is_ruler = no
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		trigger = {
+			NOT = { trait = content }
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 100
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 250
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 400
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 10.0
+			trait = ambitious
+		}
+	}
+}
+
+obj_increase_demesne_8 = {
+	type = character
+
+	potential = {
+		is_playable = yes
+		demesne_size = 8
+		NOT = { demesne_size = 9 }
+		is_landed = yes
+		is_adult = yes
+		over_max_demesne_size < 0
+		is_incapable = no
+
+		trigger_if = {
+			limit = { ai = yes }
+			NOT = { has_character_flag = obj_demesne }
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		demesne_size >= 9
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		if = {
+			limit = { has_character_flag = obj_demesne }
+
+			prestige = 25
+			set_character_flag = obj_demesne
+		}
+		else = {
+			change_stewardship = 1
+
+			if = {
+				limit = { independent = no }
+
+				opinion = {
+					name = opinion_happy
+					who = liege
+					years = 10
+				}
+			}
+		}
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			is_ruler = no
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		trigger = {
+			NOT = { trait = content }
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 100
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 250
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 400
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 10.0
+			trait = ambitious
+		}
+	}
+}
+
+obj_increase_demesne_9 = {
+	type = character
+
+	potential = {
+		is_playable = yes
+		demesne_size = 9
+		NOT = { demesne_size = 10 }
+		is_landed = yes
+		is_adult = yes
+		over_max_demesne_size < 0
+		is_incapable = no
+
+		trigger_if = {
+			limit = { ai = yes }
+			NOT = { has_character_flag = obj_demesne }
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		demesne_size >= 10
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		if = {
+			limit = { has_character_flag = obj_demesne }
+
+			prestige = 25
+			set_character_flag = obj_demesne
+		}
+		else = {
+			change_stewardship = 1
+
+			if = {
+				limit = { independent = no }
+
+				opinion = {
+					name = opinion_happy
+					who = liege
+					years = 10
+				}
+			}
+		}
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			is_ruler = no
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		trigger = {
+			NOT = { trait = content }
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 100
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 250
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 400
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 10.0
+			trait = ambitious
+		}
+	}
+}
+
+obj_become_duke = {
+	type = character
+
+	potential = {
+		is_playable = yes
+		real_tier = COUNT
+		is_adult = yes
+		is_incapable = no
+		NOT = { trait = content }
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		higher_real_tier_than = COUNT
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		prestige = 50
+	}
+
+	abort = {
+		OR = {
+			is_ruler = no
+			lower_real_tier_than = COUNT
+			is_incapable = yes
+			trait = content
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 20
+
+		mult_modifier = {
+			factor = 1.5
+			demesne_size >= 2
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			demesne_size >= 3
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			demesne_size >= 4
+		}
+
+		mult_modifier = {
+			factor = 10
+			any_claim = { real_tier = DUKE }
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = ambitious
+		}
+	}
+}
+
+obj_become_multiduke = {
+	type = character
+
+	potential = {
+		is_playable = yes
+		real_tier = DUKE
+		is_landed = yes
+		num_of_duke_titles == 1
+		is_adult = yes
+		is_incapable = no
+		NOT = { trait = content }
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		num_of_duke_titles >= 2
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		prestige = 100
+	}
+
+	abort = {
+		OR = {
+			is_ruler = no
+			lower_real_tier_than = DUKE
+			is_incapable = yes
+			trait = content
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 20
+
+		mult_modifier = {
+			factor = 1.5
+			demesne_size >= 2
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			demesne_size >= 3
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			demesne_size >= 4
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			demesne_size >= 5
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = ambitious
+		}
+	}
+}
+
+obj_become_emperor = {
+	type = character
+
+	potential = {
+		ai = no
+		is_landed = yes
+		lower_real_tier_than = EMPEROR
+		is_adult = yes
+		is_incapable = no
+		NOT = { has_character_flag = obj_increase_title_3 }
+
+		OR = {
+			real_tier = KING
+			any_claim = { real_tier = EMPEROR }
+
+			liege = {
+				primary_title = {
+					real_tier = EMPEROR
+
+					OR = {
+						has_law = succ_feudal_elective
+						has_law = succ_hre_elective
+						has_law = succ_byzantine_elective
+					}
+
+					any_elector_character = {
+						character = ROOT
+					}
+				}
+			}
+		}
+	}
+
+	creation_effect = {
+	}
+
+	success = {
+		real_tier = EMPEROR
+	}
+
+	effect = {
+		prestige = 500
+		set_character_flag = obj_increase_title_3
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			is_ruler = no
+		}
+	}
+
+	abort_effect = {
+	}
+
+	chance = {
+		factor = 0
+	}
+}
+
+obj_go_crusade = {
+	type = character
+
+	potential = {
+		ai = no
+		uses_new_crusade = yes
+		is_adult = yes
+		prisoner = no
+		is_incapable = no
+
+		OR = {
+			is_preparing_crusade = yes
+			has_called_crusade = yes
+		}
+
+		NOR = {
+			has_character_flag = obj_go_crusade
+			trait = crusader
+		}
+	}
+
+	creation_effect = {
+	}
+
+	success = {
+		trait = crusader
+	}
+
+	effect = {
+		pf_tradition_plus2_effect = yes
+
+		hidden_effect = {
+			change_variable = {
+				which = lifestyle_martial
+				value = 1
+			}
+		}
+
+		piety = 100
+		set_character_flag = obj_go_crusade
+	}
+
+	abort = {
+		OR = {
+			is_ruler = no
+			prisoner = yes
+			is_incapable = yes
+			uses_new_crusade = no
+
+			AND = {
+				has_called_crusade = no
+				is_preparing_crusade = no
+			}
+		}
+	}
+
+	abort_effect = {
+	}
+
+	chance = {
+		factor = 0
+	}
+}
+
+obj_go_jihad = {
+	type = character
+
+	potential = {
+		ai = no
+		religion_group = muslim
+		has_called_crusade = yes
+		prisoner = no
+		is_adult = yes
+		is_incapable = no
+
+		NOR = {
+			has_character_flag = obj_go_crusade
+			trait = mujahid
+			trait = decadent
+		}
+	}
+
+	creation_effect = {
+	}
+
+	success = {
+		trait = mujahid
+	}
+
+	effect = {
+		pf_tradition_plus2_effect = yes
+
+		hidden_effect = {
+			change_variable = {
+				which = lifestyle_martial
+				value = 1
+			}
+		}
+
+		piety = 100
+		set_character_flag = obj_go_crusade
+	}
+
+	abort = {
+		OR = {
+			is_ruler = no
+			prisoner = yes
+			is_incapable = yes
+			trait = decadent
+			has_called_crusade = no
+			NOT = { religion_group = muslim }
+		}
+	}
+
+	abort_effect = {
+		set_character_flag = obj_aborted
+		clr_character_flag = obj_check
+	}
+
+	chance = {
+		factor = 0
+	}
+}
+
+obj_break_out_of_prison = {
+	type = character
+
+	potential = {
+		prisoner = yes
+	}
+
+	allow = {
+		is_adult = yes
+		is_incapable = no
+	}
+
+	creation_effect = {
+	}
+
+	success = {
+		prisoner = no
+	}
+
+	effect = {
+		change_intrigue = 1
+		set_character_flag = obj_break_out_of_prison
+	}
+
+	abort = {
+		is_incapable = yes
+	}
+
+	abort_effect = {
+	}
+
+	chance = {
+		factor = 10000
+	}
+}
+
+obj_win_a_war = {
+	type = character
+
+	potential = {
+		is_ruler = yes
+		is_adult = yes
+		war = no
+		prisoner = no
+		is_incapable = no
+		NOT = { has_character_modifier = victory_timer }
+
+		trigger_if = {
+			limit = { ai = yes }
+			NOT = { has_character_flag = obj_win_a_war }
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+	success = {
+		has_character_modifier = victory_timer
+	}
+
+	effect = {
+		hidden_effect = {
+			change_variable = {
+				which = lifestyle_martial
+				value = 1
+			}
+
+			if = {
+				limit = { ai = yes }
+				remove_character_modifier = ai_objective_timer
+			}
+		}
+
+		pf_glory_plus2_effect = yes
+
+		if = {
+			limit = { has_character_flag = obj_win_a_war }
+
+			prestige = 25
+			set_character_flag = obj_win_a_war
+		}
+		else = {
+			change_martial = 1
+			prestige = 50
+		}
+	}
+
+	abort = {
+		OR = {
+			is_ruler = no
+			prisoner = yes
+			is_incapable = yes
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 100
+
+		trigger = {
+			independent = yes
+			NOT = { trait = craven }
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			is_female = yes
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			is_strong_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 10
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 15
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			martial >= 20
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			martial < 5
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			martial < 3
+		}
+	}
+}
+
+obj_convert_a_province = {
+	type = character
+
+	potential = {
+		is_ruler = yes
+		is_adult = yes
+		war = no
+		is_incapable = no
+		NOT = { has_character_modifier = convert_province_timer }
+
+		trigger_if = {
+			limit = { ai = yes }
+			NOT = { has_character_flag = obj_convert_a_province }
+		}
+
+		any_realm_province = {
+			NOT = { religion = ROOT }
+			held_under_PREV = yes
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		has_character_modifier = convert_province_timer
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		pf_tradition_plus2_effect = yes
+
+		if = {
+			limit = { has_character_flag = obj_convert_a_province }
+
+			piety = 25
+			set_character_flag = obj_convert_a_province
+		}
+		else = {
+			change_learning = 1
+			piety = 50
+		}
+	}
+
+	abort = {
+		OR = {
+			is_ruler = no
+			is_incapable = yes
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 100
+
+		trigger = {
+			NOT = { trait = cynical }
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = crusader
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			learning >= 10
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			learning >= 15
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			learning >= 20
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			learning < 5
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			learning < 3
+		}
+	}
+}
+
+obj_adopt_a_lifestyle = {
+	type = character
+
+	potential = {
+		lifestyle_traits < 1
+		age >= 25
+		prisoner = no
+		is_incapable = no
+
+		OR = {
+			diplomacy >= 5
+			martial >= 5
+			intrigue >= 5
+			stewardship >= 5
+			learning >= 5
+		}
+
+		NOR = {
+			has_character_flag = obj_adopt_a_lifestyle
+			has_character_flag = lifestyle_pick
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		mult_modifier = {
+			factor = 1.5
+			trait = diligent
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = slothful
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			is_ruler = yes
+		}
+	}
+
+	success = {
+		lifestyle_traits >= 1
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		prestige = 50
+		set_character_flag = obj_adopt_a_lifestyle
+	}
+
+	abort = {
+		OR = {
+			prisoner = yes
+			is_incapable = yes
+
+			AND = {
+				diplomacy < 5
+				martial < 5
+				intrigue < 5
+				stewardship < 5
+				learning < 5
+			}
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+}
+
+obj_gain_honorary_title = {
+	type = character
+
+	potential = {
+		is_adult = yes
+		independent = no
+		prisoner = no
+		is_incapable = no
+
+		liege = {
+			OR = {
+				is_feudal = yes
+				is_tribal = yes
+			}
+		}
+
+		trigger_if = {
+			limit = { ai = yes }
+			NOT = { has_character_flag = obj_gain_honorary_title }
+		}
+
+		NOR = { # TODO: Update list below
+			has_character_modifier = planning_claimant_adventure
+			has_minor_title = title_keeper_of_swans
+			has_minor_title = title_master_of_the_horse
+			has_minor_title = title_master_of_the_hunt
+			has_minor_title = title_high_almoner
+			has_minor_title = title_cupbearer
+			has_minor_title = title_seneschal
+			has_minor_title = title_despot
+			has_minor_title = title_sebastokrator
+			has_minor_title = title_kouropalates
+			has_minor_title = title_caesar
+			has_minor_title = title_anthypatos
+			has_minor_title = title_court_dwarf
+			has_minor_title = title_court_jester
+			has_minor_title = title_food_taster
+			has_minor_title = title_court_calligrapher
+			has_minor_title = title_court_musician
+			has_minor_title = title_court_poet
+			has_minor_title = title_chief_architect
+			has_minor_title = title_imperial_eunuch
+			has_minor_title = title_high_judge
+			has_minor_title = title_high_admiral
+			has_minor_title = title_state_inquisitor
+			has_minor_title = title_volva
+			has_minor_title = title_lawspeaker
+			has_minor_title = title_drottseti
+			has_minor_title = title_court_skald
+			has_minor_title = title_marksman
+			has_minor_title = title_hirdman
+			has_minor_title = title_baghatur
+			has_minor_title = title_cherbi
+			has_minor_title = title_darkhan
+			has_minor_title = title_noyan
+			has_minor_title = title_shahrwaraz
+			has_minor_title = title_kardarigan
+			has_minor_title = title_shahin
+			has_minor_title = title_pushtigban_salar
+			has_minor_title = title_spahbod
+			has_minor_title = title_eran_ambaragbed
+			has_minor_title = title_champion
+			has_minor_title = title_master_of_the_blade
+			has_minor_title = title_master_of_the_bow
+			has_minor_title = title_venerable_elder
+			has_minor_title = title_yabgu
+			has_minor_title = title_ishad
+			has_minor_title = title_kundur
+			has_minor_title = title_vestalis
+			has_minor_title = title_vestalis_maxima
+			has_minor_title = title_pagan_wizard
+			has_minor_title = title_censor
+			has_minor_title = title_aedile
+			has_minor_title = title_magister_equitum
+			has_minor_title = title_flamen_dialis
+			has_minor_title = title_flaminica_dialis
+			has_minor_title = title_flamen_martialis
+			has_minor_title = title_flaminica_martialis
+			has_minor_title = title_flamen_quirinalis
+			has_minor_title = title_flaminica_quirinalis
+			has_minor_title = title_uchelwr
+			has_minor_title = title_laoch
+			has_minor_title = title_royal_champion
+			has_minor_title = title_vates
+			has_minor_title = title_court_bard
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		custom_tooltip = {
+			text = custom_minor_title
+
+			OR = {
+				has_minor_title = title_keeper_of_swans
+				has_minor_title = title_master_of_the_horse
+				has_minor_title = title_master_of_the_hunt
+				has_minor_title = title_high_almoner
+				has_minor_title = title_cupbearer
+				has_minor_title = title_seneschal
+				has_minor_title = title_despot
+				has_minor_title = title_sebastokrator
+				has_minor_title = title_kouropalates
+				has_minor_title = title_caesar
+				has_minor_title = title_anthypatos
+				has_minor_title = title_court_dwarf
+				has_minor_title = title_court_calligrapher
+				has_minor_title = title_court_musician
+				has_minor_title = title_court_poet
+				has_minor_title = title_chief_architect
+				has_minor_title = title_imperial_eunuch
+				has_minor_title = title_high_judge
+				has_minor_title = title_high_admiral
+				has_minor_title = title_state_inquisitor
+				has_minor_title = title_volva
+				has_minor_title = title_lawspeaker
+				has_minor_title = title_drottseti
+				has_minor_title = title_court_skald
+				has_minor_title = title_marksman
+				has_minor_title = title_hirdman
+				has_minor_title = title_baghatur
+				has_minor_title = title_cherbi
+				has_minor_title = title_darkhan
+				has_minor_title = title_noyan
+				has_minor_title = title_shahrwaraz
+				has_minor_title = title_kardarigan
+				has_minor_title = title_shahin
+				has_minor_title = title_pushtigban_salar
+				has_minor_title = title_spahbod
+				has_minor_title = title_eran_ambaragbed
+				has_minor_title = title_champion
+				has_minor_title = title_master_of_the_blade
+				has_minor_title = title_master_of_the_bow
+				has_minor_title = title_venerable_elder
+				has_minor_title = title_yabgu
+				has_minor_title = title_ishad
+				has_minor_title = title_kundur
+				has_minor_title = title_vestalis
+				has_minor_title = title_vestalis_maxima
+				has_minor_title = title_pagan_wizard
+				has_minor_title = title_censor
+				has_minor_title = title_aedile
+				has_minor_title = title_magister_equitum
+				has_minor_title = title_flamen_dialis
+				has_minor_title = title_flaminica_dialis
+				has_minor_title = title_flamen_martialis
+				has_minor_title = title_flaminica_martialis
+				has_minor_title = title_flamen_quirinalis
+				has_minor_title = title_flaminica_quirinalis
+				has_minor_title = title_uchelwr
+				has_minor_title = title_laoch
+				has_minor_title = title_royal_champion
+				has_minor_title = title_vates
+				has_minor_title = title_court_bard
+			}
+		}
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		if = {
+			limit = { has_character_flag = obj_gain_honorary_title }
+			prestige = 25
+		}
+		else = {
+			prestige = 50
+			set_character_flag = obj_gain_honorary_title
+		}
+
+		opinion = {
+			name = opinion_honorary_title
+			who = liege
+			years = 10
+		}
+
+	}
+
+	abort = {
+		OR = {
+			has_character_modifier = planning_claimant_adventure
+			prisoner = yes
+			is_incapable = yes
+			independent = yes
+
+			liege = {
+				is_feudal = no
+				is_tribal = no
+			}
+
+			has_minor_title = title_court_jester
+			has_minor_title = title_food_taster
+
+			AND = {
+				ai = yes
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		mult_modifier = {
+			factor = 0.1
+			is_female = yes
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = proud
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			is_ruler = yes
+		}
+	}
+}
+
+obj_gain_estates_1 = {
+	type = character
+
+	potential = {
+		is_adult = yes
+		is_ruler = no
+		is_incapable = no
+		prisoner = no
+
+		liege = {
+			is_nomadic = no
+			is_tribal = no
+		}
+
+		NOR = {
+			trait = monk
+			trait = nun
+			trait = eunuch
+			has_character_modifier = estates_1
+			has_character_flag = flag_denied_estates
+			has_character_flag = obj_gain_estates
+			has_minor_title = title_guru
+			any_spouse = { is_ruler = yes }
+		}
+
+		trigger_if = {
+			limit = { is_female = yes }
+
+			OR = {
+				has_law = true_cognatic_succession
+				has_law = enatic_cognatic_succession
+				has_law = enatic_succession
+
+				AND = {
+					is_close_relative = liege
+					has_law = cognatic_succession
+				}
+			}
+		}
+		trigger_else = {
+			NOT = { has_law = enatic_succession }
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		has_character_modifier = estates_1
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		set_character_flag = obj_gain_estates
+		prestige = 50
+
+		opinion = {
+			name = opinion_estates_obj
+			who = liege
+			years = 10
+		}
+	}
+
+	abort = {
+		OR = {
+			has_character_flag = flag_denied_estates
+			prisoner = yes
+			is_incapable = yes
+			is_ruler = yes
+			trait = monk
+			trait = nun
+			trait = eunuch
+			has_minor_title = title_guru
+			any_spouse = { is_ruler = yes }
+
+			liege = {
+				OR = {
+					is_tribal = yes
+					is_nomadic = yes
+				}
+			}
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+
+			trigger_if = {
+				limit = { is_female = yes }
+
+				OR = {
+					has_law = true_cognatic_succession
+					has_law = enatic_cognatic_succession
+					has_law = enatic_succession
+
+					AND = {
+						is_close_relative = liege
+						has_law = cognatic_succession
+					}
+				}
+			}
+			trigger_else = {
+				has_law = enatic_succession
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 100
+
+		trigger = {
+			is_primary_heir = no
+		}
+
+		mult_modifier = {
+			factor = 0.1
+
+			has_living_children = no
+			NOT = { is_close_relative = liege }
+		}
+
+		mult_modifier = {
+			factor = 0.25
+
+			trigger_if = {
+				limit = { is_female = yes }
+
+				OR = {
+					has_law = agnatic_succession
+					has_religion_feature = religion_patriarchal
+				}
+			}
+			trigger_else = {
+				OR = {
+					has_law = enatic_succession
+					has_religion_feature = religion_matriarchal
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			liege = { dynasty = ROOT }
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			is_close_relative = liege
+		}
+
+		mult_modifier = {
+			factor = 5.0
+			trait = decadent
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = proud
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = charitable
+		}
+	}
+}
+
+obj_befriend_liege = {
+	type = character
+
+	potential = {
+		ai = no
+		same_sex = liege
+		is_adult = yes
+		is_incapable = no
+		independent = no
+
+		NOR = {
+			is_married = liege
+			is_lover = liege
+			is_friend = liege
+			is_rival = liege
+			war_with = liege
+		}
+
+		liege = {
+			is_adult = yes
+			is_incapable = no
+			num_of_friends < 3
+			opinion = { who = ROOT value >= -25 }
+			opinion = { who = ROOT value < 75 }
+		}
+	}
+
+	creation_effect = {
+	}
+
+	success = {
+		liege = {
+			opinion = {
+				who = ROOT
+				value >= 75
+			}
+		}
+	}
+
+	effect = {
+		add_friend = liege
+
+		if = {
+			limit = { has_character_flag = obj_befriend_liege }
+			prestige = 25
+		}
+		else = {
+			prestige = 100
+			set_character_flag = obj_befriend_liege
+		}
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			independent = yes
+
+			liege = {
+				OR = {
+					war_with = ROOT
+					is_friend = ROOT
+					is_rival = ROOT
+					is_lover = ROOT
+					is_married = ROOT
+					is_incapable = yes
+
+					trigger_if = {
+						limit = { num_of_friends >= 2 }
+						NOT = { is_friend = ROOT }
+					}
+				}
+			}
+
+			opinion = {
+				who = ROOT
+				value < -50
+			}
+
+			reverse_opinion = {
+				who = liege
+				value < -50
+			}
+		}
+	}
+
+	abort_effect = {
+	}
+
+	chance = {
+		factor = 0
+	}
+}
+
+obj_befriend_top_liege = {
+	type = character
+
+	potential = {
+		ai = no
+		same_sex = top_liege
+		is_adult = yes
+		is_incapable = no
+		independent = no
+
+		NOR = {
+			vassal_of = top_liege
+			is_married = top_liege
+			is_lover = top_liege
+			is_friend = top_liege
+			is_rival = top_liege
+			war_with = top_liege
+		}
+
+		top_liege = {
+			is_adult = yes
+			is_incapable = no
+			num_of_friends < 3
+			opinion = { who = ROOT value >= -25 }
+			opinion = { who = ROOT value < 75 }
+		}
+	}
+
+	success = {
+		top_liege = {
+			opinion = {
+				who = ROOT
+				value >= 75
+			}
+		}
+	}
+
+	effect = {
+		add_friend = top_liege
+
+		if = {
+			limit = { has_character_flag = obj_befriend_liege }
+			prestige = 25
+		}
+		else = {
+			prestige = 100
+			set_character_flag = obj_befriend_liege
+		}
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			independent = yes
+			vassal_of = top_liege
+			war_with = top_liege
+			is_friend = top_liege
+			is_rival = top_liege
+			is_lover = top_liege
+			is_married = top_liege
+
+			opinion = {
+				who = top_liege
+				value < -50
+			}
+
+			reverse_opinion = {
+				who = top_liege
+				value < -50
+			}
+		}
+	}
+
+	abort_effect = {
+	}
+
+	chance = {
+		factor = 0
+	}
+}
+
+obj_befriend_relhead = {
+	type = character
+
+	potential = {
+		ai = no
+		is_adult = yes
+		is_incapable = no
+
+		rightful_religious_head_scope = {
+			same_sex = ROOT
+			is_adult = yes
+			is_incapable = no
+			num_of_friends < 3
+			opinion = { who = ROOT value >= -25 }
+			opinion = { who = ROOT value < 75 }
+
+			NOR = {
+				is_liege_or_above_of = ROOT
+				is_married = ROOT
+				is_lover = ROOT
+				is_friend = ROOT
+				is_rival = ROOT
+				war_with = ROOT
+			}
+		}
+	}
+
+	success = {
+		rightful_religious_head_scope = {
+			opinion = {
+				who = ROOT
+				value >= 75
+			}
+		}
+	}
+
+	effect = {
+		rightful_religious_head_scope = {
+			show_scope_change = no
+
+			add_friend = ROOT
+		}
+
+		pf_tradition_plus2_effect = yes
+
+		if = {
+			limit = { has_character_flag = obj_befriend_relhead }
+			piety = 25
+		}
+		else = {
+			piety = 100
+			set_character_flag = obj_befriend_relhead
+		}
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			NOT = { rightful_religious_head_scope = { always = yes } }
+
+			rightful_religious_head_scope = {
+				OR = {
+					is_incapable = yes
+					is_opposite_sex = ROOT
+					war_with = ROOT
+					is_friend = ROOT
+					is_liege_or_above_of = ROOT
+					is_married = ROOT
+					is_rival = ROOT
+					is_lover = ROOT
+				}
+			}
+
+			rightful_religious_head_scope = {
+				OR = {
+					opinion = {
+						who = ROOT
+						value < -50
+					}
+
+					reverse_opinion = {
+						who = ROOT
+						value < -50
+					}
+				}
+			}
+		}
+	}
+
+	abort_effect = {
+	}
+
+	chance = {
+		factor = 0
+	}
+}
+
+obj_make_a_friend = {
+	type = character
+
+	potential = {
+		num_of_friends < 1
+		is_adult = yes
+		diplomacy >= 8
+		prisoner = no
+		is_incapable = no
+		practical_age < 70
+
+		NOR = {
+			trait = shy
+			has_character_flag = friend_ambition
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		num_of_friends >= 1
+	}
+
+	effect = {
+		hidden_effect = {
+			change_variable = {
+				which = lifestyle_diplomacy
+				value = 1
+			}
+
+			if = {
+				limit = { ai = yes }
+				remove_character_modifier = ai_objective_timer
+			}
+		}
+
+		change_diplomacy = 1
+		set_character_flag = friend_ambition
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			prisoner = yes
+			trait = shy
+			practical_age >= 70
+			diplomacy < 8
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 10
+
+		mult_modifier = {
+			factor = 2.0
+			trait = gregarious
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = kind
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = just
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			is_married = no
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = cruel
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = deceitful
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			practical_age >= 50
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			practical_age >= 55
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			practical_age >= 60
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			is_female = yes
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			is_ruler = no
+		}
+	}
+}
+
+obj_get_nick = {
+	type = character
+
+	potential = {
+		is_ruler = yes
+		has_nickname = no
+		prestige >= 500
+		is_adult = yes
+		prisoner = no
+		is_incapable = no
+
+		NOR = {
+			trait = humble
+			has_character_flag = got_ambition_nickname
+		}
+	}
+
+	chance = {
+		factor = 25
+
+		mult_modifier = {
+			factor = 2.0
+			prestige >= 1000
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			prestige >= 2000
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		has_nickname = yes
+	}
+
+	abort = {
+		OR = {
+			trait = humble
+			is_incapable = yes
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		set_character_flag = got_ambition_nickname
+		change_diplomacy = 1
+		prestige = 100
+	}
+}
+
+obj_change_nick = {
+	type = character
+
+	potential = {
+		ai = no
+		has_nickname = yes
+		prestige >= 500
+		is_adult = yes
+		prisoner = no
+		is_incapable = no
+
+		NOR = {
+			trait = humble
+			has_character_flag = gave_up_change_nick
+		}
+	}
+
+	creation_effect = {
+		prestige = -200
+	}
+
+	success = {
+		has_nickname = no
+	}
+
+	effect = {
+	}
+
+	abort = {
+		OR = {
+			prisoner = yes
+			is_incapable = yes
+			trait = humble
+			is_ruler = no
+			has_character_flag = gave_up_change_nick
+		}
+	}
+
+	abort_effect = {
+	}
+
+	chance = {
+		factor = 0
+	}
+}
+
+obj_spouse_councillor = {
+	type = character
+
+	potential = {
+		is_female = yes
+		is_married = yes
+		independent = no
+		prisoner = no
+		is_incapable = no
+
+		spouse = {
+			OR = {
+				martial >= 8
+				diplomacy >= 8
+				stewardship >= 8
+				intrigue >= 8
+				learning >= 8
+			}
+
+			is_councillor = no
+			independent = no
+			prisoner = no
+			is_incapable = no
+			is_female = no
+			NOT = { vassal_of = ROOT }
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		spouse = {
+			is_councillor = yes
+		}
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		prestige = 20
+	}
+
+	abort = {
+		OR = {
+			is_married = no
+			prisoner = yes
+			independent = yes
+			is_incapable = yes
+
+			spouse = {
+				OR = {
+					prisoner = yes
+					independent = yes
+					is_incapable = yes
+					vassal_of = ROOT
+				}
+			}
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 25
+
+		mult_modifier = {
+			factor = 2.0
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 1.25
+
+			spouse = {
+				OR = {
+					trait = intricate_webweaver
+					trait = charismatic_negotiator
+					trait = fortune_builder
+					trait = skilled_tactician
+					trait = scholarly_theologian
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.01
+			spouse = { is_dumb_trigger = yes }
+		}
+	}
+}
+
+obj_known_for_virtue = {
+	type = character
+
+	potential = {
+		is_ruler = yes
+		is_adult = yes
+		is_incapable = no
+		piety >= 0
+		piety < 500
+
+		NOR = {
+			trait = cruel
+			trait = impaler
+			trait = decadent
+			religion_group = indian_group
+			has_character_flag = obj_become_paragon_of_virtue
+			has_character_flag = known_for_virtue
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		piety >= 500
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		change_learning = 1
+		piety = 50
+		set_character_flag = known_for_virtue
+	}
+
+	abort = {
+		OR = {
+			is_ruler = no
+			is_incapable = yes
+			piety < 0
+			trait = cruel
+			trait = impaler
+			trait = decadent
+			religion_group = indian_group
+
+			trigger_if = {
+				limit  = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		trigger = {
+			piety > 100
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = patient
+		}
+
+		mult_modifier = {
+			factor = 0.01
+			lower_real_tier_than = KING
+		}
+
+		mult_modifier = {
+			factor = 10.0
+			has_education_learning_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 10.0
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 0.01
+			trait = cynical
+		}
+	}
+}
+
+obj_reign_20_years = {
+	type = character
+
+	potential = {
+		is_ruler = yes
+		ruled_years < 20
+		is_adult = yes
+		prisoner = no
+		is_incapable = no
+	}
+
+	chance = {
+		factor = 5
+
+		trigger = {
+			ruled_years >= 5
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			independent = no
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			ruled_years >= 10
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			ruled_years >= 15
+		}
+
+		mult_modifier = {
+			factor = 5.0
+			ruled_years >= 18
+		}
+	}
+
+	success = {
+		ruled_years >= 20
+	}
+
+	effect = {
+		change_stewardship = 1
+		prestige = 50
+	}
+
+	abort = {
+		OR = {
+			is_ruler = no
+			is_incapable = yes
+			prisoner = yes
+		}
+	}
+
+	abort_effect = {
+	}
+}
+
+obj_peace_10_year = {
+	type = character
+
+	potential = {
+		ai = no
+		is_adult = yes
+		prisoner = no
+		is_incapable = no
+		war = no
+
+		NOR = {
+			trait = ambitious
+			has_character_modifier = peace_declared_10_timer
+		}
+	}
+
+	creation_effect = {
+		add_character_modifier = {
+			name = peace_declared_10_timer
+			years = 10
+		}
+	}
+
+	success = {
+		NOT = { has_character_modifier = peace_declared_10_timer }
+	}
+
+	effect = {
+		change_stewardship = 1
+		piety = 50
+
+		if = {
+			limit = {
+				has_game_rule = {
+					name = defensive_pacts
+					value = on
+				}
+			}
+
+			if = {
+				limit = { infamy >= 50 }
+
+				random_list = {
+					1 = { change_infamy = { value = -20 localisation = PEACEFULL_RULERSHIP } }
+					5 = { change_infamy = { value = -15 localisation = PEACEFULL_RULERSHIP } }
+					9 = { change_infamy = { value = -10 localisation = PEACEFULL_RULERSHIP } }
+				}
+			}
+			else_if = {
+				limit = { infamy >= 10 }
+
+				random_list = {
+					1 = { change_infamy = { value = -10 localisation = PEACEFULL_RULERSHIP } }
+					5 = { change_infamy = { value = -5 localisation = PEACEFULL_RULERSHIP } }
+				}
+			}
+			else_if = {
+				limit = { infamy >= 2 }
+				change_infamy = { value = -2 localisation = PEACEFULL_RULERSHIP }
+			}
+			else = {
+				prestige = 250
+			}
+		}
+	}
+
+	abort = {
+		OR = {
+			war = yes
+			is_incapable = yes
+			prisoner = yes
+			trait = ambitious
+		}
+	}
+
+	abort_effect = {
+		remove_character_modifier = peace_declared_10_timer
+	}
+
+	chance = {
+		factor = 0
+	}
+}
+
+obj_great_council = {
+	type = character
+
+	potential = {
+		independent = yes
+		NOT = { has_character_flag = great_council_formed }
+		is_incapable = no
+		is_adult = yes
+		prisoner = no
+
+		OR = {
+			job_chancellor = { diplomacy >= 20 }
+			job_marshal = { martial >= 20 }
+			job_treasurer = { stewardship >= 20 }
+			job_spymaster = { intrigue >= 20 }
+			job_spiritual = { learning >= 20 }
+		}
+
+		NAND = {
+			job_chancellor = { diplomacy >= 20 }
+			job_marshal = { martial >= 20 }
+			job_treasurer = { stewardship >= 20 }
+			job_spymaster = { intrigue >= 20 }
+			job_spiritual = { learning >= 20 }
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		job_chancellor = { diplomacy >= 20 }
+		job_marshal = { martial >= 20 }
+		job_treasurer = { stewardship >= 20 }
+		job_spymaster = { intrigue >= 20 }
+		job_spiritual = { learning >= 20 }
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		prestige = 200
+		set_character_flag = great_council_formed
+	}
+
+	abort = {
+		OR = {
+			is_ruler = no
+			is_incapable = yes
+			independent = no
+			prisoner = yes
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2.0
+			ruled_years = 20
+		}
+	}
+}
+
+obj_civilize_province = {
+	type = character
+
+	potential = {
+		is_ruler = yes
+		is_adult = yes
+		prisoner = no
+		is_incapable = no
+
+		any_realm_province = {
+			NOR = {
+				culture = ROOT
+				culture = owner
+			}
+
+			held_under_PREV = yes
+		}
+
+		NOR = {
+			has_character_flag = civilized_province
+			has_law = culture_conversion_0
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+			add_character_modifier = {
+				name = "ai_objective_timer"
+				duration = 1825
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		has_character_flag = civilized_province
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		if = {
+			limit = { NOT = { has_character_flag = already_civilized_province} }
+
+			change_stewardship = 1
+			set_character_flag = already_civilized_province
+		}
+
+		prestige = 100
+		clr_character_flag = civilized_province
+	}
+
+	abort = {
+		OR = {
+			NOR = {
+				has_character_flag = civilized_province
+
+				any_realm_province = {
+					NOR = {
+						culture = ROOT
+						culture = owner
+					}
+
+					held_under_PREV = yes
+				}
+			}
+
+			is_incapable = yes
+			prisoner = yes
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 5
+	}
+}
+
+obj_be_legitimized = {
+	type = character
+
+	potential = {
+		trait = bastard
+		religion_group = christian
+		is_adult = yes
+		practical_age < 30
+		prisoner = no
+		is_incapable = no
+		is_dumb_trigger = no
+
+		trigger_if = {
+			limit = { is_ruler = yes }
+
+			is_theocracy = no
+
+			NOR = {
+				trait = nun
+				trait = monk
+			}
+		}
+
+		NOR = {
+			any_liege = { holy_order = yes }
+			has_character_flag = refused_legitimacy_attempt
+		}
+
+		real_father = {
+			is_alive = yes
+			is_liege_or_above_of = ROOT
+
+			NOT = {
+				reverse_has_opinion_modifier = {
+					name = denounced_child
+					who = ROOT
+				}
+			}
+		}
+
+		NOR = {
+			trait = content
+			trait = humble
+			trait = craven
+		}
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		NOT = { trait = bastard }
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+		change_intrigue = 1
+		prestige = 50
+	}
+
+	abort = {
+		OR = {
+			real_father = {
+				NAND = {
+					is_alive = yes
+					is_liege_or_above_of = ROOT
+
+					NOT = {
+						reverse_has_opinion_modifier = {
+							name = denounced_child
+							who = ROOT
+						}
+					}
+				}
+			}
+
+			practical_age >= 45
+			is_incapable = yes
+			prisoner = yes
+			trait = content
+			trait = humble
+			trait = craven
+			trait = nun
+			trait = monk
+			has_character_flag = refused_legitimacy_attempt
+			any_liege = { holy_order = yes }
+			NOT = { religion_group = christian }
+
+			trigger_if = {
+				limit = { is_ruler = yes }
+				is_theocracy = yes
+			}
+
+			AND = {
+				ai = yes
+				is_female = yes
+				is_married = yes
+				spouse = { is_ruler = yes }
+			}
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 50
+
+		trigger = {
+			trigger_if = {
+				limit = {
+					is_ruler = no
+					is_female = yes
+					is_married = yes
+				}
+
+				NOT = {
+					any_spouse = { is_ruler = yes }
+				}
+			}
+
+			trigger_if = {
+				limit = { is_ruler = yes }
+
+				current_heir = {
+					NAND = {
+						is_child_of = ROOT
+						dynasty = ROOT
+					}
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.1
+
+			trigger_if = {
+				limit = { is_female = yes }
+				has_law = agnatic_succession
+			}
+			trigger_else = {
+				has_law = enatic_succession
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = patient
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = trusting
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = shy
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			NOT = { religion = real_father }
+		}
+
+		mult_modifier = {
+			factor = 5
+
+			is_female = no
+
+			real_father = {
+				NOT = {
+					any_child = {
+						is_older_than = ROOT
+						has_inheritance_blocker = no
+					}
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 5
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = proud
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = brave
+		}
+	}
+}
+
+obj_druze_esoteric_learning = {
+	type = character
+
+	potential = {
+		religion = druze
+		trait = druze_juhhal
+		learning >= 8
+		prisoner = no
+		is_incapable = no
+		NOT = { trait = cynical }
+	}
+
+	creation_effect = {
+		if = {
+			limit = { ai = yes }
+
+			add_character_modifier = {
+				name = ai_objective_timer
+				years = 5
+				hidden = yes
+			}
+		}
+	}
+
+	success = {
+		trait = druze_uqqal
+	}
+
+	effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+
+        piety = 100
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			prisoner = yes
+			trait = cynical
+			NOT = { religion = druze }
+			learning < 8
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		if = {
+			limit = { ai = yes }
+			remove_character_modifier = ai_objective_timer
+		}
+	}
+
+	chance = {
+		factor = 5
+
+		trigger = {
+			practical_age >= 25
+
+			OR = {
+				has_education_learning_trigger = yes
+				trait = zealous
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			practical_age <= 35
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			is_female = yes
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = detached_priest
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = dutiful_cleric
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			trait = scholarly_theologian
+		}
+
+		mult_modifier = {
+			factor = 5
+			trait = mastermind_theologian
+		}
+	}
+}
+
+obj_become_saint = {
+	type = character
+
+	potential = {
+		NOT = { has_dlc = "Holy Fury" }
+		# Not sure this needs the DLC clause when all this is about is "putting yourself in the best position to become a saint?"
+		religion_group = christian
+		is_adult = yes
+		prisoner = no
+		is_heretic = no
+		is_incapable = no
+		rightful_religious_head_scope = { always = yes }
+
+		trigger_if = {
+			limit = { is_theocracy = yes }
+			piety >= 0
+		}
+		trigger_else = {
+			piety >= 100
+		}
+
+		trigger_if = {
+			limit = { trait = possessed }
+			has_character_modifier = voice_of_jesus
+		}
+
+		NOR = {
+			trait = cynical
+			trait = lunatic
+			trait = excommunicated
+			trait = paragon
+			trait = inbred
+			trait = imbecile
+			trait = bad_priest_christian
+			has_character_flag = failed_become_saint
+		}
+	}
+
+	creation_effect = {
+		character_event = { id = Plus.2610 }
+	}
+
+	success = {
+		trait = paragon
+	}
+
+	effect = {
+		piety = 1000
+
+		hidden_effect = {
+			set_variable = {
+				which = theosis_ambition
+				value = 0
+			}
+
+			clr_character_flag = sainthood_built_church
+			clr_character_flag = sainthood_treat_sick
+			clr_character_flag = sainthood_heal_sick
+			clr_character_flag = sainthood_visit_ascetic
+			clr_character_flag = sainthood_take_vows
+			clr_character_flag = sainthood_too_much_wealth
+			clr_character_flag = sainthood_stigmata
+			clr_character_flag = sainthood_priest_support
+			clr_character_flag = sainthood_priest_doubt
+			clr_character_flag = sainthood_piety1
+			clr_character_flag = sainthood_piety2
+			clr_character_flag = sainthood_piety3
+			clr_character_flag = sainthood_piety4
+			clr_character_flag = sainthood_high_learning
+			clr_character_flag = sainthood_high_diplomacy
+			clr_character_flag = sainthood_high_martial
+			clr_character_flag = sainthood_mystic
+			clr_character_flag = sainthood_impaler
+			clr_character_flag = sainthood_chaste
+			clr_character_flag = sainthood_celibate
+			clr_character_flag = sainthood_charitable
+			clr_character_flag = sainthood_kind
+			clr_character_flag = sainthood_humble
+			clr_character_flag = sainthood_honest
+			clr_character_flag = sainthood_just
+			clr_character_flag = sainthood_theologian
+			clr_character_flag = sainthood_voice_of_jesus
+		}
+	}
+
+	abort = {
+		OR = {
+			prisoner = yes
+			is_heretic = yes
+			is_incapable = yes
+			trait = cynical
+			trait = lunatic
+			trait = excommunicated
+			trait = bad_priest_christian
+			has_character_flag = failed_become_saint
+
+			trigger_if = {
+				limit = { trait = possessed }
+				NOT = { has_character_modifier = voice_of_jesus }
+			}
+
+			NOT = { religion_group = christian }
+			NOT = { rightful_religious_head_scope = { always = yes } }
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { has_character_modifier = ai_objective_timer }
+			}
+		}
+	}
+
+	abort_effect = {
+		piety = -100
+
+		hidden_effect = {
+			set_variable = {
+				which = theosis_ambition
+				value = 0
+			}
+
+			clr_character_flag = sainthood_built_church
+			clr_character_flag = sainthood_treat_sick
+			clr_character_flag = sainthood_heal_sick
+			clr_character_flag = sainthood_visit_ascetic
+			clr_character_flag = sainthood_take_vows
+			clr_character_flag = sainthood_too_much_wealth
+			clr_character_flag = sainthood_stigmata
+			clr_character_flag = sainthood_priest_support
+			clr_character_flag = sainthood_priest_doubt
+			clr_character_flag = sainthood_piety1
+			clr_character_flag = sainthood_piety2
+			clr_character_flag = sainthood_piety3
+			clr_character_flag = sainthood_piety4
+			clr_character_flag = sainthood_high_learning
+			clr_character_flag = sainthood_high_diplomacy
+			clr_character_flag = sainthood_high_martial
+			clr_character_flag = sainthood_mystic
+			clr_character_flag = sainthood_impaler
+			clr_character_flag = sainthood_chaste
+			clr_character_flag = sainthood_celibate
+			clr_character_flag = sainthood_charitable
+			clr_character_flag = sainthood_kind
+			clr_character_flag = sainthood_humble
+			clr_character_flag = sainthood_honest
+			clr_character_flag = sainthood_just
+			clr_character_flag = sainthood_theologian
+			clr_character_flag = sainthood_voice_of_jesus
+		}
+	}
+
+	chance = {
+		factor = 25
+
+		trigger = {
+			OR = {
+				trait = zealous
+				trait = humble
+				trait = nun
+				trait = monk
+				trait = desert_father
+				trait = desert_mother
+				trait = scholarly_theologian
+				trait = mastermind_theologian
+				is_theocracy = yes
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.1
+
+			OR = {
+				trait = proud
+				trait = ambitious
+				trait = cruel
+				trait = content
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			NOT = { trait = humble }
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = gluttonous
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = wroth
+		}
+
+		mult_modifier = {
+			factor = 5
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			OR = {
+				trait = nun
+				trait = monk
+				trait = desert_father
+				trait = desert_mother
+			}
+		}
+
+		mult_modifier = {
+			factor = 2
+			is_theocracy = yes
+		}
+
+		mult_modifier = {
+			factor = 2
+			rightful_religious_head = ROOT
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = celibate
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = patient
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = chaste
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = charitable
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = temperate
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = diligent
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = kind
+		}
+	}
+}

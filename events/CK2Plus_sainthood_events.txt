@@ -1,0 +1,5724 @@
+namespace = Plus
+
+#reserved: Plus.2600 to Plus.2649
+#reserved: Plus.1550 to Plus.1599
+
+#######################################
+# SAINTHOOD EVENTS
+#######################################
+
+# Vassal/family member has been declared a martyr
+character_event = {
+	id = Plus.2600
+	desc = EVTDESC_Plus_2600
+	picture = GFX_evt_martyr
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	trigger = {
+		religion = event_target:new_martyr
+	}
+
+	option = {
+		name = {
+			text = EVTOPTA_Plus_2600
+			trigger = { is_close_relative = event_target:new_martyr }
+		}
+		name = {
+			text = EVTOPTB_Plus_2600
+			trigger = {
+				dynasty = event_target:new_martyr
+				NOT = { is_close_relative = event_target:new_martyr }
+			}
+		}
+		name = {
+			text = EVTOPTC_Plus_2600
+			trigger = {
+				NOR = {
+					is_close_relative = event_target:new_martyr
+					dynasty = event_target:new_martyr
+				}
+			}
+		}
+
+		tooltip = {
+			event_target:new_martyr = {
+				show_scope_change = no
+
+				add_trait = martyr
+			}
+		}
+
+		if = {
+			limit = { is_close_relative = event_target:new_martyr }
+			piety = 25
+		}
+		else_if = {
+			limit = { dynasty = event_target:new_martyr }
+			piety = 10
+		}
+		else = {
+			piety = 5
+		}
+	}
+}
+
+# Chance of Christian becoming a saint upon death
+character_event = {
+	id = Plus.2601
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	religion_group = christian
+	min_age = 16
+	lacks_dlc = "Holy Fury"
+
+	trigger = {
+		is_adult = yes
+		is_heretic = no
+
+		# A religious head exists
+		religion_head = { always = yes }
+
+		# Qualifies for sainthood
+		prestige >= 0
+		piety >= 0
+
+		OR = {
+			trait = martyr
+			trait = paragon
+			has_character_flag = converted_king
+			has_character_flag = king_converted
+			has_character_flag = schism_mender
+			piety >= 2000
+
+			AND = {
+				piety >= 1000
+
+				OR = {
+					trait = celibate
+					trait = theologian
+					trait = crusader
+					is_theocracy = yes
+					has_character_modifier = voice_of_jesus
+					has_character_modifier = true_christian_knight
+				}
+			}
+
+			AND = {
+				piety >= 250
+				controls_religion = yes
+			}
+
+			AND = {
+				piety >= 250
+				religion = chalcedonian
+				is_theocracy = yes
+
+				OR = {
+					has_landed_title = b_roma
+					has_landed_title = b_hagiasophia
+				}
+			}
+
+			AND = {
+				piety >= 400
+				is_ruler = no
+
+				OR = {
+					trait = celibate
+					trait = theologian
+					trait = monk
+					trait = nun
+					trait = crusader
+					has_character_modifier = voice_of_jesus
+					has_character_modifier = true_christian_knight
+				}
+			}
+		}
+
+		# Does not possess traits that would prevent sainthood
+		trigger_if = {
+			limit = { trait = possessed }
+			has_character_modifier = voice_of_jesus
+		}
+
+		is_kinslayer_trigger = no
+		death_suicide_trigger = no
+
+		NOR = {
+			trait = sayyid
+			trait = mirza
+			trait = mujahid
+			trait = inbred
+			trait = lunatic
+			trait = hedonist
+			trait = cynical
+			trait = excommunicated
+			trait = homosexual
+			trait = bad_priest_christian
+			has_claim = k_papacy
+			has_claim = d_fraticelli
+			has_nickname = nick_the_heathen
+			has_nickname = nick_the_unfaithful
+			has_nickname = nick_the_beguiling
+			has_nickname = nick_the_temptress
+			has_nickname = nick_the_seducer
+			has_nickname = nick_the_lewd
+			has_nickname = nick_the_lecher
+			has_nickname = nick_the_unchaste
+			has_nickname = nick_of_the_wilds
+			has_nickname = nick_the_beheader
+			has_nickname = nick_the_ruthless
+			has_nickname = nick_the_sea_devil
+			has_nickname = nick_the_flail_of
+			has_nickname = nick_the_scourge_of
+			has_nickname = nick_the_alchemist
+			has_nickname = nick_the_terror_of_provincename
+			has_nickname = nick_the_butcher
+			has_nickname = nick_son_of_evilgod
+			has_nickname = nick_the_evil
+			has_nickname = nick_the_tormentor
+			has_nickname = nick_the_mutilator
+			has_nickname = nick_the_despoiler
+			has_nickname = nick_the_bane_of_realmname
+			has_nickname = nick_the_depraved
+			has_nickname = nick_the_monster
+			has_nickname = nick_the_abomination
+			has_nickname = nick_the_culture_marauder
+			has_nickname = nick_the_kingslayer
+			has_nickname = nick_the_cannibal
+			has_nickname = nick_the_plaguebearer
+			has_nickname = nick_the_accursed
+			has_nickname = nick_the_wicked
+			has_nickname = nick_the_bewitched
+			has_nickname = nick_priest_hater
+			has_nickname = nick_the_witch
+			has_nickname = nick_the_devil
+			has_nickname = nick_the_dragon
+			has_nickname = nick_the_defiler
+			has_nickname = nick_the_fratricide
+			has_nickname = nick_the_parricide
+			has_nickname = nick_the_tyrant
+			has_nickname = nick_the_godless
+			has_nickname = nick_the_impaler
+		}
+
+		# Not already another saint in progress for the top liege
+		# TODO: Delay for a month instead?
+		NOT = {
+			top_liege = {
+				capital_scope = { has_province_flag = saint_in_progress }
+			}
+		}
+	}
+
+	immediate = {
+		random = {
+			chance = 10
+
+			mult_modifier = {
+				factor = 10
+				has_character_flag = schism_mender
+			}
+
+			mult_modifier = {
+				factor = 7.5
+
+				OR = {
+					controls_religion = yes
+					has_landed_title = k_papacy
+					has_nickname = nick_the_saint
+				}
+
+				NOT = { has_character_flag = schism_mender }
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				has_landed_title = b_hagiasophia
+				is_theocracy = yes
+				controls_religion = no
+			}
+
+			mult_modifier = {
+				factor = 5
+				trait = martyr
+			}
+
+			mult_modifier = {
+				factor = 3
+
+				OR = {
+					has_character_flag = king_converted
+					has_character_modifier = voice_of_jesus
+					has_character_modifier = true_christian_knight
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				is_theocracy = yes
+				controls_religion = no
+
+				NOR = {
+					has_landed_title = b_roma
+					has_landed_title = b_hagiasophia
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = paragon
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				OR = {
+					has_nickname = nick_the_holy
+					has_nickname = nick_the_confessor
+					has_nickname = nick_the_blessed
+					has_nickname = nick_the_pious
+					has_nickname = nick_the_apostle
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				piety >= 1000
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				piety >= 1500
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				piety >= 2000
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				piety >= 2500
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				piety >= 3000
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				piety >= 3500
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				piety >= 4000
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				piety >= 4500
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				piety >= 5000
+			}
+
+			mult_modifier = {
+				factor = 1.25
+
+				OR = {
+					has_nickname = nick_the_crusader
+					has_nickname = nick_the_kind
+					has_nickname = nick_the_wise
+					has_nickname = nick_the_righteous
+					has_nickname = nick_the_just
+					has_nickname = nick_the_good
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.25
+
+				OR = {
+					is_priest = yes
+					trait = monk
+					trait = nun
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = celibate
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = crusader
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = theologian
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = chaste
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = temperate
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = diligent
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = kind
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = brave
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = honest
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = lustful
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = gluttonous
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = envious
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = deceitful
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				OR = {
+					trait = sympathy_pagans
+					trait = sympathy_zoroastrianism
+					trait = sympathy_indian
+					trait = sympathy_judaism
+					trait = sympathy_islam
+				}
+
+				NOT = { has_character_flag = king_converted }
+			}
+
+			mult_modifier = {
+				factor = 0.25
+
+				piety < 1000
+				controls_religion = no
+
+				NOR = {
+					trait = martyr
+					trait = paragon
+					has_character_flag = converted_king
+					has_character_flag = king_converted
+					has_landed_title = b_roma
+					has_landed_title = b_hagiasophia
+				}
+			}
+
+			save_event_target_as = new_saint
+
+			religion_head = {
+				primary_title = {
+					save_event_target_as = religion_head_title
+				}
+			}
+
+			top_liege = {
+				capital_scope = {
+					set_province_flag = saint_in_progress
+
+					if = {
+						limit = { ROOT = { trait = martyr } }
+						set_province_flag = martyr_saint
+						province_event = { id = Plus.2602 days = 100 random = 100 }
+					}
+					else_if = {
+						limit = { ROOT = { has_character_flag = schism_mender } }
+						set_province_flag = schism_saint
+						province_event = { id = Plus.2602 days = 100 random = 100 }
+					}
+					else_if = {
+						limit = { ROOT = { has_character_flag = converted_king } }
+						set_province_flag = converter_saint
+						province_event = { id = Plus.2602 days = 100 random = 100 }
+					}
+					else_if = {
+						limit = { ROOT = { has_character_flag = king_converted } }
+						set_province_flag = converted_saint
+						province_event = { id = Plus.2602 days = 100 random = 100 }
+					}
+					else_if = {
+						limit = { ROOT = { has_character_modifier = voice_of_jesus } }
+						set_province_flag = voice_jesus_saint
+						province_event = { id = Plus.2602 days = 100 random = 100 }
+					}
+					else_if = {
+						limit = { ROOT = { has_character_modifier = true_christian_knight } }
+						set_province_flag = true_knight_saint
+						province_event = { id = Plus.2602 days = 100 random = 100 }
+					}
+					else_if = {
+						limit = {
+							ROOT = {
+								is_theocracy = yes
+								OR = {
+									controls_religion = yes
+									has_landed_title = b_roma
+									has_landed_title = b_hagiasophia
+								}
+							}
+						}
+						set_province_flag = religion_head_saint
+						province_event = { id = Plus.2602 days = 100 random = 100 }
+					}
+					else = {
+						set_province_flag = pious_saint
+						province_event = { id = Plus.2602 days = 100 random = 100 }
+					}
+				}
+			}
+		}
+	}
+}
+
+# Bounce event
+province_event = {
+	id = Plus.2602
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		event_target:religion_head_title = {
+			holder_scope = { religion = event_target:new_saint }
+		}
+	}
+
+	immediate = {
+		event_target:new_saint = {
+			any_dynasty_member = {
+				limit = { religion = event_target:new_saint }
+				character_event = { id = Plus.2603 } # Nnotification
+			}
+		}
+
+		event_target:religion_head_title = {
+			holder_scope = {
+				narrative_event = {
+					id = Plus.2604 # Ceremony for the event
+					months = 3
+				}
+			}
+		}
+
+	}
+}
+
+# Relatives notified of sainthood
+character_event = {
+	id = Plus.2603
+	desc = EVTDESC_Plus_2603
+	picture = GFX_evt_pope
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_Plus_2603
+	}
+}
+
+# Canonization ceremony
+narrative_event = {
+	id = Plus.2604
+	title = EVTNAME_Plus_2604
+	picture = GFX_evt_sainthood
+
+	desc = {
+		text = EVTDESC_Plus_2604_martyr
+		trigger = { FROM = { has_province_flag = martyr_saint } }
+	}
+	desc = {
+		text = EVTDESC_Plus_2604_schism
+		trigger = { FROM = { has_province_flag = schism_saint } }
+	}
+	desc = {
+		text = EVTDESC_Plus_2604_converter
+		trigger = { FROM = { has_province_flag = converter_saint } }
+	}
+	desc = {
+		text = EVTDESC_Plus_2604_converted
+		trigger = { FROM = { has_province_flag = converted_saint } }
+	}
+	desc = {
+		text = EVTDESC_Plus_2604_jesus
+		trigger = { FROM = { has_province_flag = voice_jesus_saint } }
+	}
+	desc = {
+		text = EVTDESC_Plus_2604_knight
+		trigger = { FROM = { has_province_flag = true_knight_saint } }
+	}
+	desc = {
+		text = EVTDESC_Plus_2604_relhead
+		trigger = { FROM = { has_province_flag = religion_head_saint } }
+	}
+	desc = {
+		text = EVTDESC_Plus_2604
+		trigger = { FROM = { has_province_flag = pious_saint } }
+	}
+
+	is_triggered_only = yes
+	major = yes
+	show_from_from = yes
+
+	major_trigger = {
+		religion = FROMFROM
+	}
+
+	immediate = {
+		log = "[new_saint.GetTitledName] has been declared a [new_saint.Religion.GetName] saint"
+
+		event_target:new_saint = {
+			add_trait = saint
+
+			if = {
+				limit = { has_nickname = nick_the_saint }
+				remove_nickname = nick_the_saint
+				set_character_flag = had_nickname
+			}
+			else_if = {
+				limit = { has_nickname = nick_the_holy }
+				remove_nickname = nick_the_holy
+				set_character_flag = had_nickname
+			}
+
+			if = {
+				limit = { has_nickname = no }
+
+				random_list = {
+					5  = { give_nickname = nick_the_rel_group }
+					20 = { give_nickname = nick_the_pious }
+					20 = { give_nickname = nick_the_blessed }
+					20 = { give_nickname = nick_the_confessor }
+
+					20 = {
+						trigger = {
+							OR = {
+								trait = kind
+								trait = just
+								trait = charitable
+							}
+						}
+
+						give_nickname = nick_the_good
+					}
+
+					20 = {
+						trigger = { trait = just }
+						give_nickname = nick_the_just
+					}
+
+					20 = {
+						trigger = {
+							trait = zealous
+							trait = just
+						}
+
+						give_nickname = nick_the_righteous
+					}
+
+					20 = {
+						trigger = {
+							trigger_if = {
+								limit = {
+									OR = {
+										trait = arbitrary
+										trait = wroth
+										is_dumb_trigger = yes
+										trait = inbred
+									}
+								}
+
+								OR = {
+									is_smart_trigger = yes
+									trait = just
+									trait = patient
+									trait = scholar
+									trait = theologian
+									learning >= 12
+								}
+							}
+						}
+
+						give_nickname = nick_the_wise
+					}
+
+					20 = {
+						trigger = { trait = kind }
+						give_nickname = nick_the_kind
+					}
+
+					20 = {
+						trigger = { trait = scholar }
+						give_nickname = nick_the_scholar
+					}
+
+					20 = {
+						trigger = { trait = crusader }
+						give_nickname = nick_the_crusader
+					}
+
+					20 = {
+						trigger = { trait = zealous }
+						give_nickname = nick_the_zealot
+					}
+
+					40 = {
+						trigger = {
+							NOT = { has_character_flag = had_nickname }
+						}
+					}
+				}
+
+				clr_character_flag = had_nickname
+			}
+		}
+
+		FROM = {
+			province_event = {
+				id = Plus.2605 # Clear flags
+				days = 1
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2604
+
+		if = {
+			limit = { has_landed_title = event_target:religion_head_title }
+
+			if = {
+				limit = { NOT = { religion_authority >= 0.75 } }
+				religion_authority = { name = new_saint }
+			}
+
+			piety = 100
+		}
+		else_if = {
+			limit = { dynasty = event_target:new_saint }
+
+			if = {
+				limit = { is_child_of = event_target:new_saint }
+				piety = 100
+			}
+			else = {
+				piety = 25
+			}
+
+			if = {
+				limit = { ai = no }
+
+				chronicle = {
+					entry = CHRONICLE_NEW_SAINT
+					picture = GFX_evt_sainthood
+				}
+			}
+		}
+
+		tooltip = {
+			event_target:new_saint = {
+				show_scope_change = no
+
+				add_trait = saint
+			}
+		}
+
+	}
+}
+
+# Clear flags
+province_event = {
+	id = Plus.2605
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		event_target:new_saint = { set_special_character_title = SAINT_TITLE }
+		log = "[new_saint.GetTitledNameWithNick] has been declared a [new_saint.Religion.GetName] saint"
+		clr_province_flag = saint_in_progress
+		clr_province_flag = martyr_saint
+		clr_province_flag = schism_saint
+		clr_province_flag = converter_saint
+		clr_province_flag = converted_saint
+		clr_province_flag = voice_jesus_saint
+		clr_province_flag = true_knight_saint
+		clr_province_flag = religion_head_saint
+		clr_province_flag = pious_saint
+	}
+}
+
+### 'BECOME A SAINT' AMBITION EVENTS
+
+# Introduction event once ambition is started
+character_event = {
+	id = Plus.2610
+	desc = EVTDESC_Plus_2610
+	picture = GFX_evt_sainthood
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	immediate = {
+		set_variable = {
+			which = theosis_ambition
+			value = 0
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2610
+	}
+}
+
+# Build a church in a local town?
+character_event = {
+	id = Plus.2611
+	desc = EVTDESC_Plus_2611
+	picture = GFX_evt_stone_church
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		wealth >= 50
+		is_inaccessible_trigger = no
+		NOT = { has_character_flag = sainthood_built_church}
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_built_church
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2611 # Build it
+
+		piety = 25
+
+		scaled_wealth = {
+			value = -0.5
+			min = -50
+		}
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2611 # No, there are enough churches
+
+		piety = -25
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = -1
+			}
+		}
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Administering to the sick
+character_event = {
+	id = Plus.2612
+	desc = EVTDESC_Plus_2612
+	picture = GFX_evt_monastery_monks
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+	is_sick = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		NOT = { has_character_flag = sainthood_treat_sick }
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_treat_sick
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2612 # I will help them
+
+		trigger = {
+			learning < 12
+			NOT = { trait = scholar }
+		}
+
+		piety = 25
+
+		random_list = {
+			50 = { give_ill_effect = yes }
+			25 = { give_pneumonic_effect = yes }
+
+			10 = {
+				mult_modifier = {
+					factor = 2
+					health >= 4
+				}
+
+				mult_modifier = {
+					factor = 2
+					health >= 6
+				}
+
+				mult_modifier = {
+					factor = 2
+					health >= 8
+				}
+			}
+		}
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2612 # I will help them
+		tooltip_info = learning
+
+		trigger = {
+			learning >= 12
+			NOT = { trait = scholar }
+		}
+
+		piety = 25
+
+		random_list = {
+			50 = { give_ill_effect = yes }
+
+			50 = {
+				mult_modifier = {
+					factor = 2
+					health >= 4
+				}
+
+				mult_modifier = {
+					factor = 2
+					health >= 6
+				}
+
+				mult_modifier = {
+					factor = 2
+					health >= 8
+				}
+			}
+		}
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2612 # I will help them
+		tooltip_info = scholar
+
+		trigger = { trait = scholar }
+
+		piety = 25
+		change_learning = 1
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2612 # No, that's too dangerous
+
+		piety = -25
+
+		if = {
+			limit =  { trait = brave }
+
+			random = {
+				chance = 50
+				remove_trait_brave_effect = yes
+			}
+		}
+		else_if = {
+			limit = { NOT = { trait = craven } }
+
+			random = {
+				chance = 50
+				add_trait_craven_effect = yes
+			}
+		}
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = -1
+			}
+		}
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# The sick believe you can heal them
+character_event = {
+	id = Plus.2613
+	desc = EVTDESC_Plus_2613
+	picture = GFX_evt_monastery_monks
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	has_character_flag = sainthood_treat_sick
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+	is_sick = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value >= 5
+		}
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+
+		NOR = {
+			trait = craven
+			has_character_flag = sainthood_heal_sick
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_heal_sick
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2613 # I will touch him
+
+		piety = 50
+
+		random_list = {
+			10 = { give_ill_effect = yes }
+			10 = { give_pneumonic_effect = yes }
+			10 = { give_consumption_effect = yes }
+			10 = { give_slow_fever_effect = yes }
+			10 = { give_food_poisoning_effect = yes }
+			10 = { give_measles_effect = yes }
+			10 = { give_smallpox_effect = yes }
+
+			10 = {
+				trigger = { year >= 1300 }
+				give_bubonic_plague_effect = yes # TODO: Add better dynamic trigger
+			}
+
+			25 = {
+				mult_modifier = {
+					factor = 2
+					health >= 4
+				}
+
+				mult_modifier = {
+					factor = 2
+					health >= 6
+				}
+
+				mult_modifier = {
+					factor = 2
+					health >= 8
+				}
+			}
+		}
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 2
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2613 # No, it doesn't work that way
+
+		piety = -50
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = -1
+			}
+		}
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Visiting a remote ascetic
+character_event = {
+	id = Plus.2614
+	desc = EVTDESC_Plus_2614
+	picture = GFX_evt_boatcoast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+	is_sick = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		is_inaccessible_trigger = no
+		NOT = { has_character_flag = sainthood_visit_ascetic }
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_visit_ascetic
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2614 # Make the journey
+
+		piety = 25
+		health = -1.0
+
+		random = {
+			chance = 25
+			give_ill_effect = yes
+		}
+
+		random_list = {
+			50 = { change_learning = 1 }
+			25 = { change_learning = 2 }
+			25 = {}
+		}
+
+		hidden_effect = {
+			add_character_modifier = {
+				name = do_not_disturb
+				months = 2
+				hidden = yes
+			}
+
+			change_variable = { which = health_lost value = 1.0 }
+			change_variable = { which = theosis_ambition value = 1 }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2614 # No, it's not worth it
+
+		piety = -25
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = -1
+			}
+		}
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Take monastic vows?
+character_event = {
+	id = Plus.2615
+	desc = EVTDESC_Plus_2615
+	picture = GFX_evt_monastery_monks
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		is_theocracy = no
+
+		OR = {
+			is_ruler = no
+			player_heir = { always = yes }
+			fertility < 0.05
+		}
+
+		NOR = {
+			trait = monk
+			trait = nun
+			trait = desert_father
+			trait = desert_mother
+			has_character_flag = sainthood_take_vows
+		}
+
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.5
+			practical_age < 40
+		}
+
+		mult_modifier = {
+			factor = 2
+			practical_age >= 50
+		}
+
+		mult_modifier = {
+			factor = 2
+			practical_age >= 55
+		}
+
+		mult_modifier = {
+			factor = 2
+			practical_age >= 60
+		}
+
+		mult_modifier = {
+			factor = 0.67
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_take_vows
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2615 # I will live my life in the service of God
+
+		piety = 100
+
+		if = {
+			limit = { is_ruler = no }
+
+			# Get rid of estates
+			if = {
+				limit = { has_minor_title = title_lord }
+				remove_title = title_lord
+			}
+
+			if = {
+				limit = { has_character_modifier = estates_1 }
+				remove_character_modifier = estates_1
+				wealth = 40
+			}
+		}
+
+		if = {
+			limit = { is_ruler = yes }
+
+			abdicate = yes
+			add_trait = abdicated
+
+			hidden_effect = {
+				current_heir = {
+					character_event = {
+						id = Plus.121 # Notify heir, transfer wealth, artifacts
+						days = 1
+					}
+				}
+			}
+		}
+
+		set_christian_ascetic_effect = yes
+
+		if = {
+			limit = { trait = ambitious }
+			remove_trait = ambitious
+		}
+		else_if = {
+			limit = { NOT = { trait = content }	}
+
+			random = {
+				chance = 50
+				add_trait_content_effect = yes
+			}
+		}
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 2
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2615 # No, I am meant for better things
+
+		piety = -50
+
+		random = {
+			chance = 50
+			add_trait_partially_ambitious_effect = yes
+		}
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = -1
+			}
+		}
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# You have too much wealth
+character_event = {
+	id = Plus.2616
+	desc = EVTDESC_Plus_2616
+	picture = GFX_evt_throne_room
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		is_inaccessible_trigger = no
+
+		OR = {
+			wealth >= 100
+			has_character_modifier = estates_1
+		}
+
+		NOR = {
+			trait = greedy
+			has_character_flag = sainthood_too_much_wealth
+			has_character_flag = loan_taken
+		}
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+
+		check_variable = {
+			which = loan_amount
+			value < 50
+		}
+	}
+
+	weight_multiplier = {
+		years = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_too_much_wealth
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2616 # Give it away
+
+		piety = 50
+
+		if = {
+			limit = { is_ruler = no }
+
+			# Get rid of estates
+			if = {
+				limit = { has_minor_title = title_lord }
+				remove_title = title_lord
+			}
+
+			if = {
+				limit = { has_character_modifier = estates_1 }
+
+				remove_character_modifier = estates_1
+				wealth = 40
+			}
+		}
+
+		if = {
+			limit = { wealth >= 250 }
+			set_character_flag = double_amount
+		}
+
+		clear_wealth = yes
+
+		hidden_effect = {
+			if = {
+				limit = { has_character_flag = double_amount }
+
+				clr_character_flag = double_amount
+				change_variable = { which = theosis_ambition value = 2 }
+			}
+			else = {
+				change_variable = { which = theosis_ambition value = 1 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2616 # Give it away? Are you crazy?
+
+		piety = -50
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = -1
+			}
+		}
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# The stigmata
+character_event = {
+	id = Plus.2617
+	desc = EVTDESC_Plus_2617
+	picture = GFX_evt_bad_news
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	is_sick = yes
+
+	trigger = {
+		has_ambition = obj_become_saint
+		piety >= 250
+		is_inaccessible_trigger = no
+		NOT = { has_character_flag = sainthood_stigmata }
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 4
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_stigmata
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2617 # Perhaps I am truly blessed
+
+		piety = 100
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+}
+
+# Support of a priest
+character_event = {
+	id = Plus.2618
+	desc = EVTDESC_Plus_2618
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		NOT = { has_character_flag = sainthood_priest_support }
+
+		top_liege = {
+			any_realm_lord = {
+				is_theocracy = yes
+				religion = ROOT
+				piety >= 100
+				prisoner = no
+				is_incapable = no
+
+				distance = {
+					who = ROOT
+					value < 75
+				}
+
+				opinion = {
+					who = ROOT
+					value >= 50
+				}
+
+				NOR = {
+					trait = cynical
+					trait = paranoid
+					trait = slothful
+				}
+			}
+		}
+
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value >= 3
+		}
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_priest_support
+
+		top_liege = {
+			random_realm_lord = {
+				limit = {
+					is_theocracy = yes
+					religion = ROOT
+					piety >= 100
+					prisoner = no
+					is_incapable = no
+
+					distance = {
+						who = ROOT
+						value < 75
+					}
+
+					opinion = {
+						who = ROOT
+						value >= 50
+					}
+
+					NOR = {
+						trait = cynical
+						trait = paranoid
+						trait = slothful
+					}
+				}
+
+				save_event_target_as = supporting_priest
+			}
+		}
+	}
+
+	option = {
+		name = EXCELLENT
+
+		piety = 25
+		add_friend = event_target:supporting_priest
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+}
+
+# A priest doubts you
+character_event = {
+	id = Plus.2619
+	desc = EVTDESC_Plus_2619
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		is_inaccessible_trigger = no
+		NOT = { has_character_flag = sainthood_priest_doubt }
+
+		top_liege = {
+			any_realm_lord = {
+				is_theocracy = yes
+				religion = ROOT
+				piety >= 100
+				prisoner = no
+				is_incapable = no
+				NOT = { trait = slothful }
+
+				OR = {
+					trait = zealous
+					trait = paranoid
+					trait = wroth
+				}
+
+				distance = {
+					who = ROOT
+					value < 75
+				}
+
+				opinion = {
+					who = ROOT
+					value < 0
+				}
+			}
+		}
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_priest_doubt
+
+		top_liege = {
+			random_realm_lord = {
+				limit = {
+					is_theocracy = yes
+					religion = ROOT
+					piety >= 100
+					prisoner = no
+					is_incapable = no
+					NOT = { trait = slothful }
+
+					OR = {
+						trait = zealous
+						trait = paranoid
+						trait = wroth
+					}
+
+					distance = {
+						who = ROOT
+						value < 75
+					}
+
+					opinion = {
+						who = ROOT
+						value < 0
+					}
+				}
+
+				save_event_target_as = doubting_priest
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2619 # Allow him to test me
+
+		random_list = {
+			50 = {
+				mult_modifier = {
+					factor = 0.5
+
+					reverse_opinion = {
+						who = event_target:doubting_priest
+						value < -50
+					}
+				}
+
+				mult_modifier = {
+					factor = 1.2
+
+					piety >= 250
+					piety < 500
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					piety >= 500
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = chaste
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = temperate
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = charitable
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = kind
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = patient
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = honest
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = just
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = humble
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = zealous
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = celibate
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = lustful
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = gluttonous
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = greedy
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = envious
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = slothful
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = cruel
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = wroth
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = deceitful
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = arbitrary
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = impaler
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = proud
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = hedonist
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					learning < 6
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					learning < 8
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					learning >= 12
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					learning >= 14
+				}
+
+				character_event = {
+					id = Plus.2620
+					days = 7
+					tooltip = PRIEST_WON_OVER
+				}
+			}
+
+			50 = {
+				character_event = {
+					id = Plus.2621
+					days = 7
+					tooltip = PRIEST_CONDEMNS
+				}
+			}
+		}
+
+		hidden_effect = {
+			add_character_modifier = {
+				name = do_not_disturb
+				days = 7
+				hidden = yes
+			}
+
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2619 # Refuse
+
+		piety = -50
+		add_rival = event_target:doubting_priest
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = -1
+			}
+		}
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# The doubting priest is won over
+character_event = {
+	id = Plus.2620
+	desc = EVTDESC_Plus_2620
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	hide_from = yes
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		piety = 100
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 2
+			}
+		}
+	}
+}
+
+# The doubting priest condemns you
+character_event = {
+	id = Plus.2621
+	desc = EVTDESC_Plus_2621
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	hide_from = yes
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2621
+
+		piety = -100
+		add_rival = event_target:doubting_priest
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = -2
+			}
+		}
+	}
+}
+
+# High piety
+character_event = {
+	id = Plus.2622
+	desc = EVTDESC_Plus_2622
+	picture = GFX_evt_sainthood
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		is_inaccessible_trigger = no
+
+		OR = {
+			AND = {
+				piety >= 250
+				NOT = { has_character_flag = sainthood_piety1 }
+			}
+
+			AND = {
+				piety >= 500
+				NOT = { has_character_flag = sainthood_piety2 }
+			}
+
+			AND = {
+				piety >= 1000
+				NOT = { has_character_flag = sainthood_piety3 }
+			}
+
+			AND = {
+				piety >= 2000
+				NOT = { has_character_flag = sainthood_piety4 }
+			}
+		}
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				piety >= 250
+				NOT = { has_character_flag = sainthood_piety1 }
+			}
+			set_character_flag = sainthood_piety1
+		}
+		else_if = {
+			limit = {
+				piety >= 500
+				NOT = { has_character_flag = sainthood_piety2 }
+			}
+			set_character_flag = sainthood_piety2
+		}
+		else_if = {
+			limit = {
+				piety >= 1000
+				NOT = { has_character_flag = sainthood_piety3 }
+			}
+			set_character_flag = sainthood_piety3
+		}
+		else_if = {
+			limit = {
+				piety >= 2000
+				NOT = { has_character_flag = sainthood_piety4 }
+			}
+			set_character_flag = sainthood_piety4
+		}
+	}
+
+	option = {
+		name = EXCELLENT
+
+		piety = 25
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+}
+
+# Exceptional learning
+character_event = {
+	id = Plus.2623
+	desc = EVTDESC_Plus_2623
+	picture = GFX_evt_monk
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		learning >= 15
+		NOT = { has_character_flag = sainthood_high_learning }
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_high_learning
+	}
+
+	option = {
+		name = EXCELLENT
+
+		piety = 25
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+}
+
+# Exceptional diplomacy
+character_event = {
+	id = Plus.2624
+	desc = EVTDESC_Plus_2624
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		diplomacy >= 15
+		NOT = { has_character_flag = sainthood_high_diplomacy }
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_high_diplomacy
+	}
+
+	option = {
+		name = EXCELLENT
+
+		piety = 25
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+}
+
+# Exceptional martial
+character_event = {
+	id = Plus.2625
+	desc = EVTDESC_Plus_2625
+	picture = GFX_evt_large_army
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		martial >= 15
+		NOT = { has_character_flag = sainthood_high_martial }
+
+		OR = {
+			trait = crusader
+			trait = holy_warrior
+			has_character_modifier = true_christian_knight
+		}
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_high_martial
+	}
+
+	option = {
+		name = EXCELLENT
+
+		piety = 25
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+}
+
+# Homosexual/Lustful/Hedonist/Seducer/Seductress
+character_event = {
+	id = Plus.2626
+	desc = EVTDESC_Plus_2626
+	picture = GFX_evt_brothel
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		is_inaccessible_trigger = no
+
+		OR = {
+			trait = homosexual
+			trait = lustful
+			trait = hedonist
+			trait = master_seducer
+			trait = master_seductress
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.67
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = depressed
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2626 # Make the attempt
+
+		random_list = {
+			50 = {
+				mult_modifier = {
+					factor = 2.0
+					trait = homosexual
+				}
+
+				mult_modifier = {
+					factor = 2.0
+
+					calc_true_if = {
+						amount >= 2
+
+						trait = homosexual
+						trait = lustful
+						trait = hedonist
+						trait = master_seducer
+						trait = master_seductress
+					}
+				}
+
+				mult_modifier = {
+					factor = 2.0
+
+					calc_true_if = {
+						amount >= 3
+
+						trait = homosexual
+						trait = lustful
+						trait = hedonist
+						trait = master_seducer
+						trait = master_seductress
+					}
+				}
+
+				mult_modifier = {
+					factor = 2.0
+
+					calc_true_if = {
+						amount >= 4
+
+						trait = homosexual
+						trait = lustful
+						trait = hedonist
+						trait = master_seducer
+						trait = master_seductress
+					}
+				}
+
+				set_character_flag = lustful_fail
+
+				character_event = {
+					id = Plus.2637
+					days = 15
+					tooltip = ATTEMPT_FAILS
+				}
+			}
+
+			50 = {
+				mult_modifier = {
+					factor = 1.5
+					trait = zealous
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = temperate
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = slothful
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = gluttonous
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = stressed
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = depressed
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = drunkard
+				}
+
+				tooltip = {
+					if = {
+						limit = { trait = homosexual }
+						remove_trait = homosexual
+					}
+					if = {
+						limit = { trait = lustful }
+						remove_trait = lustful
+					}
+					if = {
+						limit = { trait = hedonist }
+						remove_trait = hedonist
+					}
+					if = {
+						limit = { trait = master_seducer }
+						remove_trait = master_seducer
+					}
+					if = {
+						limit = { trait = master_seductress }
+						remove_trait = master_seductress
+					}
+				}
+
+				set_character_flag = lustful_succeed
+
+				character_event = {
+					id = Plus.2638
+					days = 15
+					tooltip = ATTEMPT_SUCCEEDS
+				}
+			}
+		}
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 15
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2626 # It's not worth it
+
+		piety = -50
+		cancel_ambition = yes
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Gluttonous
+character_event = {
+	id = Plus.2627
+	desc = EVTDESC_Plus_2627
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+	is_sick = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = gluttonous
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.67
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = depressed
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2626 # Make the attempt
+
+		random_list = {
+			50 = {
+				mult_modifier = {
+					factor = 1.5
+					health < 4
+				}
+
+				set_character_flag = gluttonous_fail
+
+				character_event = {
+					id = Plus.2637
+					days = 15
+					tooltip = ATTEMPT_FAILS
+				}
+			}
+
+			50 = {
+				mult_modifier = {
+					factor = 1.5
+					trait = zealous
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = slothful
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = greedy
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = stressed
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = depressed
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = drunkard
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					health >= 6
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					health >= 7
+				}
+
+				set_character_flag = gluttonous_succeed
+
+				character_event = {
+					id = Plus.2638
+					days = 15
+					tooltip = ATTEMPT_SUCCEEDS
+				}
+			}
+		}
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 15
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2626 # It's not worth it
+
+		piety = -50
+		cancel_ambition = yes
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Greedy
+character_event = {
+	id = Plus.2628
+	desc = EVTDESC_Plus_2628
+	picture = GFX_evt_market
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = greedy
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.67
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = depressed
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2626 # Make the attempt
+
+		random_list = {
+			50 = {
+				set_character_flag = greedy_fail
+
+				character_event = {
+					id = Plus.2637
+					days = 15
+					tooltip = ATTEMPT_FAILS
+				}
+			}
+
+			50 = {
+				mult_modifier = {
+					factor = 1.2
+					trait = zealous
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = humble
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = kind
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = slothful
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = envious
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = proud
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = stressed
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = depressed
+				}
+
+				set_character_flag = greedy_succeed
+
+				character_event = {
+					id = Plus.2638
+					days = 15
+					tooltip = ATTEMPT_SUCCEEDS
+				}
+			}
+		}
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 15
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2626 # It's not worth it
+
+		piety = -50
+		cancel_ambition = yes
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Slothful
+character_event = {
+	id = Plus.2629
+	desc = EVTDESC_Plus_2629
+	picture = GFX_evt_illness
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+	is_sick = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = slothful
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.67
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = depressed
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2626 # Make the attempt
+
+		random_list = {
+			50 = {
+				set_character_flag = slothful_fail
+
+				character_event = {
+					id = Plus.2637
+					days = 15
+					tooltip = ATTEMPT_FAILS
+				}
+			}
+
+			50 = {
+				mult_modifier = {
+					factor = 1.5
+					trait = zealous
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					is_strong_trigger = yes
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = ambitious
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					is_weak_trigger = yes
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = envious
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = content
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = stressed
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = depressed
+				}
+
+				set_character_flag = slothful_succeed
+
+				character_event = {
+					id = Plus.2638
+					days = 15
+					tooltip = ATTEMPT_SUCCEEDS
+				}
+			}
+		}
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 15
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2626 # It's not worth it
+
+		piety = -50
+		cancel_ambition = yes
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Envious
+character_event = {
+	id = Plus.2630
+	desc = EVTDESC_Plus_2630
+	picture = GFX_evt_scandal
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = envious
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.67
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = depressed
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2626 # Make the attempt
+
+		random_list = {
+			50 = {
+				set_character_flag = envious_fail
+
+				character_event = {
+					id = Plus.2637
+					days = 15
+					tooltip = ATTEMPT_FAILS
+				}
+			}
+
+			50 = {
+				mult_modifier = {
+					factor = 1.2
+					trait = zealous
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = humble
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = kind
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = slothful
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = greedy
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = proud
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = stressed
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = depressed
+				}
+
+				set_character_flag = envious_succeed
+
+				character_event = {
+					id = Plus.2638
+					days = 15
+					tooltip = ATTEMPT_SUCCEEDS
+				}
+			}
+		}
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 15
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2626 #It 's not worth it
+
+		piety = -50
+		cancel_ambition = yes
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Cruel
+character_event = {
+	id = Plus.2631
+	desc = EVTDESC_Plus_2631
+	picture = GFX_evt_sainthood
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = cruel
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.67
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = depressed
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2626 # Make the attempt
+
+		random_list = {
+			50 = {
+				mult_modifier = {
+					factor = 2.0
+					trait = impaler
+				}
+
+				set_character_flag = cruel_fail
+
+				character_event = {
+					id = Plus.2637
+					days = 15
+					tooltip = ATTEMPT_FAILS
+				}
+			}
+
+			50 = {
+				mult_modifier = {
+					factor = 0.8
+					trait = zealous
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = humble
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = patient
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = slothful
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = greedy
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = envious
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = proud
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = stressed
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = depressed
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = drunkard
+				}
+
+				set_character_flag = cruel_succeed
+
+				character_event = {
+					id = Plus.2638
+					days = 15
+					tooltip = ATTEMPT_SUCCEEDS
+				}
+			}
+		}
+
+		add_character_modifier = {
+			name = do_not_disturb
+			duration = 15
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2626 # It's not worth it
+
+		piety = -50
+		cancel_ambition = yes
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Wroth
+character_event = {
+	id = Plus.2632
+	desc = EVTDESC_Plus_2632
+	picture = GFX_evt_burning_house
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = wroth
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.5
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = depressed
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2626 # Make the attempt
+
+		random_list = {
+			50 = {
+				mult_modifier = {
+					factor = 1.5
+
+					OR = {
+						trait = duelist
+						trait = impaler
+					}
+				}
+
+				set_character_flag = wroth_fail
+
+				character_event = {
+					id = Plus.2637
+					days = 15
+					tooltip = ATTEMPT_FAILS
+				}
+			}
+
+			50 = {
+				mult_modifier = {
+					factor = 0.8
+					trait = zealous
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = humble
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = patient
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = slothful
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = greedy
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = envious
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = proud
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = stressed
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = depressed
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = drunkard
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					martial < 8
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					martial >= 12
+				}
+
+				set_character_flag = wroth_succeed
+
+				character_event = {
+					id = Plus.2638
+					days = 15
+					tooltip = ATTEMPT_SUCCEEDS
+				}
+			}
+		}
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 15
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2626 # It's not worth it
+
+		piety = -50
+		cancel_ambition = yes
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Proud
+character_event = {
+	id = Plus.2633
+	desc = EVTDESC_Plus_2633
+	picture = GFX_evt_victory_arch_byzantine
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = proud
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.67
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = depressed
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2626 # Make the attempt
+
+		random_list = {
+			50 = {
+				mult_modifier = {
+					factor = 1.5
+
+					is_ruler = yes
+					lower_real_tier_than = DUKE
+				}
+
+				mult_modifier = {
+					factor = 2.0
+					higher_real_tier_than = COUNT
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					prestige >= 1000
+				}
+
+				set_character_flag = proud_fail
+
+				character_event = {
+					id = Plus.2637
+					days = 15
+					tooltip = ATTEMPT_FAILS
+				}
+			}
+
+			50 = {
+
+				mult_modifier = {
+					factor = 1.5
+					is_ruler = no
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = content
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = zealous
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = patient
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = slothful
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = greedy
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = envious
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = ambitious
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = stressed
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = depressed
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = drunkard
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					martial < 8
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					martial >= 12
+				}
+
+				set_character_flag = proud_succeed
+
+				character_event = {
+					id = Plus.2638
+					days = 15
+					tooltip = ATTEMPT_SUCCEEDS
+				}
+			}
+		}
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 15
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2626 # It's not worth it
+
+		piety = -50
+		cancel_ambition = yes
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Deceitful
+character_event = {
+	id = Plus.2634
+	desc = EVTDESC_Plus_2634
+	picture = GFX_evt_scandal
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = deceitful
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.67
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = depressed
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2626 # Make the attempt
+
+		random_list = {
+			50 = {
+				set_character_flag = deceitful_fail
+
+				character_event = {
+					id = Plus.2637
+					days = 15
+					tooltip = ATTEMPT_FAILS
+				}
+			}
+
+			50 = {
+				mult_modifier = {
+					factor = 1.5
+					trait = kind
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = just
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = content
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = zealous
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = patient
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = greedy
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = envious
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = ambitious
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = stressed
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = depressed
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = cruel
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = arbitrary
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					intrigue < 8
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					intrigue >= 12
+				}
+
+				set_character_flag = deceitful_succeed
+
+				character_event = {
+					id = Plus.2638
+					days = 15
+					tooltip = ATTEMPT_SUCCEEDS
+				}
+			}
+		}
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 15
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2626 # It's not worth it
+
+		piety = -50
+		cancel_ambition = yes
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Ambitious
+character_event = {
+	id = Plus.2635
+	desc = EVTDESC_Plus_2635
+	picture = GFX_evt_throne_room
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = ambitious
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.67
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = depressed
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2626 # Make the attempt
+
+		random_list = {
+			50 = {
+				mult_modifier = {
+					factor = 1.5
+					prestige >= 1000
+				}
+
+				set_character_flag = ambitious_fail
+
+				character_event = {
+					id = Plus.2637
+					days = 15
+					tooltip = ATTEMPT_FAILS
+				}
+			}
+
+			50 = {
+				mult_modifier = {
+					factor = 1.5
+					trait = humble
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = zealous
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = patient
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = slothful
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = greedy
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = envious
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = proud
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = stressed
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = depressed
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = drunkard
+				}
+
+				set_character_flag = ambitious_succeed
+
+				character_event = {
+					id = Plus.2638
+					days = 15
+					tooltip = ATTEMPT_SUCCEEDS
+				}
+			}
+		}
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 15
+			hidden = yes
+		}
+	}
+	option = {
+		name = EVTOPTB_Plus_2626 #It's not worth it
+		trigger = { ai = no }
+		piety = -50
+		cancel_ambition = yes
+	}
+}
+
+# Arbitrary
+character_event = {
+	id = Plus.2636
+	desc = EVTDESC_Plus_2636
+	picture = GFX_evt_throne_room
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = arbitrary
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.67
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = depressed
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2626 # Make the attempt
+
+		random_list = {
+			50 = {
+				set_character_flag = arbitrary_fail
+
+				character_event = {
+					id = Plus.2637
+					days = 15
+					tooltip = ATTEMPT_FAILS
+				}
+			}
+
+			50 = {
+				mult_modifier = {
+					factor = 1.5
+					trait = kind
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = trusting
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = humble
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = zealous
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = patient
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = slothful
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = envious
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = wroth
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = stressed
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = depressed
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = drunkard
+				}
+
+				set_character_flag = arbitrary_succeed
+
+				character_event = {
+					id = Plus.2638
+					days = 15
+					tooltip = ATTEMPT_SUCCEEDS
+				}
+			}
+		}
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 15
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2626 # It's not worth it
+
+		piety = -50
+		cancel_ambition = yes
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Attempt to remove negative trait fails
+character_event = {
+	id = Plus.2637
+	picture = GFX_evt_sainthood
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_Plus_2637_lustful
+		trigger = { has_character_flag = lustful_fail }
+	}
+	desc = {
+		text = EVTDESC_Plus_2637_gluttonous
+		trigger = { has_character_flag = gluttonous_fail }
+	}
+	desc = {
+		text = EVTDESC_Plus_2637_greedy
+		trigger = { has_character_flag = greedy_fail }
+	}
+	desc = {
+		text = EVTDESC_Plus_2637_slothful
+		trigger = { has_character_flag = slothful_fail }
+	}
+	desc = {
+		text = EVTDESC_Plus_2637_envious
+		trigger = { has_character_flag = envious_fail }
+	}
+	desc = {
+		text = EVTDESC_Plus_2637_cruel
+		trigger = { has_character_flag = cruel_fail }
+	}
+	desc = {
+		text = EVTDESC_Plus_2637_wroth
+		trigger = { has_character_flag = wroth_fail }
+	}
+	desc = {
+		text = EVTDESC_Plus_2637_proud
+		trigger = { has_character_flag = proud_fail }
+	}
+	desc = {
+		text = EVTDESC_Plus_2637_deceitful
+		trigger = { has_character_flag = deceitful_fail }
+	}
+	desc = {
+		text = EVTDESC_Plus_2637_ambitious
+		trigger = { has_character_flag = ambitious_fail }
+	}
+	desc = {
+		text = EVTDESC_Plus_2637_arbitrary
+		trigger = { has_character_flag = arbitrary_fail }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2637
+
+		piety = -25
+
+		random_list = {
+			1 = {
+				trigger = { NOT = { trait = lunatic } }
+				add_trait = lunatic
+			}
+
+			2 = {
+				trigger = { NOT = { trait = possessed } }
+
+				add_trait = possessed
+
+				add_character_modifier = {
+					name = voice_of_jesus
+					duration = -1
+				}
+			}
+
+			2 = {
+				trigger = { NOT = { trait = possessed } }
+
+				add_trait = possessed
+
+				add_character_modifier = {
+					name = voice_of_satan
+					duration = -1
+				}
+			}
+
+			50 = {
+				trigger = { has_character_flag = gluttonous_fail }
+
+				health = -0.5
+
+				hidden_effect = {
+					change_variable = {
+						which = health_lost
+						value = 0.5
+					}
+				}
+			}
+
+			25 = {
+				trigger = {
+					OR = {
+						has_character_flag = greedy_fail
+						has_character_flag = envious_fail
+					}
+				}
+
+				change_stewardship = -1
+			}
+
+			25 = {
+				trigger = {
+					OR = {
+						has_character_flag = greedy_fail
+						has_character_flag = envious_fail
+						has_character_flag = cruel_fail
+						has_character_flag = proud_fail
+					}
+				}
+				change_diplomacy = -1
+			}
+
+			25 = {
+				trigger = {
+					OR = {
+						has_character_flag = wroth_fail
+						has_character_flag = cruel_fail
+						has_character_flag = deceitful_fail
+					}
+				}
+
+				mult_modifier = {
+					factor = 2
+					has_character_flag = deceitful_fail
+				}
+
+				change_intrigue = -1
+			}
+
+			25 = {
+				trigger = {
+					OR = {
+						has_character_flag = slothful_fail
+						has_character_flag = gluttonous_fail
+					}
+
+					NOT = { trait = drunkard }
+				}
+
+				add_trait = drunkard
+			}
+
+			25 = {
+				trigger = {
+					NOR = {
+						trait = stressed
+						trait = depressed
+					}
+				}
+
+				add_trait = stressed
+			}
+
+			25 = {
+				trigger = {
+					NOR = {
+						trait = stressed
+						trait = depressed
+					}
+				}
+
+				mult_modifier = {
+					factor = 2
+
+					OR = {
+						has_character_flag = proud_fail
+						has_character_flag = ambitious_fail
+					}
+				}
+
+				add_trait = depressed
+			}
+
+			45 = {
+				mult_modifier = {
+					factor = 0.75
+					check_variable = { which = remove_trait_failure value >= 1 }
+				}
+
+				mult_modifier = {
+					factor = 0.75
+					check_variable = { which = remove_trait_failure value >= 2 }
+				}
+
+				mult_modifier = {
+					factor = 0.75
+					check_variable = { which = remove_trait_failure value >= 3 }
+				}
+			}
+		}
+
+		hidden_effect = {
+			clr_character_flag = lustful_fail
+			clr_character_flag = gluttonous_fail
+			clr_character_flag = greedy_fail
+			clr_character_flag = slothful_fail
+			clr_character_flag = envious_fail
+			clr_character_flag = cruel_fail
+			clr_character_flag = wroth_fail
+			clr_character_flag = proud_fail
+			clr_character_flag = deceitful_fail
+			clr_character_flag = ambitious_fail
+			clr_character_flag = arbitrary_fail
+			change_variable = { which = remove_trait_failure value = 1 }
+			change_variable = { which = theosis_ambition value = -1 }
+		}
+	}
+}
+
+# Attempt to remove negative trait succeeds
+character_event = {
+	id = Plus.2638
+	picture = GFX_evt_sainthood
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_Plus_2638_lustful
+		trigger = { has_character_flag = lustful_succeed }
+	}
+	desc = {
+		text = EVTDESC_Plus_2638_gluttonous
+		trigger = { has_character_flag = gluttonous_succeed }
+	}
+	desc = {
+		text = EVTDESC_Plus_2638_greedy
+		trigger = { has_character_flag = greedy_succeed }
+	}
+	desc = {
+		text = EVTDESC_Plus_2638_slothful
+		trigger = { has_character_flag = slothful_succeed }
+	}
+	desc = {
+		text = EVTDESC_Plus_2638_envious
+		trigger = { has_character_flag = envious_succeed }
+	}
+	desc = {
+		text = EVTDESC_Plus_2638_cruel
+		trigger = { has_character_flag = cruel_succeed }
+	}
+	desc = {
+		text = EVTDESC_Plus_2638_wroth
+		trigger = { has_character_flag = wroth_succeed }
+	}
+	desc = {
+		text = EVTDESC_Plus_2638_proud
+		trigger = { has_character_flag = proud_succeed }
+	}
+	desc = {
+		text = EVTDESC_Plus_2638_deceitful
+		trigger = { has_character_flag = deceitful_succeed }
+	}
+	desc = {
+		text = EVTDESC_Plus_2638_ambitious
+		trigger = { has_character_flag = ambitious_succeed }
+	}
+	desc = {
+		text = EVTDESC_Plus_2638_arbitrary
+		trigger = { has_character_flag = arbitrary_succeed }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2638
+
+		piety = 50
+
+		if = {
+			limit = { has_character_flag = lustful_succeed }
+
+			clr_character_flag = lustful_succeed
+
+			if = {
+				limit = { trait = homosexual }
+				remove_trait = homosexual
+			}
+			if = {
+				limit = { trait = lustful }
+				remove_trait = lustful
+			}
+			if = {
+				limit = { trait = hedonist }
+				remove_trait = hedonist
+			}
+			if = {
+				limit = { trait = master_seducer }
+				remove_trait = master_seducer
+			}
+			if = {
+				limit = { trait = master_seductress }
+				remove_trait = master_seductress
+			}
+
+			random_list = {
+				50 = {
+					trigger = { NOT = { trait = humble } }
+					add_trait_humble_effect = yes
+				}
+
+				20 = {
+					trigger = { NOT = { trait = chaste } }
+					add_trait_chaste_effect = yes
+				}
+
+				50 = {
+					trigger = { NOT = { trait = celibate } }
+					add_trait = celibate
+				}
+
+				20 = {}
+			}
+		}
+		else_if = {
+			limit = { has_character_flag = gluttonous_succeed }
+
+			clr_character_flag = gluttonous_succeed
+			remove_trait = gluttonous
+			health = -0.5
+
+			hidden_effect = {
+				change_variable = {
+					which = health_lost
+					value = 0.5
+				}
+			}
+		}
+		else_if = {
+			limit = { has_character_flag = greedy_succeed }
+
+			clr_character_flag = greedy_succeed
+			remove_trait = greedy
+			prestige = -100
+
+			random_list = {
+				5 = { change_diplomacy = -1 }
+				5 = { change_stewardship = -1 }
+				20 = { add_trait_depressed_effect = yes }
+				20 = { add_trait_stressed_effect = yes }
+				50 = {}
+			}
+		}
+		else_if = {
+			limit = { has_character_flag = slothful_succeed }
+
+			clr_character_flag = slothful_succeed
+			remove_trait = slothful
+
+			random_list = {
+				50 = { add_trait_stressed_effect = yes }
+				50 = { give_ill_effect = yes }
+				25 = {}
+			}
+		}
+		else_if = {
+			limit = { has_character_flag = envious_succeed }
+
+			clr_character_flag = envious_succeed
+			remove_trait = envious
+			prestige = -100
+
+			random_list = {
+				5 = { change_diplomacy = -1 }
+				5 = { change_stewardship = -1 }
+				20 = { add_trait_depressed_effect = yes }
+				20 = { add_trait_stressed_effect = yes }
+				50 = {}
+			}
+		}
+		else_if = {
+			limit = { has_character_flag = cruel_succeed }
+
+			clr_character_flag = cruel_succeed
+			remove_trait = cruel
+			prestige = -100
+
+			random_list = {
+				5 = { change_diplomacy = -1 }
+				5 = { change_intrigue = -1 }
+				20 = { add_trait_depressed_effect = yes }
+				20 = { add_trait_stressed_effect = yes }
+				50 = {}
+			}
+		}
+		else_if = {
+			limit = { has_character_flag = wroth_succeed }
+
+			clr_character_flag = wroth_succeed
+			remove_trait = wroth
+			prestige = -100
+
+			random_list = {
+				5 = { change_diplomacy = -1 }
+				5 = { change_intrigue = -1 }
+				20 = { add_trait_depressed_effect = yes }
+				20 = { add_trait_stressed_effect = yes }
+				50 = {}
+			}
+		}
+		else_if = {
+			limit = { has_character_flag = proud_succeed }
+
+			clr_character_flag = proud_succeed
+			remove_trait = proud
+			prestige = -250
+		}
+		else_if = {
+			limit = { has_character_flag = deceitful_succeed }
+
+			clr_character_flag = deceitful_succeed
+			remove_trait = deceitful
+			prestige = -100
+			change_intrigue = -2
+		}
+		else_if = {
+			limit = { has_character_flag = ambitious_succeed }
+
+			clr_character_flag = ambitious_succeed
+			remove_trait = ambitious
+			prestige = -100
+
+			random = {
+				chance = 50
+				add_trait_depressed_effect = yes
+			}
+		}
+		else_if = {
+			limit = { has_character_flag = arbitrary_succeed }
+
+			clr_character_flag = arbitrary_succeed
+			remove_trait = arbitrary
+			prestige = -100
+
+			random_list = {
+				25 = {
+					trigger = { NOT = { trait = depressed } }
+					add_trait_depressed_effect = yes
+				}
+
+				25 = {
+					trigger = {
+						NOR = {
+							trait = stressed
+							trait = depressed
+						}
+					}
+
+					add_trait_stressed_effect = yes
+				}
+
+				50 = { }
+			}
+		}
+
+		hidden_effect = {
+			set_variable = { which = remove_trait_failure value = 0 }
+			change_variable = { which = theosis_ambition value = 1 }
+		}
+	}
+}
+
+# Mystic
+character_event = {
+	id = Plus.2639
+	desc = EVTDESC_Plus_2639
+	picture = GFX_evt_comet
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = mystic
+		NOT = { has_character_flag = sainthood_mystic }
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_mystic
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2639 # Am I not a good Christian?
+
+		random_list = {
+			50 = {
+				piety = -50
+
+				hidden_effect = {
+					change_variable = {
+						which = theosis_ambition
+						value = -1
+					}
+				}
+			}
+
+			50 = {
+				piety = 50
+
+				hidden_effect = {
+					change_variable = {
+						which = theosis_ambition
+						value = 1
+					}
+				}
+			}
+		}
+	}
+}
+
+# Impaler
+character_event = {
+	id = Plus.2640
+	desc = EVTDESC_Plus_2640
+	picture = GFX_evt_burning_house
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = impaler
+		NOT = { has_character_flag = sainthood_impaler }
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_impaler
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2640 # I do what I do for God!
+
+		random_list = {
+			50 = {
+				piety = -50
+
+				hidden_effect = {
+					change_variable = {
+						which = theosis_ambition
+						value = -1
+					}
+				}
+			}
+
+			50 = {
+				piety = 50
+
+				hidden_effect = {
+					change_variable = {
+						which = theosis_ambition
+						value = 1
+					}
+				}
+			}
+		}
+	}
+}
+
+# Chaste
+character_event = {
+	id = Plus.2641
+	desc = EVTDESC_Plus_2641
+	picture = GFX_evt_sainthood
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = chaste
+		NOT = { has_character_flag = sainthood_chaste }
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_chaste
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2641 # All should strive for virtue
+
+		piety = 25
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+}
+
+# Celibate
+character_event = {
+	id = Plus.2642
+	desc = EVTDESC_Plus_2642
+	picture = GFX_evt_sainthood
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = celibate
+		NOT = { has_character_flag = sainthood_celibate }
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_celibate
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2641 # All should strive for virtue
+
+		piety = 25
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+}
+
+# Charitable
+character_event = {
+	id = Plus.2643
+	desc = EVTDESC_Plus_2643
+	picture = GFX_evt_market
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = charitable
+		NOT = { has_character_flag = sainthood_charitable }
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_charitable
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2641 # All should strive for virtue
+
+		piety = 25
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+}
+
+# Kind
+character_event = {
+	id = Plus.2644
+	desc = EVTDESC_Plus_2644
+	picture = GFX_evt_garden
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = kind
+		NOT = { has_character_flag = sainthood_kind }
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.5
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_kind
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2641 # All should strive for virtue
+
+		piety = 25
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+}
+
+# Humble
+character_event = {
+	id = Plus.2645
+	desc = EVTDESC_Plus_2645
+	picture = GFX_evt_stone_church
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = humble
+		NOT = { has_character_flag = sainthood_humble }
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_humble
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2641 # All should strive for virtue
+
+		piety = 25
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+}
+
+# Honest
+character_event = {
+	id = Plus.2646
+	desc = EVTDESC_Plus_2646
+	picture = GFX_evt_stone_church
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = honest
+		NOT = { has_character_flag = sainthood_honest }
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_honest
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2641 # All should strive for virtue
+
+		piety = 25
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+}
+
+# Just
+character_event = {
+	id = Plus.2647
+	desc = EVTDESC_Plus_2647
+	picture = GFX_evt_throne_room
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = just
+		NOT = { has_character_flag = sainthood_just }
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_just
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2641 # All should strive for virtue
+
+		piety = 25
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+}
+
+# Theologian
+character_event = {
+	id = Plus.2648
+	desc = EVTDESC_Plus_2648
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = theologian
+		NOT = { has_character_flag = sainthood_theologian }
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			check_variable = {
+				which = theosis_ambition
+				value < 5
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_theologian
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2641 # All should strive for virtue
+
+		piety = 25
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+}
+
+# Voice of Jesus
+character_event = {
+	id = Plus.2649
+	desc = EVTDESC_Plus_2649
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = possessed
+		has_character_modifier = voice_of_jesus
+		NOT = { has_character_flag = sainthood_voice_of_jesus }
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value >= 5
+		}
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	immediate = {
+		set_character_flag = sainthood_voice_of_jesus
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2649 # Jesus shall guide me
+
+		piety = 100
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 2
+			}
+		}
+	}
+}
+
+# Stressed
+character_event = {
+	id = Plus.1550
+	desc = EVTDESC_Plus_1550
+	picture = GFX_evt_bad_news
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = stressed
+		is_inaccessible_trigger = no
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1550 # I will renew my dedication to God
+
+		remove_trait = stressed
+	}
+}
+
+# Depressed
+character_event = {
+	id = Plus.1551
+	desc = EVTDESC_Plus_1551
+	picture = GFX_evt_bad_news
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = depressed
+		is_inaccessible_trigger = no
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1550 # I will renew my dedication to God
+
+		remove_trait = depressed
+	}
+}
+
+# Drunkard
+character_event = {
+	id = Plus.1552
+	desc = EVTDESC_Plus_1552
+	picture = GFX_evt_bad_news
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		trait = drunkard
+		is_inaccessible_trigger = no
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1550 # I will renew my dedication to God
+
+		remove_trait = drunkard
+		health = -0.5
+
+		hidden_effect = {
+			change_variable = {
+				which = health_lost
+				value = 0.5
+			}
+		}
+	}
+}
+
+# Ambition progress
+character_event = {
+	id = Plus.1553
+	desc = EVTDESC_Plus_1553
+	picture = GFX_evt_sainthood
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.25
+
+			OR = {
+				trait = chaste
+				trait = celibate
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = temperate
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = charitable
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = diligent
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = kind
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = patient
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = honest
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = just
+		}
+
+		mult_modifier = {
+			factor = 1.43
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 1.43
+			trait = humble
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1553
+
+		piety = 25
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = 1
+			}
+		}
+	}
+}
+
+# Ambition setback
+character_event = {
+	id = Plus.1554
+	desc = EVTDESC_Plus_1554
+	picture = GFX_evt_bad_news
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+		is_inaccessible_trigger = no
+
+		check_variable = {
+			which = theosis_ambition
+			value >= -5
+		}
+
+		check_variable = {
+			which = theosis_ambition
+			value < 10
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.25
+			trait = homosexual
+		}
+
+		mult_modifier = {
+			factor = 1.25
+
+			OR = {
+				trait = lustful
+				trait = hedonist
+				trait = master_seducer
+				trait = master_seductress
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = gluttonous
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = slothful
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = cruel
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = wroth
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = deceitful
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = arbitrary
+		}
+
+		mult_modifier = {
+			factor = 1.43
+			trait = proud
+		}
+
+		mult_modifier = {
+			factor = 0.67
+
+			check_variable = {
+				which = theosis_ambition
+				value >= 5
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1554
+
+		piety = -25
+
+		hidden_effect = {
+			change_variable = {
+				which = theosis_ambition
+				value = -1
+			}
+		}
+	}
+}
+
+# Failure - Ambition Abandoned
+character_event = {
+	id = Plus.1555
+	picture = GFX_evt_bad_news
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_Plus_1555_fail1
+		trigger = { check_variable = { which = theosis_ambition value < -4 } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1555_fail2
+		trigger = { check_variable = { which = theosis_ambition value >= -4 } }
+	}
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+
+		OR = {
+			check_variable = { which = theosis_ambition value < -4 }
+
+			AND = {
+				check_variable = { which = theosis_ambition value >= 10 }
+
+				OR = {
+					trait = homosexual
+					trait = lustful
+					trait = hedonist
+					trait = master_seducer
+					trait = master_seductress
+					trait = gluttonous
+					trait = greedy
+					trait = slothful
+					trait = envious
+					trait = cruel
+					trait = wroth
+					trait = proud
+					trait = deceitful
+					trait = arbitrary
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1555 # I simply cannot do it...
+
+		set_character_flag = failed_become_saint
+		cancel_ambition = yes
+	}
+}
+
+# Success - Ambition Completed
+character_event = {
+	id = Plus.1556
+	desc = EVTDESC_Plus_1556
+	picture = GFX_evt_sainthood
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_from = yes
+
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_ambition = obj_become_saint
+
+		check_variable = {
+			which = theosis_ambition
+			value >= 10
+		}
+
+		NOR = {
+			trait = homosexual
+			trait = lustful
+			trait = hedonist
+			trait = master_seducer
+			trait = master_seductress
+			trait = gluttonous
+			trait = greedy
+			trait = slothful
+			trait = envious
+			trait = cruel
+			trait = wroth
+			trait = proud
+			trait = deceitful
+			trait = arbitrary
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1556 # I am but a servant of God
+
+		add_trait = paragon
+
+		random_list = {
+			5 = { give_nickname = nick_the_rel_group }
+			40 = { give_nickname = nick_the_saint }
+			20 = { give_nickname = nick_the_pious }
+			20 = { give_nickname = nick_the_blessed }
+			20 = { give_nickname = nick_the_holy }
+
+			20 = {
+				trigger = {
+					OR = {
+						trait = kind
+						trait = just
+						trait = charitable
+					}
+				}
+
+				give_nickname = nick_the_good
+			}
+
+			20 = {
+				trigger = { trait = just }
+				give_nickname = nick_the_just
+			}
+
+			20 = {
+				trigger = {
+					trait = zealous
+					trait = just
+				}
+
+				give_nickname = nick_the_righteous
+			}
+
+			20 = {
+				trigger = {
+					trigger_if = {
+						limit = {
+							OR = {
+								trait = arbitrary
+								trait = wroth
+								is_dumb_trigger = yes
+								trait = inbred
+							}
+						}
+
+						OR = {
+							is_smart_trigger = yes
+							trait = just
+							trait = patient
+							trait = scholar
+							trait = theologian
+							learning = 12
+						}
+					}
+				}
+
+				give_nickname = nick_the_wise
+			}
+
+			20 = {
+				trigger = { trait = kind }
+				give_nickname = nick_the_kind
+			}
+
+			20 = {
+				trigger = { trait = scholar }
+				give_nickname = nick_the_scholar
+			}
+
+			20 = {
+				trigger = { trait = crusader }
+				give_nickname = nick_the_crusader
+			}
+
+			20 = {
+				trigger = { trait = zealous }
+				give_nickname = nick_the_zealot
+			}
+
+			40 = {}
+		}
+	}
+}

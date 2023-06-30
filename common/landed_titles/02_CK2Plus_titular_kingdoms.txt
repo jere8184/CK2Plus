@@ -1,0 +1,3237 @@
+##################################
+##
+## Titular Kingdoms
+##
+##################################
+# Un-formables
+
+k_aydin = {
+	color = { 238 43 172 }
+
+	culture = turkish
+
+	allow = {
+		always = no
+	}
+}
+
+k_candar = {
+	color = { 238 79 182 }
+
+	culture = turkish
+
+	allow = {
+		always = no
+	}
+}
+
+k_eretnid = {
+	color = { 253 182 182 }
+
+	culture = mongol
+
+	allow = {
+		always = no
+	}
+}
+
+k_jalayarid = {
+	color = { 190 158 217 }
+
+	culture = mongol
+
+	allow = {
+		always = no
+	}
+}
+
+k_chupanid = {
+	color = { 0 0 100 }
+
+	culture = mongol
+
+	allow = {
+		always = no
+	}
+}
+
+k_injuid = {
+	color = { 238 210 2 }
+
+	culture = mongol
+
+	allow = {
+		always = no
+	}
+}
+
+k_germiyan = {
+	color = { 255 180 180 }
+
+	culture = kurdish
+
+	allow = {
+		always = no
+	}
+}
+
+k_karaman = {
+	color = { 120 41 92 }
+
+	culture = turkish
+
+	allow = {
+		always = no
+	}
+}
+
+k_mentese = {
+	color = { 60 130 20 }
+
+	culture = turkish
+
+	allow = {
+		always = no
+	}
+}
+
+k_saruhan = {
+	color = { 144 171 225 }
+	culture = turkish
+
+
+	allow = {
+		always = no
+	}
+}
+
+k_tekke = {
+	color = { 244 153 189 }
+
+	culture = turkish
+
+	allow = {
+		always = no
+	}
+}
+
+# Republic Kingdoms
+k_ancona = {
+	color = { 130 227 180 }
+	color2 = { 255 255 255 }
+
+	capital = 469 # Ancona
+	culture = umbrian
+
+	dignity = 200 # Never want the Republic of Ancona to change primary title
+
+	allow = {
+		is_republic = yes
+		can_create_kingdom = yes
+
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+
+				OR = {
+					is_italian_trigger = yes
+					culture = longobard
+					culture = sicilian
+				}
+			}
+		}
+	}
+}
+
+# k_genoa = {
+# 	color = { 234 131 110 }
+# 	capital = 435 # Genoa
+# 	culture = ligurian
+#
+# 	dignity = 200 # Never want the Republic of Genoa to change primary title
+#
+# 	allow = {
+# 		is_republic = yes
+# 		can_create_kingdom = yes
+#
+# 		OR = {
+# 			has_titular_requirements = yes
+#
+# 			ROOT = {
+# 				lower_real_tier_than = KING
+#
+#				OR = {
+# 					is_italian_trigger = yes
+# 					culture = longobard
+# 					culture = sicilian
+#				}
+# 			}
+# 		}
+# 	}
+# }
+
+k_gotland = {
+	color = { 96 92 240 }
+	color2 = { 255 255 255 }
+	assimilate = no
+
+	capital = 148 # Gotland
+	culture = swedish
+
+	dignity = 200 # Never want the Republic of Gotland to change primary title
+
+	allow = {
+		is_republic = yes
+		can_create_kingdom = yes
+
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture_group = north_germanic
+			}
+		}
+	}
+}
+
+k_hansa = {
+	color = { 142 142 142 }
+	color2 = { 255 255 255 }
+
+	capital = 728 # Lubeck
+	dignity = 200 # Never want the Hanseatic League to change primary title
+
+	allow = {
+		is_republic = yes
+		can_create_kingdom = yes
+
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				german_cultures_trigger = yes
+			}
+		}
+	}
+}
+
+k_lucca = {
+	color = { 0  255  115 }
+	capital = 456 # Lucca
+	culture = tuscan
+	dignity = 200 # Never want them to change primary title
+
+	allow = {
+		is_republic = yes
+		can_create_kingdom = yes
+
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+
+				OR = {
+					is_italian_trigger = yes
+					culture = longobard
+					culture = sicilian
+				}
+			}
+		}
+	}
+}
+
+k_magna_graecia = {
+	color = { 16 211 246 }
+
+	capital = 480 # Taranto
+	culture = greek
+
+	allow = {
+		is_republic = yes
+		can_create_kingdom = yes
+
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+
+				OR = {
+					culture = greek
+					culture = sicilian_greek
+				}
+			}
+		}
+	}
+}
+
+k_marino = {
+	color = { 0  128  255 }
+	capital = 467 # Urbino
+	culture = umbrian
+	dignity = 200 # Never want the republic of marino to change primary title
+
+	allow = {
+		is_republic = yes
+		can_create_kingdom = yes
+
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+
+				OR = {
+					is_italian_trigger = yes
+					culture = longobard
+					culture = sicilian
+				}
+			}
+		}
+	}
+}
+
+# k_pisa = {
+# 	color = { 196 192 140 }
+# 	color2 = { 255 255 255 }
+#
+# 	capital = 460 # Pisa
+# 	culture = tuscan
+#
+# 	dignity = 200 # Never want the Republic of Pisa to change primary title
+#
+# 	allow = {
+# 		is_republic = yes
+# 		can_create_kingdom = yes
+#
+# 		OR = {
+# 			has_titular_requirements = yes
+#
+# 			ROOT = {
+# 				lower_real_tier_than = KING
+#
+#				OR = {
+#	 				is_italian_trigger = yes
+#	 				culture = longobard
+# 					culture = sicilian
+#				}
+# 			}
+# 		}
+# 	}
+# }
+
+# Roman Province Kingdoms
+k_provincia_italia = {
+	color = { 245 102 97 }
+	capital = 464 # Roma
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+	greek = "Italia"
+
+	christian = 1000 #Crusade target weight
+	roman_pagan = 1000 # Crusade target weight
+	hellenic_pagan = 1000 # Crusade target weight
+	promethean_pagan = 1000 # Crusade targer weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_italia }
+					}
+				}
+			}
+		}
+
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_italia }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_thracia = {
+	color = { 122 180 210 }
+	color2 = { 255 255 23 }
+	capital = 541 # Constantinople
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	sunni = 100
+	catholic = 100 #Crusade target weight
+	zoroastrian_group = 50 # Crusade target weight
+	hellenic_pagan_reformed = 500
+	orthodox = 5000 # Crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_thracia }
+					}
+				}
+			}
+		}
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_thracia }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_phrygia = {
+	color = { 101 102 163 }
+	color2 = { 255 255 23 }
+	capital = 547 # Nikaea
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	catholic = 75 # Crusade target weight
+	muslim = 100 # Crusade target weight
+	zoroastrian_group = 100 # Crusade target weight
+	orthodox = 300 # Crusade target weight
+	hellenic_pagan_reformed = 100
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_phrygia }
+					}
+				}
+			}
+		}
+
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_phrygia }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_pontus = {
+	color = { 140 41 171 }
+	color2 = { 255 255 255 }
+	capital = 579 # Sinope
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	orthodox = 300 # Crusade target weight
+	sunni = 100 # Crusade target weight
+	zoroastrian_group = 50 # Crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_pontus }
+					}
+				}
+			}
+		}
+
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_pontus }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_macedonia = {
+	color = { 89 140 76 }
+	color2 = { 255 255 20 }
+	capital = 527 #Strymon
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	sunni = 100
+	catholic = 100 #Crusade target weight
+	zoroastrian_group = 50 # Crusade target weight
+	hellenic_pagan_reformed = 500
+	orthodox = 5000 # Crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_macedonia }
+					}
+				}
+			}
+		}
+
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_macedonia }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_mauretania = {
+	color = { 58 41 188 }
+	color2 = { 255 255 255 }
+	capital = 1676 # Marrakech
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	catholic = 10 #Crusade target weight
+	muslim = 100 # Crusade target weight
+	west_african_pagan_reformed = 100
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_mauretania }
+					}
+				}
+			}
+		}
+
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_mauretania }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_syria_palaestina = {
+	color = { 180 180 180 }
+	color2 = { 255 255 255 }
+	capital = 1514 # Jerusalem
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	catholic = 250 #Crusade target weight
+	sunni = 50 #Crusade target weight
+	shiite = 50 #Crusade target weight
+	zoroastrian_group = 20 # Crusade target weight
+	egyptian_pagan = 30 #Crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_syria_palaestina }
+					}
+				}
+			}
+		}
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_syria_palaestina }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_mesopotamia = {
+	color = { 55 128 67 }
+	color2 = { 255 255 255 }
+	capital	= 1476 # Baghdad
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	shiite = 100 #Crusade target weight
+	sunni = 100 #Crusade target weight
+	muslim = 40 # Crusade target weight
+	zoroastrian_group = 50 # Crusade target weight
+	zun_pagan_reformed = 300 # Crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_mesopotamia }
+					}
+				}
+			}
+		}
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_mesopotamia }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_viennensis = {
+	color = { 60 153 151 }
+	color2 = { 255 255 20 }
+	capital = 355 # Vienne
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	catholic = 700 # Crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_viennensis }
+					}
+				}
+			}
+		}
+
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_viennensis }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_aegyptus = {
+	color = { 10 255 180 }
+	color2 = { 255 255 255 }
+	capital	= 1609 # Cairo
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	catholic = 100 #Crusade target weight
+	sunni = 100 #Crusade target weight
+	shiite = 100 #Crusade target weight
+	orthodox = 20 # Crusade target weight
+	zoroastrian_group = 15 # Crusade target weight
+	egyptian_pagan = 1000 # Crusade target weight
+	zun_pagan_reformed = 100 # Crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_aegyptus }
+					}
+				}
+			}
+		}
+
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_aegyptus }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_africa = {
+	color = { 21 255 3 }
+	color2 = { 255 255 255 }
+	capital = 1643 # Tunis
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	catholic = 10 # Crusade target weight
+	muslim = 20 # Crusade target weight
+	west_african_pagan_reformed = 5 # Crusade target weight
+	egyptian_pagan = 50 # Crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_africa }
+					}
+				}
+			}
+		}
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_africa }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_illyricum = {
+	color = { 205 145 145 }
+	color2 = { 200 0 0 }
+	capital = 681 # Zadar
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	orthodox = 300 # Crusade target weight
+	catholic = 10 #Crusade target weight
+	hellenic_pagan_reformed = 100 #crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_illyricum }
+					}
+				}
+			}
+		}
+
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_illyricum }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_gallia = {
+	color = { 15 27 187 }
+	color2 = { 255 255 20 }
+	capital = 281 # Paris
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	catholic = 100 #Crusade target weight
+	norse_pagan_reformed = 10 # Crusade target weight
+	german_pagan_reformed = 10 # Crusade target weight
+	celtic_pagan_reformed = 30 # Crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_gallia }
+					}
+				}
+			}
+		}
+
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_gallia }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_germania = {
+	color = { 160 95 95 }
+	color2 = { 220 220 20 }
+	capital = 191 # Fritzlar
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	catholic = 10 # Crusade target weight
+	norse_pagan_reformed = 10 # Crusade target weight
+	german_pagan_reformed = 200 # Crusade target weight
+	slavic_pagan_reformed = 10 # Crusade target weight
+	baltic_pagan_reformed = 1 # Crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_germania }
+					}
+				}
+			}
+		}
+
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_germania }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_britannia = {
+	color = { 202 26 26 }
+	color2 = { 255 255 255 }
+	capital = 46 # Middlesex
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	catholic = 10 #Crusade target weight
+	norse_pagan_reformed = 20 # Crusade target weight
+	german_pagan_reformed = 20 # Crusade target weight
+	celtic_pagan_reformed = 50 # Crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_brittania }
+					}
+				}
+			}
+		}
+
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_brittania }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_hispania = {
+	color = { 243 209 23 }
+	color2 = { 200 80 10 }
+	capital = 375 # Burgos
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	catholic = 10 # Crusade target weight
+	muslim = 10
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_hispania }
+					}
+				}
+			}
+		}
+
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_hispania }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_caledonia = {
+	color = { 199 175 12 }
+	color2 = { 255 255 255 }
+	capital = 80 #Gowrie
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	catholic = 10 #Crusade target weight
+	norse_pagan_reformed = 20 # Crusade target weight
+	german_pagan_reformed = 20 # Crusade target weight
+	celtic_pagan_reformed = 100 #Crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_caledonia }
+					}
+				}
+			}
+		}
+
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_caledonia }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_hibernia = {
+	color = { 6 127 2 }
+	color2 = { 255 255 255 }
+	capital = 6 # Dublin
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	catholic = 10 #Crusade target weight
+	norse_pagan_reformed = 20 # Crusade target weight
+	german_pagan_reformed = 20 # Crusade target weight
+	celtic_pagan_reformed = 1000 #crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_hibernia }
+					}
+				}
+			}
+		}
+
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_hibernia }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_pannonia_dacia = {
+	color = { 92 198 88 }
+	color2 = { 255 255 255 }
+	capital = 694 # Pest
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	catholic = 10 #Crusade target weight
+	slavic_pagan_reformed = 200 # Crusade target weight
+	tengri_pagan_reformed = 1000 #crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_pannonia_dacia }
+					}
+				}
+			}
+		}
+
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_pannonia_dacia }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_armenia = {
+	color = { 240 128 128 }
+	color2 = { 255 255 255 }
+	capital = 593 # Vaspurakan
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	orthodox = 10 #Crusade target weight
+	tengri_pagan_reformed = 1000 #crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_armenia }
+					}
+				}
+			}
+		}
+
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_armenia }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+k_provincia_sardinia_corsica = {
+	color = { 170 145 100 }
+	color2 = { 255 255 255 }
+	capital = 428 # Cagliari
+	culture = roman
+	title_prefix = ROMAN_PROVINCE_OF
+	title = CONSUL
+	title_female = CONSUL
+	dynasty_title_names = no
+
+	christian = 1000 #Crusade target weight
+	hellenic_pagan_reformed = 1000 #Crusade target weight
+
+	allow = {
+		custom_tooltip = {
+			text = NOT_ROMAN_CAPITAL
+
+			top_liege = {
+				primary_title = {
+					NAND = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_sardinia_corsica }
+					}
+				}
+			}
+		}
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+
+	gain_effect = {
+		if = {
+			limit = {
+				top_liege = {
+					primary_title = {
+						OR = {
+							title = e_roman_empire
+							has_title_flag = eastern_roman_successor
+							has_title_flag = western_roman_successor
+						}
+
+						capital_scope = { region = custom_roman_sardinia_corsica }
+					}
+				}
+			}
+
+			destroy_landed_title = FROM
+		}
+	}
+}
+
+# Anglo-Saxon
+k_anglia = {
+	color = { 20 72 255 }
+	capital = 50 # Suffolk
+	culture = anglo-saxon
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = anglo-saxon
+			}
+		}
+	}
+}
+
+k_essex = {
+	color = { 91 60 24 }
+	capital = 47 # Essex
+	culture = anglo-saxon
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = anglo-saxon
+			}
+		}
+	}
+}
+
+k_kent = {
+	color = { 115 42 199 }
+	capital = 44 # Kent
+	culture = anglo-saxon
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = anglo-saxon
+			}
+		}
+	}
+}
+
+k_mercia = {
+	color = { 227 199 41 }
+
+	capital = 53 # Leicester
+	culture = anglo-saxon
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = anglo-saxon
+			}
+		}
+	}
+}
+
+k_north_sea = {
+	color = { 88 100 100 }
+	color2 = { 120 220 120 }
+
+	culture = norse
+	capital = 86 # Orkney
+
+	norwegian = "Vesterhavet"
+	swedish = "Vesterhavet"
+	danish = "Vesterhavet"
+	icelandic = "Nordsoen"
+	english_norse = "Nordsoen"
+	norse = "Nordsoen"
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+
+				OR = {
+					culture_group = north_germanic
+					culture = english_norse
+				}
+			}
+		}
+	}
+}
+
+k_northumbria = {
+	color = { 255 65 20 }
+
+	capital = 61 # York
+	culture = anglo-saxon
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = anglo-saxon
+			}
+		}
+	}
+}
+
+k_sussex = {
+	color = { 0 221 255 }
+	capital = 43 # Sussex
+	culture = anglo-saxon
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = anglo-saxon
+			}
+		}
+	}
+}
+
+k_wessex = {
+	color = { 101 206 15 }
+
+	capital = 41 # Winchester
+	culture = anglo-saxon
+	saxon = "Westseaxna"
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = anglo-saxon
+			}
+		}
+	}
+}
+
+
+# Arberian
+k_albania = {
+	color = { 228 30 32 }
+	capital = 516 # Dyrrachion
+	culture = arberian
+	dignity = 10
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = arberian
+			}
+		}
+	}
+}
+
+# Avar
+
+
+# Assyrian
+k_assyria = {
+	color ={ 0 255 255 }
+	culture = assyrian
+
+	capital = 1483 # Mosul
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = assyrian
+			}
+		}
+	}
+}
+
+# Bedouin Arabic
+k_bahrain = {
+	color = { 108  21  124 }
+	capital = 1544 # Bahrein
+	culture = bedouin_arabic
+	dignity = 10
+	#dynasty_title_names = no
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = bedouin_arabic
+			}
+		}
+	}
+}
+
+k_oman = {
+	color = { 255 0 0 }
+	color2 = { 255 255 255 }
+
+	capital = 1547 # Muscat
+	culture = bedouin_arabic
+
+	ibadi = 1000 # Crusade target weight
+	sunni = 500 # Crusade target weight
+	shiite = 500 # Crusade target weight
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = bedouin_arabic
+			}
+		}
+	}
+}
+
+# Beja
+k_bazin = {
+	color = { 61 255 26 }
+	color2 = { 255 255 255 }
+	capital = 1598 # Aydhab
+	culture = beja
+	dignity = 10
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = beja
+			}
+		}
+	}
+}
+
+# Bohemian
+# k_moravia = {
+# 	color = { 158 102 36 }
+# 	color2 = { 200 0 0 }
+#
+# 	culture = bohemian
+# 	capital = 711 # Brno
+# 	slavic_pagan_reformed = 100 # Crusade target weight
+#
+# 	allow = {
+# 		can_create_kingdom = yes
+# 		OR = {
+# 			has_titular_requirements = yes
+#
+# 			ROOT = {
+# 				lower_real_tier_than = KING
+# 				culture = bohemian
+# 			}
+# 		}
+# 	}
+# }
+
+
+# Breton
+k_strath = {
+	color = { 0  100  55 }
+	capital = 74 # Clydesdale
+	culture = breton
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture_group = celtic
+			}
+		}
+	}
+}
+
+
+# Castilian
+# k_leon = { # Needs to be up here for the k_asturias allow trigger
+# 	color = { 233 158 51 }
+# 	color2 = { 255 255 255 }
+#
+# 	dignity = 1 # One more county than de jure
+# 	capital = 382 # León
+# 	culture = castilian
+#
+# 	catholic = 10 # Crusade target weight
+# 	muslim = 25 # Crusade target weight
+#
+# 	allow = {
+# 		can_create_kingdom = yes
+# 		FROM = {
+# 			any_previous_holder = { always = yes }
+# 		}
+# 	}
+# }
+
+
+# Catalan
+k_mallorca = {
+	color = { 70 130 75 }
+	capital = 426 # Mallorca
+	culture = catalan
+	#dynasty_title_names = no
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = catalan
+			}
+		}
+	}
+}
+
+# k_valencia = {
+# 	color = { 44 99 222 }
+# 	color2 = { 255 255 255 }
+#
+# 	capital = 424 # Valencia
+# 	culture = catalan
+#
+# 	bedouin_arabic = "Balansiyya"
+# 	maghreb_arabic = "Balansiyya"
+# 	levantine_arabic = "Balansiyya"
+# 	egyptian_arabic = "Balansiyya"
+# 	andalusian_arabic = "Balansiyya"
+# 	sicilian_arabic = "Balansiyya"
+#
+# 	catholic = 10 # Crusade target weight
+# 	chalcedonian = 10 #Crusade target weight
+#
+# 	allow = {
+# 		can_create_kingdom = yes
+# 		OR = {
+# 			has_titular_requirements = yes
+#
+# 			ROOT = {
+# 				culture = catalan
+# 				completely_controls = d_valencia
+# 				primary_title = { real_tier = EMPEROR }
+# 			}
+# 		}
+# 	}
+# }
+
+# Cornish
+k_cornwall = {
+	color = { 195 65 15 }
+	capital = 33 # Cornwall
+
+	culture = cornish
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = cornish
+			}
+		}
+	}
+}
+
+
+# Croatian
+k_slavonia = {
+	color = { 87 108 155 }
+	culture = croatian
+	capital = 685 # Krizevci
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = croatian
+			}
+		}
+	}
+}
+
+
+# Danish (edited, now north germanic)
+k_dublin = {
+	color = { 255 65 20 }
+	capital = 6 # Dublin
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture_group = north_germanic
+			}
+		}
+	}
+}
+
+k_jorvik = {
+	color = { 173 121 121 }
+	capital = 61 # York
+	dignity = 10
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture_group = north_germanic
+			}
+		}
+	}
+}
+
+# Dutch
+k_belgium = {
+	color = { 214 100 6 }
+	capital = 265 # Brabant
+	culture = dutch
+
+	han = "Bilìshí"
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				OR = {
+					culture = dutch
+					culture = flemish
+					culture = french
+				}
+			}
+		}
+	}
+}
+
+k_tnetherlands = {
+	color = { 0 54 182 }
+	capital = 261 # Holland
+	culture = dutch
+
+	han = "Hélán"
+	nahua = "Tlanitlalpan"
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				OR = {
+					culture = dutch
+					culture = flemish
+					culture = frisian
+				}
+			}
+		}
+	}
+}
+
+
+# Ethiopian
+k_gondar = {
+	color = { 223 223 211 }
+	color2 = { 255 255 255 }
+	culture = ethiopian
+	capital = 1576 # Gondar
+	dignity = 100
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				religion_group = jewish_group
+			}
+		}
+	}
+}
+
+# Frankish
+k_franks = {
+	color = { 106  0  255 }
+	capital = 281 # Paris
+	culture = frankish
+	dignity = 10
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				OR = {
+					culture = frankish
+					culture = french
+				}
+			}
+		}
+	}
+}
+
+k_upper_burgundy = {
+	color = { 250 54 98 }
+	capital = 351 # Genevois
+	culture = burgundian
+	dignity = 10
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				OR = {
+					culture = french
+					culture = burgundian
+				}
+			}
+		}
+	}
+}
+
+
+# German
+k_austria = { # Kingdom of Austria
+	color = { 224 67 46 }
+	capital = 213 # Wien
+	culture = austrian
+
+	andalusian_arabic = "Nimsa"
+	anglo-saxon = "Eastrice"
+	aromanian = "Austria"
+	ashkenazi = "Estraykh"
+	austrian = "Ésterreich"
+	bavarian = "Östareich"
+	bedouin_arabic = "Nimsa"
+	bohemian = "Rakúsy"
+	breton = "Aostria"
+	bulgarian = "Avstrija"
+	castilian = "Austria"
+	catalan = "Àustria"
+	colognian = "Österreich"
+	cornish = "Estrych"
+	croatian = "Njemacka"
+	cuman = "Avstriya"
+	danish = "Østrig"
+	dutch = "Oostenrijk"
+	egyptian_arabic = "Nimsa"
+	emilian = "Àustria"
+	english = "Austria"
+	finnish = "Itävalta"
+	flemish = "Oostenrijk"
+	franconian = "Éisträich"
+	french = "Autriche"
+	frisian = "Eastenryk"
+	galatian = "Norig"
+	georgian = "Avstria"
+	german = "Ostarrîchi"
+	greek = "Afstría"
+	gujurati = "Ostriya"
+	han = "Àodìlì"
+	hausa = "Austriya"
+	hindustani = "Ostriya"
+	hungarian = "Osztrák"
+	icelandic = "Austurríki"
+	imperial_german = "Österreich"
+	irish = "An Ostair"
+	israeli = "Óstriya"
+	jolof = "Ótriis"
+	kurdish = "Awistriya"
+	latgalian = "Austrija"
+	levantine_arabic = "Nimsa"
+	lithuanian = "Austrija"
+	lombard = "Àustria"
+	maghreb_arabic = "Nimsa"
+	mongol = "Avstri"
+	nahua = "Tlapcopatlahtohcayotl"
+	nepali = "Avstriya"
+	norman = "Autriche"
+	norse = "Eysturríki"
+	norwegian = "Østerrike"
+	old_gothic = "Australand"
+	persian = "Namsâ"
+	polish = "Niemcy"
+	pomeranian = "Rakuska"
+	pontic_greek = "Afstría"
+	portuguese = "Áustria"
+	prussian = "Austreje"
+	roman = "Noricum"
+	russian = "Niemcy"
+	sardinian = "Àustria"
+	saxon = "Oostnriek"
+	scottish = "An Ostair"
+	serbian = "Nemacka"
+	sicilian_arabic = "Awstrija"
+	sinhala = "Ostriyava"
+	slovene = "Nemcija"
+	somali = "Austriya"
+	swedish = "Österrike"
+	tamil = "Astiriya"
+	telugu = "Astriya"
+	turkish = "Nemçe"
+	uyghur = "Awstiriye"
+	veneto = "Àustria"
+	welsh = "Awstria"
+	yugoslavian = "Njemacka"
+	zenati = "Tutrict"
+
+	allow = {
+		NOT = { top_liege = { has_landed_title = e_hre } }
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				german_cultures_trigger = yes
+			}
+		}
+	}
+}
+
+k_franconia = {
+	color = { 100 9 170 }
+	color2 = { 255 255 255 }
+	capital = 194 # Mainz
+	culture = franconian
+	dignity = 10
+
+	catholic = 700 # Crusade target weight
+
+	allow = {
+		NOT = { top_liege = { has_landed_title = e_hre } }
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				german_cultures_trigger = yes
+			}
+		}
+	}
+}
+
+k_illyria = {
+	color = { 106  28  133 }
+	capital = 218 # Villach
+	culture = bavarian
+	dignity = 10
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				OR = {
+					german_cultures_trigger = yes
+					culture_group = south_slavic
+				}
+			}
+		}
+	}
+}
+
+k_luxembourg = { # Kingdom of Luxembourg
+	color = { 0 150 255 }
+	capital = 249 # Luxembourg
+	culture = franconian
+	dignity = 10
+	allow = {
+		NOT = { top_liege = { has_landed_title = e_hre } }
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				german_cultures_trigger = yes
+			}
+		}
+	}
+}
+
+k_prussia = {
+	color = { 121 176 209 }
+	capital = 762 # Marienburg
+	culture = teutonic
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				OR = {
+					german_cultures_trigger = yes
+					culture = prussian
+				}
+			}
+		}
+	}
+}
+
+k_swabia = {
+	color = { 246 203 203 }
+	color2 = { 255 255 255 }
+	capital = 233 # Schwaben
+	culture = swabian
+	dignity = 10
+
+	catholic = 700 # Crusade target weight
+
+	allow = {
+		NOT = { top_liege = { has_landed_title = e_hre } }
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				german_cultures_trigger = yes
+			}
+		}
+	}
+}
+
+k_swiss = {
+	color = { 250 0 0 }
+	capital = 230 # Schwyz
+	culture = swiss
+	german = "Schweiz"
+	swiss = "Schwyz"
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				german_cultures_trigger = yes
+			}
+		}
+	}
+}
+
+k_wurttemberg = {
+	color = { 252 224 101 }
+	capital = 236 # Württemberg
+	culture = swabian
+	dignity = 10
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				german_cultures_trigger = yes
+			}
+		}
+	}
+}
+
+
+# Greek
+
+
+k_edessa = {
+	color = { 255 119 0 }
+	capital = 586 # Edessa
+	culture = greek
+	dignity = 10
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = greek
+			}
+		}
+	}
+}
+
+# k_epirus = {
+# 	color = { 159 158 29 }
+# 	capital = 511 # Épeiros
+# 	culture = greek
+#
+# 	allow = {
+# 		can_create_kingdom = yes
+# 		OR = {
+# 			has_titular_requirements = yes
+#
+# 			ROOT = {
+# 				lower_real_tier_than = KING
+# 				culture = greek
+# 			}
+# 		}
+# 	}
+# }
+
+k_krete = {
+	color = { 255 0 0 }
+	culture = greek
+	capital = 491 # Kaneia
+	dignity = 10
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = greek
+			}
+		}
+	}
+}
+
+k_macedon = {
+	color = { 250 169 44 }
+	color2 = { 255 255 255 }
+
+	capital = 497 # Thessalonike
+	culture = greek
+
+	catholic = 10 # Crusade target weight
+	chalcedonian = 10 #Crusade target weight
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_landed_title = c_chalkidike
+				has_landed_title = c_ohrid
+				has_landed_title = c_strymon
+				has_landed_title = c_thessalonike
+				OR = {
+					culture = arberian
+					culture = bulgarian
+					culture = greek
+				}
+			}
+		}
+	}
+}
+
+k_morea = {
+	color = { 54  167  156 }
+	capital = 502 # Korinthos
+	culture = greek
+	dignity = 10
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = greek
+			}
+		}
+	}
+}
+
+k_sparta = {
+	color = { 228 30 32 }
+	capital = 503 # Monemvasia
+	culture = greek
+	dignity = 10
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = greek
+			}
+		}
+	}
+}
+
+k_thessalonika = {
+	color = { 162  210  210 }
+	color2 = { 255 255 23 }
+	culture = greek
+	capital = 497 # Thessalonike
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				OR = {
+					religion = catholic
+					religion = chalcedonian
+				}
+			}
+		}
+	}
+}
+
+
+# Hungarian
+# k_hungary = {
+# 	color = { 250 120 90 }
+#
+# 	culture = hungarian
+# 	capital = 694 # Pest
+# 	dignity = 20
+#
+# 	han = "Xiongyálì"
+#
+# 	allow = {
+# 		can_create_kingdom = yes
+# 		OR = {
+# 			has_titular_requirements = yes
+#
+# 			ROOT = {
+# 				lower_real_tier_than = KING
+# 				culture = hungarian
+# 			}
+# 		}
+# 	}
+# }
+
+k_magyar = {
+	color = { 187 70 70 }
+
+	culture = hungarian
+	capital = 694 # Pest
+
+	allow = {
+		NOT = { is_title_active = k_hungary }
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = hungarian
+			}
+		}
+	}
+}
+
+# Italian
+k_tuscany = {	# Kingdom of Tuscany
+	color = { 244 227 160 }
+	capital = 457 # Firenze
+	culture = tuscan
+	dignity = 10
+	allow = {
+		NOT = { top_liege = { has_landed_title = e_hre } }
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				OR = {
+					culture = tuscan
+					culture = italian
+				}
+			}
+		}
+		completely_controls_region = custom_hre_tuscany
+	}
+}
+
+k_corsica = {
+    color = { 90 65 128 }
+    color2 = { 255 255 255 }
+
+    capital = 434 # Corsica
+
+    allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = corsican
+			}
+		}
+	}
+}
+
+# Dalmatia
+k_dalmatia = {
+	color = { 150 120 250 }
+	color2 = { 255 255 255 }
+	culture = dalmatian
+	capital = 681 # Zadar
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				OR = {
+					is_dalmatian_meltingpot_culture_yugoslav = yes
+					is_dalmatian_meltingpot_culture_italian = yes
+					german_cultures_trigger = yes
+					culture = bulgarian
+					culture = greek
+					culture = hungarian
+					culture = sicilian
+					culture = sicilian_greek
+				}
+				completely_controls = d_hum
+			}
+		}
+	}
+}
+
+# k_naples = {
+# 	color = { 0 0 255 }
+# 	color2= { 255 216 0 }
+#
+# 	culture = neapolitan
+# 	capital = 473 # Napoli
+#
+# 	allow = {
+# 		NOT = { top_liege = { has_landed_title = e_hre } }
+# 		can_create_kingdom = yes
+# 		OR = {
+# 			has_titular_requirements = yes
+#
+# 			ROOT = {
+# 				lower_real_tier_than = KING
+# 				OR = {
+# 					is_italian_trigger = yes
+# 					culture = longobard
+# 					culture = sicilian
+# 					culture = french
+# 					culture = norman
+# 					culture = catalan
+# 				}
+# 			}
+# 		}
+# 	}
+# }
+
+k_trinacria = {
+	color = { 250 0 0 }
+	color2 = { 255 255 255 }
+	culture = sicilian
+	capital = 486 # Palermo
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+
+				custom_tooltip = {
+					text = catholic_group_christian
+					is_catholic_branch = yes
+				}
+			}
+		}
+	}
+}
+
+# Kurdish
+k_kurdistan = {
+	color ={ 198 18 18 }
+	culture = kurdish
+
+	capital = 1446 # Kurdistan
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = kurdish
+			}
+		}
+	}
+}
+
+# Jewish
+# Levantine Arabic
+k_badawi = {
+	short_name = yes
+	color = { 234 255 0 }
+	capital = 1524 # Al Jawf
+	culture = levantine_arabic
+	#dynasty_title_names = no
+	dignity = 10
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = levantine_arabic
+			}
+		}
+	}
+}
+
+# k_iraq = {
+# 	color = { 0 204 85 }
+# 	capital = 1476 # Baghdad
+# 	culture = levantine_arabic
+# 	#dynasty_title_names = no
+# 	dignity = 10
+#
+# 	bodpa = "Ilaakho"
+# 	bohemian = "Irák"
+# 	georgian = "Eraqi"
+# 	han = "Yìlakè"
+# 	icelandic = "Írak"
+# 	latgalian = "Iraka"
+# 	lithuanian = "Irakas"
+# 	roman = "Iraquia"
+# 	scottish = "Ioràc"
+# 	sinhala = "Irakaya"
+#
+# 	allow = {
+# 		can_create_kingdom = yes
+# 		OR = {
+# 			has_titular_requirements = yes
+#
+# 			ROOT = {
+# 				lower_real_tier_than = KING
+# 				culture = levantine_arabic
+# 			}
+# 		}
+# 	}
+# }
+
+k_jordan = {
+	color = { 89 172 235 }
+	capital = 1507 # Amman
+	culture = levantine_arabic
+	# dynasty_title_names = no
+	dignity = 10
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = levantine_arabic
+			}
+		}
+	}
+}
+
+k_lahej = {
+	color = { 0 250 142 }
+	capital = 1557 # Aden
+	culture = levantine_arabic
+	# dynasty_title_names = no
+	dignity = 10
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = levantine_arabic
+			}
+		}
+	}
+}
+
+# Lombard
+# k_italy = {
+# 	color = { 31 138 40 }
+# 	color2 = { 255 255 255 }
+#
+# 	capital = 442 # Milano
+#
+# 	culture = italian
+#
+# 	christian = 1000 # Crusade target weight
+# 	hellenic_pagan_reformed = 1000 # Crusade target weight
+#
+# 	han = "Yìdàlì"
+#
+# 	allow = {
+# 		can_create_kingdom = yes
+# 		OR = {
+# 			has_titular_requirements = yes
+#
+# 			ROOT = {
+# 				lower_real_tier_than = KING
+# 				is_italian_trigger = yes
+# 			}
+# 			ROOT = {
+# 				lower_real_tier_than = KING
+# 				culture = longobard
+# 			}
+# 			ROOT = {
+# 				lower_real_tier_than = KING
+# 				culture = sicilian
+# 			}
+# 		}
+# 	}
+# }
+
+# Norman
+k_normandy = {
+	color = { 73 136 4 }
+	color2 = { 255 255 255 }
+
+	culture = norman
+	capital = 298 # Rouen
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = norman
+			}
+		}
+	}
+}
+
+
+# Occitan
+k_gascony = {
+	color = { 106 255 0 }
+	capital = 321 # Armagnac
+	culture = occitan
+	dignity = 10
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = occitan
+			}
+		}
+	}
+}
+
+k_provence = {
+	color = { 90 189 250 }
+	capital = 359 # Provence
+	culture = occitan
+	dignity = 10
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = occitan
+			}
+		}
+	}
+}
+
+k_visigoth = {
+	color = { 210 2 217 }
+	capital = 327 # Toulouse
+	culture = visigothic
+	dignity = 10
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = visigothic
+			}
+		}
+	}
+}
+
+
+# Persian
+k_qarakhnid = { # Actually Khiva
+	color = { 39 138 51 }
+	color2 = { 255 255 255 }
+
+	capital = 1083 # Khiva
+	culture = persian
+
+	tengri_pagan_reformed = 50
+	zoroastrian_group = 700 # Crusade target weight
+
+	sogdian = "Sogdiana"
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = persian
+			}
+		}
+	}
+}
+
+# Pomeranian
+k_wend = {
+	color = { 142 160 40 }
+
+	capital = 729 # Mecklenburg
+	culture = pomeranian
+	dignity = 100
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = pomeranian
+			}
+		}
+	}
+}
+
+# Portugese
+k_algarve = {
+	color = { 54 167 156 }
+	capital = 398 # Silves
+	culture = portuguese
+	dignity = 10
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = portuguese
+			}
+		}
+	}
+}
+
+# k_galicia = {
+# 	color = { 255 224 94 }
+# 	color2 = { 255 255 255 }
+#
+# 	capital = 386 # Coruña
+# 	culture = portuguese
+#
+# 	catholic = 250 # Crusade target weight
+# 	muslim = 25 # Crusade target weight
+#
+# 	allow = {
+# 		can_create_kingdom = yes
+# 		OR = {
+# 			has_titular_requirements = yes
+#
+# 			ROOT = {
+# 				lower_real_tier_than = KING
+# 				culture_group = iberian
+# 			}
+# 		}
+# 	}
+# }
+
+
+# Vlach
+k_romania = {
+	color = { 91 91 102 }
+
+	capital = 667 # Turnu
+	culture = vlach
+	dignity = 10
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = vlach
+			}
+		}
+	}
+}
+
+# Swedish
+k_scania = {
+	color = { 0 255 234 }
+	capital = 165 # Skåne
+	culture = swedish
+
+	swedish = "Skåne"
+	danish = "Skåne"
+	norwegian = "Skåne"
+	norse = "Skåne"
+
+	dignity = 10
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				OR = {
+					culture = norse
+					culture = danish
+					culture = swedish
+					culture = norwegian
+				}
+			}
+		}
+	}
+}
+
+k_iceland = {
+	color = { 105 55 215 }
+	color2 = { 120 220 120 }
+
+	culture = icelandic
+	capital = 90 #Vestisland
+
+	han = "Bingdao"
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture_group = north_germanic
+			}
+		}
+	}
+}
+
+# Tibeto-Burman
+k_bhutan = {
+	color = { 242 206 97 }
+	color2={ 255 255 255 }
+	capital = 1133 # Bumthang
+
+	culture = bodpa
+
+	bodpa = "Druk"
+	han = "Budan"
+
+	allow = {
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+		ROOT = {
+			lower_real_tier_than = KING
+			OR = {
+				culture = bodpa
+				culture = nepali
+				culture = sumpa
+				culture = tangut
+				culture = zhangzhung
+			}
+			completely_controls = d_bhutan
+		}
+	}
+}
+
+# Turkish
+k_ottoman = {
+	color = { 38 127 0 }
+
+	culture = turkish
+
+	allow = {
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+}
+
+k_rum = {
+	color = { 144 182 161 }
+
+	culture = turkish
+	dynasty_title_names = no         # Will not be named "Seljuk", etc.
+
+	allow = {
+		can_create_kingdom = yes
+		has_titular_requirements = yes
+	}
+}
+
+# k_daylam = {
+# 	color={ 70 125 147 }
+# 	color2={ 255 255 255 }
+# 	capital = 1437 # Gilan
+#
+# 	allow = {
+# 		can_create_kingdom = yes
+# 		OR = {
+# 			has_titular_requirements = yes
+#
+# 			ROOT = {
+# 				lower_real_tier_than = KING
+# 				OR = {
+# 					culture = persian
+# 					culture = sogdian
+# 					culture = afghan
+# 					culture = saka
+# 					culture = baloch
+# 					culture = turkish
+# 					culture = kurdish
+# 					culture = armenian
+# 					culture = assyrian
+# 					culture = georgian
+# 					culture = grecopersian
+# 					culture = greek
+# 					culture = alan
+# 				}
+# 			}
+# 		}
+# 	}
+# }
+
+# Vandalic
+k_vandalia = {
+	color = { 152 0 255 }
+	color2 = { 159 109 78 }
+
+	capital = 1643 # Tunis (Carthage)
+
+	culture = vandalic
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				culture = vandalic
+			}
+		}
+	}
+}
+
+# Used between 1204 and 1261
+k_nikaea = {
+	color = { 101 102 163 }
+	color2 = { 255 255 23 }
+
+	capital = 547 # Nikaea
+
+	culture = greek
+
+	catholic = 75 # Crusade target weight
+	chalcedonian = 100 #Crusade target weight
+	muslim = 50 # Crusade target weight
+	zoroastrian_group = 100 # Crusade target weight
+	orthodox = 300 # Crusade target weight
+	hellenic_pagan = 200 #Crusade target weight
+
+	allow = {
+		can_create_kingdom = yes
+
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = greek
+			}
+		}
+	}
+}
+
+k_takrur = {
+	color = { 251 163 38 }
+	color2 = { 185 48 15 }
+
+	capital = 1700 # Kantor
+	culture = jolof
+
+	west_african_pagan_reformed = 100
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = KING
+				culture = jolof
+			}
+		}
+	}
+}

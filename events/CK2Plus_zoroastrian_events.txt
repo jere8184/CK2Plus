@@ -1,0 +1,4065 @@
+
+namespace = GoPagan
+
+#reserved: GoPagan.200 to GoPagan.299
+
+#######################################
+# ZOROASTRIAN EVENTS
+# Written by Zeress
+#######################################
+
+# Help in fighting the local bandits
+character_event = {
+	id = GoPagan.200
+	desc = EVTDESC_GoPagan_200
+	picture = GFX_evt_bandits
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	only_playable = yes
+	religion_group = zoroastrian_group
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+	is_sick = no
+
+	trigger = {
+		any_demesne_province = {
+			OR = {
+				has_province_modifier = highway_robber_band
+				has_province_modifier = smugglers_ring
+				has_province_modifier = thieves_guild
+				revolt_risk >= 0.3
+			}
+
+			owned_by = PREV
+		}
+
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.25
+			trait = diligent
+		}
+
+		mult_modifier = {
+			factor = 1.67
+			realm_learning >= 30
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_200 # Hunt them down yourself
+
+		piety = 10
+
+		random = {
+			chance = 15
+			add_trait_wounded_effect = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_200 # Send a squad of guards
+
+		trigger = { scaled_wealth >= 0.15 }
+
+		scaled_wealth = -0.15
+		prestige = 20
+	}
+
+	option = {
+		name = EVTOPTC_GoPagan_200 # Let the locals handle it
+
+		prestige = -10
+		piety = -10
+	}
+}
+
+# Rebuild a local mosque?
+character_event = {
+	id = GoPagan.201
+	desc = EVTDESC_GoPagan_201
+	picture = GFX_evt_burning_house
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	only_playable = yes
+	religion_group = zoroastrian_group
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		OR = {
+			religion = zoroastrian
+			religion = mazdaki
+			religion = zurvanist
+		}
+
+		any_demesne_province = {
+			religion_group = muslim
+			owned_by = PREV
+		}
+
+		NOR = {
+			has_character_modifier = zoroastrian_tolerance
+			trait = cruel
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.25
+			trait = kind
+		}
+
+		mult_modifier = {
+			factor = 1.43
+			trait = charitable
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_201 # Help them
+
+		scaled_wealth = -0.5
+		piety = 20
+
+		add_character_modifier = {
+			name = zoroastrian_tolerance
+			years = 1
+		}
+
+		hidden_effect = {
+			any_realm_character = {
+				if = {
+					limit = { religion_group = muslim }
+
+					opinion = {
+						name = opinion_tolerant_muslims
+						who = ROOT
+						years = 2
+					}
+				}
+				else_if = {
+					limit = { religion_group = zoroastrian_group }
+
+					opinion = {
+						name = opinion_tolerant
+						who = ROOT
+						years = 2
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_201 # Ignore their plight
+
+		random = {
+			chance = 20
+			add_trait_fully_cruel_effect = yes
+		}
+	}
+}
+
+# Sedreh Pushi ritual - child's event
+character_event = {
+	id = GoPagan.202
+	desc = EVTDESC_GoPagan_202
+	picture = GFX_evt_child_bully
+
+	is_triggered_only = yes
+
+	religion_group = zoroastrian_group
+	min_age = 7
+	max_age = 15
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		OR = {
+			religion = zoroastrian
+			religion = mazdaki
+			religion = zurvanist
+		}
+
+		any_close_relative = {
+			is_parent_of = ROOT
+			is_alive = yes
+			is_incapable = no
+			is_inaccessible_trigger = no
+			prisoner = no
+			war = no
+		}
+
+		NOT = { has_character_flag = had_sedreh_pushi }
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		years = 1
+
+		mult_modifier = {
+			factor = 2
+			age >= 11
+		}
+
+		mult_modifier = {
+			factor = 2
+			age >= 12
+		}
+
+		mult_modifier = {
+			factor = 2
+			age >= 13
+		}
+
+		mult_modifier = {
+			factor = 10
+			age >= 14
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_202 # Ask my father for advice
+
+		set_character_flag = had_sedreh_pushi
+
+		hidden_effect = {
+			if = {
+				limit = {
+					father = {
+						is_alive = yes
+
+						any_child = {
+							character = ROOT
+
+							mother = {
+								trigger_if = {
+									limit = { is_alive = yes }
+									NOT = { higher_real_tier_than = PREVPREV }
+								}
+							}
+						}
+					}
+				}
+
+				father = {
+					character_event = {
+						id = GoPagan.203
+						days = 3
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					mother = {
+						is_alive = yes
+
+						any_child = {
+							character = ROOT
+
+							father = {
+								trigger_if = {
+									limit = { is_alive = yes }
+									lower_real_tier_than = PREVPREV
+								}
+							}
+						}
+					}
+				}
+
+				mother = {
+					character_event = {
+						id = GoPagan.203
+						days = 3
+					}
+				}
+			}
+		}
+	}
+}
+
+# Sedreh Pushi ritual - father's event
+character_event = {
+	id = GoPagan.203
+	desc = EVTDESC_GoPagan_203
+	picture = GFX_evt_guardian
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_203 # Talk to him about Asha � righteousness
+
+		trigger = {
+			OR = {
+				trait = just
+				trait = kind
+			}
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			piety = 10
+			change_intrigue = -1
+			change_learning = 2
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_203 # Talk to him about Khshatr � divine power.
+
+		trigger = {
+			OR = {
+				trait = brave
+				is_strong_trigger = yes
+			}
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			prestige = 20
+			change_intrigue = -1
+			change_martial = 1
+		}
+	}
+
+	option = {
+		name = EVTOPTC_GoPagan_203 # Talk to him about  Armaiti � devotion.
+
+		trigger = {
+			OR = {
+				trait = zealous
+				piety >= 400
+			}
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			piety = 30
+			change_intrigue = -1
+			change_diplomacy = 1
+		}
+	}
+
+	option = {
+		name = EVTOPTD_GoPagan_203 # Talk to him about Vohu Manah � holy spirit.
+
+		trigger = {
+			OR = {
+				trait = diligent
+				piety >= 800
+			}
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			piety = 10
+			prestige = 10
+			change_intrigue = -1
+			change_stewardship = 1
+		}
+	}
+
+	option = {
+		name = EVTOPTE_GoPagan_203 # I have nothing to teach him.
+
+		FROM = {
+			show_scope_change = no
+
+			random_list = {
+				50 = { change_learning = 1 }
+				50 = { change_learning = -1 }
+			}
+		}
+	}
+}
+
+### Rebuilding Persepolis
+
+# Rebuild Persepolis Phase 1 - Laying the foundation
+character_event = {
+	id = GoPagan.205 # formerly 1000182065
+	desc = EVTDESC_GoPagan_205
+	picture = GFX_persepolis_ruin
+
+	is_triggered_only = yes
+
+	immediate = {
+		add_character_modifier = {
+			name = is_rebuilding_persepolis
+			duration = -1
+			hidden = yes
+			inherit = yes
+		}
+
+		c_esfahan = {
+			location = {
+				province_event = {
+					id = GoPagan.206 # Phase 2
+					years = 7
+					random = 730 # 2 years
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_GoPagan_205 # Make it the greatest city there ever was!
+	}
+}
+
+# Rebuild Persepolis Phase 2 - Add Esfahan bonus modifier ~8 years
+province_event = {
+	id = GoPagan.206 # formerly 1000182066
+	title = EVTNAME_GoPagan_206
+	desc = EVTDESC_GoPagan_206
+	picture = GFX_persepolis_built
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_206 # Library
+
+		add_province_modifier = {
+			name = persepolis_library
+			duration = -1
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_206 # Irrigation system
+
+		add_province_modifier = {
+			name = persepolis_irrigation
+			duration = -1
+		}
+	}
+
+	option = {
+		name = EVTOPTC_GoPagan_206 # Gate of all nations
+
+		add_province_modifier = {
+			name = persepolis_gate
+			duration = -1
+		}
+	}
+
+	after = {
+		province_event = {
+			id = GoPagan.207 # Phase 3
+			months = 18
+			random = 90
+		}
+	}
+}
+
+# Rebuild Persepolis Phase 3
+province_event = {
+	id = GoPagan.207 # formerly 1000182067
+	title = EVTNAME_GoPagan_207
+	desc = EVTDESC_GoPagan_207
+	picture = GFX_persepolis_built
+
+	is_triggered_only = yes
+
+	immediate = {
+		owner = { remove_character_modifier = is_rebuilding_persepolis }
+		clr_global_flag = rebuilding_persepolis
+		set_global_flag = persepolis_rebuilt
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_207
+
+		owner = {
+			show_scope_change = no
+			prestige = 500
+		}
+
+		build_holding = {
+			title = b_new_persepolis
+			type = temple
+			holder = owner
+		}
+
+		owner = {
+			set_character_flag = persepolis_built
+
+			narrative_event = {
+				id = GoPagan.210
+				days = 7
+			}
+		}
+	}
+}
+
+# Esfahan owned by someone else before Persepolis is rebuilt
+# TODO: Add notification event
+character_event = {
+	id = GoPagan.208
+
+	is_triggered_only = yes # on_new_holder(_inheritance/usurpation)
+	hide_window = yes
+
+	has_global_flag = rebuilding_persepolis
+
+	trigger = {
+		FROM = { title = c_esfahan }
+		NOT = { has_character_modifier = is_rebuilding_persepolis }
+	}
+
+	immediate = {
+		clr_global_flag = rebuilding_persepolis
+
+		FROM = {
+			location = {
+				clear_delayed_event = { id = GoPagan.206 } # Phase 2
+				clear_delayed_event = { id = GoPagan.207 } # Phase 3
+				remove_province_modifier = persepolis_library
+				remove_province_modifier = persepolis_irrigation
+				remove_province_modifier = persepolis_gate
+			}
+		}
+
+		FROMFROM = {
+			remove_character_modifier = is_rebuilding_persepolis
+		}
+	}
+}
+
+# News spread about New Persepolis
+narrative_event = {
+	id = GoPagan.210 # formerly 1000182068
+	title = EVTNAME_GoPagan_210
+	desc = EVTDESC_GoPagan_210
+	picture = GFX_persepolis_built
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	only_rulers = yes
+
+	option = {
+		name = EXCELLENT
+
+		trigger = { has_character_flag = persepolis_built }
+
+		clr_character_flag = persepolis_built
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_210
+
+		trigger = {
+			NOT = { has_character_flag = persepolis_built }
+		}
+	}
+}
+
+# Expand Zhayedan
+narrative_event = {
+	id = GoPagan.216 #formerly 1000182158
+	title = EVTNAME_GoPagan_216
+	desc = EVTDESC_GoPagan_216
+	picture = GFX_evt_zhayedan
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	only_rulers = yes
+
+	option = {
+		name = EXCELLENT
+
+		trigger = { has_character_flag = expanded_zhayedan }
+
+		clr_character_flag = expanded_zhayedan
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_210
+
+		trigger = {
+			NOT = { has_character_flag = expanded_zhayedan }
+		}
+	}
+}
+
+# Great Sacrifice event
+character_event = {
+	id = GoPagan.220 # formerly 1000182159
+	title = EVTNAME_GoPagan_220
+	desc = EVTDESC_GoPagan_220
+	picture = GFX_evt_sacrifice
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_220 # To Mithra (War)
+
+		scaled_wealth = -0.3
+		piety = -30
+
+		add_character_modifier = {
+			name = zoroastrian_sacrifice_mithra
+			years = 2
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_220 # To Parendi (Riches)
+
+		scaled_wealth = -0.3
+		piety = -30
+
+		add_character_modifier = {
+			name = zoroastrian_sacrifice_parendi
+			years = 2
+		}
+	}
+
+	option = {
+		name = EVTOPTC_GoPagan_220 # To Chisti (Wisdom)
+
+		scaled_wealth = -0.3
+		piety = -30
+
+		capital_scope = {
+			show_scope_change = no
+
+			add_province_modifier = {
+				name = zoroastrian_sacrifice_chisti
+				years = 2
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTD_GoPagan_220 # To none of them
+
+		clr_character_flag = made_sacrifice_1
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Cleansing Ritual event
+character_event = {
+	id = GoPagan.225 #formerly 1000182160
+	title = EVTNAME_GoPagan_225
+	desc = EVTDESC_GoPagan_225
+	picture = GFX_evt_sacrifice
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_225
+
+		piety = 25
+
+		add_character_modifier = {
+			name = zoroastrian_cleansing
+			years = 1
+		}
+	}
+}
+
+#######################################
+# MANICHAEAN EVENTS
+#######################################
+
+# Choosing a Shekhinah
+character_event = {
+	id = GoPagan.226
+	title = EVTNAME_GoPagan_226
+	desc = EVTDESC_GoPagan_226
+	picture = GFX_evt_knight_kneeling
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_226
+
+		add_character_modifier = {
+			name = patron_reason
+			duration = -1
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_226
+
+		add_character_modifier = {
+			name = patron_mind
+			duration = -1
+		}
+	}
+
+	option = {
+		name = EVTOPTC_GoPagan_226
+
+		add_character_modifier = {
+			name = patron_intelligence
+			duration = -1
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_227
+
+		trigger = { ai = yes }
+
+		add_character_modifier = {
+			name = patron_mani_understanding
+			duration = -1
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_227
+
+		trigger = { ai = yes }
+
+		add_character_modifier = {
+			name = patron_thought
+			duration = -1
+		}
+	}
+
+	option = {
+		name = EVTOPTD_GoPagan_226
+
+		character_event = {
+			id = GoPagan.227
+			tooltip = CONSIDER_OTHER_OPTIONS
+		}
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+character_event = {
+	id = GoPagan.227
+	title = EVTNAME_GoPagan_226
+	desc = EVTDESC_GoPagan_226
+	picture = GFX_evt_knight_kneeling
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTB_GoPagan_227
+
+		add_character_modifier = {
+			name = patron_mani_understanding
+			duration = -1
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_227
+
+		add_character_modifier = {
+			name = patron_thought
+			duration = -1
+		}
+	}
+
+	option = {
+		name = EVTOPTD_GoPagan_226
+
+		character_event = {
+			id = GoPagan.226
+			tooltip = CONSIDER_OTHER_OPTIONS
+		}
+	}
+}
+
+# Manichaean leader restored
+narrative_event = {
+	id = GoPagan.228
+	title = EVTNAME_GoPagan_228
+	desc = EVTDESC_GoPagan_228
+	picture = GFX_evt_zoroaster
+	border = GFX_event_narrative_frame_religion
+	portrait = event_target:new_manichaean_leader
+
+	is_triggered_only = yes
+	major = yes
+	show_root = yes
+	hide_from = yes
+
+	immediate = {
+		random_realm_lord = {
+			limit = {
+				is_theocracy = yes
+				religion = ROOT
+				prisoner = no
+				is_incapable = no
+				in_revolt = no
+				pf_war_trait_trigger = no
+				NOT = { trait = bad_priest_zoroastrian }
+			}
+
+			preferred_limit = {
+				capital_holding = { is_holy_site = ROOT }
+			}
+
+			grant_title = d_manichaean
+			set_defacto_liege = ROOT
+			pf_liege_change_effect = yes
+			save_event_target_as = new_manichaean_leader
+
+			if = {
+				limit = {
+					NOT = {
+						any_demesne_title = {
+							is_holy_site = ROOT
+						}
+					}
+				}
+
+				ROOT = {
+					random_realm_title = {
+						limit = { is_holy_site = ROOT }
+						gain_title = event_target:new_manichaean_leader
+					}
+				}
+			}
+		}
+
+		if = {
+			limit = { NOT = { event_target:new_manichaean_leader = { always = yes } } }
+
+			create_random_priest = {
+				random_traits = yes
+				dynasty = random
+				religion = manichaean
+				culture = ROOT
+				age = 40
+				health = 7
+				add_trait = quick
+				add_trait = zealous
+				add_trait = scholar
+				add_trait = mastermind_theologian
+
+				attributes = {
+					learning = 5
+					diplomacy = 5
+					martial = 2
+					stewardship = 5
+					intrigue = 5
+				}
+			}
+
+			new_character = {
+				grant_title = d_manichaean
+				set_defacto_liege = ROOT
+				save_event_target_as = new_manichaean_leader
+
+				ROOT = {
+					random_realm_title = {
+						limit = { is_holy_site = ROOT }
+						gain_title = PREVPREV
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_228
+
+		trigger = {
+			NOT = { religion = manichaean }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_228
+
+		trigger = { religion = manichaean }
+	}
+}
+
+# The Army of Light founded
+narrative_event = {
+	id = GoPagan.229
+	title = EVTNAME_GoPagan_229
+	desc = EVTDESC_GoPagan_229
+	picture = GFX_evt_crusaders
+	border = GFX_event_narrative_frame_war
+
+	is_triggered_only = yes
+	major = yes
+	hide_from = yes
+
+	major_trigger = {
+		ai = no
+	}
+
+	option = {
+		name = {
+			text = EVTOPTA_GoPagan_229
+			trigger = { religion = manichaean }
+		}
+		name = {
+			text = I_SEE
+			trigger = {
+				NOT = { religion = manichaean }
+			}
+		}
+	}
+}
+
+# Muslim caliph orders the murder of Manichaeans in Baghdad
+character_event = {
+	id = GoPagan.234
+	desc = EVTDESC_GoPagan_234
+	picture = GFX_evt_bishop_byzantine
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	only_playable = yes
+	religion_group = muslim
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		controls_religion = yes
+		is_title_active = d_manichaean
+		d_manichaean = { has_holder = yes }
+		year >= 900
+
+		c_baghdad = {
+			holder_scope = {
+				OR = {
+					character = ROOT
+					is_vassal_or_below_of = ROOT
+				}
+			}
+		}
+
+		OR = {
+			trait = cruel
+			trait = decadent
+			trait = wroth
+			trait = greedy
+			trait = lunatic
+			trait = possessed
+		}
+
+		NOR = {
+			trait = sympathy_zoroastrianism
+			has_character_flag = refused_manichaean_murder
+			has_global_flag = manichaean_leader_murdered
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_234
+
+		set_global_flag = manichaean_leader_murdered
+		piety = 250
+		remove_trait_silently_just_effect = yes
+
+		if = {
+			limit = { trait = decadent }
+			remove_trait = decadent
+		}
+
+		if = {
+			limit = { trait = kind }
+			remove_trait = kind
+		}
+		else_if = {
+			limit = { NOT = { trait = cruel } }
+
+			random = {
+				chance = 50
+				add_trait_cruel_effect = yes
+			}
+		}
+
+		c_baghdad = {
+			show_scope_change = no
+
+			location = {
+				show_scope_change = no
+
+				if = {
+					limit = { religion = manichaean }
+					religion = ROOT
+				}
+			}
+		}
+
+		d_manichaean = {
+			holder_scope = {
+				save_event_target_as = manichaean_leader
+
+				tooltip = {
+					death = {
+						death_reason = death_murder
+						killer = ROOT
+					}
+
+					religion_authority = {
+						name = death_of_leader
+						years = 30
+					}
+				}
+			}
+		}
+
+		narrative_event = { id = GoPagan.235 }
+
+		ai_chance = { factor = 100 }
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_234
+
+		set_character_flag = refused_manichaean_murder
+		piety = -250
+		remove_trait_silently_zealous_effect = yes
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Notification of the murder of the Manichaean leader
+narrative_event = {
+	id = GoPagan.235
+	title = EVTNAME_GoPagan_235
+	desc = EVTDESC_GoPagan_235
+	picture = GFX_evt_bishop_byzantine
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	major_trigger = {
+		OR = {
+			character = FROM
+			same_realm = FROM
+			has_landed_title = d_manichaean
+			religion = manichaean
+
+			capital_scope = {
+				distance = {
+					where = c_baghdad
+					value < 600	# Same part of the world
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_235
+
+		trigger = { has_landed_title = d_manichaean }
+
+		d_manichaean = {
+			show_scope_change = no
+
+			hidden_effect = {
+				unsafe_destroy_landed_title = THIS
+			}
+
+			activate_title = {
+				title = THIS
+				status = no
+			}
+		}
+
+		religion_authority = {
+			name = death_of_leader
+			years = 30
+		}
+
+		death = {
+			death_reason = death_murder
+			killer = FROM
+		}
+	}
+
+	option = {
+		name = {
+			text = EVTOPTA_GoPagan_235
+			trigger = {
+				religion = manichaean
+				NOT = { has_landed_title = d_manichaean }
+			}
+		}
+		name = {
+			text = EVTOPTB_GoPagan_235
+			trigger = { religion_group = muslim }
+		}
+		name = {
+			text = I_SEE
+			trigger = {
+				NOR = {
+					religion = manichaean
+					religion_group = muslim
+				}
+			}
+		}
+	}
+}
+
+# Battle Events
+character_event = {
+	id = GoPagan.236
+	desc = EVTDESC_GoPagan_236
+	picture = GFX_evt_battle
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	religion = manichaean
+
+	option = {
+		name = EVTOPTA_GoPagan_236
+
+		piety = 50
+
+		religion_authority = {
+			name = light_victory
+			years = 5
+		}
+	}
+}
+
+character_event = {
+	id = GoPagan.237
+	desc = EVTDESC_GoPagan_237
+	picture = GFX_evt_battle
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	religion = manichaean
+
+	option = {
+		name = EVTOPTA_GoPagan_237
+
+		piety = -50
+
+		religion_authority = {
+			name = dark_victory
+			years = 5
+		}
+	}
+}
+
+### BEMA FEAST EVENTS
+
+# Invite vassals to festival
+character_event = {
+	id = GoPagan.238
+	desc = EVTDESC_GoPagan_238
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_playable = yes
+	has_character_flag = planning_bema_feast
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		month < 6
+		month >= 3
+		is_inaccessible_trigger = no
+	}
+
+	fail_trigger_effect = {
+		if = {
+			limit = { has_character_flag = planning_bema_feast }
+
+			repeat_event = {
+				id = GoPagan.238
+				months = 1
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_238
+
+		clr_character_flag = planning_bema_feast
+		set_character_flag = holding_bema_feast
+
+		any_vassal = {
+			show_scope_change = no
+
+			limit = {
+				religion = manichaean
+				is_adult = yes
+				is_incapable = no
+				prisoner = no
+				war = no
+				is_inaccessible_trigger = no
+			}
+
+			letter_event = {
+				id = GoPagan.239
+				tooltip = EVTTOOLTIP1_RoI_1000
+			}
+		}
+
+		hidden_effect = {
+			character_event = { id = GoPagan.241 days = 12 } # Begin Feast
+			character_event = { id = GoPagan.246 days = 4 }  # Fast
+
+			add_character_modifier = {
+				name = do_not_disturb
+				days = 25
+				hidden = yes
+			}
+		}
+
+		if = {
+			limit = { is_inaccessible_trigger = yes	}
+
+			end_inaccessibility_effect = yes
+
+			add_character_modifier = {
+				name = went_out_of_hiding_timer
+				months = 6
+				hidden = yes
+			}
+
+			character_event = { id = CM.6400 } # Notify plotters and family
+		}
+	}
+}
+
+# Vassal receives invitation
+letter_event = {
+	id = GoPagan.239
+	desc = EVTDESC_GoPagan_239
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_239 # Travel to the feast
+
+		set_character_flag = attending_bema_feast
+
+		character_event = { id = GoPagan.242 days = 12 } # Hidden - arrives at feast
+		character_event = { id = GoPagan.245 days = 25 } # Safety event for clearing all flags
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 25
+			hidden = yes
+		}
+
+		if = {
+			limit = { is_inaccessible_trigger = yes	}
+
+			end_inaccessibility_effect = yes
+
+			add_character_modifier = {
+				name = went_out_of_hiding_timer
+				months = 6
+				hidden = yes
+			}
+
+			character_event = { id = CM.6400 } # Notify plotters and family
+		}
+
+		ai_chance = {
+			factor = 2
+
+			mult_modifier  = {
+				factor = 0.1
+				is_inaccessible_trigger = yes
+			}
+
+			mult_modifier  = {
+				factor = 2
+				opinion = { who = FROM value >= -30 }
+			}
+
+			mult_modifier  = {
+				factor = 5
+				opinion = { who = FROM value >= -15 }
+			}
+
+			mult_modifier  = {
+				factor = 5
+				opinion = { who = FROM value >= 0 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_239 # Refuse invitation
+
+		FROM = {
+			show_scope_change = no
+
+			letter_event = {
+				id = GoPagan.240
+				days = 1
+				random = 2
+				tooltip = EVTTOOLTIP1_RoI_2001
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+
+			trigger = {
+				trigger_if = {
+					limit = { is_inaccessible_trigger = no }
+
+					opinion = {
+						who = FROM
+						value < 25
+					}
+				}
+			}
+		}
+	}
+}
+
+# If vassal refuses to come to the feast
+letter_event = {
+	id = GoPagan.240
+	desc = EVTDESC_GoPagan_240
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_240
+
+		opinion = {
+			name = opinion_dislike
+			who = FROM
+			years = 2
+		}
+	}
+}
+
+# Festival begins
+character_event = {
+	id = GoPagan.241
+	desc = EVTDESC_GoPagan_241
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_capable = yes
+	prisoner = no
+
+	option = {
+		name = EXCELLENT
+
+		hidden_effect = {
+			character_event = { id = GoPagan.247 days = 3 } # Singing of Hymns
+			character_event = { id = GoPagan.250 days = 5 } # Feast
+			character_event = { id = GoPagan.251 days = 7 } # Sermon
+			character_event = { id = GoPagan.243 days = 10 } # End festival
+			character_event = { id = GoPagan.245 days = 20 } # Clearing all flags and modifiers after feast
+
+			any_courtier = {
+				limit = {
+					religion = manichaean
+					is_adult = yes
+					is_ruler = no # Vassals get the event below instead
+					prisoner = no
+					is_incapable = no
+				}
+
+				set_character_flag = attending_bema_feast
+				character_event = { id = GoPagan.247 days = 3 }
+				character_event = { id = GoPagan.250 days = 5 }
+				character_event = { id = GoPagan.251 days = 7 }
+				character_event = { id = GoPagan.245 days = 20 } # Clearing all flags and modifiers after feast
+			}
+		}
+	}
+}
+
+# Vassal arrives at festival
+character_event = {
+	id = GoPagan.242
+	desc = EVTDESC_GoPagan_242
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	trigger = {
+		FROM = {
+			is_incapable = no
+			prisoner = no
+		}
+	}
+
+	option = {
+		name = EXCELLENT
+
+		hidden_effect = {
+			character_event = { id = GoPagan.247 days = 3 } # Singing of Hymns
+			character_event = { id = GoPagan.250 days = 5 } # Feast
+			character_event = { id = GoPagan.251 days = 7 } # Picture Book
+		}
+	}
+}
+
+# Festival is over - host
+character_event = {
+	id = GoPagan.243
+	desc = EVTDESC_GoPagan_243
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		prestige = 50
+		piety = 50
+
+		add_character_modifier = {
+			name = held_bema_feast_timer
+			years = 5
+			hidden = yes
+		}
+
+		remove_do_not_disturb_effect = yes
+		clr_character_flag = holding_bema_feast
+
+		hidden_effect = {
+			any_courtier_or_vassal = {
+				limit = { has_character_flag = attending_bema_feast }
+				character_event = { id = GoPagan.244 }
+			}
+		}
+	}
+}
+
+# Festival is over - guest
+character_event = {
+	id = GoPagan.244
+	desc = EVTDESC_GoPagan_243
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		opinion = {
+			name = opinion_enjoyed_feast
+			who = FROM
+			years = 2
+		}
+
+		clr_character_flag = attending_bema_feast
+		remove_do_not_disturb_effect = yes
+	}
+}
+
+# Clear all character flags and modifiers - safety catch
+character_event = {
+	id = GoPagan.245
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		clr_character_flag = attending_bema_feast
+		clr_character_flag = holding_bema_feast
+	}
+}
+
+# Ruler begins the ritual fast
+character_event = {
+	id = GoPagan.246
+	desc = EVTDESC_GoPagan_246
+	picture = GFX_evt_garden
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_capable = yes
+	prisoner = no
+
+	option = {
+		name = EVTOPTA_GoPagan_246
+
+		piety = 20
+		prestige = 20
+
+		random_list = {
+			30 = { health = -1 }
+			30 = { add_trait_fully_temperate_effect = yes }
+			40 = { } # No event
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_246
+
+		piety = 5
+
+		random_list = {
+			10 = { health = -1 }
+			10 = { add_trait_fully_temperate_effect = yes }
+			80 = { } # No event
+		}
+	}
+
+	option = {
+		name = EVTOPTC_GoPagan_246
+
+		piety = -20
+
+		random_list = {
+			30 = { add_trait_fully_gluttonous_effect = yes }
+			70 = { } # No event
+		}
+	}
+}
+
+# Singing of Hymns
+character_event = {
+	id = GoPagan.247
+	title = EVTNAME_GoPagan_247
+	desc = EVTDESC_GoPagan_247
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_capable = yes
+	prisoner = no
+
+	option = {
+		name = EVTOPTA_GoPagan_247
+
+		piety = 10
+
+		random_list = {
+			10 = {
+				trigger = {
+					diplomacy < 8
+
+					NOR = {
+						trait = poet
+						trait = gregarious
+						trait = zealous
+					}
+				}
+
+				mult_modifier = {
+					factor = 10
+					trait = shy
+				}
+
+				custom_tooltip = { text = CANNOT_SING }
+
+				random = {
+					chance = 30
+					add_trait_fully_shy_effect = yes
+				}
+
+				prestige = -50
+			}
+
+			10 = {
+				trigger = {
+					NOR = {
+						trait = zealous
+						trait = cynical
+					}
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = poet
+				}
+
+				custom_tooltip = { text = TOUCHED_BY_BEAUTY }
+				add_trait = zealous
+			}
+
+			100 = { } # No event
+		}
+	}
+}
+
+# Feast
+character_event = {
+	id = GoPagan.250
+	title = EVTNAME_GoPagan_250
+	desc = EVTDESC_GoPagan_250
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_capable = yes
+	prisoner = no
+
+	option = {
+		name = EVTOPTA_GoPagan_250
+
+		piety = 20
+	}
+}
+
+# Read the Arzhang
+character_event = {
+	id = GoPagan.251
+	title = EVTNAME_GoPagan_251
+	desc = EVTDESC_GoPagan_251
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_capable = yes
+	prisoner = no
+
+	option = {
+		name = EVTOPTA_GoPagan_251
+
+		random_list = {
+			5 = {
+				trigger = {
+					NOR = {
+						trait = humble
+						trait = proud
+					}
+				}
+
+				add_trait_humble_effect = yes
+			}
+
+			5 = {
+				trigger = {
+					NOR = {
+						trait = humble
+						trait = proud
+					}
+				}
+
+				add_trait_proud_effect = yes
+			}
+
+			5 = {
+				trigger = {
+					NOR = {
+						trait = zealous
+						trait = cynical
+					}
+				}
+
+				add_trait_cynical_effect = yes
+			}
+
+			10 = {
+				trigger = {
+					NOR = {
+						trait = zealous
+						trait = cynical
+					}
+				}
+
+				add_trait_zealous_effect = yes
+			}
+
+			10 = {
+				mult_modifier = {
+					factor = 0.5
+					trait = cynical
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = zealous
+				}
+
+				change_learning = 1
+			}
+
+			30 = { piety = 20 }
+			100 = { } # No effect
+		}
+	}
+}
+
+#######################################
+# MAZDAKI EVENTS
+#######################################
+
+# Babak and Banu's Rebellion
+character_event = {
+	id = GoPagan.255
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_playable = yes
+
+	trigger = {
+		has_landed_title = c_hamadan
+		year >= 815
+		year < 850
+		total_years_played >= 2
+		NOT = { has_global_flag = babak_and_banu }
+
+		c_hamadan = {
+			location = {
+				kingdom = { culture = persian }
+			}
+		}
+
+		top_liege = {
+			has_landed_title = d_sunni
+			NOT = { culture = persian }
+		}
+	}
+
+	immediate = {
+		set_global_flag = babak_and_banu
+
+		c_hamadan = {
+			location = {
+				if = {
+					limit = { has_province_modifier = cultural_unrest }
+					remove_province_modifier = cultural_unrest
+				}
+
+				save_event_target_as = revolt_location
+				kingdom = { save_event_target_as = revolt_kingdom }
+			}
+		}
+
+		top_liege = { save_event_target_as = revolt_top_liege }
+
+		create_character = {
+			random_traits = yes
+			name = "Babak"
+			dynasty = 100639 # Khorramdin
+			religion = mazdaki
+			culture = persian
+			female = no
+			age = 24
+			health = 7
+
+			attributes = {
+				martial = 15
+				learning = 7
+				diplomacy = 12
+			}
+
+			add_trait = just
+			add_trait = brave
+			add_trait = gregarious
+			add_trait = ambitious
+			add_trait = zealous
+			add_trait = skilled_tactician
+			add_trait = unyielding_leader
+			add_trait = holy_warrior
+			add_trait = mountain_expert
+			add_trait = peasant_leader
+		}
+
+		new_character = {
+			save_event_target_as = nationalist_revolt_leader
+			set_character_flag = nationalist_rebel
+			set_character_flag = began_revolt
+			prestige = 200
+			wealth = 100
+
+			opinion = {
+				name = opinion_evil_tyrant
+				who = event_target:revolt_top_liege
+			}
+
+			character_event = { id = GoPagan.256 }
+		}
+	}
+}
+
+character_event = {
+	id = GoPagan.256
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		create_title = {
+			tier = KING
+			landless = yes
+			temporary = yes
+			culture = ROOT
+			holder = ROOT
+			base_title = event_target:revolt_kingdom
+			copy_title_laws = yes
+			name = KHORRAMDIN_REBELLION
+		}
+
+		while = {
+			count = 4
+
+			spawn_unit = {
+				province = event_target:revolt_location
+				home = event_target:revolt_location
+				owner = ROOT
+				scaled_by_biggest_garrison = 2.4
+				attrition = 0.25
+				maintenance_multiplier = 0
+				earmark = nationalist_rebels_1
+				cannot_inherit = yes
+
+				troops = {
+					archers = { 6 6 }
+					light_cavalry = { 3 3 }
+					knights = { 1 1 }
+					light_infantry = { 7 7 }
+					heavy_infantry = { 3 3 }
+				}
+			}
+		}
+
+		create_character = {
+			random_traits = yes
+			dynasty = none
+			name = "Banu"
+			religion = ROOT
+			culture = ROOT
+			female = yes
+			age = 19
+
+			attributes = {
+				martial = 15
+				learning = 7
+			}
+
+			add_trait = just
+			add_trait = brave
+			add_trait = skilled_tactician
+			add_trait = mountain_expert
+			add_trait = peasant_leader
+			add_trait = martial_lady_tengri
+			flag = special_marshal
+		}
+
+		new_character = {
+			add_spouse = ROOT
+			add_lover = ROOT
+			give_minor_title = title_commander
+		}
+
+		while = {
+			count = 2
+
+			create_character = {
+				random_traits = yes
+				dynasty = none
+				religion = ROOT
+				culture = ROOT
+				female = no
+				age = 24
+
+				attributes = {
+					martial = 7
+				}
+
+				add_trait = peasant_leader
+				add_trait = tough_soldier
+			}
+
+			new_character = {
+				opinion = {
+					name = opinion_loyal_servant
+					who = ROOT
+					years = 20
+				}
+			}
+		}
+
+		set_character_flag = has_current_revolt
+
+		war = {
+			target = event_target:revolt_top_liege
+			casus_belli = liberation_revolt
+			thirdparty_title = event_target:revolt_kingdom
+		}
+
+		event_target:revolt_top_liege = {
+			narrative_event = { id = GoPagan.257 }
+
+			any_realm_lord = {
+				limit = {
+					higher_real_tier_than = BARON
+					culture = ROOT
+					religion = ROOT
+					is_adult = yes
+					prisoner = no
+					is_incapable = no
+					pf_war_trait_trigger = no
+
+					capital_scope = {
+						kingdom = { title = event_target:revolt_kingdom }
+					}
+
+					NOR = {
+						character = PREV
+						has_truce = PREV
+						has_non_aggression_pact_with = PREV
+
+						reverse_has_opinion_modifier = {
+							name = refused_revolt_call
+							who = ROOT
+						}
+
+						any_liege = { pf_war_flag_trigger = yes }
+
+						# Not if any liege can be called to war instead
+						any_liege = {
+							culture = ROOT
+							religion = ROOT
+							capital_scope = { kingdom = { title = event_target:revolt_kingdom } }
+							is_adult = yes
+							prisoner = no
+							is_incapable = no
+							pf_war_trait_trigger = no
+
+							NOR = {
+								character = PREVPREV
+								has_truce = PREVPREV
+								has_non_aggression_pact_with = PREVPREV
+
+								reverse_has_opinion_modifier = {
+									name = refused_revolt_call
+									who = ROOT
+								}
+							}
+						}
+					}
+				}
+
+				character_event = { id = TOG.1043 } # Ask to join the war
+			}
+		}
+	}
+}
+
+# Caliph informed of the rebellion
+narrative_event = {
+	id = GoPagan.257
+	title = EVTNAME_GoPagan_257
+	desc = EVTDESC_GoPagan_257
+	picture = GFX_evt_moors
+	border = GFX_event_narrative_frame_war
+
+	is_triggered_only = yes
+	major = yes
+
+	major_trigger = {
+		OR = {
+			has_landed_title = d_sunni
+			same_realm = ROOT
+			religion_group = zoroastrian_group
+			culture = persian
+
+			capital_scope = {
+				distance = {
+					where = c_hamadan
+					value <= 600 # Same part of the world
+				}
+			}
+		}
+	}
+
+	option = {
+		name = {
+			text = EVTOPTA_GoPagan_257
+			trigger = { has_landed_title = d_sunni }
+		}
+		name = {
+			text = EVTOPTB_GoPagan_257
+			trigger = {
+				culture = persian
+				NOT = { has_landed_title = d_sunni }
+			}
+		}
+		name = {
+			text = I_SEE
+			trigger = {
+				NOR = {
+					culture = persian
+					has_landed_title = d_sunni
+				}
+			}
+		}
+	}
+}
+
+# Mazdaki priesthood created
+narrative_event = {
+	id = GoPagan.258
+	title = EVTNAME_GoPagan_258
+	desc = EVTDESC_GoPagan_258
+	picture = GFX_evt_zoroaster
+	border = GFX_event_narrative_frame_religion
+	portrait = event_target:new_mazdaki_leader
+
+	is_triggered_only = yes
+	major = yes
+	show_root = yes
+	hide_from = yes
+
+	immediate = {
+		random_realm_lord = {
+			limit = {
+				is_theocracy = yes
+				religion = ROOT
+				prisoner = no
+				is_incapable = no
+				in_revolt = no
+				pf_war_flag_trigger = no
+				NOT = { trait = bad_priest_zoroastrian }
+			}
+
+			preferred_limit = {
+				capital_holding = { is_holy_site = ROOT }
+			}
+
+			grant_title = d_mazdaki
+			set_defacto_liege = ROOT
+			pf_liege_change_effect = yes
+			save_event_target_as = new_mazdaki_leader
+
+			if = {
+				limit = {
+					NOT = {
+						any_demesne_title = {
+							is_holy_site = ROOT
+						}
+					}
+				}
+
+				ROOT = {
+					random_realm_title = {
+						limit = { is_holy_site = ROOT }
+						gain_title = event_target:new_mazdaki_leader
+					}
+				}
+			}
+		}
+
+		if = {
+			limit = { NOT = { event_target:new_mazdaki_leader = { always = yes } } }
+
+			create_random_priest = {
+				random_traits = yes
+				dynasty = random
+				religion = mazdaki
+				culture = ROOT
+				age = 40
+				health = 7
+				add_trait = quick
+				add_trait = zealous
+				add_trait = scholar
+				add_trait = mastermind_theologian
+
+				attributes = {
+					learning = 5
+					diplomacy = 5
+					martial = 2
+					stewardship = 5
+					intrigue = 5
+				}
+			}
+
+			new_character = {
+				grant_title = d_mazdaki
+				set_defacto_liege = ROOT
+				save_event_target_as = new_manichaean_leader
+
+				ROOT = {
+					random_realm_title = {
+						limit = { is_holy_site = ROOT }
+						gain_title = PREVPREV
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = {
+			text = I_SEE
+			trigger = {
+				NOT = { religion = mazdaki }
+			}
+		}
+		name = {
+			text = EVTOPTA_GoPagan_258
+			trigger = { religion = mazdaki }
+		}
+	}
+}
+
+# Mazdaki Power chosen
+character_event = {
+	id = GoPagan.259
+	desc = EVTDESC_GoPagan_259
+	picture = GFX_evt_knight_kneeling
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_259
+
+		add_character_modifier = {
+			name = patron_discernment
+			duration = -1
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_259
+
+		add_character_modifier = {
+			name = patron_understanding
+			duration = -1
+		}
+	}
+
+	option = {
+		name = EVTOPTC_GoPagan_259
+
+		add_character_modifier = {
+			name = patron_preservation
+			duration = -1
+		}
+	}
+
+	option = {
+		name = EVTOPTD_GoPagan_259
+
+		add_character_modifier = {
+			name = patron_joy
+			duration = -1
+		}
+	}
+}
+
+#######################################
+# YAZIDI EVENTS
+#######################################
+
+### PEACOCK FEAST EVENTS
+
+# Invite vassals to festival
+character_event = {
+	id = GoPagan.260
+	desc = EVTDESC_GoPagan_260
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_playable = yes
+	has_character_flag = planning_peacock_feast
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		month < 5
+		month >= 10
+		is_inaccessible_trigger = no
+	}
+
+	fail_trigger_effect = {
+		if = {
+			limit = { has_character_flag = planning_peacock_feast }
+
+			repeat_event = {
+				id = GoPagan.260
+				months = 1
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_260
+
+		clr_character_flag = planning_peacock_feast
+		set_character_flag = holding_peacock_feast
+
+		any_vassal = {
+			show_scope_change = no
+
+			limit = {
+				religion = yazidi
+				is_adult = yes
+				prisoner = no
+				is_incapable = no
+				war = no
+				is_inaccessible_trigger = no
+			}
+
+			letter_event = {
+				id = GoPagan.261 # Send out invitations
+				tooltip = EVTTOOLTIP1_RoI_1000
+			}
+		}
+
+		character_event = { id = GoPagan.264 days = 12 } # start the feast
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 85
+			hidden = yes
+		}
+
+		if = {
+			limit = { is_inaccessible_trigger = yes	}
+
+			end_inaccessibility_effect = yes
+
+			add_character_modifier = {
+				name = went_out_of_hiding_timer
+				months = 6
+				hidden = yes
+			}
+
+			character_event = { id = CM.6400 } # Notify plotters and family
+		}
+	}
+}
+
+# Vassal receives invitation
+letter_event = {
+	id = GoPagan.261
+	desc = EVTDESC_GoPagan_261
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_TOG_701 # Travel to the feast
+
+		set_character_flag = attending_peacock_feast
+
+
+		character_event = { id = GoPagan.263 days = 12 } # Arrives at the feast
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 45
+			hidden = yes
+		}
+
+		if = {
+			limit = { is_inaccessible_trigger = yes	}
+
+			end_inaccessibility_effect = yes
+
+			add_character_modifier = {
+				name = went_out_of_hiding_timer
+				months = 6
+				hidden = yes
+			}
+
+			character_event = { id = CM.6400 } # Notify plotters and family
+		}
+	}
+}
+
+# Vassal arrives at festival
+character_event = {
+	id = GoPagan.263
+	desc = EVTDESC_GoPagan_263
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	trigger = {
+		liege = { has_character_flag = holding_peacock_feast }
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_263
+
+		character_event = { id = GoPagan.265 days = 5 } # Presentation of the Senjaq
+		character_event = { id = GoPagan.270 days = 10 } # Veneration of the Senjaq
+		character_event = { id = GoPagan.271 days = 15 } # Taxes on the Pious
+		character_event = { id = GoPagan.272 days = 20 } # Sermon
+		character_event = { id = GoPagan.273 days = 30 } # End festival
+	}
+}
+
+# Festival begins
+character_event = {
+	id = GoPagan.264
+	desc = EVTDESC_GoPagan_264
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	has_character_flag = holding_peacock_feast
+
+	option = {
+		name = EVTOPTA_GoPagan_263
+
+		character_event = { id = GoPagan.265 days = 5 } # Presentation of the Senjaq
+		character_event = { id = GoPagan.270 days = 10 } # Veneration of the Senjaq
+		character_event = { id = GoPagan.271 days = 15 } # Taxes on the Pious
+		character_event = { id = GoPagan.272 days = 20 } # Sermon
+		character_event = { id = GoPagan.273 days = 30 } # End festival
+	}
+}
+
+# Presentation of the Senjaq
+character_event = {
+	id = GoPagan.265
+	title = EVTNAME_GoPagan_265
+	desc = EVTDESC_GoPagan_265
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	trigger = {
+		OR = {
+			has_character_flag = holding_peacock_feast
+			liege = { has_character_flag = holding_peacock_feast }
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_265
+
+		trigger = { is_female = no }
+
+		piety = 30
+
+		random_list = {
+			10 = {
+				trigger = {
+					OR = {
+						practical_age >= 50
+						is_weak_trigger = yes
+						trait = infirm
+						health_traits >= 1
+					}
+				}
+
+				character_event = {
+					id = GoPagan.266 # Drop the senjaq
+					tooltip = SENJAQ_DROPPED
+				}
+			}
+
+			10 = {
+				trigger = {
+					trait = zealous
+					NOT = { trait = possessed }
+				}
+
+				character_event = {
+					id = GoPagan.267 # Character becomes possessed
+					tooltip = SENJAQ_POSSESSED
+				}
+			}
+
+			10 = {
+				trigger = {
+					NOR = {
+						trait = cynical
+						trait = zealous
+					}
+				}
+
+				character_event = {
+					id = GoPagan.268 # Character becomes zealous
+					tooltip = SENJAQ_ZEALOUS
+				}
+			}
+
+			10 = {
+				trigger = {
+					is_strong_trigger = no
+					is_ill = no
+					health_traits < 1
+					NOT = { trait = slothful }
+				}
+
+				character_event = {
+					id = GoPagan.269 # Character becomes stronger
+					tooltip = SENJAQ_STRONGER
+				}
+			}
+
+			300 = { } # No event
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 2
+				trait = brave
+			}
+
+			mult_modifier = {
+				factor = 2
+				is_strong_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 3
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				is_ill = yes
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				practical_age >= 50
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_265
+
+		piety = 10
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 2
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 2
+				is_weak_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 3
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 4
+				piety < 100
+			}
+		}
+	}
+}
+
+# Weak or old character drops the senjaq
+character_event = {
+	id = GoPagan.266
+	desc = EVTDESC_GoPagan_266
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_266
+
+		prestige = -100
+		piety = -50
+	}
+}
+
+# Character becomes possessed by senjaq
+character_event = {
+	id = GoPagan.267
+	desc = EVTDESC_GoPagan_267
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_267
+
+		add_trait = possessed
+	}
+}
+
+# Character becomes zealous
+character_event = {
+	id = GoPagan.268
+	desc = EVTDESC_GoPagan_268
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_268
+
+		add_trait = zealous
+	}
+}
+
+# Character becomes stronger
+character_event = {
+	id = GoPagan.269
+	desc = EVTDESC_GoPagan_269
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_269
+
+		if = {
+			limit = { is_weak_trigger = yes }
+
+			if = {
+				limit = { trait = weak }
+				remove_trait = weak
+			}
+
+			if = {
+				limit = { trait = frail }
+				remove_trait = frail
+			}
+		}
+		else_if = {
+			limit = { is_strong_trigger = no }
+			add_trait = brawny
+		}
+	}
+}
+
+# Veneration of the Senjaq
+character_event = {
+	id = GoPagan.270
+	title = EVTNAME_GoPagan_270
+	desc = EVTDESC_GoPagan_270
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	trigger = {
+		OR = {
+			has_character_flag = holding_peacock_feast
+			liege = { has_character_flag = holding_peacock_feast }
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_270
+
+		piety = 10
+
+		random_list = {
+			30 = {
+				trigger = {
+					NOR = {
+						trait = humble
+						trait = proud
+					}
+				}
+
+				add_trait_humble_effect = yes
+			}
+
+			30 = {
+				trigger = {
+					NOR = {
+						trait = temperate
+						trait = gluttonous
+					}
+				}
+
+				add_trait_temperate_effect = yes
+			}
+
+			20 = { prestige = 25 }
+			40 = { }
+		}
+	}
+}
+
+# Donation of Money
+character_event = {
+	id = GoPagan.271
+	title = EVTNAME_GoPagan_271
+	desc = EVTDESC_GoPagan_271
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	trigger = {
+		OR = {
+			has_character_flag = holding_peacock_feast
+			liege = { has_character_flag = holding_peacock_feast }
+		}
+
+		controls_religion = no
+	}
+
+	option = { # Give a lot
+		name = EVTOPTA_GoPagan_271
+
+		trigger = {
+			NOR = {
+				trait = greedy
+				trait = cynical
+			}
+		}
+
+		piety = 50
+
+		if = {
+			limit = { religion_head = { always = yes } }
+
+			religion_head = {
+				show_scope_change = no
+
+				transfer_scaled_wealth = {
+					from = ROOT
+					value = 0.25
+				}
+			}
+		}
+		else = {
+			scaled_wealth = -0.25
+		}
+
+		add_trait = charitable
+	}
+
+	option = { # Give some
+		name = EVTOPTB_GoPagan_271
+
+		piety = 10
+
+		if = {
+			limit = { religion_head = { always = yes } }
+
+			religion_head = {
+				show_scope_change = no
+
+				transfer_scaled_wealth = {
+					from = ROOT
+					value = 0.05
+				}
+			}
+		}
+		else = {
+			scaled_wealth = -0.05
+		}
+
+		remove_trait_silently_charitable_effect = yes
+	}
+
+	option = { # Bugger th at
+		name = EVTOPTC_GoPagan_271
+
+		trigger = {
+			NOR = {
+				trait = charitable
+				trait = zealous
+			}
+		}
+
+		piety = -25
+
+		random = {
+			chance = 25
+			add_trait_fully_greedy_effect = yes
+		}
+
+		random = {
+			chance = 25
+			add_trait_fully_cynical_effect = yes
+		}
+	}
+}
+
+# Sermon - host and guests
+character_event = {
+	id = GoPagan.272
+	desc = EVTDESC_GoPagan_272
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	ai = no
+
+	trigger = {
+		OR = {
+			has_character_flag = holding_peacock_feast
+			liege = { has_character_flag = holding_peacock_feast }
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_272
+	}
+}
+
+# Festival ends
+character_event = {
+	id = GoPagan.273
+	desc = EVTDESC_GoPagan_273
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	trigger = {
+		OR = {
+			has_character_flag = holding_peacock_feast
+			liege = { has_character_flag = holding_peacock_feast }
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_273
+
+		trigger = { has_character_flag = holding_peacock_feast }
+
+		set_character_flag = held_recent_feast
+		clr_character_flag = holding_peacock_feast
+		remove_do_not_disturb_effect = yes
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_273
+
+		trigger = { NOT = { has_character_flag = holding_peacock_feast } }
+
+		clr_character_flag = attending_peacock_feast
+		remove_do_not_disturb_effect = yes
+
+		opinion = {
+			name = opinion_enjoyed_feast
+			who = liege
+			years = 2
+		}
+	}
+}
+
+# The feast is cancelled due to war
+character_event = {
+	id = GoPagan.291
+
+	is_triggered_only = yes # on_war_started
+	hide_window = yes
+
+	immediate = {
+		ROOT = {
+			if = {
+				limit = {
+					OR = {
+						has_character_flag = holding_peacock_feast
+						has_character_flag = planning_peacock_feast
+					}
+				}
+
+				character_event = { id = GoPagan.274 }
+			}
+		}
+
+		FROM = {
+			if = {
+				limit = {
+					OR = {
+						has_character_flag = holding_peacock_feast
+						has_character_flag = planning_peacock_feast
+					}
+				}
+
+				character_event = { id = GoPagan.274 }
+			}
+		}
+	}
+}
+
+character_event = {
+	id = GoPagan.274
+	desc = EVTDESC72112
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	trigger = {
+		OR = {
+			has_character_flag = holding_peacock_feast
+			has_character_flag = planning_peacock_feast
+		}
+	}
+
+	option = {
+		name = EVTOPTA72112
+
+		if = {
+			limit = { has_character_flag = planning_peacock_feast }
+
+			clr_character_flag = planning_peacock_feast
+			scaled_wealth = 0.25
+		}
+
+		clr_character_flag = holding_peacock_feast
+		set_character_flag = held_recent_feast
+		remove_do_not_disturb_effect = yes
+
+		any_vassal = {
+			show_scope_change = no
+
+			limit = { has_character_flag = attending_peacock_feast }
+
+			letter_event = {
+				id = GoPagan.275
+				tooltip = EVTTOOLTIP72113
+			}
+
+			remove_do_not_disturb_effect = yes
+			clr_character_flag = attending_peacock_feast
+		}
+	}
+}
+
+# Feast cancelled: notify invited vassals
+letter_event = {
+	id = GoPagan.275
+	desc = EVTDESC72113
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA72113
+	}
+}
+
+# The feast is cancelled due to death of liege
+character_event = {
+	id = GoPagan.276
+
+	is_triggered_only = yes # on_death
+	hide_window = yes
+
+	trigger = {
+		OR = {
+			has_character_flag = holding_peacock_feast
+			has_character_flag = planning_peacock_feast
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = { has_character_flag = planning_peacock_feast }
+
+			clr_character_flag = planning_peacock_feast
+			scaled_wealth = 0.25
+		}
+
+		clr_character_flag = holding_peacock_feast
+		remove_do_not_disturb_effect = yes
+
+		any_vassal = {
+			limit = { has_character_flag = attending_peacock_feast }
+
+			character_event = { id = GoPagan.277 }
+			remove_do_not_disturb_effect = yes
+			clr_character_flag = attending_peacock_feast
+		}
+	}
+}
+
+# Feast cancelled: notify invited vassals
+character_event = {
+	id = GoPagan.277
+	desc = EVTDESC_GoPagan_277
+	picture = GFX_evt_death
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_GoPagan_277
+	}
+}
+
+### KOASASA EVENTS
+
+# Yazidi youth is believed to be a koasasa
+narrative_event = {
+	id = GoPagan.278
+	title = EVTNAME_GoPagan_278
+	picture = GFX_evt_imam
+	border = GFX_event_narrative_frame_religion
+
+	desc = {
+		text = EVTDESC_GoPagan_278_taus
+		trigger = { ROOT = { trait = koasasa_taus } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_278_israfel
+		trigger = { ROOT = { trait = koasasa_israfel } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_278_azrael
+		trigger = { ROOT = { trait = koasasa_azrael } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_278_mihael
+		trigger = { ROOT = { trait = koasasa_mihael } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_278_dardael
+		trigger = { ROOT = { trait = koasasa_dardael } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_278_samael
+		trigger = { ROOT = { trait = koasasa_samael } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_278_nurael
+		trigger = { ROOT = { trait = koasasa_nurael } }
+	}
+
+	is_triggered_only = yes
+	major = yes
+	hide_from = yes
+	show_root = yes
+
+	religion = yazidi
+	only_men = yes
+	only_capable = yes
+	min_age = 15
+	max_age = 19
+	prisoner = no
+
+	trigger = {
+		is_reincarnated = no
+		is_dumb_trigger = no
+		is_weak_trigger = no
+
+		calc_true_if = {
+			amount >= 2
+
+			is_smart_trigger = yes
+			trait = possessed
+			trait = attractive
+			martial >= 15
+			martial >= 20
+			diplomacy >= 15
+			stewardship >= 15
+			intrigue >= 15
+			learning >= 15
+		}
+
+		NOR = {
+			trait = cynical
+			trait = inbred
+			trait = clubfooted
+			trait = harelip
+			trait = hunchback
+			trait = lisp
+			trait = stutter
+			trait = ugly
+			trait = dwarf
+		}
+
+		NAND = {
+			koasasa_taus = { is_alive = yes }
+			koasasa_israfel = { is_alive = yes }
+			koasasa_azrael = { is_alive = yes }
+			koasasa_mihael = { is_alive = yes }
+			koasasa_dardael = { is_alive = yes }
+			koasasa_samael = { is_alive = yes }
+			koasasa_nurael = { is_alive = yes }
+		}
+	}
+
+	major_trigger = {
+		ai = no
+		religion = yazidi
+		same_realm = ROOT
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			ai = no
+		}
+
+		mult_modifier = {
+			factor = 0.8
+
+			martial < 15
+			diplomacy < 15
+			stewardship < 15
+			intrigue < 15
+			learning < 15
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = possessed
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			NOR = {
+				koasasa_taus = { is_alive = yes }
+				koasasa_israfel = { is_alive = yes }
+				koasasa_azrael = { is_alive = yes }
+				koasasa_mihael = { is_alive = yes }
+				koasasa_dardael = { is_alive = yes }
+				koasasa_samael = { is_alive = yes }
+				koasasa_nurael = { is_alive = yes }
+			}
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			calc_true_if = {
+				amount >= 3
+
+				is_smart_trigger = yes
+				trait = possessed
+				trait = attractive
+				martial >= 15
+				martial >= 20
+				diplomacy >= 15
+				stewardship >= 15
+				intrigue >= 15
+				learning >= 15
+			}
+		}
+
+		mult_modifier = {
+			factor = 4
+
+			calc_true_if = {
+				amount >= 4
+
+				is_smart_trigger = yes
+				trait >= possessed
+				trait >= attractive
+				martial >= 15
+				martial >= 20
+				diplomacy >= 15
+				stewardship >= 15
+				intrigue >= 15
+				learning >= 15
+			}
+		}
+	}
+
+	immediate = {
+		random_list = {
+			10 = {
+				trigger = { NOT = { koasasa_taus = { is_alive = yes } } }
+				add_trait = koasasa_taus
+			}
+
+			10 = {
+				trigger = { NOT = { koasasa_israfel = { is_alive = yes } } }
+				add_trait = koasasa_israfel
+			}
+
+			10 = {
+				trigger = { NOT = { koasasa_azrael = { is_alive = yes } } }
+				add_trait = koasasa_azrael
+			}
+
+			10 = {
+				trigger = { NOT = { koasasa_mihael = { is_alive = yes } } }
+				add_trait = koasasa_mihael
+			}
+
+			10 = {
+				trigger = { NOT = { koasasa_dardael = { is_alive = yes } } }
+				add_trait = koasasa_dardael
+			}
+
+			10 = {
+				trigger = { NOT = { koasasa_samael = { is_alive = yes } } }
+				add_trait = koasasa_samael
+			}
+
+			10 = {
+				trigger = { NOT = { koasasa_nurael = { is_alive = yes } } }
+				add_trait = koasasa_nurael
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_278
+
+		trigger = { character = ROOT }
+
+		piety = 250
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_278
+
+		trigger = { NOT = { character = ROOT } }
+	}
+}
+
+### YAZIDI PILGRIMAGE EVENTS
+
+# Preparing for the pilgrimage
+character_event = {
+	id = GoPagan.279
+	desc = EVTDESC_GoPagan_279
+	picture = GFX_evt_council
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_SoA_5016 # I will start making travel plans
+
+		set_character_flag = pilgrimage_to_lalish
+
+		character_event = {
+			id = GoPagan.280
+			days = 15
+		}
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 15
+			hidden = yes
+		}
+
+		if = {
+			limit = { ai = no }
+
+			chronicle = {
+				entry = CHRONICLE_PILGRIMAGE_TO_LALISH
+				picture = GFX_evt_pilgrims_epic_journey
+			}
+		}
+	}
+}
+
+# Setting out for Lalish (also selects events for road)
+character_event = {
+	id = GoPagan.280
+	desc = EVTDESC_GoPagan_280
+	picture = GFX_evt_carriage
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_SoA_5022 # My journey begins!
+
+		hidden_effect = {
+			clr_character_flag = preparing_yazidi_pilgrimage
+			add_trait = on_pilgrimage
+			set_character_flag = good_pilgrimage
+
+			narrative_event = {
+				id = GoPagan.281
+				months = 1
+			}
+
+			if = {
+				limit = {
+					location = {
+						distance = {
+							where = c_mosul
+							value >= 600	# Even Longer journey
+						}
+					}
+				}
+
+				random_list = {
+					10 = {  character_event = { id = SoA.5026 days = 5 random = 4 } } # List for even longer journeys only
+					10 = {  character_event = { id = SoA.5027 days = 5 random = 4 } }
+					10 = {  narrative_event = { id = SoA.5028 days = 5 random = 4 } }
+					10 = {  character_event = { id = SoA.5029 days = 5 random = 4 } }
+					10 = {  character_event = { id = SoA.5030 days = 5 random = 4 } }
+				}
+			}
+			else_if = {
+				limit = {
+					location = {
+						distance = {
+							where = 697	# Mosul
+							value >= 400 # Longer journey
+						}
+					}
+				}
+
+				random_list = {
+					10 = {  character_event = { id = SoA.5026 days = 10 random = 5 } } # List for longer journeys only
+					10 = {  character_event = { id = SoA.5027 days = 10 random = 5 } }
+					10 = {  narrative_event = { id = SoA.5028 days = 10 random = 5 } }
+					10 = {  character_event = { id = SoA.5029 days = 10 random = 5 } }
+					10 = {  character_event = { id = SoA.5030 days = 10 random = 5 } }
+				}
+			}
+
+			random_list = {
+				10 = {  character_event = { id = SoA.5031 days = 16 random = 6 } } # List that is always checked
+				10 = {  character_event = { id = SoA.5032 days = 16 random = 6 } }
+				10 = {  narrative_event = { id = SoA.5033 days = 16 random = 6 } }
+				10 = {  character_event = { id = SoA.5034 days = 16 random = 6 } }
+				10 = {  character_event = { id = SoA.5035 days = 16 random = 6 } }
+				10 = {  character_event = { id = SoA.5036 days = 16 random = 6 } }
+				10 = {  character_event = { id = SoA.5037 days = 16 random = 6 } }
+				10 = {  character_event = { id = SoA.5038 days = 16 random = 6 } }
+				10 = {  character_event = { id = SoA.5039 days = 16 random = 6 } }
+			}
+		}
+	}
+}
+
+# Arrived at Lalish (also selects events while in the city)
+narrative_event = {
+	id = GoPagan.281
+	title = EVTNAME_GoPagan_281
+	desc = EVTDESC_GoPagan_281
+	picture = GFX_evt_yazidi
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		random_list = {
+			10 = {
+				if = {
+					limit = { trait = cynical }
+
+					random_list = {
+						20 = { character_event = { id = SoA.5057 } } # Strong religious experience
+						10 = { character_event = { id = SoA.5058 } } # Disappointed in the place
+						20 = { character_event = { id = SoA.5060 } } # Learns things of the world - cosmopolitan
+						20 = { character_event = { id = SoA.5061 } } # Generally impressed
+					}
+				}
+				else = {
+					character_event = { id = SoA.5056 } # Stimulated to learning
+				}
+			}
+
+			10 = {
+				if = {
+					limit = {
+						OR = {
+							trait = mastermind_theologian
+							trait = scholarly_theologian
+						}
+					}
+
+					character_event = { id = SoA.5059 } # Mastermind theologian impresses everyone
+				}
+				else = {
+					random_list = {
+						20 = { character_event = { id = SoA.5057 } } # Strong religious experience
+						10 = { character_event = { id = SoA.5058 } } # Disappointed in the place
+						20 = { character_event = { id = SoA.5060 } } # Learns things of the world - cosmopolitan
+						20 = { character_event = { id = SoA.5061 } } # Generally impressed
+					}
+				}
+			}
+
+			10 = {
+				if = {
+					limit = { trait = lustful }
+					character_event = { id = SoA.5062 }	# Lustful tourist having fun
+				}
+				else = {
+					random_list = {
+						20 = { character_event = { id = SoA.5057 } } # Strong religious experience
+						10 = { character_event = { id = SoA.5058 } } # Disappointed in the place
+						20 = { character_event = { id = SoA.5060 } } # Learns things of the world - cosmopolitan
+						20 = { character_event = { id = SoA.5061 } } # Generally impressed
+					}
+				}
+			}
+
+			10 = {
+				if = {
+					limit = { trait = homosexual }
+					character_event = { id = SoA.5063 }	# Freedom
+				}
+				else = {
+					random_list = {
+						20 = { character_event = { id = SoA.5057 } } # Strong religious experience
+						10 = { character_event = { id = SoA.5058 } } # Disappointed in the place
+						20 = { character_event = { id = SoA.5060 } } # Learns things of the world - cosmopolitan
+						20 = { character_event = { id = SoA.5061 } } # Generally impressed
+					}
+				}
+			}
+
+			10 = { # Monks cure pilgrim of disease - attributed to God's hand?
+				if = {
+					limit = {
+						OR = {
+							trait = ill
+							trait = pneumonic
+							trait = great_pox
+						}
+					}
+
+					narrative_event = { id = SoA.5064 }
+				}
+				else = {
+					random_list = {
+						20 = { character_event = { id = SoA.5057 } } # Strong religious experience
+						10 = { character_event = { id = SoA.5058 } } # Disappointed in the place
+						20 = { character_event = { id = SoA.5060 } } # Learns things of the world - cosmopolitan
+						20 = { character_event = { id = SoA.5061 } } # Generally impressed
+					}
+				}
+			}
+
+			10 = {
+				if = {
+					limit = {
+						OR = {
+							trait = lunatic
+							trait = possessed
+						}
+					}
+
+					character_event = { id = SoA.5065 } # Lunatic/possessed decides (s)he is God
+				}
+				else = {
+					random_list = {
+						20 = { character_event = { id = SoA.5057 } } # Strong religious experience
+						10 = { character_event = { id = SoA.5058 } } # Disappointed in the place
+						20 = { character_event = { id = SoA.5060 } } # Learns things of the world - cosmopolitan
+						20 = { character_event = { id = SoA.5061 } } # Generally impressed
+					}
+				}
+			}
+
+			10 = {
+				if = {
+					limit = {
+						OR = {
+							trait = drunkard
+							trait = hedonist
+						}
+					}
+
+					character_event = { id = SoA.5066 } # Drunkard/hedonist event
+				}
+				else = {
+					random_list = {
+						20 = { character_event = { id = SoA.5057 } } # Strong religious experience
+						10 = { character_event = { id = SoA.5058 } } # Disappointed in the place
+						20 = { character_event = { id = SoA.5060 } } # Learns things of the world - cosmopolitan
+						20 = { character_event = { id = SoA.5061 } } # Generally impressed
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_281
+
+		if = {
+			limit = { trait = decadent }
+			remove_trait = decadent
+		}
+	}
+}
+
+# Good pilgrimage
+character_event = {
+	id = GoPagan.282
+	desc = EVTDESC_SoA_5091
+	picture = GFX_evt_castle_construction
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_SoA_5091 # A great experience!
+
+		clr_character_flag = pilgrimage_to_lalish
+		clr_character_flag = good_pilgrimage
+		add_trait = yazidi_pilgrim
+		piety = 30
+
+		hidden_effect = {
+			remove_trait = on_pilgrimage
+
+			change_variable = {
+				which = lifestyle_learning
+				value = 1
+			}
+		}
+	}
+}
+
+# Disappointing pilgrimage
+character_event = {
+	id = GoPagan.283
+	desc = EVTDESC_SoA_5092
+	picture = GFX_evt_castle_construction
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_SoA_5092 # I won't tell my family what really happened out there
+
+		clr_character_flag = pilgrimage_to_lalish
+		clr_character_flag = bad_pilgrimage
+		add_trait = yazidi_pilgrim
+
+		hidden_effect = {
+			remove_trait = on_pilgrimage
+
+			change_variable = {
+				which = lifestyle_learning
+				value = 1
+			}
+		}
+
+		piety = -10
+
+		random = {
+			chance = 20
+			add_trait_fully_cynical_effect = yes
+		}
+	}
+}
+
+# Abominable pilgrimage - very unusual outcome
+character_event = {
+	id = GoPagan.284
+	desc = EVTDESC_SoA_5093
+	picture = GFX_evt_lunatic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_SoA_5093
+
+		clr_character_flag = pilgrimage_to_lalish
+		clr_character_flag = abominable_pilgrimage
+		add_trait = yazidi_pilgrim
+
+		hidden_effect = {
+			remove_trait = on_pilgrimage
+
+			change_variable = {
+				which = lifestyle_learning
+				value = 1
+			}
+		}
+
+		piety = -100
+
+		random = {
+			chance = 50
+			add_trait_fully_cynical_effect = yes
+		}
+	}
+}
+
+### YAZIDI HERESY DECLARATION
+
+# Yazidi ruler declares his faith no longer a heresy
+narrative_event = {
+	id = GoPagan.285
+	title = EVTNAME_GoPagan_285
+	desc = EVTDESC_GoPagan_285
+	picture = GFX_evt_zoroaster
+
+	is_triggered_only = yes
+	major = yes
+	show_root = yes
+	hide_from = yes
+
+	option = {
+		name = {
+			text = EVTOPTA_GoPagan_285
+			trigger = { religion = yazidi }
+		}
+		name = {
+			text = EVTOPTB_GoPagan_285
+			trigger = { religion_group = muslim }
+		}
+		name = {
+			text = I_SEE
+			trigger = {
+				NOR = {
+					religion = yazidi
+					religion_group = muslim
+				}
+			}
+		}
+	}
+}
+
+### Old Triggered Modifiers
+
+# Add zoroastrian_modifier
+# TODO: Consider creating different traits and always add them using scripted effects
+# Otherwise, add to on_character_convert_religion too
+character_event = {
+	id = GoPagan.286
+
+	is_triggered_only = yes # on_yearly_pulse
+	hide_window = yes
+
+	religion_group = zoroastrian_group
+
+	trigger = {
+		OR = {
+			religion = zoroastrian
+			religion = zurvanist
+		}
+
+		OR = {
+			AND = {
+				NOT = { has_character_modifier = zoroastrian_honesty }
+				trait = honest
+			}
+			AND = {
+				NOT = { has_character_modifier = zoroastrian_deceitfulness }
+				trait = deceitful
+			}
+			AND = {
+				NOT = { has_character_modifier = zoroastrian_celibacy }
+				trait = celibate
+			}
+			AND = {
+				NOT = { has_character_modifier = zoroastrian_chastity }
+				trait = chaste
+			}
+			AND = {
+				NOT = { has_character_modifier = zoroastrian_hedonism }
+				trait = hedonist
+			}
+			AND = {
+				NOT = { has_character_modifier = zoroastrian_lustfulness }
+				trait = lustful
+			}
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				trait = honest
+				NOT = { has_character_modifier = zoroastrian_honesty }
+			}
+			add_character_modifier = { name = zoroastrian_honesty duration = -1 }
+			set_character_flag = zoroastrian_modifier
+		}
+		if = {
+			limit = {
+				trait = chaste
+				NOT = { has_character_modifier = zoroastrian_chastity }
+			}
+			add_character_modifier = { name = zoroastrian_chastity duration = -1 }
+			set_character_flag = zoroastrian_modifier
+		}
+		if = {
+			limit = {
+				trait = deceitful
+				NOT = { has_character_modifier = zoroastrian_deceitfulness }
+			}
+			add_character_modifier = { name = zoroastrian_deceitfulness duration = -1 }
+			set_character_flag = zoroastrian_modifier
+		}
+		if = {
+			limit = {
+				trait = celibate
+				NOT = { has_character_modifier = zoroastrian_celibacy }
+			}
+			add_character_modifier = { name = zoroastrian_celibacy duration = -1 }
+			set_character_flag = zoroastrian_modifier
+		}
+		if = {
+			limit = {
+				trait = hedonist
+				NOT = { has_character_modifier = zoroastrian_hedonism }
+			}
+			add_character_modifier = { name = zoroastrian_hedonism duration = -1 }
+			set_character_flag = zoroastrian_modifier
+		}
+		if = {
+			limit = {
+				trait = lustful
+				NOT = { has_character_modifier = zoroastrian_lustfulness }
+			}
+			add_character_modifier = { name = zoroastrian_lustfulness duration = -1 }
+			set_character_flag = zoroastrian_modifier
+		}
+	}
+}
+
+# Remove zoroastrian_modifier
+character_event = {
+	id = GoPagan.287
+
+	is_triggered_only = yes # on_yearly_pulse
+	hide_window = yes
+
+	has_character_flag = zoroastrian_modifier
+
+	trigger = {
+		OR = {
+			NOR = {
+				religion = zoroastrian
+				religion = zurvanist
+			}
+			AND = {
+				has_character_modifier = zoroastrian_honesty
+				NOT = { trait = honest }
+			}
+			AND = {
+			   has_character_modifier = zoroastrian_deceitfulness
+			   NOT = { trait = deceitful }
+			}
+			AND = {
+			   has_character_modifier = zoroastrian_celibacy
+			   NOT = { trait = celibate }
+			}
+			AND = {
+			   has_character_modifier = zoroastrian_chastity
+			   NOT = { trait = chaste }
+			}
+			AND = {
+			   has_character_modifier = zoroastrian_hedonism
+			   NOT = { trait = hedonist }
+			}
+			AND = {
+			   has_character_modifier = zoroastrian_lustfulness
+			   NOT = { trait = lustful }
+			}
+		}
+
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				has_character_modifier = zoroastrian_honesty
+				OR = {
+					NOT = { trait = honest }
+					NOR = {
+						religion = zoroastrian
+						religion = zurvanist
+					}
+				}
+			}
+			remove_character_modifier = zoroastrian_honesty
+		}
+		if = {
+			limit = {
+				has_character_modifier = zoroastrian_deceitfulness
+				OR = {
+					NOT = { trait = deceitful }
+					NOR = {
+						religion = zoroastrian
+						religion = zurvanist
+					}
+				}
+			}
+			remove_character_modifier = zoroastrian_deceitfulness
+		}
+		if = {
+			limit = {
+				has_character_modifier = zoroastrian_celibacy
+				OR = {
+					NOT = { trait = celibate }
+					NOR = {
+						religion = zoroastrian
+						religion = zurvanist
+					}
+				}
+			}
+			remove_character_modifier = zoroastrian_celibacy
+		}
+		if = {
+			limit = {
+				has_character_modifier = zoroastrian_chastity
+				OR = {
+					NOT = { trait = chaste }
+					NOR = {
+						religion = zoroastrian
+						religion = zurvanist
+					}
+				}
+			}
+			remove_character_modifier = zoroastrian_chastity
+		}
+		if = {
+			limit = {
+				has_character_modifier = zoroastrian_hedonism
+				OR = {
+					NOT = { trait = hedonist }
+					NOR = {
+						religion = zoroastrian
+						religion = zurvanist
+					}
+				}
+			}
+			remove_character_modifier = zoroastrian_hedonism
+		}
+		if = {
+			limit = {
+				has_character_modifier = zoroastrian_lustfulness
+				OR = {
+					NOT = { trait = lustful }
+					NOR = {
+						religion = zoroastrian
+						religion = zurvanist
+					}
+				}
+			}
+			remove_character_modifier = zoroastrian_lustfulness
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_character_modifier = zoroastrian_honesty
+					has_character_modifier = zoroastrian_deceitfulness
+					has_character_modifier = zoroastrian_celibacy
+					has_character_modifier = zoroastrian_chastity
+					has_character_modifier = zoroastrian_hedonism
+					has_character_modifier = zoroastrian_lustfulness
+				}
+			}
+			clr_character_flag = zoroastrian_modifier
+		}
+	}
+}
+
+### NOWRUZ events
+
+character_event = {
+	id = GoPagan.288
+	title = EVTNAME_GoPagan_288
+	desc = EVTDESC_GoPagan_288
+	picture = GFX_evt_avesta
+
+	is_triggered_only = yes
+
+	only_playable = yes
+	has_character_flag = planning_nowruz
+	war = no
+	prisoner = no
+
+	trigger = {
+		OR = {
+			religion_group = zoroastrian_group
+			culture_group = iranian
+		}
+
+		has_regent = no
+		month == 2
+		is_inaccessible_trigger = no
+		NOT = { has_character_flag = celebrating_nowruz }
+	}
+
+	fail_trigger_effect = {
+		if = {
+			limit = { has_character_flag = planning_nowruz }
+
+			repeat_event = {
+				id = GoPagan.288
+				days = 15 # Can only fire in March, so smaller time window
+			}
+		}
+	}
+
+	immediate = {
+		clr_character_flag = planning_nowruz
+		set_character_flag = celebrating_nowruz
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_288
+
+		trigger = {
+			NOT = { religion_group = zoroastrian_group }
+		}
+
+		add_trait = sympathy_zoroastrianism
+		piety = -25
+
+		random = {
+			chance = 75
+			remove_trait_zealous_effect = yes
+		}
+
+		add_character_modifier = {
+			name = do_not_disturb
+			months = 1
+			hidden = yes
+		}
+
+		character_event = {
+			id = GoPagan.289
+			days = 4
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_288
+
+		piety = 25
+
+		add_character_modifier = {
+			name = do_not_disturb
+			months = 1
+			hidden = yes
+		}
+
+		character_event = {
+			id = GoPagan.289
+			days = 4
+		}
+	}
+
+	option = {
+		name = EVTOPTC_GoPagan_288
+
+		piety = -10
+		prestige = 25
+
+		random = {
+			chance = 25
+			add_trait_fully_cruel_effect = yes
+		}
+
+		add_character_modifier = {
+			name = do_not_disturb
+			months = 1
+			hidden = yes
+		}
+
+		character_event = {
+			id = GoPagan.289
+			days = 4
+		}
+	}
+
+	option = {
+		name = EVTOPTD_GoPagan_288
+
+		if = {
+			limit = { religion_group = zoroastrian_group}
+			piety = -5
+		}
+
+		remove_do_not_disturb_effect = yes
+		clr_character_flag = celebrating_nowruz
+
+		add_character_modifier = {
+			name = feast_event_timer
+			months = 1
+			hidden = yes
+		}
+	}
+}
+
+character_event = {
+	id = GoPagan.289
+	title = EVTNAME_GoPagan_289
+	desc = EVTDESC_GoPagan_289
+	picture = GFX_evt_feast_christian
+
+	is_triggered_only = yes
+
+	only_playable = yes
+	has_character_flag = celebrating_nowruz
+
+	option = {
+		name = EVTOPTA_GoPagan_289
+
+		prestige = 250
+		wealth = -300
+
+		if = {
+			limit = { has_dlc = "Reapers"}
+
+			custom_tooltip = {
+				text = capital_prospers_custom_tooltip
+
+				capital_scope = {
+					random_list = {
+						50 = { change_variable = { which = prosperity_value value = 5 } }
+						25 = { change_variable = { which = prosperity_value value = 10 } }
+						25 = { }
+					}
+				}
+			}
+		}
+
+		random = {
+			chance = 50
+			add_trait_fully_charitable_effect = yes
+		}
+
+		character_event = {
+			id = GoPagan.290
+			days = 13
+		}
+
+		add_character_modifier = {
+			name = celebration_nowruz_large
+			days = 100
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_289
+
+		prestige = -50
+		wealth = 75
+
+
+		character_event = {
+			id = GoPagan.290
+			days = 13
+		}
+
+		add_character_modifier = {
+			name = celebration_nowruz_small
+			days = 100
+		}
+	}
+
+	option = {
+		name = EVTOPTC_GoPagan_289
+
+		if = {
+			limit = { religion_group = zoroastrian_group }
+			piety = -5
+		}
+
+		remove_do_not_disturb_effect = yes
+		clr_character_flag = celebrating_nowruz
+
+		add_character_modifier = {
+			name = feast_event_timer
+			months = 1
+			hidden = yes
+		}
+	}
+}
+
+character_event = {
+	id = GoPagan.290
+	title = EVTNAME_GoPagan_290
+	desc = EVTDESC_GoPagan_290
+	picture = GFX_evt_feast_christian
+	is_triggered_only = yes
+
+	immediate = {
+		remove_do_not_disturb_effect = yes
+		clr_character_flag = celebrating_nowruz
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_290
+
+		any_courtier = {
+			show_scope_change = no
+
+			limit = { prisoner = no }
+
+			opinion = {
+				name = opinion_enjoyed_feast
+				who = ROOT
+				months = 3
+			}
+		}
+
+		prestige = 50
+
+		add_character_modifier = {
+			name = feast_event_timer
+			months = 1
+			hidden = yes
+		}
+	}
+}

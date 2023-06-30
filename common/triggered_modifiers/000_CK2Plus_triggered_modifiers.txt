@@ -1,0 +1,51 @@
+##################################################
+#
+# STRATEGIC EFFECTS - A.K.A. "TRIGGERED MODIFIERS"
+#
+##################################################
+
+# Player isn't picking an ambition
+# We probably need this... Since foci have negative effect too.
+player_no_ambition = {
+	potential = {
+		ai = no
+	}
+
+	trigger = {
+		is_adult = yes
+		has_ambition = no
+		has_regent = no
+
+		trigger_if = {
+			limit = { has_character_flag = obj_aborted }
+
+			had_character_flag = {
+				flag = obj_aborted
+				years >= 3
+			}
+		}
+	}
+
+	icon = 25
+
+	monthly_character_prestige = -1
+}
+
+# Bankruptcy
+negative_money = {
+	potential = {
+		is_ruler = yes
+	}
+
+	trigger = {
+		wealth < 0
+	}
+
+	icon = 24
+
+	land_morale = -1
+	monthly_character_prestige = -1
+	general_opinion = -20
+
+	active = no
+}

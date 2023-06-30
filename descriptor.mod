@@ -1,0 +1,12 @@
+name="CK2Plus"
+archive="mod/ck2plus.zip"
+dependencies=
+{
+	CleanSlate 
+}
+replace_path="history/provinces"
+replace_path="history/titles"
+replace_path="history/wars"
+replace_path="common/buildings"
+replace_path="common/trade_routes"
+picture="ck2plus.jpg"

@@ -1,0 +1,39 @@
+20.1.1 = {
+	historical_nomad = yes
+}
+
+764.1.1 = {
+	holder = 146214
+}
+
+803.1.1 = {
+	holder = 146229
+}
+
+826.1.1 = {
+	holder = 146230
+}
+
+845.1.1 = {
+	holder = 159137
+}
+
+867.1.1 = {
+	set_global_flag = magyar_1066_invasion
+}
+
+895.1.1 = {
+	holder = 159136
+	clr_global_flag = magyar_1066_invasion
+	set_global_flag = magyar_victory
+	pentarch = b_roma
+}
+
+900.1.1 = {
+	de_jure_liege = e_carpathia
+}
+
+907.1.1 = {
+	holder = 0
+	active = no
+}

@@ -1,0 +1,179 @@
+baltic_sea = {
+	wealth = 6			# Total base wealth of Baltic Trade
+
+	modifier = {			# How the trade route modifies the provinces it passes
+		castle_tax_modifier = 0.025
+		city_tax_modifier = 0.05
+		temple_tax_modifier = 0.025
+		trade_route_value = 0.5
+		tech_growth_modifier = 0.10
+		icon = 97
+	}
+
+	start = { # Start provinces of trade route
+		777 # Riga
+		787 # Kalevan
+		167 # Sjælland
+	}
+
+	path = { # Connects to Salt road
+		1966 # Gulf of Heligoland
+		727 # Hamburg
+	}
+	path = { # Connects to Salt road
+		1966 # Gulf of Heligoland
+		177 # Hadeln
+	}
+	path = {
+		1966 # Gulf of Heligoland
+		258 # Ostfriesland
+	}
+	path = {
+		787 # Kalevan
+		1975 # Gulf of Finland
+	}
+	path = { # Connects to Rus trade
+		1975 # Gulf of Finland
+		788 # Narva
+		790 # Gdov
+	}
+	path = {
+		1975 # Gulf of Finland
+		1972 # Sea of Äland
+	}
+	path = {
+		1975 # Gulf of Finland
+		1815 # Neva
+		1816 # Lake Ladoga
+	}
+	path = { # Connects to Rus trade
+		1816 # Lake Ladoga
+		1817 # Volkhov
+		797 # Novgorod
+	}
+	path = {
+		1816 # Lake Ladoga
+		1820 # Svir
+		1821 # Onega
+		898 # Romny
+	}
+	path = {
+		167 # Sjælland
+		169 # Fyn
+		174 # Slesvig
+	}
+	path = {
+		1966 # Gulf of Heligoland
+		174 # Slesvig
+	}
+	path = { # Connects to Salt road
+		174 # Slesvig
+		175 # Holstein
+		728 # Lübeck
+	}
+	path = {
+		1972 # Sea of Äland
+		1970 # Bight of Hanö
+	}
+	path = {
+		1970 # Bight of Hanö
+		1969 # Gulf of Danzig
+	}
+	path = {
+		1970 # Bight of Hanö
+		150 # Möre
+	}
+	path = {
+		1969 # Gulf of Danzig
+		1968 # The Sound
+	}
+	path = {
+		1968 # The Sound
+		167 # Sjælland
+	}
+	path = {
+		167 # Sjælland
+		1967 # Kattegat
+	}
+	path = {
+		1967 # Kattegat
+		1966 # Gulf of Heligoland
+	}
+	path = {
+		1966 # Gulf of Heligoland
+		1965 # Waddenzee
+	}
+	path = { # Connects to French trade
+		1965 # Waddenzee
+		268 # Brugge
+	}
+	path = {
+		1965 # Waddenzee
+		261 # Holland
+	}
+	path = {
+		1965 # Waddenzee
+		256 # Gelre
+	}
+	path = {
+		1965 # Waddenzee
+		260 # Westfriesland
+	}
+	path = { # Connects to Salt road
+		1968 # The Sound
+		728 # Lübeck
+	}
+	path = {
+		1966 # Gulf of Heligoland
+		1976 # North Sea
+	}
+	path = {
+		1976 # North Sea
+		99 # Bergenhus
+	}
+	path = { # Connects to Rus trade
+		1976 # North Sea
+		1978 # North Sea
+		1979 # North Sea
+		1980 # North Atlantic
+		1981 # White Sea
+		901 # Onega Peninsula
+	}
+	path = {
+		1967 # Kattegat
+		94 # Akershus
+	}
+	path = {
+		1967 # Kattegat
+		170 # Aarhus
+	}
+	path = { # Connects to Amber road
+		1969 # Gulf of Danzig
+		738 # Danzig
+	}
+	path = {
+		1970 # Bight of Hanö
+		148 # Gotland
+	}
+	path = {
+		777 # Riga
+		1971 # Baltic Sea
+		1970 # Bight Hanö
+	}
+	path = {
+		1972 # Sea of Äland
+		1862 # Mälaren
+	}
+	path = {
+		1862 # Mälaren
+		145 # Uppland
+	}
+	path = {
+		1862 # Mälaren
+		146 # Södermanland
+	}
+	path = {
+		1968 # The Sound
+		165 # Skåne
+	}
+}

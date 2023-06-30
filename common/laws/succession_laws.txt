@@ -1,0 +1,1551 @@
+# DO NOT ALTER THE NAME OR NUMBER OF THESE!
+
+succession_laws = {
+	succ_gavelkind = {
+		child_opinion = 30
+		oldest_child_opinion = -45
+
+		potential = {
+			rebel = no
+
+			trigger_if = {
+				limit = { is_primary_type_title = yes }
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			trigger_if = {
+				limit = {
+					is_landless_type_title = yes
+					temporary = no
+				}
+
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			holder_scope = {
+				OR = {
+					is_feudal = yes
+					is_tribal = yes
+				}
+
+				trigger_if = { # Imperial can always have gavelkind
+					limit = { has_imperial_government_trigger = yes }
+					has_game_started = yes # Default to primogeniture/imperial elective instead
+				}
+
+				NOR = {
+					religion_group = muslim
+					religion_openly_celtic_or_reformed_trigger = yes
+					government = confucian_bureaucracy
+					government = order_government
+				}
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			trigger_if = {
+				limit = {
+					has_dlc = "Conclave"
+					OR = {
+						has_law = succ_feudal_elective
+						has_law = succ_hre_elective
+					}
+				}
+
+				has_law = succession_voting_power_0
+			}
+
+			# NOTE: Do not combine these two. They are separate for the tooltip
+			trigger_if = {
+				limit = { has_law = succ_hre_elective }
+				has_law = crown_authority_4
+			}
+		#	trigger_if = {
+		#		limit = { has_law = succ_hre_elective }
+		#		has_law = centralization_4
+		#	}
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { is_tribal = yes }
+
+					OR = {
+						has_law = tribal_organization_3
+						has_law = tribal_organization_4
+					}
+				}
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_prestige_trigger_2 = yes
+				}
+
+				custom_tooltip = {
+					text = not_forced_tt
+					NOT = { has_character_flag = liege_forced_succ_law }
+				}
+
+				in_revolt = no
+				NOT = { trait = uncrowned }
+			}
+		}
+
+		pass_effect = {
+			# log = "succ_gavelkind pass ([This.GetFullBaseName])"
+			plus_law_change_prestige_effect_2 = yes
+		}
+
+		effect = {
+			# log = "succ_gavelkind ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_prestige_effect_2 = yes
+			}
+
+			succession = gavelkind
+		}
+	}
+
+	succ_elective_gavelkind = {
+		child_opinion = 15
+		dynasty_opinion = 5
+		oldest_child_opinion = -15
+		vassal_opinion = 5
+
+		potential = {
+			rebel = no
+
+			trigger_if = {
+				limit = { is_primary_type_title = yes }
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			trigger_if = {
+				limit = {
+					is_landless_type_title = yes
+					temporary = no
+				}
+
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			holder_scope = {
+				OR = {
+					is_feudal = yes
+					is_tribal = yes
+				}
+
+				trigger_if = { # Imperials can always have elective gavelkind
+					limit = { has_imperial_government_trigger = yes }
+					has_game_started = yes # Default to primogeniture/imperial elective instead
+				}
+
+				NOR = {
+					religion_group = muslim
+					religion_openly_celtic_or_reformed_trigger = yes
+					government = chinese_imperial_government
+					government = confucian_bureaucracy
+					government = order_government
+				}
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			trigger_if = {
+				limit = {
+					has_dlc = "Conclave"
+					OR = {
+						has_law = succ_feudal_elective
+						has_law = succ_hre_elective
+					}
+				}
+
+				has_law = succession_voting_power_0
+			}
+
+			# NOTE: Do not combine these two. They are separate for the tooltip
+			trigger_if = {
+				limit = { has_law = succ_hre_elective }
+				has_law = crown_authority_4
+			}
+		#	trigger_if = {
+		#		limit = { has_law = succ_hre_elective }
+		#		has_law = centralization_4
+		#	}
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_prestige_trigger_2 = yes
+				}
+
+				custom_tooltip = {
+					text = not_forced_tt
+					NOT = { has_character_flag = liege_forced_succ_law }
+				}
+
+				in_revolt = no
+				NOT = { trait = uncrowned }
+			}
+		}
+
+		pass_effect = {
+			# log = "succ_elective_gavelkind pass ([This.GetFullBaseName])"
+			plus_law_change_prestige_effect_2 = yes
+		}
+
+		effect = {
+			# log = "succ_elective_gavelkind ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_prestige_effect_2 = yes
+			}
+
+			succession = {
+				base_type = elective_gavelkind
+				voting_rules = elective_gavelkind
+			}
+		}
+	}
+
+	succ_eldership = {
+		child_opinion = -30
+		dynasty_opinion = 10
+		vassal_opinion = 5
+
+		potential = {
+			has_dlc = "Holy Fury"
+			rebel = no
+
+			trigger_if = {
+				limit = { is_primary_type_title = yes }
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			trigger_if = {
+				limit = {
+					is_landless_type_title = yes
+					temporary = no
+				}
+
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			holder_scope = {
+				OR = {
+					is_feudal = yes
+					is_tribal = yes
+				}
+
+				OR = {
+					trigger_if = {
+						limit = { is_tribal = yes }
+
+						OR = {
+							religion = baltic_pagan
+							religion = west_african_pagan
+						}
+					}
+
+					has_religion_feature = religion_beatification
+					has_religion_feature = religion_feature_baltic
+					has_religion_feature = religion_feature_west_african
+					has_religion_feature = religion_feature_egyptian
+				}
+
+				NOR = {
+					religion_group = muslim
+					government = chinese_imperial_government
+					government = confucian_bureaucracy
+					government = order_government
+					has_imperial_government_trigger = yes
+					has_religion_feature = religion_matriarchal
+					has_religion_feature = religion_patriarchal
+				}
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			trigger_if = {
+				limit = {
+					has_dlc = "Conclave"
+					OR = {
+						has_law = succ_feudal_elective
+						has_law = succ_hre_elective
+					}
+				}
+
+				has_law = succession_voting_power_0
+			}
+
+			# NOTE: Do not combine these two. They are separate for the tooltip
+			trigger_if = {
+				limit = { has_law = succ_hre_elective }
+				has_law = crown_authority_4
+			}
+		#	trigger_if = {
+		#		limit = { has_law = succ_hre_elective }
+		#		has_law = centralization_4
+		#	}
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_prestige_trigger_2 = yes
+				}
+
+				custom_tooltip = {
+					text = not_forced_tt
+					NOT = { has_character_flag = liege_forced_succ_law }
+				}
+
+				in_revolt = no
+				NOT = { trait = uncrowned }
+			}
+		}
+
+		pass_effect = {
+			# log = "succ_eldership pass ([This.GetFullBaseName])"
+			plus_law_change_prestige_effect_2 = yes
+		}
+
+		effect = {
+			# log = "succ_eldership ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_prestige_effect_2 = yes
+			}
+
+			succession = {
+				base_type = tanistry
+				voting_rules = eldership_rules
+			}
+		}
+	}
+
+	succ_seniority = {
+		child_opinion = -30
+		dynasty_opinion = 15
+
+		potential = {
+			trigger_if = {
+				limit = { is_primary_type_title = yes }
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			trigger_if = {
+				limit = {
+					is_landless_type_title = yes
+					temporary = no
+				}
+
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			holder_scope = {
+				trigger_if = {
+					limit = { is_merchant_republic = yes }
+					PREV = { is_primary_holder_title = no }
+				}
+				trigger_else_if = {
+					limit = { is_patrician = no }
+
+					is_feudal = yes
+
+					NOR = {
+						religion_group = muslim
+						religion_group = indian_group
+						religion_openly_celtic_or_reformed_trigger = yes
+					}
+				}
+
+				trigger_if = { # Imperials can always have seniority
+					limit = { has_imperial_government_trigger = yes }
+					has_game_started = yes # Default to primogeniture/imperial elective instead
+				}
+
+				NOR = {
+					government = confucian_bureaucracy
+					government = order_government
+				}
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			trigger_if = {
+				limit = {
+					has_dlc = "Conclave"
+					OR = {
+						has_law = succ_feudal_elective
+						has_law = succ_hre_elective
+					}
+				}
+
+				has_law = succession_voting_power_0
+			}
+
+			# NOTE: Do not combine these two. They are separate for the tooltip
+			trigger_if = {
+				limit = { has_law = succ_hre_elective }
+				has_law = crown_authority_4
+			}
+		##	trigger_if = {
+		##		limit = { has_law = succ_hre_elective }
+		##		has_law = centralization_4
+		##	}
+
+			trigger_if = {
+				limit = {
+					NOT = { has_law = succ_hre_elective }
+					holder_scope = { is_patrician = no }
+				}
+
+				trigger_if = {
+					limit = { is_crown_law_title = yes }
+
+					OR = {
+						has_law = crown_authority_2
+						has_law = crown_authority_3
+						has_law = crown_authority_4
+					}
+				}
+				trigger_else_if = {
+					limit = {
+						has_crown_law_title = yes
+						crownlaw_title = { holder_scope = { has_landed_title = ROOT } }
+					}
+
+					crownlaw_title = {
+						OR = {
+							has_law = crown_authority_2
+							has_law = crown_authority_3
+							has_law = crown_authority_4
+						}
+					}
+				}
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_prestige_trigger_1 = yes
+				}
+
+				custom_tooltip = {
+					text = not_forced_tt
+					NOT = { has_character_flag = liege_forced_succ_law }
+				}
+
+				in_revolt = no
+				NOT = { trait = uncrowned }
+			}
+		}
+
+		pass_effect = {
+			# log = "succ_seniority pass ([This.GetFullBaseName])"
+			plus_law_change_prestige_effect_1 = yes
+		}
+
+		effect = {
+			# log = "succ_seniority ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_prestige_effect_1 = yes
+			}
+
+			succession = seniority
+		}
+	}
+
+	succ_primogeniture = {
+		oldest_child_opinion = 10
+		youngest_child_opinion = -15
+		child_opinion = -10
+		dynasty_opinion = -5
+
+		potential = {
+			trigger_if = {
+				limit = { is_primary_type_title = yes }
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			trigger_if = {
+				limit = {
+					is_landless_type_title = yes
+					temporary = no
+				}
+
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			holder_scope = {
+				is_feudal = yes
+
+				trigger_if = { # Imperial vassals can always have primogeniture
+					limit = {
+						has_imperial_government_trigger = yes
+						independent = yes
+					}
+
+					# The emperor starts with imperial elective instead
+					has_game_started = yes
+				}
+
+				NOR = {
+					religion_group = muslim
+					government = confucian_bureaucracy
+					government = order_government
+				}
+
+				trigger_if = {
+					limit = { religion_group = pagan_group }
+
+					OR = {
+						is_reformed_religion = yes
+						religion = bon_pagan
+						religion = hellenic_pagan
+					}
+				}
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			trigger_if = {
+				limit = {
+					has_dlc = "Conclave"
+					OR = {
+						has_law = succ_feudal_elective
+						has_law = succ_hre_elective
+					}
+				}
+
+				has_law = succession_voting_power_0
+			}
+
+			# NOTE: Do not combine these two. They are separate for the tooltip
+			trigger_if = {
+				limit = { has_law = succ_hre_elective }
+				has_law = crown_authority_4
+			}
+		#	trigger_if = {
+		#		limit = { has_law = succ_hre_elective }
+		#		has_law = centralization_4
+		#	}
+
+			# These two are also separate for the tooltip
+			trigger_if = {
+				limit = {
+					# Imperial vassals can always have primogeniture
+					holder_scope = {
+						trigger_if = {
+							limit = { has_imperial_government_trigger = yes }
+							independent = yes
+						}
+					}
+				}
+
+				trigger_if = {
+					limit = { has_dlc = "Conclave" }
+
+					OR = {
+						has_law = ze_administration_laws_1
+						has_law = ze_administration_laws_2
+					}
+				}
+			}
+
+			trigger_if = {
+				limit = {
+					# Imperial vassals can always have primogeniture
+					holder_scope = {
+						trigger_if = {
+							limit = { has_imperial_government_trigger = yes }
+							independent = yes
+						}
+					}
+				}
+
+				trigger_if = {
+					limit = { is_crown_law_title = yes }
+
+					OR = {
+						has_law = crown_authority_3
+						has_law = crown_authority_4
+					}
+				}
+				trigger_else_if = {
+					limit = {
+						has_crown_law_title = yes
+						crownlaw_title = { holder_scope = { has_landed_title = ROOT } }
+					}
+
+					crownlaw_title = {
+						OR = {
+							has_law = crown_authority_3
+							has_law = crown_authority_4
+						}
+					}
+				}
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_prestige_trigger_4 = yes
+				}
+
+				custom_tooltip = {
+					text = not_forced_tt
+					NOT = { has_character_flag = liege_forced_succ_law }
+				}
+
+				in_revolt = no
+				NOT = { trait = uncrowned }
+			}
+		}
+
+		pass_effect = {
+			# log = "succ_primogeniture pass ([This.GetFullBaseName])"
+			plus_law_change_prestige_effect_4 = yes
+		}
+
+		effect = {
+			# log = "succ_primogeniture ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_prestige_effect_4 = yes
+			}
+
+			succession = primogeniture
+		}
+	}
+
+	succ_feudal_elective = {
+		oldest_child_opinion = -15
+		child_opinion = -5
+		dynasty_opinion = -5
+		vassal_opinion = 10
+
+		potential = {
+			higher_real_tier_than = BARON
+
+			trigger_if = {
+				limit = { is_primary_type_title = yes }
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			trigger_if = {
+				limit = {
+					is_landless_type_title = yes
+					temporary = no
+				}
+
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			NOR = { # Has special elective law instead
+				title = e_hre
+				has_title_flag = alternate_hre
+			}
+
+			holder_scope = {
+				is_feudal = yes
+
+				trigger_if = {
+					limit = {
+						OR = {
+							religion_group = muslim
+							religion_group = indian_group
+
+							trigger_if = {
+								limit = { religion_group = pagan_group }
+
+								is_reformed_religion = no
+								NOT = { religion = hellenic_pagan }
+							}
+						}
+					}
+
+					has_dlc = "Conclave"
+					higher_real_tier_than = DUKE
+				}
+
+				trigger_if = { # Imperial vassals can always have feudal elective
+					limit = { has_imperial_government_trigger = yes }
+					independent = no
+					has_game_started = yes # Default to primogeniture instead
+				}
+
+				NOR = {
+					government = chinese_imperial_government
+					government = confucian_bureaucracy
+					government = order_government
+				}
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = {
+						has_dlc = "Conclave"
+
+						OR = {
+							religion_group = muslim
+							religion_group = indian_group
+
+							AND = {
+								religion_group = pagan_group
+								is_reformed_religion = no
+								NOT = { religion = hellenic_pagan }
+							}
+						}
+					}
+
+					has_law = succession_voting_power_1
+				}
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_prestige_trigger_1 = yes
+				}
+
+				custom_tooltip = {
+					text = not_forced_tt
+					NOT = { has_character_flag = liege_forced_succ_law }
+				}
+
+				in_revolt = no
+				NOT = { trait = uncrowned }
+			}
+		}
+
+		pass_effect = {
+			# log = "succ_feudal_elective pass ([This.GetFullBaseName])"
+			plus_law_change_prestige_effect_1 = yes
+		}
+
+		effect = {
+			# log = "succ_feudal_elective ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_prestige_effect_1 = yes
+			}
+
+			succession = {
+				base_type = feudal_elective
+				voting_rules = feudal_elective
+			}
+		}
+	}
+
+	succ_hre_elective = {
+		oldest_child_opinion = -15
+		child_opinion = -5
+		dynasty_opinion = -5
+		vassal_opinion = 15
+		vassal_limit = 20
+
+		potential = {
+			real_tier = EMPEROR
+
+			# Title bound
+			OR = {
+				title = e_hre
+				has_title_flag = alternate_hre
+			}
+
+			holder_scope = {
+				is_feudal = yes
+
+				trigger_if = {
+					limit = {
+						OR = {
+							religion_group = muslim
+							religion_group = indian_group
+
+							AND = {
+								religion_group = pagan_group
+								is_reformed_religion = no
+								NOT = { religion = hellenic_pagan }
+							}
+						}
+					}
+
+					has_dlc = "Conclave"
+				}
+
+				NOR = {
+					government = chinese_imperial_government
+					government = confucian_bureaucracy
+				}
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = {
+						has_dlc = "Conclave"
+
+						OR = {
+							religion_group = muslim
+							religion_group = indian_group
+
+							trigger_if = {
+								limit = { religion_group = pagan_group }
+
+								is_reformed_religion = no
+								NOT = { religion = hellenic_pagan }
+							}
+						}
+					}
+
+					has_law = succession_voting_power_1
+				}
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_prestige_trigger_4 = yes
+				}
+
+				NOT = { trait = uncrowned }
+			}
+		}
+
+		pass_effect = {
+			# log = "succ_hre_elective pass ([This.GetFullBaseName])"
+			plus_law_change_prestige_effect_4 = yes
+		}
+
+		effect = {
+			# log = "succ_hre_elective ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_prestige_effect_4 = yes
+			}
+
+			succession = {
+				base_type = feudal_elective
+				voting_rules = hre_feudal_elective
+			}
+		}
+	}
+
+	succ_byzantine_elective = {
+		oldest_child_opinion = -5
+		child_opinion = -5
+		dynasty_opinion = -5
+		feudal_opinion = -5
+
+		potential = {
+			real_tier = EMPEROR
+
+			holder_scope = {
+				is_feudal = yes
+
+				OR = {
+					has_landed_title = e_byzantium
+					has_landed_title = e_roman_empire
+				}
+
+				NOR = {
+					religion_group = muslim
+					government = chinese_imperial_government
+					government = confucian_bureaucracy
+					government = order_government
+				}
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			# This is semi-redundant but I don't care.
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_prestige_trigger_4 = yes
+				}
+
+				NOT = { trait = uncrowned }
+			}
+		}
+
+		pass_effect = {
+			# log = "succ_byzantine_elective pass ([This.GetFullBaseName])"
+			plus_law_change_prestige_effect_4 = yes
+		}
+
+		effect = {
+			# log = "succ_byzantine_elective ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_prestige_effect_4 = yes
+			}
+
+			succession = {
+				base_type = feudal_elective
+				voting_rules = byzantine_elective
+			}
+		}
+	}
+
+	succ_tanistry = {
+		oldest_child_opinion = -20
+		child_opinion = -10
+		dynasty_opinion = 5
+		vassal_opinion = 5
+
+		potential = {
+			higher_real_tier_than = BARON
+
+			trigger_if = {
+				limit = { is_primary_type_title = yes }
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			trigger_if = {
+				limit = {
+					is_landless_type_title = yes
+					temporary = no
+				}
+
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			holder_scope = {
+				OR = {
+					is_feudal = yes
+					is_tribal = yes
+				}
+
+				OR = {
+					culture_group = celtic
+					religion_openly_celtic_or_reformed_trigger = yes
+
+					any_owned_bloodline = {
+						has_bloodline_flag = bloodline_tanistry
+						bloodline_is_active_for = PREV
+					}
+				}
+
+				NOR = {
+					religion_group = muslim
+					government = chinese_imperial_government
+					government = confucian_bureaucracy
+					government = order_government
+					has_imperial_government_trigger = yes
+				}
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			trigger_if = {
+				limit = {
+					has_dlc = "Conclave"
+					OR = {
+						has_law = succ_feudal_elective
+						has_law = succ_hre_elective
+					}
+				}
+
+				has_law = succession_voting_power_0
+			}
+
+			# NOTE: Do not combine these two. They are separate for the tooltip
+			trigger_if = {
+				limit = { has_law = succ_hre_elective }
+				has_law = crown_authority_4
+			}
+		#	trigger_if = {
+		#		limit = { has_law = succ_hre_elective }
+		#		has_law = centralization_4
+		#	}
+
+			trigger_if = {
+				limit = { holder_scope = { is_tribal = yes } }
+
+				holder_scope = {
+					show_scope_change = no
+
+					OR = {
+						has_law = tribal_organization_2
+						has_law = tribal_organization_3
+						has_law = tribal_organization_4
+					}
+				}
+			}
+			trigger_else_if = {
+				limit = { is_crown_law_title = yes }
+
+				OR = {
+					has_law = crown_authority_2
+					has_law = crown_authority_3
+					has_law = crown_authority_4
+				}
+			}
+			trigger_else_if = {
+				limit = {
+					has_crown_law_title = yes
+					crownlaw_title = { holder_scope = { has_landed_title = ROOT } }
+				}
+
+				crownlaw_title = {
+					OR = {
+						has_law = crown_authority_2
+						has_law = crown_authority_3
+						has_law = crown_authority_4
+					}
+				}
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_prestige_trigger_2 = yes
+				}
+
+				custom_tooltip = {
+					text = not_forced_tt
+					NOT = { has_character_flag = liege_forced_succ_law }
+				}
+
+				NOT = { trait = uncrowned }
+			}
+		}
+
+		pass_effect = {
+			# log = "succ_tanistry pass ([This.GetFullBaseName])"
+			plus_law_change_prestige_effect_2 = yes
+		}
+
+		effect = {
+			# log = "succ_tanistry ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_prestige_effect_2 = yes
+			}
+
+			succession = {
+				base_type = tanistry
+				voting_rules = tanistry
+			}
+		}
+	}
+
+	succ_ultimogeniture = {
+		youngest_child_opinion = 10
+		oldest_child_opinion = -15
+		child_opinion = -10
+		dynasty_opinion = -5
+
+		potential = {
+			trigger_if = {
+				limit = { is_primary_type_title = yes }
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			trigger_if = {
+				limit = {
+					is_landless_type_title = yes
+					temporary = no
+				}
+
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			holder_scope = {
+				trigger_if = {
+					limit = { is_feudal = no }
+
+					is_tribal = yes
+
+					OR = {
+						has_landed_title = e_mongol_empire
+						has_landed_title = e_golden_horde
+						has_landed_title = e_ilkhanate
+						has_landed_title = e_chagatai
+					}
+				}
+
+				trigger_if = {
+					limit = { religion_group = pagan_group }
+
+					OR = {
+						culture = mongol
+						religion = bon_pagan
+						religion = hellenic_pagan
+						is_reformed_religion = yes
+					}
+				}
+
+				trigger_if = { # Imperial vassals can always have ultimogeniture
+					limit = { has_imperial_government_trigger = yes }
+					independent = no
+					has_game_started = yes # Default to primogeniture instead
+				}
+
+				NOR = {
+					religion_group = muslim
+					government = confucian_bureaucracy
+					government = order_government
+				}
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			trigger_if = {
+				limit = {
+					has_dlc = "Conclave"
+					OR = {
+						has_law = succ_feudal_elective
+						has_law = succ_hre_elective
+					}
+				}
+
+				has_law = succession_voting_power_0
+			}
+
+			# NOTE: Do not combine these two. They are separate for the tooltip
+			trigger_if = {
+				limit = { has_law = succ_hre_elective }
+				has_law = crown_authority_4
+			}
+		#	trigger_if = {
+		#		limit = { has_law = succ_hre_elective }
+		#		has_law = centralization_4
+		#	}
+
+			trigger_if = {
+				limit = { has_dlc = "Conclave" }
+
+				holder_scope = {
+					show_scope_change = no
+
+					OR = {
+						has_law = ze_administration_laws_1
+						has_law = ze_administration_laws_2
+					}
+				}
+			}
+
+			trigger_if = {
+				limit = {
+					NOT = { has_law = succ_hre_elective }
+
+					# Imperial vassals can always have ultimogeniture
+					holder_scope = {
+						trigger_if = {
+							limit = { has_imperial_government_trigger = yes }
+							independent = yes
+						}
+					}
+				}
+
+				trigger_if = {
+					limit = { is_crown_law_title = yes }
+
+					OR = {
+						has_law = crown_authority_2
+						has_law = crown_authority_3
+						has_law = crown_authority_4
+					}
+				}
+				trigger_else_if = {
+					limit = {
+						has_crown_law_title = yes
+						crownlaw_title = { holder_scope = { has_landed_title = ROOT } }
+					}
+
+					crownlaw_title = {
+						OR = {
+							has_law = crown_authority_2
+							has_law = crown_authority_3
+							has_law = crown_authority_4
+						}
+					}
+				}
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_prestige_trigger_2 = yes
+				}
+
+				custom_tooltip = {
+					text = not_forced_tt
+					NOT = { has_character_flag = liege_forced_succ_law }
+				}
+
+				in_revolt = no
+				NOT = { trait = uncrowned }
+			}
+		}
+
+		pass_effect = {
+			# log = "succ_ultimogeniture pass ([This.GetFullBaseName])"
+			plus_law_change_prestige_effect_2 = yes
+		}
+
+		effect = {
+			# log = "succ_ultimogeniture ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_prestige_effect_2 = yes
+			}
+
+			succession = ultimogeniture
+		}
+	}
+
+	succ_turkish_succession = {
+		oldest_child_opinion = -5
+
+		potential = {
+			trigger_if = {
+				limit = { is_primary_type_title = yes }
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			trigger_if = {
+				limit = {
+					is_landless_type_title = yes
+					temporary = no
+				}
+
+				NOT = { is_law_potential = succ_open_elective }
+			}
+
+			NOR = { # Has special elective law instead
+				title = e_hre
+				has_title_flag = alternate_hre
+			}
+
+			holder_scope = {
+				OR = {
+					is_feudal = yes
+					is_tribal = yes
+				}
+
+				OR = {
+					religion_group = muslim
+					has_religion_feature = religion_patriarchal
+					has_religion_feature = religion_matriarchal
+				}
+
+				NOR = {
+					government = confucian_bureaucracy
+					government = order_government
+					has_imperial_government_trigger = yes
+				}
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			trigger_if = {
+				limit = { has_law = succ_feudal_elective }
+				has_law = succession_voting_power_0
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				custom_tooltip = {
+					text = not_forced_tt
+					NOT = { has_character_flag = liege_forced_succ_law }
+				}
+
+				in_revolt = no
+				NOT = { trait = uncrowned }
+			}
+		}
+
+		pass_effect = {
+			# log = "succ_turkish_succession pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "succ_turkish_succession ([This.GetFullBaseName])"
+			succession = turkish_succession
+		}
+	}
+
+	succ_papal_succession = {
+		potential = {
+			# TODO: Verify this list and ensure they are properly set up for this succession
+			OR = {
+				title = k_papacy
+				title = d_cathar
+				title = d_bogomilist
+				title = d_manichaean
+				title = d_fraticelli
+
+				AND = {
+					holder_scope = {
+						has_religion_feature = religion_theocratic_head
+					}
+
+					OR = {
+						title = d_celtic_pagan_reformed
+						title = d_roman_pagan
+					}
+				}
+			}
+		}
+
+		allow = {}
+
+		pass_effect = {
+			# log = "succ_papal_succession pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "succ_papal_succession ([This.GetFullBaseName])"
+			succession = papal_succession
+		}
+	}
+
+	# Titles revert back to the liege on death
+	succ_appointment = {
+		potential = {
+			holder_scope = {
+				government = order_government
+				holy_order = no
+			}
+		}
+
+		allow = {}
+
+		pass_effect = {
+			# log = "succ_appointment pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "succ_appointment ([This.GetFullBaseName])"
+			succession = appointment
+		}
+	}
+
+	succ_open_elective = {
+		potential = {
+			temporary = no
+
+			OR = {
+				is_primary_type_title = yes
+				holy_order = yes
+
+				holder_scope = {
+					OR = {
+						is_republic = yes
+						is_theocracy = yes
+					}
+				}
+			}
+
+			holder_scope = {
+				trigger_if = {
+					limit = { is_offmap_governor = yes }
+
+					# Use Offmap succession instead
+					ROOT = {
+						NOT = { is_law_potential = succ_offmap_succession }
+					}
+				}
+
+				trigger_if = {
+					limit = { is_theocracy = yes }
+
+					# Use Investiture and Papal succession instead
+					ROOT = {
+						NOR = {
+							is_law_potential = succ_papal_succession
+							is_law_potential = succ_catholic_bishopric
+						}
+					}
+				}
+				trigger_else_if = {
+					limit = { is_republic = yes }
+					is_patrician = no
+				}
+			}
+
+			trigger_if = {
+				limit = { controls_religion = yes }
+
+				holder_scope = {
+					trigger_if = {
+						limit = { has_dlc = "Holy Fury" }
+						NOT = { has_religion_feature = religion_temporal_head }
+					}
+					trigger_else = {
+						NOT = { religion = norse_pagan_reformed }
+					}
+				}
+			}
+		}
+
+		allow = {}
+
+		pass_effect = {
+			# log = "succ_open_elective pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "succ_open_elective ([This.GetFullBaseName])"
+			succession = open_elective
+		}
+	}
+
+	succ_catholic_bishopric = {
+		potential = {
+			is_primary_type_title = no
+			is_landless_type_title = no
+
+			holder_scope = {
+				is_theocracy = yes
+
+				OR = {
+					religion = catholic
+					religion = fraticelli
+					religion = cathar
+					religion = bogomilist
+					religion = manichaean
+
+					trigger_if = {
+						limit = { religion = chalcedonian }
+						trait = latin_rites
+					}
+				}
+			}
+		}
+
+		allow = {}
+
+		pass_effect = {
+			# log = "succ_catholic_bishopric pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "succ_catholic_bishopric ([This.GetFullBaseName])"
+			succession = catholic_bishopric
+		}
+	}
+
+	succ_patrician_elective = {
+		potential = {
+			is_merchant_republic = yes
+
+			trigger_if = {
+				limit = { is_primary_holder_title = no }
+
+				holder_scope = {
+					in_revolt = yes
+				}
+
+				succ_law_title = {
+					title = PREV
+				}
+			}
+		}
+
+		allow = {}
+
+		pass_effect = {
+			# log = "succ_patrician_elective pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "succ_patrician_elective ([This.GetFullBaseName])"
+			succession = patrician_elective
+		}
+	}
+
+	succ_nomad_succession = {
+		child_opinion = -20
+		dynasty_opinion = 5
+		vassal_opinion = 5
+
+		potential = {
+			holder_scope = {
+				is_nomadic = yes
+			}
+		}
+
+		allow = {}
+
+		pass_effect = {
+			# log = "succ_nomad_succession pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "succ_nomad_succession ([This.GetFullBaseName])"
+			succession = nomad_succession
+		}
+	}
+
+	succ_offmap_succession = {
+		potential = {
+			holder_scope = {
+				top_liege = { is_offmap_governor = yes }
+				government = confucian_bureaucracy # To use this with future offmap powers, use an OR clause here with the new government types
+			}
+		}
+
+		allow = {}
+
+		pass_effect = {
+			# log = "succ_offmap_succession pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "succ_offmap_succession ([This.GetFullBaseName])"
+			succession = offmap_succession
+
+			# This succession type generates a character of China's culture and religion
+			# They have decent (4-10) stats, and good (7-11) stewardship, and will always have a Stewardship education
+			# The offmap power defined in the top liege's government is used to determine the culture and religion. Will not function if this isn't defined
+		}
+	}
+}

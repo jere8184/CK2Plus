@@ -1,0 +1,34 @@
+1000083001 = {
+	name = "Amali"
+	culture = norse
+}
+1000083002 = {
+	name = "Balti"
+	culture = norse
+}
+1000083004 = {
+	name = "Liuvigild"
+	culture = norse
+}
+1000083006 = {
+	name = "Kinthaswinth"
+	culture = norse
+}
+1000124121 = {
+	name = "Hængr"
+	culture = norse
+}
+1000124210 = {
+	name = "Kambansson"
+	culture = norse
+}
+1000124211 = {
+	name = "Hlodvisson"
+	culture = norse
+}
+
+# Historical
+1000119500 = {
+	name = Sigfreding
+	culture = norse
+}

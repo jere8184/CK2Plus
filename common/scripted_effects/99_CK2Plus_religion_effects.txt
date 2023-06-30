@@ -1,0 +1,424 @@
+indian_caste_fix_effect = {
+	if = {
+		limit = {
+			OR = {
+				religion = buddhist
+				religion = hindu
+				religion = jain
+			}
+
+			NOR = {
+				trait = brahmin
+				trait = kshatriya
+				trait = vaishya
+			}
+		}
+
+		if = {
+			limit = { is_feudal = yes }
+			add_trait = kshatriya
+		}
+		else_if = {
+			limit = {
+				is_feudal = no
+
+				OR = {
+					is_theocracy = yes
+					is_priest = yes
+				}
+			}
+			add_trait = brahmin
+		}
+		else = {
+			add_trait = vaishya
+		}
+	}
+}
+
+martyr_check = {
+	if = {
+		limit = {
+			religion_group = christian
+			is_heretic = no
+			NOT = { religion_group = FROMFROM }
+
+			piety >= 25
+
+			OR = {
+				AND = {
+					has_called_crusade = yes
+
+					OR = {
+						any_war = {
+							attacker = { religion = ROOT }
+							defender = { religion = FROMFROM }
+							using_cb = crusade
+						}
+
+						any_liege = {
+							any_war = {
+								attacker = { religion = ROOT }
+								defender = { religion = FROMFROM }
+								using_cb = crusade
+							}
+						}
+					}
+				}
+
+				AND = {
+					FROMFROM = { has_called_crusade = yes }
+
+					OR = {
+						any_war = {
+							attacker = { religion = FROMFROM }
+							defender = { religion = ROOT }
+							using_cb = crusade
+						}
+
+						any_liege = {
+							any_war = {
+								attacker = { religion = FROMFROM }
+								defender = { religion = ROOT }
+								using_cb = crusade
+							}
+						}
+					}
+				}
+
+				any_war = {
+					attacker = { religion = ROOT }
+					defender = { religion = FROMFROM }
+
+					OR = {
+						using_cb = holy_war
+						using_cb = religious_revolt
+					}
+				}
+
+				any_liege = {
+					any_war = {
+						attacker = { religion = ROOT }
+						defender = { religion = FROMFROM }
+
+						OR = {
+							using_cb = holy_war
+							using_cb = religious_revolt
+						}
+					}
+				}
+
+				any_war = {
+					attacker = { religion = FROMFROM }
+					defender = { religion = ROOT }
+					using_cb = holy_war
+				}
+
+				any_liege = {
+					any_war = {
+						attacker = { religion = FROMFROM }
+						defender = { religion = ROOT }
+						using_cb = holy_war
+					}
+				}
+			}
+
+			trigger_if = {
+				limit = { trait = possessed }
+				has_character_modifier = voice_of_jesus
+			}
+
+			is_kinslayer_trigger = no
+
+			NOR = {
+				trait = lunatic
+				trait = hedonist
+				trait = craven
+				trait = cynical
+				trait = excommunicated
+				trait = homosexual
+				trait = bad_priest_christian
+				has_character_modifier = voice_of_satan
+			}
+		}
+
+		random = {
+			chance = 25
+
+			mult_modifier = {
+				factor = 5
+				has_character_modifier = voice_of_jesus
+			}
+
+			mult_modifier = {
+				factor = 2.5
+
+				is_ruler = yes
+				is_theocracy = yes
+			}
+
+			mult_modifier = {
+				factor = 2.5
+
+				OR = {
+					trait = celibate
+					trait = monk
+					trait = nun
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = chaste
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = kind
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = brave
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = temperate
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = honest
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = lustful
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = gluttonous
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = envious
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = deceitful
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				piety < 50
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				piety >= 100
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				piety >= 200
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				piety >= 300
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				piety >= 400
+			}
+
+			mult_modifier = {
+				factor = 1.3
+				piety >= 500
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				piety >= 1000
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				has_called_crusade = yes
+				FROMFROM = { has_called_crusade = no }
+			}
+
+			log = "[Root.GetBestName] has been declared a [Root.Religion.GetName] martyr"
+			add_trait = martyr
+
+			if = {
+				limit = { has_nickname = no }
+				give_nickname = nick_the_martyr
+			}
+
+			FROMFROM = { save_event_target_as = martyr_killer }
+			save_event_target_as = new_martyr
+
+			any_dynasty_member = {
+				limit = {
+					NOR = {
+						character = FROMFROM
+						character = FROM
+					}
+				}
+
+				character_event = {
+					id = Plus.2600
+					days = 1
+					random = 13
+				}
+			}
+
+			any_liege = {
+				limit = {
+					NOR = {
+						dynasty = ROOT
+						character = FROMFROM
+						character = FROM
+					}
+				}
+
+				character_event = {
+					id = Plus.2600
+					days = 1
+					random = 13
+				}
+			}
+
+			any_spouse = {
+				limit = {
+					NOR = {
+						dynasty = ROOT
+						is_liege_or_above_of = ROOT
+						character = FROMFROM
+						character = FROM
+					}
+				}
+
+				character_event = {
+					id = Plus.2600
+					days = 1
+					random = 13
+				}
+			}
+		}
+	}
+}
+
+set_christian_ascetic_effect = {
+	if = {
+		limit = { is_miaphysite_branch = yes }
+
+		if = {
+			limit = { is_female = no }
+
+			add_trait = desert_father
+			set_character_flag = title_desert_father
+			set_special_character_title = DESERT_FATHER_TITLE
+		}
+		else = {
+			add_trait = desert_mother
+			set_character_flag = title_desert_mother
+			set_special_character_title = DESERT_MOTHER_TITLE
+		}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				religion = cathar
+				religion = bogomilist
+			}
+		}
+
+		remove_trait = cynical
+		remove_trait = lustful
+		remove_trait = hedonist
+		remove_trait = master_seducer
+		remove_trait = master_seductress
+		add_trait = zealous
+		add_trait = perfecti
+		set_character_flag = consolamentum_taken
+
+		if = {
+			limit = { is_female = yes }
+
+			set_character_flag = title_nun
+			set_special_character_title = NUN_SISTER
+		}
+		else = {
+			set_character_flag = title_monk
+			set_special_character_title = MONK_BROTHER
+		}
+	}
+	else = {
+		change_learning = 1
+
+		if = {
+			limit = { is_female = no }
+
+			add_trait = monk
+			set_character_flag = title_monk
+			set_special_character_title = MONK_BROTHER
+		}
+		else = {
+			add_trait = nun
+			set_character_flag = title_nun
+			set_special_character_title = NUN_SISTER
+		}
+	}
+}

@@ -1,0 +1,1251 @@
+law_groups = {
+	status_of_women = {
+	}
+
+	revoke_title_law = {
+	}
+
+	ze_administration_laws = {
+	}
+}
+
+laws = {
+	# Status of Women
+	status_of_women_0 = {
+		group = status_of_women
+		default = yes
+
+		potential = {
+			holder_scope = {
+				NOR = {
+					has_religion_feature = religion_matriarchal
+					has_religion_feature = religion_patriarchal
+					has_gender_equal_game_rule_trigger = yes
+
+					has_game_rule = {
+						name = gender
+						value = historical
+					}
+				}
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			trigger_if = {
+				limit = {
+					OR = {
+						has_law = status_of_women_0
+						has_law = status_of_women_1
+						has_law = status_of_women_2
+						has_law = status_of_women_3
+						has_law = status_of_women_4
+					}
+				}
+
+				has_law = status_of_women_1
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				NOT = { trait = uncrowned }
+
+				trigger_if = {
+					limit = { has_religion_feature = religion_equal }
+					plus_law_prestige_trigger_4 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "status_of_women_0 pass ([This.GetFullBaseName])"
+
+			if = {
+				limit = {
+					# Don't charge the prestige if the law fell off
+					OR = {
+						has_law = status_of_women_1
+						has_law = status_of_women_2
+						has_law = status_of_women_3
+						has_law = status_of_women_4
+					}
+
+					holder_scope = { has_religion_feature = religion_equal }
+				}
+
+				plus_law_change_prestige_effect_4 = yes
+			}
+		}
+
+		effect = {
+			# log = "status_of_women_0 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				if = {
+					limit = {
+						# Don't charge the prestige if the law fell off
+						OR = {
+							has_law = status_of_women_1
+							has_law = status_of_women_2
+							has_law = status_of_women_3
+							has_law = status_of_women_4
+						}
+
+						holder_scope = { has_religion_feature = religion_equal }
+					}
+
+					plus_law_change_prestige_effect_4 = yes
+				}
+			}
+
+			law_set_allow_matrilineal_marriage = no
+			set_allow_feminism = no
+			set_allow_gender_laws = no
+
+			trigger_switch = {
+				on_trigger = has_law
+
+				status_of_women_1 = {
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_SPYMASTER }
+				}
+
+				status_of_women_2 = {
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_SPYMASTER }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_CHANCELLOR }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_TREASURER }
+				}
+
+				status_of_women_3 = {
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_SPYMASTER }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_CHANCELLOR }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_TREASURER }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_MARSHAL }
+				}
+
+				status_of_women_4 = {
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_SPYMASTER }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_CHANCELLOR }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_TREASURER }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_MARSHAL }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_COMMANDERS }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_TRUE_COGNATIC }
+				}
+			}
+
+			if = {
+				limit = {
+					has_dlc = "Conclave"
+					has_law = status_of_women_1
+					has_law = law_voting_power_1
+				}
+
+				custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_ADVISOR }
+			}
+
+			revoke_law = status_of_women_1
+			revoke_law = status_of_women_2
+			revoke_law = status_of_women_3
+			revoke_law = status_of_women_4
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+
+	#	default_selection = {
+	#		factor = 1
+	#	}
+	}
+
+	status_of_women_1 = {
+		group = status_of_women
+
+		potential = {
+			is_law_potential = status_of_women_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			OR = {
+				has_law = status_of_women_0
+				has_law = status_of_women_2
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				NOT = { trait = uncrowned }
+
+				trigger_if = {
+					limit = { has_religion_feature = religion_equal }
+					plus_law_prestige_trigger_3 = yes
+				}
+				trigger_else = {
+					plus_law_prestige_trigger_1 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "status_of_women_1 pass ([This.GetFullBaseName])"
+
+			if = {
+				limit = { holder_scope = { has_religion_feature = religion_equal } }
+				plus_law_change_prestige_effect_3 = yes
+			}
+			else = {
+				plus_law_change_prestige_effect_1 = yes
+			}
+		}
+
+		effect = {
+			# log = "status_of_women_1 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				if = {
+					limit = { holder_scope = { has_religion_feature = religion_equal } }
+					plus_law_change_prestige_effect_3 = yes
+				}
+				else = {
+					plus_law_change_prestige_effect_1 = yes
+				}
+			}
+
+			law_set_allow_matrilineal_marriage = yes
+			set_allow_feminism = no
+			set_allow_gender_laws = no
+
+			trigger_switch = {
+				on_trigger = has_law
+
+				status_of_women_0 = {
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_SPYMASTER }
+				}
+
+				status_of_women_2 = {
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_CHANCELLOR }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_TREASURER }
+				}
+
+				status_of_women_3 = {
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_CHANCELLOR }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_TREASURER }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_MARSHAL }
+				}
+
+				status_of_women_4 = {
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_CHANCELLOR }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_TREASURER }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_MARSHAL }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_COMMANDERS }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_TRUE_COGNATIC }
+				}
+			}
+
+			if = {
+				limit = {
+					has_dlc = "Conclave"
+					has_law = status_of_women_0
+					has_law = law_voting_power_1
+				}
+
+				custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_ADVISOR }
+			}
+
+			revoke_law = status_of_women_0
+			revoke_law = status_of_women_2
+			revoke_law = status_of_women_3
+			revoke_law = status_of_women_4
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				NOT = { has_law = status_of_women_2 }
+
+				holder_scope = {
+					OR = {
+						is_female = yes
+						is_feminist_trigger = yes
+						culture = basque
+
+						any_courtier_or_vassal = {
+							is_female = yes
+							is_voter = no
+							intrigue >= 15
+
+							OR = {
+								is_ruler = yes
+								dynasty = PREV
+							}
+
+							NOR = {
+								is_married = PREV
+								is_mother = PREV
+							}
+						}
+					}
+
+					trigger_if = {
+						limit = { trait = zealous }
+						is_feminist_trigger = yes
+					}
+
+					NOR = {
+						trait = slothful
+						trait = content
+						trait = humble
+					}
+				}
+			}
+		}
+
+	#	default_selection = {
+	#		factor = 0
+	#
+	#		additive_modifier = {
+	#			value = 10
+	#
+	#			holder_scope = {
+	#				OR = {
+	#					is_female = yes
+	#					religion_group = pagan_group
+	#
+	#					AND = {
+	#						has_law = cognatic_succession
+	#						year >= 1000
+	#					}
+	#				}
+	#			}
+	#		}
+	#	}
+	}
+
+	status_of_women_2 = {
+		group = status_of_women
+
+		potential = {
+			is_law_potential = status_of_women_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			OR = {
+				has_law = status_of_women_1
+				has_law = status_of_women_3
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				NOT = { trait = uncrowned }
+				plus_law_prestige_trigger_2 = yes
+			}
+		}
+
+		pass_effect = {
+			# log = "status_of_women_2 pass ([This.GetFullBaseName])"
+			plus_law_change_prestige_effect_2 = yes
+		}
+
+		effect = {
+			# log = "status_of_women_2 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_prestige_effect_2 = yes
+			}
+
+			law_set_allow_matrilineal_marriage = yes
+			set_allow_feminism = no
+			set_allow_gender_laws = no
+
+			trigger_switch = {
+				on_trigger = has_law
+
+				status_of_women_0 = {
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_SPYMASTER }
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_CHANCELLOR }
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_TREASURER }
+				}
+
+				status_of_women_1 = {
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_CHANCELLOR }
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_TREASURER }
+				}
+
+				status_of_women_3 = {
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_MARSHAL }
+				}
+
+				status_of_women_4 = {
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_MARSHAL }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_COMMANDERS }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_TRUE_COGNATIC }
+				}
+			}
+
+			revoke_law = status_of_women_0
+			revoke_law = status_of_women_1
+			revoke_law = status_of_women_3
+			revoke_law = status_of_women_4
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				holder_scope = {
+					trigger_if = {
+						limit = { has_law = status_of_women_1 }
+
+						OR = {
+							is_female = yes
+							is_feminist_trigger = yes
+							culture = basque
+
+							any_courtier_or_vassal = {
+								is_female = yes
+								is_voter = no
+
+								OR = {
+									diplomacy >= 15
+									stewardship >= 15
+								}
+
+								OR = {
+									is_ruler = yes
+									dynasty = PREV
+								}
+
+								NOR = {
+									is_married = PREV
+									is_mother = PREV
+								}
+							}
+						}
+					}
+
+					trigger_if = {
+						limit = { trait = zealous }
+						is_feminist_trigger = yes
+					}
+
+					NOR = {
+						trait = slothful
+						trait = content
+						trait = humble
+						has_law = status_of_women_3
+					}
+				}
+			}
+		}
+
+	#	default_selection = {
+	#		factor = 0
+	#
+	#		additive_modifier = {
+	#			value = 10
+	#			culture = basque
+	#		}
+	#	}
+	}
+
+	status_of_women_3 = {
+		group = status_of_women
+
+		potential = {
+			is_law_potential = status_of_women_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			OR = {
+				has_law = status_of_women_2
+				has_law = status_of_women_4
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				NOT = { trait = uncrowned }
+
+				trigger_if = {
+					limit = { has_religion_feature = religion_equal }
+					show_only_failed_conditions = yes
+					plus_law_prestige_trigger_1 = yes
+				}
+				trigger_else = {
+					show_only_failed_conditions = yes
+					plus_law_prestige_trigger_3 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "status_of_women_3 pass ([This.GetFullBaseName])"
+
+			if = {
+				limit = { has_religion_feature = religion_equal }
+				plus_law_change_prestige_effect_1 = yes
+			}
+			else = {
+				plus_law_change_prestige_effect_3 = yes
+			}
+		}
+
+		effect = {
+			# log = "status_of_women_3 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				if = {
+					limit = { has_religion_feature = religion_equal }
+					plus_law_change_prestige_effect_1 = yes
+				}
+				else = {
+					plus_law_change_prestige_effect_3 = yes
+				}
+			}
+
+			law_set_allow_matrilineal_marriage = yes
+			set_allow_feminism = no
+			set_allow_gender_laws = yes
+
+			trigger_switch = {
+				on_trigger = has_law
+
+				status_of_women_0 = {
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_SPYMASTER }
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_CHANCELLOR }
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_TREASURER }
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_MARSHAL }
+				}
+
+				status_of_women_1 = {
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_CHANCELLOR }
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_TREASURER }
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_MARSHAL }
+				}
+
+				status_of_women_2 = {
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_MARSHAL }
+				}
+
+				status_of_women_4 = {
+					custom_tooltip = { text = TOOLTIP_DISALLOW_FEMALE_COMMANDERS }
+					custom_tooltip = { text = TOOLTIP_DISALLOW_TRUE_COGNATIC }
+				}
+			}
+
+			revoke_law = status_of_women_0
+			revoke_law = status_of_women_1
+			revoke_law = status_of_women_2
+			revoke_law = status_of_women_4
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				holder_scope = {
+					trigger_if = {
+						limit = { has_law = status_of_women_2 }
+
+						OR = {
+							is_female = yes
+							is_feminist_trigger = yes
+							culture = basque
+
+							any_courtier_or_vassal = {
+								is_female = yes
+								is_voter = no
+								martial >= 15
+
+								OR = {
+									is_ruler = yes
+									dynasty = PREV
+								}
+
+								NOR = {
+									is_married = PREV
+									is_mother = PREV
+								}
+							}
+						}
+					}
+
+					trigger_if = {
+						limit = { trait = zealous }
+						is_feminist_trigger = no
+					}
+
+					NOR = {
+						trait = slothful
+						trait = content
+						trait = humble
+					}
+				}
+			}
+		}
+
+	#	default_selection = {
+	#		factor = 0
+	#	}
+	}
+
+	status_of_women_4 = {
+		group = status_of_women
+
+		potential = {
+			is_law_potential = status_of_women_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			has_law = status_of_women_3
+
+			holder_scope = {
+				show_scope_change = no
+
+				NOT = { trait = uncrowned }
+
+				trigger_if = {
+					limit = { NOT = { has_religion_feature = religion_equal } }
+					plus_law_prestige_trigger_4 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "status_of_women_4 pass ([This.GetFullBaseName])"
+
+			if = {
+				limit = { NOT = { has_religion_feature = religion_equal } }
+				plus_law_change_prestige_effect_4 = yes
+			}
+		}
+
+		effect = {
+			# log = "status_of_women_4 ([This.GetFullBaseName])"
+
+			tooltip = {
+				if = {
+					limit = { NOT = { has_religion_feature = religion_equal } }
+					plus_law_change_prestige_effect_4 = yes
+				}
+			}
+
+			law_set_allow_matrilineal_marriage = yes
+			set_allow_feminism = yes
+			set_allow_gender_laws = yes
+
+			trigger_switch = {
+				on_trigger = has_law
+
+				status_of_women_0 = {
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_SPYMASTER }
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_CHANCELLOR }
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_TREASURER }
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_MARSHAL }
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_COMMANDERS }
+					custom_tooltip = { text = TOOLTIP_ALLOW_TRUE_COGNATIC }
+				}
+
+				status_of_women_1 = {
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_CHANCELLOR }
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_TREASURER }
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_MARSHAL }
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_COMMANDERS }
+					custom_tooltip = { text = TOOLTIP_ALLOW_TRUE_COGNATIC }
+				}
+
+				status_of_women_2 = {
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_MARSHAL }
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_COMMANDERS }
+					custom_tooltip = { text = TOOLTIP_ALLOW_TRUE_COGNATIC }
+				}
+
+				status_of_women_3 = {
+					custom_tooltip = { text = TOOLTIP_ALLOW_FEMALE_COMMANDERS }
+					custom_tooltip = { text = TOOLTIP_ALLOW_TRUE_COGNATIC }
+				}
+			}
+
+			revoke_law = status_of_women_0
+			revoke_law = status_of_women_1
+			revoke_law = status_of_women_2
+			revoke_law = status_of_women_3
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				holder_scope = {
+					OR = {
+						is_female = yes
+						culture = basque
+						is_feminist_trigger = yes
+					}
+
+					trigger_if = {
+						limit = { trait = zealous }
+						is_feminist_trigger = no
+					}
+
+					NOR = {
+						trait = slothful
+						trait = content
+						trait = humble
+					}
+				}
+			}
+		}
+
+	#	default_selection = {
+	#		factor = 0
+	#
+	#		additive_modifier = {
+	#			value = 10
+	#			holder_scope = { is_feminist_trigger = yes }
+	#		}
+	#
+	#		additive_modifier = {
+	#			value = 100
+	#			has_law = true_cognatic_succession
+	#		}
+	#	}
+	}
+
+	# Title Revocation
+
+	revoke_title_law_0 = { # disabled
+		group = revoke_title_law
+		default = yes
+
+		vassal_opinion = 5
+
+		potential = {
+			holder_scope = {
+				is_tribal = no
+				is_nomadic = no
+				NOT = { government = confucian_bureaucracy }
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			trigger_if = {
+				limit = {
+					OR = {
+						has_law = revoke_title_law_0
+						has_law = revoke_title_law_1
+						has_law = revoke_title_law_2
+					}
+				}
+
+				show_only_failed_conditions = yes
+
+				has_law = revoke_title_law_1
+
+				holder_scope = {
+					show_scope_change = no
+					NOT = { trait = uncrowned }
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "revoke_title_law_0 pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "revoke_title_law_0 ([This.GetFullBaseName])"
+			set_allow_title_revokation = no
+			set_allow_free_infidel_revokation = no
+			revoke_law = revoke_title_law_1
+			revoke_law = revoke_title_law_2
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	revoke_title_law_1 = { # enabled
+		group = revoke_title_law
+
+		potential = {
+			is_law_potential = revoke_title_law_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			OR = {
+				has_law = revoke_title_law_0
+				has_law = revoke_title_law_2
+			}
+
+			trigger_if = {
+				limit = { is_crown_law_title = yes }
+
+				show_only_failed_conditions = yes
+
+				OR = {
+					has_law = crown_authority_1
+					has_law = crown_authority_2
+					has_law = crown_authority_3
+					has_law = crown_authority_4
+				}
+			}
+			trigger_else_if = {
+				limit = {
+					has_crown_law_title = yes
+					crownlaw_title = { holder_scope = { has_landed_title = ROOT } }
+				}
+
+				show_only_failed_conditions = yes
+
+				crownlaw_title = {
+					OR = {
+						has_law = crown_authority_1
+						has_law = crown_authority_2
+						has_law = crown_authority_3
+						has_law = crown_authority_4
+					}
+				}
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				NOT = { trait = uncrowned }
+
+				trigger_if = {
+					limit = { NOT = { has_law = revoke_title_law_2 } }
+					plus_law_prestige_trigger_1 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "revoke_title_law_1 pass ([This.GetFullBaseName])"
+
+			if = {
+				limit = { NOT = { has_law = revoke_title_law_2 } }
+				plus_law_change_prestige_effect_1 = yes
+			}
+		}
+
+		effect = {
+			# log = "revoke_title_law_1 ([This.GetFullBaseName])"
+
+			tooltip = {
+				if = {
+					limit = { NOT = { has_law = revoke_title_law_2 } }
+					plus_law_change_prestige_effect_1 = yes
+				}
+			}
+
+			set_allow_title_revokation = yes
+			set_allow_free_infidel_revokation = no
+			revoke_law = revoke_title_law_0
+			revoke_law = revoke_title_law_2
+		}
+
+		ai_will_do = {
+			factor = 0.05
+
+			trigger = {
+				NOT = { has_law = revoke_title_law_2 }
+			}
+		}
+	}
+
+	revoke_title_law_2 = { # religious
+		group = revoke_title_law
+
+		vassal_opinion = -5
+
+		potential = {
+			is_law_potential = revoke_title_law_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			has_law = revoke_title_law_1
+
+			trigger_if = {
+				limit = { is_crown_law_title = yes }
+
+				show_only_failed_conditions = yes
+
+				OR = {
+					has_law = crown_authority_2
+					has_law = crown_authority_3
+					has_law = crown_authority_4
+				}
+			}
+			trigger_else_if = {
+				limit = {
+					has_crown_law_title = yes
+					crownlaw_title = { holder_scope = { has_landed_title = ROOT } }
+				}
+
+				show_only_failed_conditions = yes
+
+				crownlaw_title = {
+					OR = {
+						has_law = crown_authority_2
+						has_law = crown_authority_3
+						has_law = crown_authority_4
+					}
+				}
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				NOT = { government = chinese_imperial_government}
+				NOT = { has_religion_feature = religion_cosmopolitan }
+				NOT = { trait = uncrowned }
+				plus_law_prestige_trigger_2 = yes
+			}
+		}
+
+		pass_effect = {
+			# log = "revoke_title_law_2 pass ([This.GetFullBaseName])"
+			plus_law_change_prestige_effect_2 = yes
+		}
+
+		effect = {
+			# log = "revoke_title_law_2 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_prestige_effect_2 = yes
+			}
+
+			set_allow_title_revokation = yes
+			set_allow_free_infidel_revokation = yes
+			revoke_law = revoke_title_law_0
+			revoke_law = revoke_title_law_1
+		}
+
+		ai_will_do = {
+			factor = 0.01
+
+			mult_modifier = {
+				factor = 10
+				holder_scope = { trait = zealous }
+			}
+		}
+	}
+
+	# Administration Laws
+	ze_administration_laws_0 = { # Feudal
+		group = ze_administration_laws
+		default = yes
+
+		potential = {
+			has_dlc = "Conclave"
+			holder_scope = { is_feudal = yes }
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			trigger_if = {
+				limit = {
+					OR = {
+						has_law = ze_administration_laws_0
+						has_law = ze_administration_laws_1
+						has_law = ze_administration_laws_2
+					}
+				}
+
+				has_law = ze_administration_laws_1
+			}
+
+			holder_scope = {
+				show_scope_change = no
+				NOT = { trait = uncrowned }
+			}
+		}
+
+		pass_effect = {
+			# log = "ze_administration_laws_0 pass ([This.GetFullBaseName])"
+
+			holder_scope = {
+				if = {
+					limit = {
+						has_game_started = yes
+						is_feudal = yes
+					}
+
+					switch_to_feudal_effect = yes
+
+					any_realm_lord = {
+						limit = {
+							is_feudal = yes
+							in_revolt = no
+							NOT = { any_liege = { in_revolt = yes } }
+						}
+
+						switch_to_feudal_effect = yes
+					}
+				}
+			}
+		}
+
+		effect = {
+			# log = "ze_administration_laws_0 ([This.GetFullBaseName])"
+
+			set_allow_free_duchy_revokation = no
+
+			if = {
+				limit = { has_law = ze_administration_laws_1 }
+				custom_tooltip = { text = TOOLTIP_ze_administration_laws_0 }
+			}
+
+			revoke_law = ze_administration_laws_1
+			revoke_law = ze_administration_laws_2
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	ze_administration_laws_1 = { # Late Feudal
+		group = ze_administration_laws
+
+		tribal_opinion = -20
+
+		potential = {
+			is_law_potential = ze_administration_laws_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			OR = {
+				has_law = ze_administration_laws_0
+				has_law = ze_administration_laws_2
+			}
+
+			trigger_if = {
+				limit = { is_crown_law_title = yes }
+
+				OR = {
+					has_law = crown_authority_1
+					has_law = crown_authority_2
+					has_law = crown_authority_3
+					has_law = crown_authority_4
+				}
+			}
+			trigger_else_if = {
+				limit = {
+					has_crown_law_title = yes
+					crownlaw_title = { holder_scope = { has_landed_title = ROOT } }
+				}
+
+				crownlaw_title = {
+					OR = {
+						has_law = crown_authority_1
+						has_law = crown_authority_2
+						has_law = crown_authority_3
+						has_law = crown_authority_4
+					}
+				}
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				NOT = { trait = uncrowned }
+
+				trigger_if = {
+					limit = { NOT = { has_law = ze_administration_laws_2 } }
+					plus_law_prestige_trigger_2 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "ze_administration_laws_1 pass ([This.GetFullBaseName])"
+
+			holder_scope = {
+				if = {
+					limit = { has_game_started = yes }
+
+					switch_to_feudal_effect = yes
+
+					any_realm_lord = {
+						limit = {
+							is_feudal = yes
+							in_revolt = no
+							NOT = { any_liege = { in_revolt = yes } }
+						}
+
+						switch_to_feudal_effect = yes
+					}
+				}
+			}
+
+			if = {
+				limit = { NOT = { has_law = ze_administration_laws_2 } }
+				plus_law_change_prestige_effect_2 = yes
+			}
+		}
+
+		effect = {
+			# log = "ze_administration_laws_1 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				if = {
+					limit = { NOT = { has_law = ze_administration_laws_2 } }
+					plus_law_change_prestige_effect_2 = yes
+				}
+			}
+
+			set_allow_free_duchy_revokation = no
+
+			if = {
+				limit = { has_law = ze_administration_laws_0 }
+				custom_tooltip = { text = TOOLTIP_ze_administration_laws_1 }
+			}
+
+			revoke_law = ze_administration_laws_0
+			revoke_law = ze_administration_laws_2
+		}
+
+		ai_will_do = {
+			factor = 0.2
+
+			trigger = {
+				has_law = ze_administration_laws_0
+			}
+		}
+	}
+
+	ze_administration_laws_2 = { # Imperial
+		group = ze_administration_laws
+
+		vassal_limit = 10
+		castle_vassal_tax_modifier = 0.1
+		city_vassal_tax_modifier = 0.1
+		temple_vassal_tax_modifier = 0.1
+		feudal_opinion = -10
+		tribal_opinion = -20
+
+		potential = {
+			is_law_potential = ze_administration_laws_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			real_tier = EMPEROR
+			is_titular = no
+			has_law = ze_administration_laws_1
+			has_law = crown_authority_4
+			has_law = law_voting_power_0
+			has_law = war_voting_power_0
+			has_law = revoke_title_voting_power_0
+			has_law = imprison_voting_power_0
+			has_law = grant_title_voting_power_0
+			has_law = banish_voting_power_0
+			has_law = execution_voting_power_0
+
+			holder_scope = {
+				show_scope_change = no
+
+				OR = {
+					has_religion_feature = religion_cosmopolitan
+					has_law = revoke_title_law_2
+				}
+
+				NOT = { government = theocratic_feudal_government }
+				NOT = { government = chinese_imperial_government }
+				NOT = { trait = uncrowned }
+				plus_law_prestige_trigger_4 = yes
+
+				custom_tooltip = {
+					text = HAS_NO_TRIBAL_VASSALS
+
+					NOT = {
+						any_vassal = {
+							is_tribal = yes
+							is_playable = yes
+						}
+					}
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "ze_administration_laws_2 pass ([This.GetFullBaseName])"
+
+			# Set flag required to obtain government before law is enacted
+			set_title_flag = has_imperial_administration
+
+			holder_scope = {
+				if = {
+					limit = {
+						has_game_started = yes
+						could_be_temporal_religious_head_trigger = yes
+						has_imperial_government_trigger = no
+					}
+
+					switch_to_imperial_effect = yes
+
+					any_realm_lord = {
+						limit = {
+							is_feudal = yes
+							in_revolt = no
+							NOT = { any_liege = { in_revolt = yes } }
+							could_be_temporal_religious_head_trigger = yes
+							has_imperial_government_trigger = no
+						}
+
+						switch_to_imperial_effect = yes
+					}
+				}
+			}
+
+			clr_title_flag = has_imperial_administration
+			plus_law_change_prestige_effect_4 = yes
+		}
+
+		effect = {
+			# log = "ze_administration_laws_2 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_prestige_effect_4 = yes
+			}
+
+			if = {
+				limit = { has_law = ze_administration_laws_0 }
+				custom_tooltip = { text = TOOLTIP_ze_administration_laws_1 }
+			}
+
+			set_allow_free_duchy_revokation = yes
+
+			revoke_law = ze_administration_laws_0
+			revoke_law = ze_administration_laws_1
+		}
+
+		ai_will_do = {
+			factor = 10
+		}
+	}
+}

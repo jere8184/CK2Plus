@@ -1,0 +1,250 @@
+add_uncrowned_effect = {
+	if = {
+		limit = {
+			ROOT_FROM = { higher_real_tier_than = DUKE } # Inherited title is kingdom or empire
+			is_feudal = yes
+			independent = yes
+			has_horde_culture = no
+			is_uncrowned_trigger = no
+			is_crowned_trigger = no
+			is_offmap_trigger = no
+
+			# In case a feudal character inherited a higher tier title from a non-feudal ruler
+			trigger_if = {
+				limit = {
+					ROOT_FROMFROM = { is_dying = yes } # Old holder is dying
+					ROOT_FROM = { is_primary_holder_title = yes } # New title is primary title
+				}
+
+				ROOT_FROMFROM = { is_feudal = yes }
+			}
+		}
+
+		add_trait = uncrowned
+	}
+}
+
+remove_uncrowned_effect = {
+	FROMFROM = {
+		if = {
+			limit = {
+				trait = uncrowned
+				is_alive = yes
+				is_dying = no
+
+				NAND = {
+					higher_real_tier_than = DUKE
+					is_feudal = yes
+					independent = yes
+					has_horde_culture = no
+					is_crowned_trigger = no
+					is_offmap_trigger = no
+				}
+			}
+
+			remove_trait = uncrowned
+		}
+	}
+}
+
+remove_crown_effect = {
+	remove_trait = uncrowned
+	remove_trait = crowned
+	remove_trait = crowned_by_vip
+	remove_trait = crowned_by_relhead
+	remove_trait = crowned_by_pope
+	remove_trait = weak_basileus
+	remove_trait = strong_basileus
+}
+
+remove_unworthy_crown_effect = {
+	if = {
+		limit = {
+			FROM = { title = e_hre }
+
+			FROMFROM = {
+				is_alive = yes
+				is_dying = no
+				trait = crowned_by_pope
+			}
+		}
+
+		FROMFROM = {
+			remove_trait = crowned_by_pope
+			add_uncrowned_effect = yes
+		}
+	}
+	else_if = {
+		limit = {
+			FROM = { title = e_byzantium }
+
+			FROMFROM = {
+				is_alive = yes
+				is_dying = no
+				OR = {
+					trait = strong_basileus
+					trait = weak_basileus
+				}
+			}
+		}
+
+		FROMFROM = {
+			remove_trait = strong_basileus
+			remove_trait = weak_basileus
+			add_uncrowned_effect = yes
+		}
+	}
+	else_if = {
+		limit = {
+			FROMFROM = {
+				is_alive = yes
+				is_dying = no
+				is_crowned_trigger = yes
+				lower_real_tier_than = KING
+			}
+		}
+
+		FROMFROM = {
+			remove_crown_effect = yes
+		}
+	}
+}
+
+send_coronation_invitations_effect = {
+	custom_tooltip = {
+		text = send_invitations
+
+		hidden_effect = {
+			any_character = {
+				limit = {
+					is_adult = yes
+					prisoner = no
+					is_incapable = no
+					is_within_diplo_range = ROOT
+
+					OR = {
+						is_liege_or_above_of = ROOT
+						is_vassal_or_below_of = ROOT
+						is_close_relative = ROOT
+						dynasty = ROOT
+						is_allied_with = ROOT
+						has_non_aggression_pact_with = ROOT
+
+						AND = {
+							same_realm = ROOT
+							higher_real_tier_than = BARON
+						}
+
+						AND = {
+							religion = ROOT
+
+							distance_from_realm = {
+								who = ROOT
+								value < 125
+							}
+						}
+					}
+
+					NOR = {
+						trait = excommunicated
+						has_truce = ROOT
+
+						has_opinion_modifier = {
+							name = opinion_performed_coronation
+							who = FROM
+						}
+
+						ROOT = {
+							rightful_religious_head = PREV # He's either performing it or not coming at all
+						}
+					}
+				}
+
+				letter_event = { id = Plus.1201 }
+			}
+		}
+	}
+}
+
+# event_target:coronation_ruler is the coronation target
+will_perform_coronation_effect = {
+	hidden_effect = {
+		reverse_opinion = {
+			name = opinion_performed_coronation
+			who = event_target:coronation_ruler
+			years = 10
+		}
+
+		opinion = {
+			name = opinion_performed_coronation
+			who = event_target:coronation_ruler
+			years = 10
+		}
+
+		if = {
+			limit = {
+				NOT = {
+					has_opinion_modifier = {
+						name = attending_coronation
+						who = event_target:coronation_ruler
+					}
+				}
+			}
+
+			reverse_opinion = {
+				name = attending_coronation
+				who = event_target:coronation_ruler
+				years = 1
+			}
+
+			opinion = {
+				name = attending_coronation
+				who = event_target:coronation_ruler
+				years = 1
+			}
+
+			add_character_modifier = {
+				name = do_not_disturb
+				days = 200
+				hidden = yes
+			}
+
+			end_inaccessibility_effect = yes
+		}
+
+		any_spouse = {
+			limit = {
+				is_ill = no
+				is_pregnant = no
+				is_ruler = no
+				war = no
+				is_inaccessible_trigger = no
+
+				NOT = {
+					has_opinion_modifier = {
+						name = attending_coronation
+						who = event_target:coronation_ruler
+					}
+				}
+			}
+
+			reverse_opinion = {
+				name = attending_coronation
+				who = event_target:coronation_ruler
+				years = 1
+			}
+
+			opinion = {
+				name = attending_coronation
+				who = event_target:coronation_ruler
+				years = 1
+			}
+
+			add_character_modifier = {
+				name = do_not_disturb
+				days = 200
+				hidden = yes
+			}
+		}
+	}
+}

@@ -1,0 +1,4189 @@
+#############################################
+#Plus Nicknames:
+#
+#Total = 207
+#############################################
+
+# TRIGGERED ONLY
+################
+
+nick_the_exile = {}
+nick_the_quiverfull = {}
+nick_the_moneybag = {}
+nick_the_crusader = {}
+nick_the_trembling = {}
+nick_the_deacon = {}
+nick_the_catholic = {}
+nick_the_defiler = {}
+nick_the_kid = {}
+nick_the_hairy = {}
+nick_the_fratricide = {}
+nick_the_lackland = {}
+nick_the_green = {}
+nick_the_brown = {}
+nick_the_white = {}
+nick_the_bearded = {}
+nick_the_red = {}
+nick_the_butcher = {}
+nick_the_bulgar_slayer = {}
+nick_the_ill_advised = {}
+nick_forkbeard = {}
+nick_skotkonung = {}
+nick_almanzor = {}
+nick_pendragon = {}
+nick_the_ballless = {}
+nick_the_woolmaker = {}
+nick_the_affluent = {}
+nick_the_graceful = {}
+nick_the_martyrophile = {}
+nick_the_illuminator = {}
+nick_the_preacher = {}
+nick_the_proselytizer = {}
+nick_the_saint = {}
+nick_the_martyr = {}
+nick_the_diadochos = {}
+nick_the_suicide = {}
+nick_the_reformer = {}
+nick_the_whitehanded = {} # Humbert I, Count of Savoy
+nick_the_elder = {}
+nick_the_salic = {} # Conrad II, Holy Roman Emperor
+nick_the_prudhomme = {} # Saint-King Louis IX of France
+nick_the_iron_king = {} # King Philip IV of France
+nick_greymantle = {} # Geoffrey I, Count of Anjou
+nick_longsword = {} # William I of Normandy, Count of Rouen
+nick_curtmantle = {} # King Henry II of England
+nick_greycloak = {} # Harald II, King of Norway
+nick_the_mother_of_kings = {} # Gunnhild Gormsdóttir
+nick_the_coal_burner = {} # Anund Jacob, King of Sweden
+nick_the_long_armed = {} # Yuri I Vladimirovich, Grand Prince of Kiev
+nick_the_eyeless = {} # Mstislav IV
+nick_el_cid = {} # El Cid Campeador
+nick_the_unfortunate = {} # Lulach, King of Scots
+nick_canmore = {} # Malcolm III & IV, King of Scots
+nick_longneck = {} # Malcolm III, King of Scots
+nick_the_maiden = {} # Malcolm IV, King of Scots
+nick_the_valiant = {} # Edgar, King of Scots
+nick_the_maid_of_norway = {} # Margaret, Queen of Scots
+nick_empty_coat = {} # John Baliol, King of Scots
+nick_the_wine_bountiful = {} # Constantine I, King of Scots
+nick_the_son_of_fortune = {} # Gregory, King of Scots
+nick_the_pale = {} # Constantius Chlorus
+
+# GIVEN BY TRAITS
+#################
+
+nick_the_hammer = {
+	allow = {
+		trait = brave
+		age >= 35
+		martial >= 14
+
+		OR = {
+			trait = skilled_tactician
+			trait = brilliant_strategist
+		}
+
+		OR = {
+			culture_group = east_germanic
+			culture_group = north_germanic
+			culture_group = west_germanic
+			culture_group = central_germanic
+		}
+	}
+
+	chance = {
+		factor = 0.6
+
+		mult_modifier = {
+			factor = 0.9
+			prestige < 1000
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			prestige >= 1500
+		}
+
+		mult_modifier = {
+			factor = 1.2
+			real_tier = DUKE
+		}
+
+		mult_modifier = {
+			factor = 1.4
+			tier = KING
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			martial = 16
+		}
+
+		mult_modifier = {
+			factor = 1.15
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = brilliant_strategist
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = skilled_tactician
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_victorious = {
+	allow = {
+		trait = crusader
+		age >= 35
+		martial >= 14
+
+		OR = {
+			trait = skilled_tactician
+			trait = brilliant_strategist
+		}
+
+		NOT = { trait = craven }
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 0.9
+			prestige < 1000
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			prestige >= 1500
+		}
+
+		mult_modifier = {
+			factor = 1.2
+			real_tier = DUKE
+		}
+
+		mult_modifier = {
+			factor = 1.4
+			real_tier = KING
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			martial >= 16
+		}
+
+		mult_modifier = {
+			factor = 1.15
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 1.2
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = brilliant_strategist
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = skilled_tactician
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_zealot = {
+	allow = {
+		trait = zealous
+		piety >= 100
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 0.9
+			prestige < 1000
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			prestige >= 1500
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			prestige >= 2000
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = wroth
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = cruel
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = paranoid
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			real_tier = DUKE
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = crusader
+		}
+
+		mult_modifier = {
+			factor = 1.2
+			real_tier = KING
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			piety >= 750
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			piety >= 1000
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			piety >= 1500
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			piety >= 2000
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_holy = {
+	allow = {
+		piety >= 500
+		age >= 35
+		is_theocracy = no
+
+		NOR = {
+			trait = lustful
+			trait = hedonist
+			trait = cynical
+			trait = greedy
+			trait = proud
+			trait = cruel
+			trait = envious
+			trait = wroth
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 0.9
+			prestige < 1000
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			prestige >= 1500
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			prestige >= 2000
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = kind
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = temperate
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = chaste
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = charitable
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = patient
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			real_tier = DUKE
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = crusader
+		}
+
+		mult_modifier = {
+			factor = 1.2
+			real_tier = KING
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			piety >= 750
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			piety >= 1000
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			piety >= 1500
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			piety >= 2000
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_avenger = {
+	allow = {
+		trait = crusader
+		martial >= 14
+		age >= 35
+
+		OR = {
+			trait = skilled_tactician
+			trait = brilliant_strategist
+		}
+
+		NOT = {trait = craven}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 0.9
+			prestige < 1000
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			prestige >= 1500
+		}
+
+		mult_modifier = {
+			factor = 1.2
+			real_tier = DUKE
+		}
+
+		mult_modifier = {
+			factor = 1.4
+			real_tier = KING
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			martial = 16
+		}
+
+		mult_modifier = {
+			factor = 1.15
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 1.2
+			trait = brave
+		}
+		mult_modifier = {
+			factor = 1.5
+			trait = brilliant_strategist
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = skilled_tactician
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_brave = {
+	allow = {
+		trait = brave
+		martial >= 10
+		age >= 35
+
+		OR = {
+			trait = tough_soldier
+			trait = brilliant_strategist
+			trait = skilled_tactician
+			trait = crusader
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 0.9
+			prestige < 1000
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			prestige >= 1500
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			prestige >= 2000
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			real_tier = DUKE
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			real_tier = KING
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = brilliant_strategist
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			trait = skilled_tactician
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_fearless = {
+	allow = {
+		martial >= 12
+		trait = brave
+		age >= 35
+
+		OR = {
+			trait = brilliant_strategist
+			trait = skilled_tactician
+			trait = crusader
+		}
+	}
+
+	chance = {
+		factor = 0.6
+
+		mult_modifier = {
+			factor = 0.9
+			prestige < 1000
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			prestige >= 1500
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			prestige >= 2000
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			real_tier = DUKE
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			real_tier = KING
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = brilliant_strategist
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			trait = skilled_tactician
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_effeminate = {
+	allow = {
+		trait = homosexual
+		is_female = no
+		is_adult = yes
+		age >= 25
+	}
+
+	chance = {
+		factor = 0.8
+
+		mult_modifier = {
+			factor = 0.9
+			prestige < 1000
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			prestige >= 1500
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			prestige >= 2000
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			real_tier = DUKE
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			real_tier = KING
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_clueless = {
+	allow = {
+		OR = {
+			is_dumb_trigger = yes
+			trait = inbred
+			trait = arbitrary
+			trait = amateurish_plotter
+			trait = naive_appeaser
+			trait = indulgent_wastrel
+			trait = misguided_warrior
+		}
+
+		age >= 30
+		diplomacy < 12
+		martial < 12
+		stewardship < 12
+		intrigue < 12
+		learning < 10
+		is_smart_trigger = no
+
+		NOR = {
+			trait = diligent
+			trait = ambitious
+			trait = just
+		}
+	}
+
+	chance = {
+		factor = 0.6
+
+		mult_modifier = {
+			factor = 1.5
+
+			OR = {
+				trait = slow
+				trait = dull
+			}
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = imbecile
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = inbred
+		}
+
+		mult_modifier = {
+			factor = 1.2
+			real_tier = BARON
+		}
+
+		mult_modifier = {
+			factor = 0.85
+			real_tier = DUKE
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			real_tier = KING
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_heathen = {
+	allow = {
+		higher_real_tier_than = COUNT
+		religion = norse_pagan
+		age >= 35
+
+		any_liege = {
+			OR = {
+				religion_group = christian
+				religion_group = muslim
+			}
+		}
+
+		NOT = { has_landed_title = d_norse_pagan_reformed }
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 0.5
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			liege = {
+				trait = zealous
+				NOT = { religion_group = pagan_group }
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			liege = { NOT = { religion_group = pagan_group } }
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_glorious = {
+	allow = {
+		age >= 40
+		ruled_years >= 25
+		prestige >= 1000
+		piety >= 500
+		is_smart_trigger = yes
+		is_dumb_trigger = no
+
+		OR = {
+			trait = grey_eminence
+			trait = intricate_webweaver
+			trait = elusive_shadow
+			trait = charismatic_negotiator
+			trait = brilliant_strategist
+			trait = skilled_tactician
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_hunchback = {
+	allow = {
+		trait = hunchback
+		age >= 18
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_bad = {
+	allow = {
+		age >= 35
+		trait = greedy
+		trait = arbitrary
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_peaceable = {
+	allow = {
+		age >= 35
+		trait = content
+		trait = kind
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_one_eyed = {
+	allow = {
+		trait = one_eyed
+		age >= 25
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_singer = {
+	allow = {
+		trait >= poet
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_with_immortal_soul = {
+	allow = {
+		religion_group = zoroastrian_group
+		age >= 30
+		piety >= 1000
+
+		OR = {
+			trait = honest
+			trait = diligent
+		}
+	}
+
+	chance = {
+		factor = 0.6
+
+		mult_modifier = {
+			factor = 2.0
+			piety >= 1000
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			piety >= 2000
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			piety >= 4000
+		}
+	}
+}
+
+nick_the_mazdayasnian = {
+	allow = {
+		religion_group = zoroastrian_group
+		age >= 35
+		piety >= 1000
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 2.0
+			piety >= 2000
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			piety >= 4000
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			piety >= 6000
+		}
+	}
+}
+
+nick_the_lewd = {
+	allow = {
+		trait = lustful
+		age >= 30
+
+		OR = {
+			any_lover = {
+				is_close_relative = ROOT
+			}
+
+			trait = hedonist
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 10
+			any_lover = { is_close_relative = ROOT }
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_dwarf = {
+	allow = {
+		trait = dwarf
+		age >= 15
+	}
+
+	chance = {
+		factor = 0.6
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_fool = {
+	allow = {
+		OR = {
+			trait = imbecile
+			trait = inbred
+		}
+
+		age >= 30
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_poet = {
+	allow = {
+		trait = poet
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_benign = {
+	allow = {
+		trait = kind
+		trait = patient
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_eloquent = {
+	allow = {
+		age >= 35
+		diplomacy >= 12
+
+		OR = {
+			trait = charismatic_negotiator
+			trait = grey_eminence
+		}
+
+		OR = {
+			trait = gregarious
+			trait = poet
+		}
+
+		NOR = {
+			trait = lisp
+			trait = stutter
+			trait = possessed
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_meek = {
+	allow = {
+		age >= 35
+		trait = humble
+
+		OR = {
+			is_weak_trigger = yes
+			trait = shy
+			trait = craven
+		}
+
+		is_strong_trigger = no
+
+		NOR = {
+			trait = gregarious
+			trait = proud
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_prudent = {
+	allow = {
+		trait = patient
+		age >= 35
+
+		OR = {
+			trait = temperate
+			trait = chaste
+		}
+
+		NOR = {
+			trait = wroth
+			trait = drunkard
+			trait = lunatic
+			trait = possessed
+			trait = brave
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_learned = {
+	allow = {
+		trait = scholar
+		age >= 35
+		learning >= 10
+		is_dumb_trigger = no
+
+		OR = {
+			trait = mastermind_theologian
+			trait = scholarly_theologian
+			is_smart_trigger = yes
+		}
+	}
+
+	chance = {
+		factor = 0.6
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_impaler = {
+	allow = {
+		trait = impaler
+		age >= 35
+
+		OR = {
+			trait = wroth
+			trait = arbitrary
+			trait = cruel
+		}
+
+		NOR = {
+			trait = just
+			trait = kind
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_cunning = {
+	allow = {
+		trait = deceitful
+		age >= 35
+		intrigue >= 10
+
+		OR = {
+			is_smart_trigger = yes
+			trait = intricate_webweaver
+			trait = elusive_shadow
+		}
+
+		is_dumb_trigger = no
+
+		NOR = {
+			trait = trusting
+			trait = inbred
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_indolent = {
+	allow = {
+		trait = slothful
+		age >= 35
+
+		OR = {
+			trait = content
+			trait = patient
+			trait = gluttonous
+		}
+
+		NOR = {
+			trait = ambitious
+			trait = diligent
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_downcast = {
+	allow = {
+		trait = depressed
+		age >= 35
+
+		NOR = {
+			trait = gregarious
+			trait = diligent
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_scholar = {
+	allow = {
+		trait >= scholar
+		age = 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_mild = {
+	allow = {
+		trait = kind
+		trait = temperate
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_theologian = {
+	allow = {
+		age >= 35
+		learning >= 10
+		religion_group = christian
+
+		OR = {
+			trait = mastermind_theologian
+			trait = scholarly_theologian
+		}
+
+		NOR = {
+			trait = imbecile
+			trait = cynical
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_decadent = {
+	allow = {
+		trait = hedonist
+		age >= 35
+
+		OR = {
+			trait = gluttonous
+			trait = greedy
+			trait = drunkard
+			trait = lustful
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_stout = {
+	allow = {
+		trait >= gluttonous
+		is_strong_trigger = yes
+		age >= 30
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_vain = {
+	allow = {
+		trait = attractive
+		trait >= proud
+		age >= 35
+		age < 40
+
+		NOR = {
+			trait = dwarf
+			trait = inbred
+			trait = harelip
+			trait = hunchback
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_planter = {
+	allow = {
+		trait = gardener
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_ugly = {
+	allow = {
+		trait = ugly
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_short = {
+	allow = {
+		trait = dwarf
+		age >= 15
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_parricide = {
+	allow = {
+		trait = kinslayer
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_rash = {
+	allow = {
+		trait = wroth
+		trait = brave
+		age >= 30
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_mystic = {
+	allow = {
+		trait = mystic
+		learning >= 8
+		age >= 35
+		NOT = { trait = cynical }
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_generous = {
+	allow = {
+		trait = charitable
+		trait = kind
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_honorable = {
+	allow = {
+		trait = honest
+		trait = just
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_treacherous = {
+	allow = {
+		trait = deceitful
+		trait = arbitrary
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_weak = {
+	allow = {
+		is_weak_trigger = yes
+		age >= 35
+
+		OR = {
+			trait = craven
+			trait = content
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_scarred = {
+	allow = {
+		trait = scarred
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = wounded
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = maimed
+		}
+	}
+}
+
+nick_the_quiet = {
+	allow = {
+		trait = shy
+		trait = content
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_truthful = {
+	allow = {
+		trait = honest
+		trait = trusting
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_distrustful = {
+	allow = {
+		trait = deceitful
+		trait = paranoid
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_peaceful = {
+	allow = {
+		trait = content
+		trait = kind
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_ambitious = {
+	allow = {
+		trait = ambitious
+		trait = envious
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_righteous = {
+	allow = {
+		trait = just
+		trait = zealous
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_pompous = {
+	allow = {
+		diplomacy >= 10
+		trait = proud
+		trait = gregarious
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_boar = {
+	allow = {
+		trait = wroth
+		age >= 35
+
+		OR = {
+			trait = gluttonous
+			trait = head5
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 2
+			trait = wroth
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_infirm = {
+	allow = {
+		trait = infirm
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_reluctant = {
+	allow = {
+		trait = craven
+		trait = slothful
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_brilliant = {
+	allow = {
+		trait = genius
+		has_top_tier_education_trait_trigger = yes
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_stammerer = {
+	allow = {
+		trait = stutter
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_upright = {
+	allow = {
+		trait = just
+		trait = honest
+		trait = charitable
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_skald = {
+	allow = {
+		trait = poet
+		culture_group = north_germanic
+		trait = gregarious
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_bard = {
+	allow = {
+		trait = poet
+		culture_group = celtic
+		trait = gregarious
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_scop = {
+	allow = {
+		trait = poet
+		culture_group = west_germanic
+		trait = gregarious
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_recluse = {
+	allow = {
+		trait = shy
+		trait = paranoid
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_candid = {
+	allow = {
+		trait = honest
+		trait = brave
+		age >= 30
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_clubfoot = {
+	allow = {
+		trait = clubfooted
+		age >= 15
+	}
+
+	chance = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_suspicious = {
+	allow = {
+		trait = cynical
+		intrigue >= 10
+		age >= 35
+
+		OR = {
+			trait = flamboyant_schemer
+			trait = intricate_webweaver
+			trait = elusive_shadow
+		}
+
+		NOT = { trait = trusting }
+		is_dumb_trigger = no
+		is_incapable = no
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = paranoid
+		}
+	}
+}
+
+nick_the_eagle = {
+	allow = {
+		trait = brave
+		martial >= 10
+		age >= 35
+
+		OR = {
+			trait = tough_soldier
+			trait = skilled_tactician
+			trait = brilliant_strategist
+		}
+
+		NOT = { trait = slothful }
+		is_dumb_trigger = no
+		is_incapable = no
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = diligent
+		}
+	}
+}
+
+nick_the_seemly = {
+	allow = {
+		trait = charitable
+		diplomacy >= 10
+		age >= 35
+
+		OR = {
+			trait = underhanded_rogue
+			trait = charismatic_negotiator
+			trait = grey_eminence
+		}
+
+		is_incapable = no
+		is_dumb_trigger = no
+
+		NOR = {
+			trait = deceitful
+			trait = lustful
+			trait = hedonist
+			trait = cruel
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = honest
+		}
+	}
+}
+
+nick_the_ashik = {
+	allow = {
+		trait = poet
+		culture = turkish
+		trait = gregarious
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_minnesinger = {
+	allow = {
+		trait = poet
+		german_cultures_trigger = yes
+		trait = gregarious
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_wanton = {
+	allow = {
+		ruled_years >= 10
+		age >= 26
+
+		OR = {
+			trait = hedonist
+			trait = gluttonous
+			trait = drunkard
+		}
+
+		OR = {
+			trait = arbitrary
+			trait = lustful
+			trait = cynical
+		}
+
+		NOR = {
+			trait = temperate
+			trait = chaste
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_bloody = {
+	allow = {
+		age >= 30
+
+		OR = {
+			trait = dishonorable1
+			trait = dishonorable2
+			trait = dishonorable3
+			trait = dishonorable4
+			trait = dishonorable5
+			trait = dishonorable6
+			trait = dishonorable7
+			trait = dishonorable8
+			trait = dishonorable9
+			trait = dishonorable10
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = dishonorable2
+		}
+
+		mult_modifier = {
+			factor = 3
+			trait = dishonorable3
+		}
+
+		mult_modifier = {
+			factor = 4
+			trait = dishonorable4
+		}
+
+		mult_modifier = {
+			factor = 5
+			trait = dishonorable5
+		}
+
+		mult_modifier = {
+			factor = 6
+			trait = dishonorable6
+		}
+
+		mult_modifier = {
+			factor = 7
+			trait = dishonorable7
+		}
+
+		mult_modifier = {
+			factor = 8
+			trait = dishonorable8
+		}
+
+		mult_modifier = {
+			factor = 9
+			trait = dishonorable9
+		}
+
+		mult_modifier = {
+			factor = 10
+			trait = dishonorable10
+		}
+	}
+}
+
+nick_the_black = {
+	allow = {
+		trait = cruel
+		trait = wroth
+		age >= 30
+
+		NOR = {
+			trait = kind
+			trait = just
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5.0
+			trait = impaler
+		}
+
+		mult_modifier = {
+			factor = 5.0
+			trait = arbitrary
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_posthumous = {
+	allow = {
+		age < 1
+		is_female = no
+
+		father_even_if_dead = {
+			is_alive = no
+		}
+	}
+
+	chance = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10.0
+			mother_even_if_dead = { is_alive = no }
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_sickly = {
+	allow = {
+		is_weak_trigger = yes
+		age >= 15
+
+		OR = {
+			trait = ill
+			trait = pneumonic
+			trait = great_pox
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = pneumonic
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = great_pox
+		}
+	}
+}
+
+nick_the_ox = {
+	allow = {
+		age >= 35
+
+		OR = {
+			trait = ugly
+			trait = gluttonous
+			is_strong_trigger = yes
+		}
+
+		OR = {
+			trait = slow
+			trait = dull
+			trait = strong
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_stuttering_and_lame = {
+	allow = {
+		trait = clubfooted
+		trait = stutter
+		age >= 25
+	}
+
+	chance = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_noisy = {
+	allow = {
+		trait = drunkard
+		trait = gregarious
+		age >= 30
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_duelist = {
+	allow = {
+		trait = duelist
+		age >= 35
+		is_incapable = no
+
+		NOR = {
+			trait = infirm
+			trait = craven
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_eunuch = {
+	allow = {
+		trait = eunuch
+		is_adult = yes
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_purpleborn = {
+	allow = {
+		trait = born_in_the_purple
+		real_tier = EMPEROR
+		is_adult =yes
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_madman = {
+	allow = {
+		trait = lunatic
+		trait = arbitrary
+		is_adult = yes
+	}
+
+	chance = {
+		factor = 0.6
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_slobberer = {
+	allow = {
+		trait >= wroth
+		age = 30
+
+		OR = {
+			trait = imbecile
+			trait = inbred
+			trait = stutter
+		}
+
+		NOR = {
+			trait = grey_eminence
+			trait = charismatic_negotiator
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_oak = {
+	allow = {
+		age = 30
+		is_strong_trigger = yes
+
+		OR = {
+			trait = ugly
+			trait = gardener
+			trait = scarred
+		}
+
+		is_weak_trigger = no
+
+		NOR = {
+			trait = inbred
+			trait = infirm
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_merchant = {
+	allow = {
+		age >= 35
+
+		OR = {
+			trait = midas_touched
+			trait = fortune_builder
+		}
+
+		OR = {
+			trait = greedy
+			trait = honest
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_berserker = {
+	allow = {
+		trait = berserker
+		culture_group = north_germanic
+		age >= 25
+
+		NOR = {
+			trait = patient
+			trait = craven
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = wroth
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = aggressive_leader
+		}
+	}
+}
+
+nick_the_raven = {
+	allow = {
+		trait = brave
+		culture_group = north_germanic
+		martial >= 12
+		age >= 35
+
+		OR = {
+			trait = viking
+			trait = berserker
+			trait = impaler
+		}
+
+		OR = {
+			trait = cruel
+			trait = just
+			trait = ambitious
+		}
+
+		NOR = {
+			trait = slothful
+			trait = infirm
+			trait = content
+			trait = incapable
+			trait = kind
+		}
+	}
+
+	chance = {
+		factor = 0.6
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 1.5
+
+			OR = {
+				religion_openly_norse_or_reformed_trigger = yes
+				religion_openly_german_or_reformed_trigger = yes
+			}
+		}
+	}
+}
+
+nick_the_bloodaxe = {
+	allow = {
+		culture_group = north_germanic
+		age >= 30
+
+		OR = {
+			trait = kinslayer
+			trait = impaler
+			trait = aggressive_leader
+		}
+
+		OR = {
+			trait = viking
+			trait = berserker
+			trait = cruel
+		}
+
+		NOR = {
+			trait = content
+			trait = kind
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_battler = {
+	allow = {
+		culture_group = iberian
+		age >= 30
+
+		OR = {
+			trait = light_foot_leader
+			trait = heavy_infantry_leader
+			trait = cavalry_leader
+		}
+
+		OR = {
+			trait = ambitious
+			trait = brave
+			trait = diligent
+		}
+
+		NOR = {
+			trait = craven
+			trait = slothful
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_terrible_eyes = {
+	allow = {
+		culture_group = east_slavic
+		age >= 35
+
+		OR = {
+			trait = trickster
+			trait = elusive_shadow
+			trait = kinslayer
+		}
+
+		OR = {
+			trait = greedy
+			trait = ambitious
+			trait = deceitful
+		}
+
+		NOR = {
+			trait = honest
+			trait = content
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_powerful = {
+	allow = {
+		culture_group = south_slavic
+		age >= 35
+
+		OR = {
+			prestige >= 2000
+			piety >= 1000
+			wealth >= 1000
+		}
+
+		OR = {
+			trait = gregarious
+			trait = zealous
+			is_strong_trigger = yes
+		}
+
+		is_weak_trigger = no
+		NOT = { trait = shy }
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_wrymouth = {
+	allow = {
+		culture_group = west_slavic
+		age >= 35
+
+		OR = {
+			trait = inspiring_leader
+			trait = grey_eminence
+			trait = poet
+		}
+
+		OR = {
+			trait = gregarious
+			trait = charitable
+			trait = honest
+		}
+
+		NOR = {
+			trait = deceitful
+			trait = shy
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_fanged = {
+	allow = {
+		culture_group = celtic
+		age >= 35
+
+		OR = {
+			trait = aggressive_leader
+			trait = possessed
+			trait = hunter
+		}
+
+		OR = {
+			trait = wroth
+			trait = zealous
+			trait = brave
+		}
+
+		NOR = {
+			trait = patient
+			trait = craven
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_wild = {
+	allow = {
+		culture_group = west_germanic
+		age >= 35
+
+		OR = {
+			trait = direct_leader
+			trait = hedonist
+			trait = drunkard
+		}
+
+		OR = {
+			trait = lustful
+			trait = brave
+			trait = arbitrary
+		}
+
+		NOR = {
+			trait = chaste
+			trait = craven
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_defenderofgodsfaith = {
+	allow = {
+		culture_group = arabic
+		age >= 30
+
+		OR = {
+			trait = holy_warrior
+			trait = mujahid
+			trait = faqih
+		}
+
+		OR = {
+			trait = zealous
+			trait = brave
+			trait = brilliant_strategist
+		}
+
+		NOR = {
+			trait = cynical
+			trait = craven
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_dane = {
+	allow = {
+		culture = danish
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_saxon = {
+	allow = {
+		culture = saxon
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_scot = {
+	allow = {
+		culture = scottish
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_german = {
+	allow = {
+		german_cultures_trigger = yes
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_norman = {
+	allow = {
+		culture = norman
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_nord = {
+	allow = {
+		OR = {
+			culture = norwegian
+			culture = norse
+		}
+
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_breton = {
+	allow = {
+		culture = breton
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_finn = {
+	allow = {
+		culture = finnish
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_hungarian = {
+	allow = {
+		culture = hungarian
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_bohemian = {
+	allow = {
+		culture = bohemian
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_moor = {
+	allow = {
+		OR = {
+			culture = maghreb_arabic
+			culture = andalusian_arabic
+		}
+
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_russian = {
+	allow = {
+		culture = russian
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_serb = {
+	allow = {
+		culture = serbian
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_turk = {
+	allow = {
+		culture = turkish
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_pole = {
+	allow = {
+		culture = polish
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_mongol = {
+	allow = {
+		culture = mongol
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_persian = {
+	allow = {
+		culture = persian
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_italian = {
+	allow = {
+		is_italian_trigger = yes
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_armenian = {
+	allow = {
+		culture = armenian
+		age >= 35
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+# GIVEN BY PRESTIGE/PIETY/WEALTH
+################################
+
+nick_the_illustrious = {
+	allow = {
+		ruled_years >= 15
+		age >= 35
+		prestige >= 2000
+		piety >= 1000
+
+		NOR = {
+			trait = kinslayer
+			trait = excommunicated
+		}
+	}
+
+	chance = {
+		factor = 0.6
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 4000
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			prestige >= 6000
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			piety >= 2000
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			piety >= 4000
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			piety >= 6000
+		}
+	}
+}
+
+nick_the_rich = {
+	allow = {
+		ruled_years >= 10
+		wealth >= 1000
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			wealth >= 2000
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			wealth >= 4000
+		}
+
+		mult_modifier = {
+			factor = 3.0
+			wealth >= 6000
+		}
+	}
+}
+
+nick_the_godless = {
+	allow = {
+		piety < 0
+		age >= 35
+
+		OR = {
+			trait = arbitrary
+			trait = cynical
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = excommunicated
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = kinslayer
+		}
+	}
+}
+
+nick_the_pilgrim = {
+	allow = {
+		piety >= 500
+		age >= 25
+
+		OR = {
+			trait = hajjaj
+			trait = pilgrim
+		}
+
+		NOT = { trait = cynical }
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_extravagant = {
+	allow = {
+		age >= 35
+		ruled_years >= 10
+		prestige >= 1000
+
+		OR = {
+			trait = proud
+			trait = charitable
+		}
+
+		OR = {
+			trait = gregarious
+			trait = arbitrary
+			trait = hedonist
+		}
+
+		NOR = {
+			trait = shy
+			trait = humble
+			trait = greedy
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+# GIVEN BY RULE
+################
+
+nick_the_spider = {
+	allow = {
+		ruled_years >= 10
+		intrigue >= 12
+		age >= 35
+
+		OR = {
+			trait = elusive_shadow
+			trait = intricate_webweaver
+		}
+
+		OR = {
+			trait = deceitful
+			trait = patient
+		}
+
+		NOR = {
+			trait = honest
+			trait = wroth
+		}
+	}
+
+	chance = {
+		factor = 0.6
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_wolf = {
+	allow = {
+		ruled_years >= 15
+		martial >= 10
+		intrigue >= 8
+		age >= 35
+
+		OR = {
+			trait = ambitious
+			trait = deceitful
+			trait = wolf_warrior
+			trait = fian
+		}
+
+		OR = {
+			trait = skilled_tactician
+			trait = brilliant_strategist
+			trait = head2
+			trait = head3
+			trait = head4
+		}
+
+		NOR = {
+			trait = honest
+			trait = craven
+		}
+	}
+
+	chance = {
+		factor = 0.6
+
+		mult_modifier = {
+			factor = 2
+			trait = wroth
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_warrior = {
+	allow = {
+		ruled_years >= 10
+		martial >= 10
+		age >= 35
+		is_incapable = no
+
+		OR = {
+			trait = duelist
+			trait = brave
+			trait = crusader
+		}
+
+		OR = {
+			trait = tough_soldier
+			trait = skilled_tactician
+			trait = brilliant_strategist
+		}
+
+		NOR = {
+			trait = infirm
+			trait = craven
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = duelist
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = crusader
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = tough_soldier
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = skilled_tactician
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = brilliant_strategist
+		}
+	}
+}
+
+nick_the_shrewd = {
+	allow = {
+		ruled_years >= 10
+		stewardship >= 12
+		age >= 35
+
+		OR = {
+			trait = midas_touched
+			trait = fortune_builder
+		}
+
+		OR = {
+			trait = diligent
+			trait = cynical
+		}
+
+		NOR = {
+			trait = slothful
+			trait = zealous
+		}
+	}
+
+	chance = {
+		factor = 0.6
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_hotspur = {
+	allow = {
+		ruled_years >= 15
+		martial >= 10
+		age >= 35
+
+		OR = {
+			trait = wroth
+			trait = diligent
+		}
+
+		OR = {
+			trait = skilled_tactician
+			trait = brilliant_strategist
+		}
+
+		NOT = { trait = patient }
+	}
+
+	chance = {
+		factor = 0.6
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_peculiar = {
+	allow = {
+		ruled_years >= 10
+		age >= 35
+
+		trigger_if = {
+			limit = { NOT = { trait = homosexual } }
+
+			OR = {
+				AND = {
+					trait = genius
+					trait = paranoid
+				}
+
+				AND = {
+					trait = shy
+					trait = possessed
+				}
+			}
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_apathetic = {
+	allow = {
+		ruled_years >= 10
+		age >= 35
+
+		OR = {
+			trait = depressed
+			trait = content
+			trait = slothful
+		}
+
+		NOR = {
+			trait = diligent
+			trait = ambitious
+			trait = zealous
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = cynical
+		}
+	}
+}
+
+nick_the_child = {
+	allow = {
+		ruled_years >= 5
+		is_adult = no
+
+		OR = {
+			trait = trusting
+			trait = honest
+		}
+
+		OR = {
+			trait = arbitrary
+			trait = kind
+		}
+
+		NOR = {
+			trait = diligent
+			trait = patient
+		}
+	}
+
+	chance = {
+		factor = 0.1
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = charitable
+		}
+	}
+}
+
+nick_the_trickster = {
+	allow = {
+		ruled_years >= 5
+		age >= 35
+		is_incapable = no
+
+		OR = {
+			trait = trickster
+			trait = direct_leader
+		}
+
+		OR = {
+			trait = cynical
+			trait = deceitful
+			is_smart_trigger = yes
+		}
+
+		NOR = {
+			trait = infirm
+			trait = honest
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = deceitful
+		}
+	}
+}
+
+nick_the_tempest = {
+	allow = {
+		ruled_years >= 5
+		age >= 35
+		is_incapable = no
+
+		OR = {
+			trait = organizer
+			trait = flanker
+		}
+
+		OR = {
+			trait = scholar
+			trait = ambitious
+			trait = diligent
+		}
+
+		NOR = {
+			trait = infirm
+			trait = slothful
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = diligent
+		}
+	}
+}
+
+nick_the_fierce = {
+	allow = {
+		ruled_years >= 5
+		age >= 35
+		is_incapable = no
+
+		OR = {
+			trait = unyielding_leader
+			trait = aggressive_leader
+		}
+
+		OR = {
+			trait = impaler
+			trait = zealous
+			trait = wroth
+		}
+
+		NOR = {
+			trait = infirm
+			trait = patient
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = wroth
+		}
+	}
+}
+
+nick_the_iron = {
+	allow = {
+		ruled_years >= 5
+		age >= 35
+		is_incapable = no
+
+		OR = {
+			trait = inspiring_leader
+			trait = defensive_leader
+		}
+		OR = {
+			trait = falconer
+			trait = temperate
+			trait = patient
+		}
+
+		NOR = {
+			trait = infirm
+			trait = wroth
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = patient
+		}
+	}
+}
+
+nick_the_implacable = {
+	allow = {
+		ruled_years >= 5
+		age >= 35
+		is_incapable = no
+
+		OR = {
+			trait = cavalry_leader
+			trait = aggressive_leader
+		}
+
+		OR = {
+			trait = wroth
+			trait = diligent
+			trait = hunter
+		}
+
+		NOR = {
+			trait = infirm
+			trait = slothful
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = diligent
+		}
+	}
+}
+
+nick_the_anointed = {
+	allow = {
+		ruled_years >= 5
+		piety >= 500
+		age >= 35
+		is_incapable = no
+
+		OR = {
+			trait = holy_warrior
+			trait = brilliant_strategist
+		}
+
+		OR = {
+			trait = crusader
+			trait = mujahid
+			trait = zealous
+		}
+
+		NOR = {
+			trait = infirm
+			trait = cynical
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = zealous
+		}
+	}
+}
+
+nick_the_strict = {
+	allow = {
+		ruled_years >= 10
+		age = 35
+
+		OR = {
+			trait = zealous
+			trait = just
+		}
+
+		OR = {
+			trait = cruel
+			trait = wroth
+			trait = impaler
+		}
+
+		NOR = {
+			trait = kind
+			trait = slothful
+			trait = hedonist
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_jailer = {
+	allow = {
+		num_of_prisoners >= 20
+		ruled_years >= 10
+		age = 35
+		is_incapable = no
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_stubborn = {
+	allow = {
+		trait = stubborn
+		ruled_years >= 10
+		age >= 35
+		is_incapable = no
+
+		NOR = {
+			trait = gregarious
+			trait = just
+			trait = shy
+			trait = humble
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_fortunate = {
+	allow = {
+		ruled_years >= 10
+		age >= 35
+		is_incapable = no
+		is_ill = no
+		has_inheritance_blocker = no
+		has_injury_trigger = no
+		is_maimed_trigger = no
+		has_disability_trigger = no
+		has_mental_disorder_trigger = no
+		is_weak_trigger = no
+		is_dumb_trigger = no
+		has_ugly_trait_trigger = no
+
+		NOR = {
+			trait = lovers_pox
+			trait = paranoid
+			trait = cruel
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 1.1
+
+			OR = {
+				wealth >= 1000
+				prestige >= 1000
+				trait = born_in_the_purple
+				trait = master_seducer
+				trait = master_seductress
+				trait = attractive
+				trait = fertile
+				trait = grey_eminence
+				trait = midas_touched
+				trait = legit_bastard
+				trait = genius
+				trait = strong
+				trait = diligent
+				trait = paragon
+			}
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_tall = {
+	allow = {
+		trait = tall
+		is_adult = yes
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_le_rechin = {
+	# Fulk IV, le Réchin, Count of Anjou
+	allow = {
+		trait = arbitrary
+		age >= 25
+
+		NOR = {
+			trait = gregarious
+			trait = grey_eminence
+			trait = shy
+			trait = humble
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 2
+
+			OR = {
+				trait = hedonist
+				trait = greedy
+				trait = envious
+			}
+		}
+
+		mult_modifier = {
+			factor = 2
+			piety < -1000
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_walker = {
+	# Göngu-Hrólfr, AKA Rollo
+	allow = {
+		trait = imposing
+		age >= 25
+
+		NOR = {
+			trait = weak
+			trait = frail
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 1.2
+			culture = norse
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = strong
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = tall
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_middle_aged = {
+	allow = {
+		ruled_years >= 1
+		practical_age >= 40
+		diplomacy >= 5
+		diplomacy <= 8
+		martial >= 5
+		martial <= 8
+		stewardship >= 5
+		stewardship <= 8
+		intrigue >= 5
+		intrigue <= 8
+		learning >= 5
+		learning <= 8
+		lifestyle_traits == 0
+
+		# Didn't create the title
+		primary_title = {
+			any_previous_holder = { NOT = { character = ROOT } }
+		}
+
+		has_crusade_trait_trigger = no
+		has_top_tier_education_trait_trigger = no
+
+		NOR = {
+			trait = strong_basileus
+			trait = crowned_by_pope
+			trait = crowned_by_relhead
+			trait = crowned_by_vip
+			trait = attractive
+			trait = genius
+			trait = strong
+		}
+	}
+
+	chance = {
+		factor = 0.2
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			practical_age >= 45
+		}
+
+		mult_modifier = {
+			factor = 0.0
+			practical_age >= 50
+		}
+	}
+}
+
+nick_the_dangerous = {
+	allow = {
+		ruled_years >= 10
+		trait = ambitious
+		age = 30
+
+		OR = {
+			trait = wroth
+			trait = lunatic
+			trait = cruel
+			trait = impaler
+			trait = arbitrary
+			trait = stubborn
+			trait = deceitful
+			trait = paranoid
+			trait = envious
+			trait = elusive_shadow
+			trait = intricate_webweaver
+			is_tyrant_trigger = yes
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 2
+			trait = wroth
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = arbitrary
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_aggressor = {
+	allow = {
+		trait = aggressive_leader
+		age >= 35
+
+		NOR = {
+			trait = patient
+			trait = craven
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 0.2
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = wroth
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}
+
+nick_the_vehement = {
+	allow = {
+		trait = stubborn
+		age >= 30
+
+		NOR = {
+			trait = patient
+			trait = craven
+			trait = depressed
+			trait = shy
+			trait = humble
+		}
+	}
+
+	chance = {
+		factor = 0.4
+
+		mult_modifier = {
+			factor = 0.2
+			trait = arbitrary
+		}
+
+		mult_modifier = {
+			factor = 5
+			has_ambition = obj_get_nick
+		}
+	}
+}

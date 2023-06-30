@@ -1,0 +1,7810 @@
+namespace = Plus
+#reserved: Plus.800 to Plus.899
+namespace = ancrel
+#reserved: ancrel.0000 - ancrel.1999
+
+#######################################
+# CELTIC EVENTS
+#######################################
+
+### AONACH TAILTEANN
+### Written by Patrick Marchand
+
+# Invitation
+character_event = {
+	id = ancrel.1190
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1190
+	picture = GFX_evt_courier
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1190
+
+		prestige = 25
+		piety = 25
+		end_inaccessibility_effect = yes
+
+		hidden_effect = {
+			set_character_flag = attending_tailteann
+			set_character_flag = tailteann_death_phase
+
+			add_character_modifier = {
+				name = do_not_disturb
+				months = 7
+				hidden = yes
+			}
+		}
+
+		ai_chance = {
+			factor = 75
+
+			trigger = {
+				is_ill = no
+				is_inaccessible_trigger = no
+				NOT = { trait = pregnant }
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				OR = {
+					trait = diligent
+					trait = proud
+					trait = gregarious
+					trait = zealous
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_1190
+
+		prestige = -50
+		piety = -50
+
+		ai_chance = {
+			factor = 25
+
+			mult_modifier = {
+				factor = 10
+				is_inaccessible_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = shy
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = paranoid
+			}
+		}
+	}
+}
+
+# Start of Aonach
+character_event = {
+	id = ancrel.1191
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1191
+	picture = GFX_evt_bonfire_celtic
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1191
+
+		trigger = { war = no }
+
+		hidden_effect = {
+			set_character_flag = tailteann_death_ruler
+			set_character_flag = tailteann_begins
+			set_character_flag = tailteann_death_phase
+			set_character_flag = attending_tailteann
+
+			any_realm_lord = {
+				limit = { has_character_flag = attending_tailteann }
+
+				set_character_flag = tailteann_death_phase
+				character_event = { id = ancrel.1196 days = 5 }
+
+				# Set score
+				character_event = {
+					id = ancrel.1270
+					days = 46
+				}
+			}
+
+			character_event = { id = ancrel.1196 days = 5 }
+			character_event = { id = ancrel.1199 days = 10 }
+
+			# Select best athlete
+			character_event = {
+				id = ancrel.1271
+				days = 48
+			}
+
+			# Select best warrior
+			character_event = {
+				id = ancrel.1272
+				days = 49
+			}
+
+			# Select best craftsman
+			character_event = {
+				id = ancrel.1273
+				days = 50
+			}
+
+			# Notify winners
+			character_event = {
+				id = ancrel.1274
+				days = 51
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_1191
+
+		trigger = { war = yes }
+
+		wealth = 200
+		prestige = -100
+		clr_character_flag = aonach_tailteann
+		remove_character_modifier = holding_aonach_tailteann
+
+		hidden_effect = {
+			remove_do_not_disturb_effect = yes
+
+			any_realm_character = {
+				limit = { has_character_flag = attending_tailteann }
+				character_event = { id = ancrel.1192 }
+			}
+		}
+	}
+}
+
+# Aonach has been cancelled
+character_event = {
+	id = ancrel.1192
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1192
+	picture = GFX_evt_bonfire_celtic
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1192
+
+		prestige = -50
+		clr_character_flag = attending_tailteann
+		hidden_effect = { remove_do_not_disturb_effect = yes }
+	}
+}
+
+# Invitations have gone out
+character_event = {
+	id = ancrel.1193
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1193
+	picture = GFX_evt_courier
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_ancrel_1193
+	}
+}
+
+# Ruler has died, the Aonach is over
+character_event = {
+	id = ancrel.1194
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1194
+	picture = GFX_evt_funeral_pyre
+
+	is_triggered_only = yes # on_death
+
+	has_character_flag = tailteann_begins
+
+	option = {
+		name = EVTOPTA_ancrel_1194
+
+		hidden_effect = {
+			remove_do_not_disturb_effect = yes
+			remove_character_modifier = holding_aonach_tailteann
+			clr_character_flag = tailteann_begins
+			clr_character_flag = winner_athletic
+			clr_character_flag = winner_fighting
+			clr_character_flag = winner_crafting
+			clr_character_flag = attending_tailteann
+			clr_character_flag = attending_tailteann_event
+			clr_character_flag = tailteann_craftsman
+			clr_character_flag = tailteann_fighter
+			clr_character_flag = tailteann_best_athlete_athlete
+		}
+
+		custom_tooltip = {
+			text = EVTTOOLTIP_ancrel_1195
+
+			any_realm_character = {
+				limit = { has_character_flag = attending_tailteann }
+
+				letter_event = {
+					id = ancrel.1195
+					days = 2
+					random = 2
+				}
+
+				hidden_effect = {
+					remove_do_not_disturb_effect = yes
+					set_character_flag = tailteann_has_ended
+					clr_character_flag = tailteann_craftsman
+					clr_character_flag = tailteann_fighter
+					clr_character_flag = tailteann_best_athlete_athlete
+					clr_character_flag = attending_tailteann
+					clr_character_flag = attending_tailteann_event
+				}
+			}
+		}
+	}
+}
+
+# The Aonach has been cancelled due to Ruler's death
+letter_event = {
+	id = ancrel.1195
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1195
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_ancrel_1195
+	}
+}
+
+# Choose who to honor at the bonfire
+character_event = {
+	id = ancrel.1196
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1196
+	picture = GFX_evt_bonfire_celtic
+	border = GFX_event_normal_frame_diplomacy
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	only_rulers = yes
+	has_character_flag = tailteann_death_phase
+
+	trigger = {
+		NOR = {
+			has_character_flag = choose_dead_one_tailteann
+			has_character_flag = chosen_dead_one_tailteann
+		}
+
+		OR = {
+			father_even_if_dead = { is_alive = no }
+			mother_even_if_dead = { is_alive = no }
+		}
+	}
+
+	option = { # In memory of father
+		name = EVTOPTA_ancrel_1196
+
+		trigger = {
+			father_even_if_dead = { is_alive = no }
+		}
+
+		narrative_event = {
+			id = ancrel.1197
+			days = 2
+			tooltip = honor_dead_tailteann
+		}
+	}
+
+	option = { # In memory of mother
+		name = EVTOPTB_ancrel_1196
+
+		trigger = {
+			mother_even_if_dead = { is_alive = no }
+		}
+
+		narrative_event = {
+			id = ancrel.1198
+			days = 2
+			tooltip = honor_dead_tailteann
+		}
+	}
+
+	after = {
+		set_character_flag = choose_dead_one_tailteann
+	}
+}
+
+# In memory of father
+narrative_event = {
+	id = ancrel.1197
+	title = EVTNAME_ancrel_1197
+	desc = EVTDESC_ancrel_1197
+	picture = GFX_evt_bonfire_celtic
+	border = GFX_event_narrative_frame_diplomacy
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1197
+
+		piety = 100
+		clr_character_flag = choose_dead_one_tailteann
+		set_character_flag = chosen_dead_one_tailteann
+	}
+}
+
+# In memory of mother
+narrative_event = {
+	id = ancrel.1198
+	title = EVTNAME_ancrel_1198
+	desc = EVTDESC_ancrel_1198
+	picture = GFX_evt_bonfire_celtic
+	border = GFX_event_narrative_frame_diplomacy
+
+	is_triggered_only = yes
+	hide_from = yes
+
+
+	option = {
+		name = EVTOPTA_ancrel_1198
+
+		piety = 100
+		clr_character_flag = choose_dead_one_tailteann
+		set_character_flag = chosen_dead_one_tailteann
+	}
+}
+
+# Ruler chooses which caste to favor
+character_event = {
+	id = ancrel.1199
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1199
+	picture = GFX_evt_ollamh_laws
+
+	is_triggered_only = yes
+
+	option = { # Favor warrior caste
+		name = EVTOPTA_ancrel_1199
+
+		change_martial = 1
+		prestige = 150
+
+		add_character_modifier = {
+			name = favored_warriors
+			years = 10
+		}
+	}
+
+	option = { # Favor druidic caste
+		name = EVTOPTB_ancrel_1199
+
+		change_learning = 1
+		piety = 100
+
+		add_character_modifier = {
+			name = favored_druids
+			years = 10
+		}
+	}
+
+	option = { # Favor merchant caste
+		name = EVTOPTC_ancrel_1199
+
+		change_stewardship = 1
+		wealth = 100
+
+		add_character_modifier = {
+			name = favored_merchants
+			years = 10
+		}
+	}
+
+	option = { # Favor the crown
+		name = EVTOPTE_ancrel_1199
+
+		trigger = {
+			trait = ambitious
+			trait = diligent
+		}
+
+		add_character_modifier = {
+			name = favored_crown
+			years = 10
+		}
+
+		prestige = 50
+		piety = 50
+	}
+
+	option = { # Balance
+		name = EVTOPTD_ancrel_1199
+
+		trigger = { diplomacy >= 12 }
+
+		add_character_modifier = {
+			name = favored_balance
+			years = 10
+		}
+	}
+
+	option = { # Fianna
+		name = EVTOPTF_ancrel_1199
+
+		trigger = { trait = fian }
+
+		add_character_modifier = {
+			name = favored_fianna
+			years = 10
+		}
+	}
+
+	option = { # Lunatic
+		name = EVTOPTG_ancrel_1199
+		tooltip_info = lunatic
+
+		trigger = { trait = lunatic }
+
+		add_character_modifier = {
+			name = favored_birds
+			years = 10
+		}
+	}
+
+	after = {
+		clr_character_flag = tailteann_death_ruler
+		clr_character_flag = tailteann_death_phase
+		clr_character_flag = chosen_dead_one_tailteann
+		clr_character_flag = tailteann_begins
+		set_character_flag = tailteann_law_phase
+
+		character_event = {
+			id = ancrel.1201
+			tooltip = give_laws_ollam
+		}
+
+		hidden_effect = {
+			any_realm_character = {
+				if = {
+					limit = { has_character_flag = tailteann_death_phase }
+					character_event = { id = ancrel.1200 }
+				}
+			}
+		}
+	}
+}
+
+# Learn of new laws from Ollamh
+character_event = {
+	id = ancrel.1200
+	title = TAILTEANNTITLE
+	picture = GFX_evt_bonfire_celtic
+
+	desc = {
+		text = EVTDESC_ancrel_1200
+		trigger = { FROM = { has_character_modifier = favored_warriors } }
+	}
+	desc = {
+		text = EVTDESCB_ancrel_1200
+		trigger = { FROM = { has_character_modifier = favored_druids } }
+	}
+	desc = {
+		text = EVTDESCC_ancrel_1200
+		trigger = { FROM = { has_character_modifier = favored_merchants } }
+	}
+	desc = {
+		text = EVTDESCD_ancrel_1200
+		trigger = { FROM = { has_character_modifier = favored_balance } }
+	}
+	desc = {
+		text = EVTDESCE_ancrel_1200
+		trigger = { FROM = { has_character_modifier = favored_crown } }
+	}
+	desc = {
+		text = EVTDESCF_ancrel_1200
+		trigger = { FROM = { has_character_modifier = favored_fianna } }
+	}
+	desc = {
+		text = EVTDESCG_ancrel_1200
+		trigger = { FROM = { has_character_modifier = favored_birds } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = {
+			text = EVTOPTA_ancrel_1200
+			trigger = { FROM = { NOT = { has_character_modifier = favored_birds } } }
+		}
+		name = {
+			text = EVTOPTB_ancrel_1200
+			trigger = { FROM = { has_character_modifier = favored_birds } }
+		}
+
+		clr_character_flag = tailteann_death_phase
+		clr_character_flag = chosen_dead_one_tailteann
+		character_event = { id = ancrel.1251 }
+	}
+}
+
+# Announce new laws
+character_event = {
+	id = ancrel.1201
+	title = TAILTEANNTITLE
+	picture = GFX_evt_bonfire_celtic
+
+	desc = {
+		text = EVTDESC_ancrel_1200
+		trigger = { has_character_modifier = favored_warriors }
+	}
+	desc = {
+		text = EVTDESCB_ancrel_1200
+		trigger = { has_character_modifier = favored_druids }
+	}
+	desc = {
+		text = EVTDESCC_ancrel_1200
+		trigger = { has_character_modifier = favored_merchants }
+	}
+	desc = {
+		text = EVTDESCD_ancrel_1200
+		trigger = { has_character_modifier = favored_balance }
+	}
+	desc = {
+		text = EVTDESCE_ancrel_1200
+		trigger = { has_character_modifier = favored_crown }
+	}
+	desc = {
+		text = EVTDESCF_ancrel_1200
+		trigger = { has_character_modifier = favored_fianna }
+	}
+	desc = {
+		text = EVTDESCG_ancrel_1200
+		trigger = { has_character_modifier = favored_birds }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1201
+
+		clr_character_flag = tailteann_law_phase
+		set_character_flag = tailteann_game_phase
+		character_event = { id = ancrel.1251 }
+	}
+}
+
+# Set score
+character_event = {
+	id = ancrel.1270
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		random_list = {
+			10 = {
+				trigger = { combat_rating >= 130 }
+
+				set_character_flag = tailteann_score_15
+			}
+
+			10 = {
+				trigger = {
+					combat_rating >= 120
+					combat_rating < 170
+				}
+
+				set_character_flag = tailteann_score_14
+			}
+
+			10 = {
+				trigger = {
+					combat_rating >= 110
+					combat_rating < 160
+				}
+
+				set_character_flag = tailteann_score_13
+			}
+
+			10 = {
+				trigger = {
+					combat_rating >= 100
+					combat_rating < 150
+				}
+
+				set_character_flag = tailteann_score_12
+			}
+
+			10 = {
+				trigger = {
+					combat_rating >= 90
+					combat_rating < 140
+				}
+
+				set_character_flag = tailteann_score_11
+			}
+
+			10 = {
+				trigger = {
+					combat_rating >= 80
+					combat_rating < 130
+				}
+
+				set_character_flag = tailteann_score_10
+			}
+
+			10 = {
+				trigger = {
+					combat_rating >= 70
+					combat_rating < 120
+				}
+
+				set_character_flag = tailteann_score_09
+			}
+
+			10 = {
+				trigger = {
+					combat_rating >= 60
+					combat_rating < 110
+				}
+
+				set_character_flag = tailteann_score_08
+			}
+
+			10 = {
+				trigger = {
+					combat_rating >= 50
+					combat_rating < 100
+				}
+
+				set_character_flag = tailteann_score_07
+			}
+
+			10 = {
+				trigger = {
+					combat_rating >= 40
+					combat_rating < 90
+				}
+
+				set_character_flag = tailteann_score_06
+			}
+
+			10 = {
+				trigger = {
+					combat_rating >= 30
+					combat_rating < 80
+				}
+
+				set_character_flag = tailteann_score_05
+			}
+
+			10 = {
+				trigger = {
+					combat_rating >= 20
+					combat_rating < 70
+				}
+
+				set_character_flag = tailteann_score_04
+			}
+
+			10 = {
+				trigger = {
+					combat_rating >= 10
+					combat_rating < 60
+				}
+
+				set_character_flag = tailteann_score_03
+			}
+
+			10 = {
+				trigger = { combat_rating < 50 }
+
+				set_character_flag = tailteann_score_02
+			}
+
+			10 = {
+				trigger = { combat_rating < 40 }
+
+				set_character_flag = tailteann_score_01
+			}
+
+			10 = {
+				trigger = { combat_rating < 30 }
+
+				set_character_flag = tailteann_score_00
+			}
+		}
+	}
+}
+
+###########################################
+# Best athlete		                      #
+###########################################
+
+character_event = {
+	id = ancrel.1271
+
+	hide_window = yes
+	is_triggered_only = yes
+
+	immediate = {
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_15 }
+			clr_character_flag = tailteann_score_15
+			set_character_flag = tailteann_best_athlete
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_14 }
+			clr_character_flag = tailteann_score_14
+			set_character_flag = tailteann_best_athlete
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_13 }
+			clr_character_flag = tailteann_score_13
+			set_character_flag = tailteann_best_athlete
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_12 }
+			clr_character_flag = tailteann_score_12
+			set_character_flag = tailteann_best_athlete
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_11 }
+			clr_character_flag = tailteann_score_11
+			set_character_flag = tailteann_best_athlete
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_10 }
+			clr_character_flag = tailteann_score_10
+			set_character_flag = tailteann_best_athlete
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_09 }
+			clr_character_flag = tailteann_score_09
+			set_character_flag = tailteann_best_athlete
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_08 }
+			clr_character_flag = tailteann_score_08
+			set_character_flag = tailteann_best_athlete
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_07 }
+			clr_character_flag = tailteann_score_07
+			set_character_flag = tailteann_best_athlete
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_06 }
+			clr_character_flag = tailteann_score_06
+			set_character_flag = tailteann_best_athlete
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_05 }
+			clr_character_flag = tailteann_score_05
+			set_character_flag = tailteann_best_athlete
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_04 }
+			clr_character_flag = tailteann_score_04
+			set_character_flag = tailteann_best_athlete
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_03 }
+			clr_character_flag = tailteann_score_03
+			set_character_flag = tailteann_best_athlete
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_02 }
+			clr_character_flag = tailteann_score_02
+			set_character_flag = tailteann_best_athlete
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_01 }
+			clr_character_flag = tailteann_score_01
+			set_character_flag = tailteann_best_athlete
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_00 }
+			clr_character_flag = tailteann_score_00
+			set_character_flag = tailteann_best_athlete
+		}
+	}
+}
+
+###########################################
+# Best warrior                            #
+###########################################
+
+character_event = {
+	id = ancrel.1272
+
+	hide_window = yes
+	is_triggered_only = yes
+
+	immediate = {
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_15 }
+			clr_character_flag = tailteann_score_15
+			set_character_flag = tailteann_best_warrior
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_14 }
+			clr_character_flag = tailteann_score_14
+			set_character_flag = tailteann_best_warrior
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_13 }
+			clr_character_flag = tailteann_score_13
+			set_character_flag = tailteann_best_warrior
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_12 }
+			clr_character_flag = tailteann_score_12
+			set_character_flag = tailteann_best_warrior
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_11 }
+			clr_character_flag = tailteann_score_11
+			set_character_flag = tailteann_best_warrior
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_10 }
+			clr_character_flag = tailteann_score_10
+			set_character_flag = tailteann_best_warrior
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_09 }
+			clr_character_flag = tailteann_score_09
+			set_character_flag = tailteann_best_warrior
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_08 }
+			clr_character_flag = tailteann_score_08
+			set_character_flag = tailteann_best_warrior
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_07 }
+			clr_character_flag = tailteann_score_07
+			set_character_flag = tailteann_best_warrior
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_06 }
+			clr_character_flag = tailteann_score_06
+			set_character_flag = tailteann_best_warrior
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_05 }
+			clr_character_flag = tailteann_score_05
+			set_character_flag = tailteann_best_warrior
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_04 }
+			clr_character_flag = tailteann_score_04
+			set_character_flag = tailteann_best_warrior
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_03 }
+			clr_character_flag = tailteann_score_03
+			set_character_flag = tailteann_best_warrior
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_02 }
+			clr_character_flag = tailteann_score_02
+			set_character_flag = tailteann_best_warrior
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_01 }
+			clr_character_flag = tailteann_score_01
+			set_character_flag = tailteann_best_warrior
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_00 }
+			clr_character_flag = tailteann_score_00
+			set_character_flag = tailteann_best_warrior
+		}
+	}
+}
+
+###########################################
+# Best craftsman                          #
+###########################################
+
+character_event = {
+	id = ancrel.1273
+
+	hide_window = yes
+	is_triggered_only = yes
+
+	immediate = {
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_15 }
+			clr_character_flag = tailteann_score_15
+			set_character_flag = tailteann_best_crafsman
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_14 }
+			clr_character_flag = tailteann_score_14
+			set_character_flag = tailteann_best_crafsman
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_13 }
+			clr_character_flag = tailteann_score_13
+			set_character_flag = tailteann_best_crafsman
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_12 }
+			clr_character_flag = tailteann_score_12
+			set_character_flag = tailteann_best_crafsman
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_11 }
+			clr_character_flag = tailteann_score_11
+			set_character_flag = tailteann_best_crafsman
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_10 }
+			clr_character_flag = tailteann_score_10
+			set_character_flag = tailteann_best_crafsman
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_09 }
+			clr_character_flag = tailteann_score_09
+			set_character_flag = tailteann_best_crafsman
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_08 }
+			clr_character_flag = tailteann_score_08
+			set_character_flag = tailteann_best_crafsman
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_07 }
+			clr_character_flag = tailteann_score_07
+			set_character_flag = tailteann_best_crafsman
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_06 }
+			clr_character_flag = tailteann_score_06
+			set_character_flag = tailteann_best_crafsman
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_05 }
+			clr_character_flag = tailteann_score_05
+			set_character_flag = tailteann_best_crafsman
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_04 }
+			clr_character_flag = tailteann_score_04
+			set_character_flag = tailteann_best_crafsman
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_03 }
+			clr_character_flag = tailteann_score_03
+			set_character_flag = tailteann_best_crafsman
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_02 }
+			clr_character_flag = tailteann_score_02
+			set_character_flag = tailteann_best_crafsman
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_01 }
+			clr_character_flag = tailteann_score_01
+			set_character_flag = tailteann_best_crafsman
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tailteann_score_00 }
+			clr_character_flag = tailteann_score_00
+			set_character_flag = tailteann_best_crafsman
+		}
+	}
+}
+
+###########################################
+# Notify winners						  #
+###########################################
+
+character_event = {
+	id = ancrel.1274
+
+	hide_window = yes
+	is_triggered_only = yes
+
+	immediate = {
+		any_realm_character = {
+			if = {
+				limit = { has_character_flag = tailteann_best_athlete }
+				character_event = { id = ancrel.1214 }
+			}
+			else_if = {
+				limit = { has_character_flag = tailteann_best_warrior }
+				character_event = { id = ancrel.1216 }
+			}
+			else_if = {
+				limit = { has_character_flag = tailteann_best_crafsman }
+				character_event = { id = ancrel.1218 }
+			}
+		}
+	}
+}
+
+# Character is the best athlete
+character_event = {
+	id = ancrel.1214
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1214
+	picture = GFX_evt_athlete
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1214
+
+		wealth = 100
+		prestige = 300
+
+		hidden_effect = {
+			if = {
+				limit = { independent = no }
+				top_liege = { character_event = { id = ancrel.1215 } }
+			}
+			else = {
+				character_event = { id = ancrel.1220 } # Tailteann is over
+			}
+		}
+	}
+}
+
+# Inform about best athlete
+character_event = {
+	id = ancrel.1215
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1215
+	picture = GFX_evt_athlete
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1215
+
+		reverse_opinion = {
+			name = opinion_tailteann_athlete
+			who = FROM
+			years = 20
+		}
+
+		character_event = { id = ancrel.1220 } # Tailteann is over
+	}
+}
+
+# Best fighter
+character_event = {
+	id = ancrel.1216
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1216
+	picture = GFX_evt_melee
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1216
+
+		wealth = 75
+		prestige = 250
+
+		hidden_effect = {
+			if = {
+				limit = { independent = no }
+				top_liege = { character_event = { id = ancrel.1217 } }
+			}
+		}
+	}
+}
+
+# Inform about best fighter
+character_event = {
+	id = ancrel.1217
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1217
+	picture = GFX_evt_melee
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1217
+
+		reverse_opinion = {
+			name = opinion_tailteann_fighter
+			who = FROM
+			years = 15
+		}
+	}
+}
+
+# Character wins best crafstman
+character_event = {
+	id = ancrel.1218
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1218
+	picture = GFX_evt_craftsman
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1218
+
+		wealth = 50
+		prestige = 200
+
+		hidden_effect = {
+			if = {
+				limit = { independent = no }
+				top_liege = { character_event = { id = ancrel.1219 } }
+			}
+		}
+	}
+}
+
+# Inform about best crafstman
+character_event = {
+	id = ancrel.1219
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1219
+	picture = GFX_evt_craftsman
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1219
+
+		reverse_opinion = {
+			name = opinion_tailteann_craftsman
+			who = FROM
+			years = 10
+		}
+	}
+}
+
+# Tailteann is over
+character_event = {
+	id = ancrel.1220
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1220
+	picture = GFX_evt_bonfire_celtic
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1220
+
+		pf_tradition_plus2_effect = yes
+		pf_glory_plus2_effect = yes
+
+		if = {
+			limit = { real_tier = EMPEROR }
+
+			custom_tooltip = {
+				text = IMPERIAL_DECADENCE_MINUS_1
+
+				primary_title = {
+					change_variable = {
+						which = imperial_decadence
+						value = -1
+					}
+				}
+
+				character_event = { id = Plus.1852 }
+			}
+		}
+
+		hidden_effect = {
+			remove_do_not_disturb_effect = yes
+			remove_character_modifier = holding_aonach_tailteann
+			clr_character_flag = tailteann_game_phase
+			clr_character_flag = winner_athletic
+			clr_character_flag = winner_fighter
+			clr_character_flag = winner_crafting
+			clr_character_flag = attending_tailteann
+			clr_character_flag = attending_tailteann_event
+			clr_character_flag = tailteann_craftsman
+			clr_character_flag = tailteann_fighting
+			clr_character_flag = tailteann_best_athlete_athletic
+			set_character_flag = tailteann_has_ended
+		}
+
+		custom_tooltip = {
+			text = EVTTOOLTIP70002
+
+			hidden_effect = {
+				any_realm_character = {
+					limit = { has_character_flag = attending_tailteann }
+
+					set_character_flag = tailteann_has_ended
+					clr_character_flag = attending_tailteann
+					clr_character_flag = attending_tailteann_wound
+					clr_character_flag = attending_tailteann_fear
+					clr_character_flag = attending_tailteann_martialed
+					clr_character_flag = attending_tailteann_gay
+					clr_character_flag = attending_tailteann_syph
+					clr_character_flag = attending_tailteann_drunk
+					clr_character_flag = attending_tailteann_duelist
+					clr_character_flag = attending_tailteann_intrigue
+					clr_character_flag = attending_tailteann_stew
+					clr_character_flag = attending_tailteann_dip
+					remove_do_not_disturb_effect = yes
+
+					reverse_opinion = {
+						name = opinion_tailteann_participant
+						who = PREV
+						years = 2
+					}
+
+					if = {
+						limit = {
+							OR = {
+								has_character_flag = tailteann_craftsman
+								has_character_flag = tailteann_fighting
+								has_character_flag = tailteann_best_athlete_athletic
+							}
+						}
+
+						clr_character_flag = tailteann_craftsman
+						clr_character_flag = tailteann_fighting
+						clr_character_flag = tailteann_best_athlete_athletic
+					}
+					else_if = {
+						limit = { NOT = { character = PREV } }
+
+						random_list = {
+							10 = { character_event = { id = ancrel.1224 } }
+							10 = { character_event = { id = ancrel.1225 } }
+							10 = { character_event = { id = ancrel.1226 } }
+							10 = { character_event = { id = ancrel.1227 } }
+							10 = { character_event = { id = ancrel.1228 } }
+							10 = { character_event = { id = ancrel.1229 } }
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+# Message about death
+character_event = {
+	id = ancrel.1221
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1221
+	picture = GFX_evt_funeral_pyre
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOR = {
+			has_character_flag = no_msg_death
+			has_character_flag = tailteann_has_ended
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1221
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_1221
+
+		set_character_flag = no_msg_death
+	}
+}
+
+# Message about maimed
+character_event = {
+	id = ancrel.1222
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1222
+	picture = GFX_evt_viking_throneroom_oldgods
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOR = {
+			has_character_flag = no_msg_maimed
+			has_character_flag = tailteann_has_ended
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1221
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_1221
+
+		set_character_flag = no_msg_maimed
+	}
+}
+
+# Message about wounded
+character_event = {
+	id = ancrel.1223
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1223
+	picture = GFX_evt_viking_throneroom_oldgods
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOR = {
+			has_character_flag = no_msg_wounded
+			has_character_flag = tailteann_has_ended
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1221
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_1221
+
+		set_character_flag = no_msg_wounded
+	}
+}
+
+# End of tailteann event
+character_event = {
+	id = ancrel.1224
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1224
+	picture = GFX_evt_athlete
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1224
+
+		prestige = 50
+	}
+}
+
+# End of tailteann event
+character_event = {
+	id = ancrel.1225
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1225
+	picture = GFX_evt_athlete
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1225
+
+		prestige = 100
+	}
+}
+
+# End of tailteann event
+character_event = {
+	id = ancrel.1226
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1226
+	picture = GFX_evt_athlete
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1226
+
+		prestige = -50
+	}
+}
+
+# End of tailteann event
+character_event = {
+	id = ancrel.1227
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1227
+	picture = GFX_evt_athlete
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1227
+
+		prestige = -100
+	}
+}
+
+# End of tailteann event
+character_event = {
+	id = ancrel.1228
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1228
+	picture = GFX_evt_athlete
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1228
+
+		change_martial = 1
+	}
+}
+
+# End of tailteann event
+character_event = {
+	id = ancrel.1229
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1229
+	picture = GFX_evt_athlete
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1229
+
+		change_martial = -1
+	}
+}
+
+# Character is killed
+character_event = {
+	id = ancrel.1230
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1230
+	picture = GFX_evt_death
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = tailteann_has_ended
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1230
+
+		death = { death_reason = death_battle }
+
+		hidden_effect = {
+			if = {
+				limit = { independent = no }
+				top_liege = { character_event = { id = ancrel.1221 } }
+			}
+		}
+	}
+}
+
+# Character is maimed
+character_event = {
+	id = ancrel.1231
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1231
+	picture = GFX_evt_melee
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = tailteann_has_ended
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1231
+
+		add_maimed_trait_effect = yes
+
+		hidden_effect = {
+			if = {
+				limit = { independent = no }
+				top_liege = { character_event = { id = ancrel.1222 } }
+			}
+		}
+	}
+}
+
+# Character is wounded
+character_event = {
+	id = ancrel.1232
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1232
+	picture = GFX_evt_melee
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = attending_tailteann_wound
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1232
+
+		add_trait = wounded
+
+		hidden_effect = {
+			if = {
+				limit = { independent = no }
+				top_liege = { character_event = { id = ancrel.1223 } }
+			}
+		}
+	}
+}
+
+# Character becomes craven
+character_event = {
+	id = ancrel.1233
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1233
+	picture = GFX_evt_melee
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = attending_tailteann_fear
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1233
+
+		remove_trait_silently_brave_effect = yes
+		add_trait = craven
+	}
+}
+
+# Character becomes brave
+character_event = {
+	id = ancrel.1234
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1234
+	picture = GFX_evt_melee
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = attending_tailteann_fear
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1234
+
+		remove_trait_silently_craven_effect = yes
+		add_trait = brave
+	}
+}
+
+# Character gains Martial Education
+character_event = {
+	id = ancrel.1235
+	title = TAILTEANNTITLE
+	picture = GFX_evt_athlete
+
+	desc = {
+		text = EVTDESC_ancrel_1235
+		trigger = { trait = misguided_warrior }
+	}
+	desc = {
+		text = EVTDESC_ancrel_1236
+		trigger = { trait = tough_soldier }
+	}
+	desc = {
+		text = EVTDESC_ancrel_1237
+		trigger = { trait = skilled_tactician }
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = attending_tailteann_martialed
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1237
+
+		trigger = { trait = skilled_tactician }
+
+		remove_trait = skilled_tactician
+		add_trait = brilliant_strategist
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1236
+
+		trigger = { trait = tough_soldier }
+
+		remove_trait = tough_soldier
+		add_trait = skilled_tactician
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1235
+
+		trigger = { trait = misguided_warrior }
+
+		remove_trait = misguided_warrior
+		add_trait = tough_soldier
+	}
+}
+
+# Character loses Martial Education
+character_event = {
+	id = ancrel.1238
+	title = TAILTEANNTITLE
+	picture = GFX_evt_athlete
+
+	desc = {
+		text = EVTDESC_ancrel_1238
+		trigger = { trait = brilliant_strategist }
+	}
+	desc = {
+		text = EVTDESC_ancrel_1240
+		trigger = { trait = tough_soldier }
+	}
+	desc = {
+		text = EVTDESC_ancrel_1239
+		trigger = { trait = skilled_tactician }
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = attending_tailteann_martialed
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1238
+
+		trigger = { trait = brilliant_strategist }
+
+		remove_trait = brilliant_strategist
+		add_trait = skilled_tactician
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1239
+
+		trigger = { trait = skilled_tactician }
+
+		remove_trait = skilled_tactician
+		add_trait = tough_soldier
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1240
+
+		trigger = { trait = tough_soldier }
+
+		remove_trait = tough_soldier
+		add_trait = misguided_warrior
+	}
+}
+
+# Character becomes homosexual
+character_event = {
+	id = ancrel.1241
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1241
+	picture = GFX_evt_shadowy_cabal
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = attending_tailteann_gay
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1241
+
+		add_trait = homosexual
+		set_character_flag = revealed_homosexual@ROOT
+	}
+}
+
+# Character becomes great_pox
+character_event = {
+	id = ancrel.1242
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1242
+	picture = GFX_evt_lovers
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = attending_tailteann_syph
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1242
+
+		add_trait = great_pox
+	}
+}
+
+# Character becomes drunkard
+character_event = {
+	id = ancrel.1243
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1243
+	picture = GFX_evt_drunk
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = attending_tailteann_drunk
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1243
+
+		add_trait = drunkard
+	}
+}
+
+# Character becomes duelist
+character_event = {
+	id = ancrel.1244
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1244
+	picture = GFX_evt_melee
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = attending_tailteann_duelist
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1244
+
+		add_trait = duelist
+	}
+}
+
+# Character gains intrigue
+character_event = {
+	id = ancrel.1245
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1245
+	picture = GFX_evt_whispers
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = attending_tailteann_intrigue
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1245
+
+		change_intrigue = 1
+	}
+}
+
+# Character loses intrigue
+character_event = {
+	id = ancrel.1246
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1246
+	picture = GFX_evt_whispers
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = attending_tailteann_intrigue
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1246
+
+		change_intrigue = -1
+	}
+}
+
+# Character gains stewardship
+character_event = {
+	id = ancrel.1247
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1247
+	picture = GFX_evt_market
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = attending_tailteann_steward
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1247
+
+		change_stewardship = 1
+	}
+}
+
+# Character loses stewardship
+character_event = {
+	id = ancrel.1248
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1248
+	picture = GFX_evt_market
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = attending_tailteann_stew
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1248
+
+		change_stewardship = -1
+	}
+}
+
+# Character gains diplomacy
+character_event = {
+	id = ancrel.1249
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1249
+	picture = GFX_evt_council
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = attending_tailteann_dip
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1249
+
+		change_diplomacy = 1
+	}
+}
+
+# Character loses diplomacy
+character_event = {
+	id = ancrel.1250
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1250
+	picture = GFX_evt_council
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = attending_tailteann_dip
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1250
+
+		change_diplomacy = -1
+	}
+}
+
+# Game Phase
+character_event = {
+	id = ancrel.1251
+	title = TAILTEANNTITLE
+	desc = EVTDESC_ancrel_1251
+	picture = GFX_evt_athlete
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1251
+
+		character_event = {
+			id = ancrel.1240
+			days = 1
+			random = 5
+		}
+	}
+}
+
+# Looping trigger event
+character_event = {
+	id = ancrel.1240
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		has_character_flag = attending_tailteann
+		NOT = { has_character_flag = tailteann_has_ended }
+
+		top_liege = {
+			has_character_flag = tailteann_game_phase
+			NOT = { has_character_flag = tailteann_has_ended }
+		}
+	}
+
+	immediate = {
+		random_list = {
+			500 = {	} # No event
+
+			1 = { # Character is killed
+				trigger = {
+					NOT = { has_character_flag = attending_tailteann_wound }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 20
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 19
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 18
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 17
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 16
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 15
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 14
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 13
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 12
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 11
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 10
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 9
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 8
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 7
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 6
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 5
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 4
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 3
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 2
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 1
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = craven
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = brave
+				}
+
+				mult_modifier = {
+					factor = 2
+					is_maimed_trigger = yes
+				}
+
+				character_event = { id = ancrel.1230 }
+			}
+
+			2 = { # Character is maimed
+				trigger = {
+					NOT = { has_character_flag = attending_tailteann_wound }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 20
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 19
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 18
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 17
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 16
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 15
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 14
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 13
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 12
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 11
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 10
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 9
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 8
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 7
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 6
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 5
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 4
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 3
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 2
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 1
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = craven
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = brave
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = wounded
+				}
+
+				character_event = { id = ancrel.1231 }
+			}
+
+			3 = { # Character is wounded
+				trigger = {
+					NOT = { has_character_flag = attending_tailteann_wound }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 20
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 19
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 18
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 17
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 16
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 15
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 14
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 13
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 12
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 11
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 10
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 9
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 8
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 7
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 6
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 5
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 4
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 3
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 2
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 1
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = craven
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = brave
+				}
+
+				character_event = { id = ancrel.1232 }
+			}
+
+			10 = { # Character gets more fearful
+				trigger = {
+					NOT = { has_character_flag = attending_tailteann_fear }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 20
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 19
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 18
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 17
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 16
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 15
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 14
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 13
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 12
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 11
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 10
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 9
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 8
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 7
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 6
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 5
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 4
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 3
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 2
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 1
+				}
+
+				character_event = { id = ancrel.1233 }
+			}
+
+			10 = { # Character gets braver
+				trigger = {
+					NOT = { has_character_flag = attending_tailteann_fear }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 20
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 19
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 18
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 17
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 16
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 15
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 14
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 13
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 12
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					martial >= 11
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 10
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 9
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 8
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 7
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 6
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 5
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 4
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 3
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 2
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					martial < 1
+				}
+
+				character_event = { id = ancrel.1234 }
+			}
+
+			10 = { # Character gains a Marttial Education level
+				trigger = {
+					NOT = { has_character_flag = attending_tailteann_martial }
+
+					OR = {
+						trait = misguided_warrior
+						trait = tough_soldier
+						trait = skilled_tactician
+					}
+				}
+
+				character_event = { id = ancrel.1235 }
+			}
+
+			10 = { # Character loses a Martial Education level
+				trigger = {
+					NOT = { has_character_flag = attending_tailteann_martial }
+
+					OR = {
+						trait = tough_soldier
+						trait = skilled_tactician
+						trait = brilliant_strategist
+					}
+				}
+
+				character_event = { id = ancrel.1238 }
+			}
+
+			2 = { # Character becomes homosexual
+				trigger = {
+					NOR = {
+						trait = homosexual
+						trait = eunuch
+						trait = celibate
+						has_character_flag = attending_tailteann_gay
+					}
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					trait = drunkard
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = hedonist
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					trait = lustful
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = temperate
+				}
+
+				mult_modifier = {
+					factor = 0.33
+					trait = chaste
+				}
+
+				mult_modifier = {
+					factor = 0.33
+					trait = zealous
+				}
+
+				character_event = { id = ancrel.1241 }
+			}
+
+			2 = { # Character becomes great_pox
+				trigger = {
+					NOR = {
+						has_character_flag = attending_tailteann_syph
+						trait = eunuch
+						trait = celibate
+						trait = great_pox
+					}
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					trait = drunkard
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = hedonist
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = lustful
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = temperate
+				}
+
+				mult_modifier = {
+					factor = 0.33
+					trait = chaste
+				}
+
+				mult_modifier = {
+					factor = 0.33
+					trait = zealous
+				}
+
+				character_event = { id = ancrel.1242 }
+			}
+
+			3 = { # Character becomes drunkard
+				trigger = {
+					NOR = {
+						trait = drunkard
+						has_character_flag = attending_tailteann_drunk
+					}
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = gluttonous
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					trait = lustful
+				}
+
+				mult_modifier = {
+					factor = 0.33
+					trait = temperate
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = chaste
+				}
+
+				character_event = { id = ancrel.1243 }
+			}
+
+			3 = { # Character becomes duelist
+				trigger = {
+					lifestyle_traits < 1
+					martial >= 5
+					is_weak_trigger = no
+
+					NOR = {
+						has_dlc = "Way of Life"
+						has_character_flag = attending_tailteann_duelist
+						trait = content
+						trait = kind
+						trait = craven
+					}
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = wroth
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = brave
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					is_strong_trigger = yes
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					martial >= 10
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					martial >= 15
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					martial >= 20
+				}
+
+				character_event = { id = ancrel.1244 }
+			}
+
+			10 = { # Character gains intrigue
+				trigger = {
+					NOT = { has_character_flag = attending_tailteann_intrigue }
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = elusive_shadow
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					trait = intricate_webweaver
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					trait = flamboyant_schemer
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = amateurish_plotter
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					has_education_intrigue_trigger = no
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = deceitful
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					trait = honest
+				}
+
+				mult_modifier = {
+					factor = 4
+					martial >= 10
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					martial < 5
+				}
+
+				character_event = { id = ancrel.1245 }
+			}
+
+			10 = { # Character loses intrigue
+				trigger = {
+					NOT = { has_character_flag = attending_tailteann_intrigue }
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = elusive_shadow
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					trait = intricate_webweaver
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					trait = flamboyant_schemer
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = amateurish_plotter
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					has_education_intrigue_trigger = no
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					trait = deceitful
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = honest
+				}
+
+				mult_modifier = {
+					factor = 4
+					martial >= 10
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					martial < 5
+				}
+
+				character_event = { id = ancrel.1246 }
+			}
+
+			10 = { # Character gains stewardship
+				trigger = {
+					is_ruler = yes
+					NOT = { has_character_flag = attending_tailteann_stew }
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = midas_touched
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					trait = fortune_builder
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					trait = thrifty_clerk
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = indulgent_wastrel
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					has_education_stewardship_trigger = no
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					trait = slothful
+				}
+
+				mult_modifier = {
+					factor = 4
+					martial >= 10
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					martial < 5
+				}
+
+				character_event = { id = ancrel.1247 }
+			}
+
+			10 = { # Character loses stewardship
+				trigger = {
+					is_ruler = yes
+					NOT = { has_character_flag = attending_tailteann_stew }
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = midas_touched
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					trait = fortune_builder
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					trait = thrifty_clerk
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = indulgent_wastrel
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					has_education_stewardship_trigger = no
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = slothful
+				}
+
+				mult_modifier = {
+					factor = 4
+					martial >= 10
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					martial < 5
+				}
+
+				character_event = { id = ancrel.1248 }
+			}
+
+			10 = { # Character gains diplomacy
+				trigger = {
+					NOT = { has_character_flag = attending_tailteann_dip }
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = grey_eminence
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					trait = charismatic_negotiator
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					trait = underhanded_rogue
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = naive_appeaser
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					has_education_diplomacy_trigger = no
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = gregarious
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					trait = shy
+				}
+
+				mult_modifier = {
+					factor = 4
+					martial >= 10
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					martial < 5
+				}
+
+				character_event = { id = ancrel.1249 }
+			}
+
+			10 = { # Character loses diplomacy
+				trigger = {
+					NOT = { has_character_flag = attending_tailteann_dip }
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = grey_eminence
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					trait = charismatic_negotiator
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					trait = underhanded_rogue
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = naive_appeaser
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					has_education_diplomacy_trigger = no
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					trait = gregarious
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = shy
+				}
+
+				mult_modifier = {
+					factor = 4
+					martial >= 10
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					martial < 5
+				}
+
+				character_event = { id = ancrel.1250 }
+			}
+		}
+
+		# repeat_event = {
+		#	id = ancrel.1261
+		#	days = 5
+		#	random = 5
+		# }
+	}
+}
+
+### CELTIC FLAVOUR EVENTS
+# Written by Patrick Marchand
+
+# Meeting a Bard
+character_event = {
+	id = ancrel.150
+	desc = EVTDESC_ancrel_0150
+	picture = GFX_evt_thebard
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	ai = no
+	war = no
+	min_age = 16
+
+	trigger = {
+		religion_openly_celtic_or_reformed_trigger = yes
+		is_landed = yes
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = cynical
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = paranoid
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = mystic
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = content
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0150
+
+		piety = 25
+
+		random = {
+			chance = 10
+			change_learning = 1
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_0150
+		tooltip_info = poet
+
+		trigger = { trait = poet }
+
+		custom_tooltip = { text = sing_poetry }
+
+		piety = 25
+		prestige = 25
+
+		random = {
+			chance = 50
+			change_learning = 2
+		}
+	}
+}
+
+# The Afanc
+character_event = {
+	id = ancrel.151
+	desc = EVTDESC_ancrel_0151
+	picture = GFX_evt_lakeside
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	ai = no
+	war = no
+	min_age = 16
+
+	trigger = {
+		religion_openly_celtic_or_reformed_trigger = yes
+		is_inaccessible_trigger = no
+
+		NOT = {
+			has_game_rule = {
+				name = supernatural_events
+				value = off
+			}
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2.5
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = cynical
+		}
+
+		mult_modifier = {
+			factor = 3.3
+			trait = paranoid
+		}
+
+		mult_modifier = {
+			factor = 1.66
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = proud
+		}
+
+		mult_modifier = {
+			factor = 0.45
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = ill
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0151
+
+		piety = 20
+		prestige = 20
+
+		random_list = {
+			20 = { add_trait_partially_brave_effect = yes }
+			20 = { add_trait_wounded_effect = yes }
+			5 = { add_maimed_trait_effect = yes }
+			5 = { death = { death_reason = death_accident } }
+			50 = { prestige = 20 }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_0151
+
+		piety = 20
+		prestige = -25
+		remove_trait_silently_brave_effect = yes
+	}
+}
+
+# The banshee
+character_event = {
+	id = ancrel.1252
+	desc = EVTDESC_ancrel_1252
+	picture = GFX_evt_banshee
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	ai = no
+	war = no
+	min_age = 16
+
+	trigger = {
+		religion_openly_celtic_or_reformed_trigger = yes
+		is_landed = yes
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = cynical
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = paranoid
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			trait = wounded
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			trait = ill
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1252
+
+		trigger = { NOT = { trait = cynical } }
+
+		piety = 75
+
+		random_list = {
+			10 = { add_trait_depressed_effect = yes }
+			10 = { add_trait_stressed_effect = yes }
+			10 = { add_trait_zealous_effect = yes }
+			70 = { }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_1252
+
+		trigger = { NOT = { trait = zealous } }
+
+		prestige = 50
+
+		random = {
+			chance = 20
+			add_trait_cynical_effect = yes
+		}
+	}
+
+	after = {
+		health = -1
+	}
+}
+
+
+# Bran's Voyage
+character_event = {
+	id = ancrel.1253
+	desc = EVTDESC_ancrel_1253
+	picture = GFX_evt_boatcoast
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	ai = no
+	war = no
+	min_age = 16
+
+	trigger = {
+		religion_openly_celtic_or_reformed_trigger = yes
+		is_landed = yes
+		is_inaccessible_trigger = no
+
+		location = {
+			region = world_europe_west_ireland
+			is_coastal = yes
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = cynical
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = paranoid
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = mystic
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = content
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1253
+
+		trigger = { NOT = { trait = cynical } }
+
+		piety = 20
+
+		random = {
+			chance = 10
+			add_trait_zealous_effect = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_1253
+
+		trigger = { NOT = { trait = zealous } }
+
+		prestige = 25
+
+		random = {
+			chance = 10
+			add_trait_cynical_effect = yes
+		}
+	}
+}
+
+#######################################
+#
+# - Journey to St Kilda
+#
+#######################################
+
+# Written by Jacob Hodge
+
+# Character Sick, Rumor of Celts on St Kilda
+
+character_event = {
+	id = ancrel.208
+	desc = EVTDESC_ancrel_0208
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_playable = yes
+	culture_group = celtic
+	has_dlc = "The Old Gods"
+	is_sick = yes
+	min_age = 16
+	prisoner = no
+
+	trigger = {
+		c_innse_gall = {
+			holder_scope = {
+				OR = {
+					character = ROOT
+					is_vassal_or_below_of = ROOT
+				}
+			}
+		}
+
+		NOT = {
+			has_game_rule = {
+				name = supernatural_events
+				value = off
+			}
+		}
+
+		trigger_if = {
+			limit = { ai = yes }
+
+			has_game_rule = {
+				name = supernatural_events
+				value = unrestricted
+			}
+		}
+
+		NOT = { religion_group = pagan_group }
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.5
+			trait = cynical
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 1.43
+			trait = sympathy_pagans
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0208
+
+		character_event = {
+			id = ancrel.209
+			days = 5
+			tooltip = travel_island
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_0208
+
+		custom_tooltip = { text = ignore_rumors }
+	}
+}
+
+# Arrival at St Kilda
+character_event = {
+	id = ancrel.209
+	desc = EVTDESC_ancrel_0209
+	picture = GFX_evt_merchant_ship_at_sea_republic
+
+	is_triggered_only = yes
+
+	prisoner = no
+
+	option = { # Accept the healing/conversion
+		name = EVTOPTA_ancrel_0209
+
+		character_event = {
+			id = ancrel.210
+			days = 2
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_0209
+
+		add_trait_zealous_effect = yes
+	}
+}
+
+# Accept their faith
+character_event = {
+	id = ancrel.210
+	desc = EVTDESC_ancrel_0210
+	picture = GFX_evt_Pagan_dolmen
+
+	prisoner = no
+
+	is_triggered_only = yes
+
+	option = { # Character healed/converted
+		name = EVTOPTA_ancrel_0210
+
+		custom_tooltip = {
+			text = MIRACLE_STKILDA
+
+			cure_illness = yes # TODO: Clear RIP flags too?
+
+			trigger_switch = {
+				on_trigger = religion_group
+
+				christian = { add_trait = sympathy_christendom }
+				muslim = { add_trait = sympathy_islam }
+				zoroastrian_group = { add_trait = sympathy_zoroastrianism }
+				indian_group = {  add_trait = sympathy_indian }
+				jewish_group = { add_trait = sympathy_judaism }
+			}
+
+			religion = celtic_pagan
+
+			add_character_modifier = {
+				name = recently_converted
+				years = 2
+			}
+		}
+	}
+}
+
+########################################
+#
+# - First Celtic Emperor
+#
+#######################################
+
+# Y Mab Darogan
+narrative_event = {
+	id = ancrel.256
+	title = EVTNAME_ancrel_0256
+	desc = EVTDESC_ancrel_0256
+	picture = GFX_evt_y_mab_darogan
+
+	show_root = yes
+	major = yes
+	hide_from = yes
+
+	only_independent = yes
+	religion_group = pagan_group
+	culture_group = celtic
+
+	trigger = {
+		NOT = { has_global_flag = first_brythonic_emperor }
+		is_crowned_trigger = yes
+		religion_openly_celtic_or_reformed_trigger = yes
+
+		OR = {
+			culture = welsh
+			culture = cornish
+			culture = breton
+		}
+
+		OR = {
+			has_landed_title = e_britannia
+
+			AND = {
+				completely_controls_region = custom_england
+				completely_controls_region = custom_wales
+				completely_controls_region = custom_cornwall
+			}
+		}
+	}
+
+	mean_time_to_happen = { # TODO: Fire at end of coronation event chains instead?
+		days = 1
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0256 # OK
+
+		trigger = { character = ROOT }
+
+		give_nickname = nick_pendragon
+		set_global_flag = first_brythonic_emperor
+		prestige = 200
+		piety = 100
+	}
+
+	option = {
+		name = {
+			text = EVTOPTA_ancrel_0256 # Praise!
+			trigger = { religion_openly_celtic_or_reformed_trigger = yes }
+		}
+		name = {
+			text = EVTOPTB200 # No concern of ours
+			trigger = {
+				religion_openly_celtic_or_reformed_trigger = no
+				NOT = { culture_group = west_germanic }
+			}
+		}
+		name = {
+			text = EVTOPTE200 # Terrible News
+			trigger = {
+				religion_openly_celtic_or_reformed_trigger = no
+				culture_group = west_germanic
+			}
+		}
+
+		trigger = { NOT = { character = ROOT } }
+	}
+}
+
+# Spirits are angry
+narrative_event = {
+	id = ancrel.247
+	title = EVTTITLE_ancrel_0247
+	desc = EVTDESC_ancrel_0247
+	picture = GFX_evt_Pagan_dolmen
+
+	is_triggered_only = yes
+
+	ai = no
+	min_age = 20
+	max_age = 100
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		religion_openly_celtic_or_reformed_trigger = yes
+		in_command_trigger = no
+		is_inaccessible_trigger = no
+
+		NOR = {
+			has_character_modifier = angry_sidhe
+			has_character_flag = denied_sidhe
+			has_character_flag = calming_sidhe_failed
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.25
+			trait = cynical
+		}
+
+		mult_modifier = {
+			factor = 0.83
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 0.83
+			trait = charitable
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = cruel
+		}
+
+		mult_modifier = {
+			factor = 0.83
+			trait = kind
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = proud
+		}
+
+		mult_modifier = {
+			factor = 0.83
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = slothful
+		}
+
+		mult_modifier = {
+			factor = 0.83
+			trait = diligent
+		}
+	}
+
+	immediate = {
+		add_character_modifier = {
+			name = angry_sidhe
+			duration = -1
+		}
+	}
+
+	option = { # They must be appeased!
+		name = EVTOPTA_ancrel_0247
+
+		trigger = { NOT = { trait = cynical } }
+
+		character_event = { id = ancrel.248 }
+	}
+
+	option = { # Nonsense!
+		name = EVTOPTB_ancrel_0247
+
+		trigger = { NOT = { trait = zealous } }
+
+		remove_character_modifier = angry_sidhe
+		set_character_flag = denied_sidhe
+	}
+}
+
+# Spirits are calmed
+character_event = {
+	id = ancrel.254
+	desc = EVTDESC_ancrel_0254
+	picture = GFX_evt_Pagan_dolmen
+
+	is_triggered_only = yes
+	notification = yes
+
+	immediate = {
+		remove_character_modifier = angry_sidhe
+		clr_character_flag = calming_sidhe_failed
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0254
+	}
+}
+
+##################################################################
+# Offerings
+##################################################################
+
+# Offerings start
+character_event = {
+	id = ancrel.248
+	desc = EVTDESC_ancrel_0248
+	picture = GFX_evt_Pagan_dolmen
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0248
+
+		scaled_wealth = -0.25
+
+		character_event = {
+			id = ancrel.253
+			days = 5
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_0248
+
+		trigger = { has_assigned_minor_title = title_court_bard }
+
+		character_event = {
+			id = ancrel.249
+			days = 5
+		}
+	}
+
+}
+
+# Offerings middle (Poem)
+character_event = {
+	id = ancrel.249
+	desc = EVTDESC_ancrel_0249
+	picture = GFX_evt_Pagan_dolmen
+
+	is_triggered_only = yes
+
+	immediate = {
+		random_courtier_or_vassal = {
+			limit = { has_minor_title = title_court_bard }
+			save_event_target_as = my_bard
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0249
+
+		random_list = {
+			50 = {
+				mult_modifier = {
+					factor = 1.4
+					event_target:my_bard = { learning < 8 }
+				}
+
+				character_event = {
+					id = ancrel.250 # Bad
+					days = 2
+					tooltip = EVTTOOLTIP_ancrel_0250
+				}
+			}
+
+			50 = {
+				mult_modifier = {
+					factor = 1.4
+
+					event_target:my_bard = {
+						OR = {
+							learning >= 16
+							trait = poet
+						}
+					}
+				}
+
+				character_event = {
+					id = ancrel.252 # Good
+					days = 2
+					tooltip = EVTTOOLTIP_ancrel_0252
+				}
+			}
+		}
+	}
+
+}
+
+# Offerings middle (Gold)
+character_event = {
+	id = ancrel.253
+	desc = EVTDESC_ancrel_0253
+	picture = GFX_evt_Pagan_dolmen
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0253
+
+		hidden_effect = {
+			random_list = {
+				50 = { character_event = { id = ancrel.250 days = 2 } } # Bad
+				50 = { character_event = { id = ancrel.252 days = 2 } } # Good
+			}
+		}
+	}
+
+}
+
+# Offerings bad
+character_event = {
+	id = ancrel.250
+	desc = EVTDESC_ancrel_0250
+	picture = GFX_evt_Pagan_dolmen
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0250
+
+		prestige = -25
+		piety = -15
+		clr_character_flag = sidhe_offerings_giving
+		set_character_flag = calming_sidhe_failed
+
+		add_character_modifier = {
+			name = sidhe_offerings_bad
+			years = 2
+		}
+	}
+
+}
+
+# Offerings good
+character_event = {
+	id = ancrel.252
+	desc = EVTDESC_ancrel_0252
+	picture = GFX_evt_Pagan_dolmen
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0252
+
+		prestige = 25
+		piety = 15
+		character_event = { id = ancrel.254 }
+	}
+
+}
+
+### DRUIDIC CASTE EVENTS
+# Written by Patrick Marchand
+
+# Druidic priest get the druid trait as well
+character_event = {
+	id = ancrel.260
+
+	is_triggered_only = yes # on_yearly_pulse
+	hide_window = yes
+
+	only_rulers = yes
+	religion_group = pagan_group
+
+	trigger = {
+		religion_openly_celtic_or_reformed_trigger = yes
+		is_theocracy = yes
+
+		NOR = {
+			trait = druid
+			trait = bad_druid
+		}
+	}
+
+	immediate = {
+		add_trait = druid
+	}
+}
+
+# Druid can become known as wicked, if he can't hide his sins
+character_event = {
+	id = ancrel.261
+	desc = EVTDESC_ancrel_0261
+	picture = GFX_evt_scandal
+
+	is_triggered_only = yes
+
+	religion_group = pagan_group
+	only_capable = yes
+	prisoner = no
+	has_dlc = "Sons of Abraham"
+
+	trigger = {
+		religion_openly_celtic_or_reformed_trigger = yes
+		trait = druid
+
+		OR = {
+			trait = deceitful
+			trait = cruel
+			trait = arbitrary
+			trait = envious
+			trait = craven
+			trait = slothful
+			trait = paranoid
+		}
+
+		intrigue < 3
+		diplomacy < 5
+		NOT = { trait = bad_druid }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			trait = ambitious
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0261
+
+		remove_trait = druid
+		add_trait = bad_druid
+
+		if = {
+			limit = {
+				is_ruler = yes
+				has_nickname = no
+			}
+
+			give_nickname = nick_the_wicked
+		}
+	}
+}
+
+# Remove druidic traits on conversion
+# Note: using religious = yes is not suitable as it also removes the trait on reformation
+character_event = {
+	id = ancrel.258
+
+	is_triggered_only = yes # on_character_convert_religion
+	hide_window = yes
+
+	trigger = {
+		religion_openly_celtic_or_reformed_trigger = no
+		FROM = { religion_openly_celtic_or_reformed_trigger = yes }
+	}
+
+	immediate = {
+		remove_trait = head1
+		remove_trait = head2
+		remove_trait = head3
+		remove_trait = head4
+		remove_trait = head5
+		remove_trait = druid
+		remove_trait = bad_druid
+		remove_trait = fian
+		remove_trait = changeling
+		remove_trait = learning_druidic_arts
+		remove_trait = wolf_warrior
+	}
+}
+
+##### Coming of age ceremony - child's event
+character_event = {
+	id = ancrel.184
+
+	is_triggered_only = yes # on_adulthood
+	hide_window = yes
+
+	religion_group = pagan_group
+	prisoner = no
+	only_capable = yes
+
+	trigger = {
+		religion_openly_celtic_or_reformed_trigger = yes
+
+		OR = {
+			father_even_if_dead = { is_alive = yes }
+			mother_even_if_dead = { is_alive = yes }
+		}
+	}
+
+	immediate = {
+		any_close_relative = {
+			limit = { is_parent_of = ROOT }
+
+			score_value = {
+				value = 1
+
+				# Higher tier parent gets event, ties broken by matching succession law, followed by player vs AI
+				additive_modifier = {
+					value = 1000
+					real_tier = EMPEROR
+				}
+
+				additive_modifier = {
+					value = 500
+					real_tier = KING
+				}
+
+				additive_modifier = {
+					value = 250
+					real_tier = DUKE
+				}
+
+				additive_modifier = {
+					value = 125
+					real_tier = COUNT
+				}
+
+				additive_modifier = {
+					value = 60
+					real_tier = BARON
+				}
+
+				additive_modifier = {
+					value = 20
+
+					trigger_if = {
+						limit = { ROOT = { is_female = no } }
+
+						OR = {
+							has_law = agnatic_succession
+							has_law = cognatic_succession
+						}
+					}
+					trigger_else = {
+						OR = {
+							has_law = enatic_succession
+							has_law = enatic_cognatic_succession
+						}
+					}
+				}
+
+				additive_modifier = {
+					value = 10
+					ai = no
+				}
+			}
+
+			character_event = {
+				id = ancrel.183
+				days = 3
+			}
+		}
+	}
+}
+
+##### Coming of age ceremony - parent's event
+character_event = {
+	id = ancrel.183
+	title = EVTNAME_ancrel_0183
+	desc = EVTDESC_ancrel_0183
+	picture = GFX_evt_guardian
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0183 # Send him on the path of the warrior
+
+		custom_tooltip = { text = path_of_the_warriors }
+
+		FROM = {
+			show_scope_change = no
+
+			prestige = 20
+			change_martial = 1
+			change_learning = -1
+			set_character_flag = celtic_warrior_training
+
+			# Fire tombola event in the future
+			character_event = {
+				id = ancrel.187
+				years = 2
+				random = 200
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_0183 # Send him to the druids
+
+		trigger = {
+			OR = {
+				trait = zealous
+				trait = diligent
+				trait = patient
+				trait = ambitious
+				trait = scholar
+				trait = poet
+				trait = mystic
+				trait = druid
+				trait = content
+			}
+
+			FROM = {
+				trigger_if = {
+					limit = { is_ruler = yes }
+					is_theocracy = yes
+				}
+			}
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			piety = 50
+			change_learning = 1
+			change_martial = -1
+
+			narrative_event = {
+				id = ancrel.185
+				days = 3
+				tooltip = path_of_the_druids
+			}
+
+			# Fire tombola event in the future
+			character_event = {
+				id = ancrel.186
+				years = 2
+				random = 200
+			}
+		}
+	}
+}
+
+# Training about to begin
+narrative_event = {
+	id = ancrel.185
+	title = EVTNAME_ancrel_0185
+	desc = EVTDESC_ancrel_0185
+	picture = GFX_evt_monk
+
+	is_triggered_only = yes
+
+	option = { # Training starts
+		name = EVTOPTA_ancrel_0185
+
+		add_trait = learning_druidic_arts
+		set_character_flag = druidic_training
+		clr_character_flag = wants_druidic_training
+
+		opinion = {
+			name = sent_druidic_training
+			who = FROM
+			years = 100
+		}
+	}
+}
+
+# Druidic training tombola event
+character_event = {
+	id = ancrel.186
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		random_list = {
+			15 = { # Scarred but learned
+				trigger = { has_scarred_trait_trigger = no }
+
+				mult_modifier = {
+					factor = 1.5
+					trait = brave
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = craven
+				}
+
+				character_event = { id = ancrel.188 }
+			}
+
+			7 = { # Maimed
+				trigger = { can_be_maimed_trigger = yes }
+				character_event = { id = ancrel.190 }
+			}
+
+			15 = { # Learning education upgrade
+				trigger = {
+					has_education_learning_trigger = yes
+					NOT = { trait = mastermind_theologian }
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = genius
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 1.5
+
+					OR = {
+						trait = quick
+						trait = shrewd
+					}
+				}
+
+				mult_modifier = {
+					factor = 0.66
+					is_dumb_trigger = yes
+				}
+
+				character_event = { id = ancrel.192 }
+			}
+
+			7 = { # Lunatic
+				trigger = {
+					NOT = { trait = lunatic }
+				}
+
+				character_event = { id = ancrel.194 }
+			}
+
+			15 = { # Changeling child # TODO: Supernatural gamerule check?
+				mult_modifier = {
+					factor = 1.33
+					trait = lustful
+				}
+
+				character_event = { id = ancrel.196 }
+			}
+
+			15 = { # Zealot
+				trigger = {
+					NOT = { trait = zealous }
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = cynical
+				}
+
+				character_event = { id = ancrel.198 }
+			}
+
+			15 = { # Patience
+				trigger = {
+					NOT = { trait = patient }
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = brave
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 1.33
+
+					OR = {
+						trait = quick
+						trait = shrewd
+					}
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = genius
+				}
+
+				mult_modifier = {
+					factor = 0.66
+					trait = slothful
+				}
+
+				mult_modifier = {
+					factor = 0.66
+					is_dumb_trigger = yes
+				}
+
+				character_event = { id = ancrel.200 }
+			}
+
+			3 = { # Death
+				mult_modifier = {
+					factor = 1.33
+					trait = brave
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = wroth
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = head3
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = head5
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = craven
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = drunkard
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = consumption
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = slow_fever
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = camp_fever
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = bubonic_plague
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = measles
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = smallpox
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = wounded
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = infirm
+				}
+
+				mult_modifier = {
+					factor = 2
+					is_incapable = yes
+				}
+
+				character_event = { id = ancrel.202 }
+			}
+
+			15 = { # Gifts
+				mult_modifier = {
+					factor = 1.33
+					trait = greedy
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					stewardship >= 10
+				}
+
+				character_event = { id = ancrel.204 }
+			}
+		}
+	}
+}
+
+##################################################################
+#
+# Druidic training - fired via coming of age event
+#
+# There can be a variety of results
+#
+##################################################################
+
+# Child returns scarred but learned (Child)
+character_event = {
+	id = ancrel.188
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		add_trait = scarred
+		remove_trait = learning_druidic_arts
+
+		random_list = {
+			10 = { add_trait = scholar }
+			10 = { add_trait = mystic }
+			40 = { add_trait = poet }
+			40 = { add_trait = druid }
+		}
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = sent_druidic_training
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.189 }
+		}
+	}
+}
+
+# Child returns scarred but learned in the ways of the druids
+character_event = {
+	id = ancrel.189
+	desc = EVTDESC_ancrel_0189
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0189
+
+		FROM = {
+			show_scope_change = no
+
+			tooltip = { add_trait = scarred }
+			custom_tooltip = { text = return_from_druidic_training }
+		}
+	}
+}
+
+# Child returns maimed (Child)
+character_event = {
+	id = ancrel.190
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		add_maimed_trait_effect = yes
+		remove_trait = learning_druidic_arts
+
+		random_list = {
+			10 = { add_trait = scholar }
+			10 = { add_trait = mystic }
+			40 = { add_trait = poet }
+			40 = { add_trait = druid }
+		}
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = sent_druidic_training
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.191 }
+		}
+	}
+}
+
+# Child returns maimed
+character_event = {
+	id = ancrel.191
+	desc = EVTDESC_ancrel_0191
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0191
+
+		FROM = {
+			show_scope_change = no
+
+			tooltip = { add_maimed_trait_effect = yes }
+			custom_tooltip = { text = return_from_druidic_training }
+		}
+	}
+}
+
+# Child returns as excellent theologian (Child)
+character_event = {
+	id = ancrel.192
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		if = {
+			limit = { trait = scholarly_theologian }
+			add_trait = mastermind_theologian
+		}
+		else = {
+			remove_trait = detached_priest
+			remove_trait = dutiful_cleric
+			add_trait = scholarly_theologian
+		}
+
+		remove_trait = learning_druidic_arts
+
+		random_list = {
+			10 = { add_trait = scholar }
+			10 = { add_trait = mystic }
+			40 = { add_trait = poet }
+			40 = { add_trait = druid }
+		}
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = sent_druidic_training
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.193 }
+		}
+	}
+}
+
+# Child returns as excellent theologian
+character_event = {
+	id = ancrel.193
+	desc = EVTDESC_ancrel_0193
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0193
+
+		FROM = {
+			show_scope_change = no
+
+			custom_tooltip = { text = return_from_druidic_training }
+		}
+	}
+}
+
+# Child is touched by the gods (Child)
+character_event = {
+	id = ancrel.194
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		add_trait = lunatic
+		remove_trait = learning_druidic_arts
+
+		random_list = {
+			10 = { add_trait = scholar }
+			10 = { add_trait = mystic }
+			40 = { add_trait = poet }
+			40 = { add_trait = druid }
+		}
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = sent_druidic_training
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.195 }
+		}
+	}
+}
+
+# Child is touched by the gods
+character_event = {
+	id = ancrel.195
+	desc = EVTDESC_ancrel_0195
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0195
+
+		FROM = {
+			show_scope_change = no
+
+			tooltip = { add_trait = lunatic }
+			custom_tooltip = { text = return_from_druidic_training }
+		}
+	}
+}
+
+# Child returns home with strange child (Child)
+character_event = {
+	id = ancrel.196
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		create_character = {
+			random_traits = yes
+			age = 1
+			culture = ROOT
+			religion = ROOT
+		}
+
+		new_character = {
+			add_trait = bastard
+			set_character_flag = changeling_child
+			save_event_target_as = changeling_child
+
+			if = {
+				limit = { ROOT = { is_female = no } }
+				set_father = ROOT
+			}
+			else = {
+				set_mother = ROOT
+			}
+		}
+
+		remove_trait = learning_druidic_arts
+
+		random_list = {
+			10 = { add_trait = scholar }
+			10 = { add_trait = mystic }
+			40 = { add_trait = poet }
+			40 = { add_trait = druid }
+		}
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = sent_druidic_training
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.197 }
+		}
+	}
+}
+
+# Child returns home with strange child
+character_event = {
+	id = ancrel.197
+	desc = EVTDESC_ancrel_0197
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0197
+
+		FROM = {
+			show_scope_change = no
+
+			custom_tooltip = { text = return_from_druidic_training }
+		}
+
+		event_target:changeling_child = {
+			show_scope_change = no
+
+			reverse_opinion = {
+				name = opinion_grandchild
+				who = ROOT
+			}
+
+			opinion = {
+				name = opinion_grandfather
+				who = ROOT
+			}
+		}
+	}
+}
+
+# Child returns home as a zealot (Child)
+character_event = {
+	id = ancrel.198
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		add_trait = zealous
+		remove_trait = learning_druidic_arts
+
+		random_list = {
+			10 = { add_trait = scholar }
+			10 = { add_trait = mystic }
+			40 = { add_trait = poet }
+			40 = { add_trait = druid }
+		}
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = sent_druidic_training
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.199 }
+		}
+	}
+}
+
+# Child returns home as a zealot
+character_event = {
+	id = ancrel.199
+	desc = EVTDESC_ancrel_0199
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0199
+
+		FROM = {
+			show_scope_change = no
+
+			tooltip = { add_trait = zealous }
+			custom_tooltip = { text = return_from_druidic_training }
+		}
+	}
+}
+
+# Child returns home with the patience of an oak tree (Child)
+character_event = {
+	id = ancrel.200
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		add_trait = patient
+		remove_trait = learning_druidic_arts
+
+		random_list = {
+			10 = { add_trait = scholar }
+			10 = { add_trait = mystic }
+			40 = { add_trait = poet }
+			40 = { add_trait = druid }
+		}
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = sent_druidic_training
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.201 }
+		}
+	}
+}
+
+# Child returns home with the patience of an oak tree
+character_event = {
+	id = ancrel.201
+	desc = EVTDESC_ancrel_0201
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0201
+
+		FROM = {
+			show_scope_change = no
+
+			tooltip = { add_trait = patient }
+			custom_tooltip = { text = return_from_druidic_training }
+		}
+	}
+}
+
+# Child dies in training (Child)
+character_event = {
+	id = ancrel.202
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = sent_druidic_training
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.203 }
+		}
+
+		death = { death_reason = death_battle }
+	}
+}
+
+# Child dies in training
+character_event = {
+	id = ancrel.203
+	desc = EVTDESC_ancrel_0203
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0203
+
+		FROM = {
+			show_scope_change = no
+
+			tooltip = {
+				death = { death_reason = death_battle }
+			}
+		}
+	}
+}
+
+# Child returns with gifts (Child)
+character_event = {
+	id = ancrel.204
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		wealth = 100
+		remove_trait = learning_druidic_arts
+
+		random_list = {
+			10 = { add_trait = scholar }
+			10 = { add_trait = mystic }
+			40 = { add_trait = poet }
+			40 = { add_trait = druid }
+		}
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = sent_druidic_training
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.205 }
+		}
+	}
+}
+
+# Child returns with gifts
+character_event = {
+	id = ancrel.205
+	desc = EVTDESC_ancrel_0205
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0205
+
+		FROM = {
+			show_scope_change = no
+
+			custom_tooltip = { text = return_from_druidic_training }
+
+			transfer_scaled_wealth = {
+				to = ROOT
+				value = 1
+				min = 100
+				max = 100
+			}
+		}
+	}
+}
+
+# Parent dies while child is off learning druidic arts
+# called on_death (so succession has not yet resolved, so ping to child needs to be delayed )
+character_event = {
+	id = ancrel.206
+
+	hide_window = yes
+	is_triggered_only = yes # on_death
+
+	trigger = {
+		any_child = {
+			trait = learning_druidic_arts
+
+			has_opinion_modifier = {
+				name = sent_druidic_training
+				who = ROOT
+			}
+		}
+	}
+
+	immediate = {
+		any_child = {
+			limit = {
+				trait = learning_druidic_arts
+
+				has_opinion_modifier = {
+					name = sent_druidic_training
+					who = ROOT
+				}
+			}
+
+			character_event = {
+				id = ancrel.207
+				days = 1
+			}
+		}
+	}
+}
+
+# Parent dies, Child gets training traits
+character_event = {
+	id = ancrel.207
+	desc = EVTDESC_ancrel_0207
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = OK
+
+		clr_character_flag = wants_druidic_training
+		clr_character_flag = druidic_training
+		remove_trait = learning_druidic_arts
+
+		random_list = {
+			20 = { add_trait = scholar }
+			20 = { add_trait = mystic }
+			20 = { add_trait = poet }
+			40 = { change_learning = 1 }
+		}
+
+		if = {
+			limit = { is_ruler = yes }
+
+			prestige = 100
+			piety = 100
+			wealth = 50
+		}
+	}
+}
+
+### Warrior Training - The Wandering Orders
+
+# Warrior training tombola event
+character_event = {
+	id = ancrel.187
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		random_list = {
+			12 = { # Wants to join
+				mult_modifier = {
+					factor = 2
+					trait = ambitious
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = zealous
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = brave
+				}
+
+				mult_modifier = {
+					factor = 1.33
+
+					OR = {
+						trait = head1
+						trait = head2
+						trait = head3
+						trait = head4
+						trait = head5
+					}
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = proud
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = impaler
+				}
+
+				mult_modifier = {
+					factor = 0.66
+					trait = slothful
+				}
+
+				mult_modifier = {
+					factor = 0.66
+					trait = content
+				}
+
+				mult_modifier = {
+					factor = 0.66
+					is_primary_heir = yes
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = craven
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					has_education_martial_trigger = no
+					has_warrior_trait_trigger = no
+					NOT = { trait = duelist }
+				}
+
+				trigger = {
+					religion_openly_celtic_or_reformed_trigger = yes
+					is_ruler = no
+					in_command_trigger = no
+					is_inaccessible_trigger = no
+					prisoner = no
+
+					NOR = {
+						trait = wolf_warrior
+						trait = fian
+						has_character_flag = wants_gwydion
+						has_character_flag = wants_tirnanog
+					}
+
+					trigger_if = {
+						limit = {
+							OR = {
+								culture = welsh
+								culture = cornish
+								culture = breton
+							}
+						}
+
+						has_global_flag = gwydion_founded
+					}
+					trigger_else = {
+						OR = {
+							culture = irish
+							culture = scottish
+							culture = pictish
+							culture = gallawa
+						}
+
+						has_global_flag = tirnanog_founded
+					}
+
+					any_close_relative = {
+						is_parent_of = ROOT
+						is_liege_of = ROOT
+						at_location = ROOT
+						culture_group = celtic
+						is_alive = yes
+						is_ruler = yes
+						prisoner = no
+						is_incapable = no
+					}
+				}
+
+				character_event = { id = ancrel.119 }
+			}
+
+			12 = { # Scarred and seasoned
+				trigger = { has_scarred_trait_trigger = no }
+
+				mult_modifier = {
+					factor = 1.33
+					trait = brave
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = craven
+				}
+
+				character_event = { id = ancrel.124 }
+			}
+
+			6 = { # Maimed
+				trigger = { can_be_maimed_trigger = yes }
+				character_event = { id = ancrel.128 }
+			}
+
+			12 = { # Martial
+				trigger = {
+					has_education_martial_trigger = yes
+					NOT = { trait = brilliant_strategist }
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = genius
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = diligent
+				}
+
+				mult_modifier = {
+					factor = 1.33
+
+					OR = {
+						trait = quick
+						trait = shrewd
+					}
+				}
+
+				mult_modifier = {
+					factor = 0.66
+					is_dumb_trigger = yes
+				}
+
+				character_event = { id = ancrel.130 }
+			}
+
+			6 = { # PTSD
+				trigger = {
+					NOT = { trait = depressed }
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = kind
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = poet
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = just
+				}
+
+				character_event = { id = ancrel.132 }
+			}
+
+			12 = { # Wife
+				trigger = { is_married = no }
+
+				mult_modifier = {
+					factor = 1.33
+					trait = lustful
+				}
+
+				character_event = { id = ancrel.134 }
+			}
+
+			12 = { # Zealot
+				trigger = {
+					NOT = { trait = zealous }
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					trait = cynical
+				}
+
+				character_event = { id = ancrel.136 }
+			}
+
+			12 = { # Seasoned
+				mult_modifier = {
+					factor = 1.33
+					trait = brave
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					is_strong_trigger = yes
+				}
+
+				mult_modifier = {
+					factor = 1.33
+
+					OR = {
+						trait = quick
+						trait = shrewd
+					}
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = genius
+				}
+
+				mult_modifier = {
+					factor = 0.66
+					trait = slothful
+				}
+
+				mult_modifier = {
+					factor = 0.66
+					is_dumb_trigger = yes
+				}
+
+				character_event = { id = ancrel.138 }
+			}
+
+			3 = { # Death
+				mult_modifier = {
+					factor = 1.33
+					trait = brave
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = wroth
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = head1
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = head2
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = head3
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = head4
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = head5
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = craven
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = drunkard
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = consumption
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = slow_fever
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = camp_fever
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = bubonic_plague
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = measles
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = smallpox
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = wounded
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = infirm
+				}
+
+				mult_modifier = {
+					factor = 2
+					is_incapable = yes
+				}
+
+				character_event = { id = ancrel.140 }
+			}
+
+			12 = { # Loot
+				mult_modifier = {
+					factor = 1.33
+					trait = greedy
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					stewardship >= 10
+				}
+
+				character_event = { id = ancrel.142 }
+			}
+		}
+	}
+}
+
+# Son wants to train with a wandering order (Son)
+character_event = {
+	id = ancrel.119
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		if = {
+			limit = {
+				has_global_flag = gwydion_founded
+				OR = {
+					culture = welsh
+					culture = cornish
+					culture = breton
+				}
+			}
+			set_character_flag = wants_gwydion
+		}
+		else_if = {
+			limit = {
+				has_global_flag = tirnanog_founded
+				OR = {
+					culture = irish
+					culture = scottish
+					culture = pictish
+					culture = gallawa
+				}
+			}
+			set_character_flag = wants_tirnanog
+		}
+
+		if = {
+			limit = {
+				father = {
+					is_alive = yes
+					any_child = {
+						character = ROOT
+						mother = {
+							OR = {
+								is_alive = no
+								NOT = { higher_tier_than = PREVPREV }
+							}
+						}
+					}
+				}
+			}
+			father = { character_event = { id = ancrel.120 } }
+		}
+		if = {
+			limit = {
+				mother = {
+					is_alive = yes
+					any_child = {
+						character = ROOT
+						father = {
+							OR = {
+								is_alive = no
+								lower_tier_than = PREVPREV
+							}
+						}
+					}
+				}
+			}
+			mother = { character_event = { id = ancrel.120 } }
+		}
+	}
+}
+
+# Son wants to join a wandering order (Parent)
+character_event = {
+	id = ancrel.120
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	desc = {
+		text = EVTDESC_ancrel_0120
+		trigger = { FROM = { has_character_flag = wants_gwydion } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_1160
+		trigger = { FROM = { has_character_flag = wants_tirnanog } }
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		FROM = {
+			if = {
+				limit = { has_character_flag = wants_gwydion }
+
+				d_gwydion = {
+					holder_scope = {
+						save_event_target_as = holy_order_leader
+					}
+				}
+			}
+			else = {
+				d_keepers_tirnanog = {
+					holder_scope = {
+						save_event_target_as = holy_order_leader
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0120
+
+		reverse_opinion = {
+			name = opinion_very_disappointed
+			years = 1
+			who = FROM
+		}
+
+		prestige = -100
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_0120
+
+		prestige = 100
+
+
+		FROM = {
+			show_scope_change = no
+
+			opinion = {
+				name = allowed_to_serve_holy_order
+				who = ROOT
+				years = 100
+			}
+
+			character_event = {
+				id = ancrel.121
+				years = 4
+			}
+
+			move_character = event_target:holy_order_leader
+		}
+	}
+}
+
+# Son has served a few years
+character_event = {
+	id = ancrel.121
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		trigger_switch = {
+			on_trigger = has_character_flag
+
+			wants_gwydion = {
+				clr_character_flag = wants_gwydion
+				set_character_flag = serving_celtic_order
+				add_trait = wolf_warrior
+			}
+
+			wants_tirnanog = {
+				clr_character_flag = wants_tirnanog
+				set_character_flag = serving_celtic_order
+				add_trait = fian
+			}
+		}
+	}
+}
+
+# Son returns scarred but seasoned (Son)
+character_event = {
+	id = ancrel.124
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		clr_character_flag = serving_celtic_order
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = allowed_to_serve_holy_order
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.125 }
+		}
+	}
+}
+
+# Son returns scarred but seasoned
+character_event = {
+	id = ancrel.125
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	desc = {
+		text = EVTDESC_ancrel_0125
+		trigger = { FROM = { trait = wolf_warrior } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_1165
+		trigger = { FROM = { trait = fian } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0125
+
+		FROM = {
+			show_scope_change = no
+
+			move_character = ROOT
+			add_scarred_tiered_effect = yes
+			change_martial = 4
+		}
+	}
+}
+
+# Son returns maimed (Son)
+character_event = {
+	id = ancrel.128
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		add_maimed_trait_effect = yes
+		clr_character_flag = serving_celtic_order
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = allowed_to_serve_holy_order
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.129 }
+		}
+	}
+}
+
+# Son returns maimed
+character_event = {
+	id = ancrel.129
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	desc = {
+		text = EVTDESC_ancrel_0129
+		trigger = { FROM = { trait = wolf_warrior } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_1169
+		trigger = { FROM = { trait = fian } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0129
+
+		trigger = {
+			FROM = { employer = { has_landed_title = d_gwydion } }
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			move_character = ROOT
+
+			tooltip = {
+				add_maimed_trait_effect = yes
+				add_trait = wolf_warrior
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1169
+
+		trigger = {
+			FROM = { employer = { has_landed_title = d_keepers_tirnanog } }
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			move_character = ROOT
+
+			tooltip = {
+				add_maimed_trait_effect = yes
+				add_trait = fian
+			}
+		}
+	}
+}
+
+# Son returns as excellent strategist (Son)
+character_event = {
+	id = ancrel.130
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		clr_character_flag = serving_celtic_order
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = allowed_to_serve_holy_order
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.131 }
+		}
+	}
+}
+
+# Son returns as excellent strategist
+character_event = {
+	id = ancrel.131
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	desc = {
+		text = EVTDESC_ancrel_0131
+		trigger = { FROM = { trait = wolf_warrior } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_1171
+		trigger = { FROM = { trait = fian } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0131
+
+		FROM = {
+			show_scope_change = no
+
+			if = {
+				limit = { trait = skilled_tactician }
+
+				hidden_effect = { remove_trait = skilled_tactician }
+				add_trait = brilliant_strategist
+			}
+			else = {
+				hidden_effect = {
+					remove_trait = misguided_warrior
+					remove_trait = tough_soldier
+				}
+				add_trait = skilled_tactician
+			}
+
+			change_martial = 2
+			move_character = ROOT
+		}
+	}
+}
+
+# Son returns with PTSD (Son)
+character_event = {
+	id = ancrel.132
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		clr_character_flag = serving_celtic_order
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = allowed_to_serve_holy_order
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.133 }
+		}
+	}
+}
+
+# Son returns with PTSD
+character_event = {
+	id = ancrel.133
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	desc = {
+		text = EVTDESC_ancrel_0133
+		trigger = { FROM = { trait = wolf_warrior } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_1173
+		trigger = { FROM = { trait = fian } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0133
+
+		FROM = {
+			show_scope_change = no
+
+			move_character = ROOT
+			add_trait = depressed
+		}
+	}
+}
+
+# Son returns home with wife (Son)
+character_event = {
+	id = ancrel.134
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		clr_character_flag = serving_celtic_order
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = allowed_to_serve_holy_order
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.135 }
+		}
+	}
+}
+
+# Son returns home with wife
+character_event = {
+	id = ancrel.135
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	desc = {
+		text = EVTDESC_ancrel_0135
+		trigger = { FROM = { trait = wolf_warrior } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_1175
+		trigger = { FROM = { trait = fian } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0135
+
+		create_character = {
+			random_traits = yes
+			dynasty = none
+			female = yes
+			age = 26
+			religion = FROM
+			culture = FROM
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			add_spouse = new_character
+			move_character = ROOT
+		}
+	}
+}
+
+# Son returns home as a zealot (Son)
+character_event = {
+	id = ancrel.136
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		clr_character_flag = serving_celtic_order
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = allowed_to_serve_holy_order
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.137 }
+		}
+	}
+}
+
+# Son returns home as a zealot
+character_event = {
+	id = ancrel.137
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	desc = {
+		text = EVTDESC_ancrel_0137
+		trigger = { FROM = { trait = wolf_warrior } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_1177
+		trigger = { FROM = { trait = fian } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0137
+
+		FROM = {
+			show_scope_change = no
+
+			move_character = ROOT
+			add_trait = zealous
+		}
+	}
+}
+
+# Son returns home as a seasoned warrior (Son)
+character_event = {
+	id = ancrel.138
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		clr_character_flag = serving_celtic_order
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = allowed_to_serve_holy_order
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.139 }
+		}
+	}
+}
+
+# Son returns home as a seasoned warrior
+character_event = {
+	id = ancrel.139
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	desc = {
+		text = EVTDESC_ancrel_0139
+		trigger = { FROM = { trait = wolf_warrior } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_1179
+		trigger = { FROM = { trait = fian } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0139
+
+		FROM = {
+			show_scope_change = no
+
+			move_character = ROOT
+			add_trait = brave
+			change_martial = 2
+		}
+	}
+}
+
+# Son dies in battle (Son)
+character_event = {
+	id = ancrel.140
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		clr_character_flag = serving_celtic_order
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = allowed_to_serve_holy_order
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.141 }
+		}
+	}
+}
+
+# Son dies in battle
+character_event = {
+	id = ancrel.141
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	desc = {
+		text = EVTDESC_ancrel_0141
+		trigger = { FROM = { trait = wolf_warrior } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_1181
+		trigger = { FROM = { trait = fian } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0141
+
+		FROM = {
+			show_scope_change = no
+
+			death = { death_reason = death_battle }
+		}
+	}
+}
+
+# Son returns with loot (Son)
+character_event = {
+	id = ancrel.142
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		clr_character_flag = serving_celtic_order
+
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = allowed_to_serve_holy_order
+					who = ROOT
+				}
+			}
+
+			character_event = { id = ancrel.143 }
+		}
+	}
+}
+
+# Son returns with loot
+character_event = {
+	id = ancrel.143
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	desc = {
+		text = EVTDESC_ancrel_0143
+		trigger = { FROM = { trait = wolf_warrior } }
+	}
+	desc = {
+		text = EVTDESC_ancrel_1183
+		trigger = { FROM = { trait = fian } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0143
+
+		FROM = {
+			show_scope_change = no
+
+			move_character = ROOT
+		}
+
+		wealth = 300
+	}
+}
+
+# Cleanup for Fian/Son of Gwydion who inherits a title
+character_event = {
+	id = ancrel.144
+	desc = EVTDESC_ancrel_0144
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes # on_new_holder(_inheritance/usurpation)
+
+	trigger = {
+		OR = {
+			has_character_flag = wants_gwydion
+			has_character_flag = wants_tirnanog
+			has_character_flag = serving_celtic_order
+		}
+	}
+
+	immediate = {
+		clr_character_flag = serving_celtic_order
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0144
+
+		if = {
+			limit = {
+				OR = {
+					has_character_flag = wants_tirnanog
+					trait = fian
+				}
+			}
+
+			clr_character_flag = wants_tirnanog
+			add_trait = fian
+		}
+		else_if = {
+			limit = {
+				OR = {
+					has_character_flag = wants_gwydion
+					trait = wolf_warrior
+				}
+			}
+
+			clr_character_flag = wants_gwydion
+			add_trait = wolf_warrior
+		}
+
+		prestige = 200
+		wealth = 200
+	}
+}
+
+
+### SONS OF GWYDION
+# Written by Patrick Marchand
+
+# The Sons of Gwydion Founded (Celtic King)
+narrative_event = {
+	id = ancrel.110
+	title = EVTNAME_ancrel_0110
+	picture = GFX_evt_celtic_warriors
+	border = GFX_event_narrative_frame_war
+
+	desc = {
+		text = EVTDESC_ancrel_0110
+		trigger = { character = ROOT }
+	}
+	desc = {
+		text = EVTDESC_ancrel_0111
+		trigger = {
+			NOT = { character = ROOT }
+		}
+	}
+
+	is_triggered_only = yes
+	major = yes
+	show_root = yes
+	hide_from = yes
+
+	major_trigger = {
+		ai = no
+		religion_openly_celtic_or_reformed_trigger = yes
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0110
+
+		trigger = { character = ROOT }
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0111
+
+		trigger = { NOT = { character = ROOT } }
+
+		custom_tooltip = { text = gwydion_organized }
+	}
+}
+
+# Sons of Gwydion Chief gets Wolf trait or Fianna Chief gets Fian trait
+character_event = {
+	id = ancrel.115
+
+	is_triggered_only = yes # on_new_holder
+	hide_window = yes
+
+	religion_group = pagan_group
+
+	trigger = {
+		trigger_if = {
+			limit = { has_landed_title = d_gwydion }
+			NOT = { trait = wolf_warrior }
+		}
+		trigger_else = {
+			has_landed_title = d_keepers_tirnanog
+			NOT = { trait = fian }
+		}
+	}
+
+	immediate = {
+		trigger_switch = {
+			on_trigger =  has_landed_title
+
+			d_gwydion = { add_trait = wolf_warrior }
+			d_keepers_tirnanog = { add_trait = fian }
+		}
+	}
+}
+
+# Wolf visiting
+character_event = {
+	id = ancrel.154
+	desc = EVTDESC_ancrel_0154
+	picture = GFX_evt_emissary
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	only_playable = yes
+	religion_group = pagan_group
+	has_global_flag = gwydion_founded
+	prisoner = no
+	war = no
+
+	trigger = {
+		religion_openly_celtic_or_reformed_trigger = yes
+		in_command_trigger = no
+		is_inaccessible_trigger = no
+		job_chancellor = { always = yes }
+
+		OR = {
+			culture = welsh
+			culture = cornish
+			culture = breton
+		}
+
+		NOR = {
+			has_character_flag = wolf_band_visiting
+			has_character_flag = hates_gwydion
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.5
+			trait = gregarious
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			prestige >= 100
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			real_tier = COUNT
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			real_tier = KING
+		}
+
+		mult_modifier = {
+			factor = 0.2
+			real_tier = EMPEROR
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			trait = depressed
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = lunatic
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = possessed
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			trait = ill
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			trait = pneumonic
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			trait = great_pox
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = leper
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			trait = wounded
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			is_maimed_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = infirm
+		}
+
+		mult_modifier = {
+			factor = 0.4
+			trait = incapable
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = drunkard
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = consumption
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = slow_fever
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = camp_fever
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = bubonic_plague
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = measles
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = smallpox
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0154 # Welcome them with a lavish feast
+
+		set_character_flag = wolf_band_visiting
+		prestige = 10
+		add_trait_partially_silently_gregarious_effect = yes
+
+		if = {
+			limit = { trait = greedy }
+
+			scaled_wealth = -0.4
+			remove_trait = greedy
+		}
+		else = {
+			scaled_wealth = -0.2
+		}
+
+		ai_chance = {
+			factor = 10
+
+			trigger = {
+				NOR = {
+					trait = greedy
+					trait = shy
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = gregarious
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = charitable
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_0154 # Welcome them reluctantly
+
+		prestige = 1
+		scaled_wealth = -0.05
+		set_character_flag = wolf_band_visiting
+
+		ai_chance = {
+			factor = 10
+
+			trigger = {
+				NOR = {
+					trait = gregarious
+					trait = proud
+					trait = ambitious
+					trait = charitable
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_ancrel_0154 # Refuse them Access
+
+		prestige = -5
+
+		any_courtier = {
+			show_scope_change = no
+
+			opinion = {
+				name = tight_ruler
+				who = ROOT
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+
+			trigger = { trait = greedy }
+		}
+	}
+
+	after = {
+		if = {
+			limit = { has_character_flag = wolf_band_visiting }
+
+			character_event = {
+				id = ancrel.161 # Tombola 1st time
+				days = 10
+				random = 10
+			}
+
+			character_event = {
+				id = ancrel.161 # Tombola 2nd time
+				days = 21
+				random = 10
+			}
+
+			character_event = {
+				id = ancrel.159 # Wolf band leaving
+				days = 35
+				random = 10
+			}
+		}
+	}
+}
+
+# Wolf band tombola
+character_event = {
+	id = ancrel.161
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_playable = yes
+	has_character_flag = wolf_band_visiting
+	prisoner = no
+
+	fail_trigger_effect = {
+		clr_character_flag = wolf_band_visiting
+		clr_character_flag = wolf_recruited
+		clr_character_flag = wolf_woman_seduced
+	}
+
+	immediate = {
+		random_list = {
+			30 = { } # Nothing
+
+			30 = { # Minor brawl, wolf warrior Injured
+				trigger = {
+					NOR = {
+						has_character_flag = wolf_recruited
+						has_character_flag = wolf_woman_seduced
+					}
+				}
+
+				character_event = { id = ancrel.155 }
+			}
+
+			6 = { # One wolf warrior distinguishes himself
+				trigger = {
+					# ai = no
+
+					NOR = {
+						has_character_flag = wolf_recruited
+						has_character_flag = wolf_woman_seduced
+					}
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = gregarious
+				}
+
+				character_event = { id = ancrel.156 }
+			}
+
+			20 = { # Male courtier insulted by wolf warrior
+				trigger = {
+					any_courtier = {
+						is_adult = yes
+						is_female = no
+
+						OR = {
+							trait = cruel
+							trait = proud
+							trait = wroth
+							trait = zealous
+							trait = envious
+							prestige >= 100
+						}
+					}
+				}
+
+				mult_modifier = {
+					factor = 1.11
+					trait = arbitrary
+				}
+
+				mult_modifier = {
+					factor = 0.2
+					has_character_flag = wolf_recruited
+				}
+
+				mult_modifier = {
+					factor = 0.2
+					has_character_flag = wolf_woman_seduced
+				}
+
+				character_event = { id = ancrel.157 }
+			}
+
+			30 = { # A young woman has been seduced by a wolf warrior
+				trigger = {
+					# ai = no
+
+					any_courtier = {
+						is_female = yes
+						is_adult = yes
+						age < 20
+						fertility >= 0.3
+						is_married = no
+						is_pregnant = no
+						has_lover = no
+						NOT = { trait = homosexual }
+					}
+
+					NOR = {
+						has_character_flag = wolf_recruited
+						has_character_flag = wolf_woman_seduced
+					}
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = gregarious
+				}
+
+				character_event = { id = ancrel.158 }
+			}
+		}
+	}
+}
+
+# Minor brawl, wolf warrior Injured
+character_event = {
+	id = ancrel.155
+	desc = EVTDESC_ancrel_0155
+	picture = GFX_evt_joust
+
+	is_triggered_only = yes
+
+	immediate = {
+		clr_character_flag = wolf_band_visiting
+		clr_character_flag = wolf_recruited
+		clr_character_flag = wolf_woman_seduced
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0155 # Pay for their expenses, and send them on their way
+
+		scaled_wealth = -0.05
+		piety = 5
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_0155 # Let them stay at the castle while recovering.
+
+		prestige = -5
+		piety = 5
+
+		if = {
+			limit = { personality_traits < 5 }
+			add_trait_partially_silently_just_effect = yes
+		}
+	}
+}
+
+# One wolf warrior distinguishes himself
+character_event = {
+	id = ancrel.156
+	desc = EVTDESC_ancrel_0156
+	picture = GFX_evt_joust
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = wolf_recruited
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0156 # Take him in your service
+
+		create_character = {
+			random_traits = no
+			dynasty = random
+			female = no
+			age = 16
+			culture = ROOT
+			religion = ROOT
+			add_trait = brave
+			add_trait = ambitious
+			add_trait = humble
+			add_trait = wolf_warrior
+			health = 10
+
+			attributes = {
+				martial = 10
+			}
+		}
+
+		scaled_wealth = -0.1
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_0156 # Give him lavish praise
+
+		prestige = 5
+	}
+}
+
+# Male courtier insulted by wolf warrior
+character_event = {
+	id = ancrel.157
+	desc = EVTDESC_ancrel_0157
+	picture = GFX_evt_joust
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_0157 # Throw them out
+
+		clr_character_flag = wolf_band_visiting
+		clr_character_flag = wolf_recruited
+		clr_character_flag = wolf_woman_seduced
+		piety = -10
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_0157 # Ignore the complaints
+
+		random_courtier = {
+			show_scope_change = no
+
+			limit = {
+				is_adult = yes
+				is_female = no
+
+				OR = {
+					trait = cruel
+					trait = proud
+					trait = wroth
+					trait = zealous
+					trait = envious
+					prestige >= 100
+				}
+			}
+
+			opinion = {
+				name = ruler_not_respect_rank
+				who = ROOT
+				years = 5
+			}
+		}
+	}
+
+}
+
+# A young woman has been seduced by a wolf warrior
+character_event = {
+	id = ancrel.158
+	desc = EVTDESC_ancrel_0158
+	picture = GFX_evt_lovers
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = wolf_woman_seduced
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0158 # Stay
+
+		random_courtier = {
+			show_scope_change = no
+
+			limit = {
+				is_female = yes
+				is_adult = yes
+				practical_age < 20
+				fertility >= 0.3
+				is_married = no
+				is_pregnant = no
+				has_lover = no
+			}
+
+			create_character = {
+				random_traits = yes
+				female = no
+				culture = ROOT
+				religion = ROOT
+				dynasty = random
+				fertility = 0.6
+				age = 24
+				add_trait = wolf_warrior
+				add_trait = lustful
+			}
+
+			add_trait_fully_lustful_effect = yes
+			impregnate_cuckoo = new_character
+			add_lover = new_character
+		}
+
+		piety = -10
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_0158 # Dungeon
+
+		random_courtier = {
+			show_scope_change = no
+
+			limit = {
+				is_female = yes
+				is_adult = yes
+				practical_age < 20
+				fertility >= 0.3
+				is_married = no
+				is_pregnant = no
+				has_lover = no
+			}
+
+			create_character = {
+				random_traits = yes
+				female = no
+				culture = ROOT
+				religion = ROOT
+				dynasty = random
+				fertility = 0.6
+				age = 24
+				add_trait = wolf_warrior
+				add_trait = lustful
+			}
+
+			add_trait_fully_lustful_effect = yes
+			impregnate_cuckoo = new_character
+			add_lover = new_character
+		}
+
+		reverse_imprison = new_character
+
+		ai_chance = {
+			factor = 1
+
+			mult_modifier = {
+				factor = 100
+
+				OR = {
+					trait = cruel
+					trait = zealous
+				}
+			}
+		}
+	}
+}
+
+# Wolf leaving
+character_event = {
+	id = ancrel.159
+	desc = EVTDESC_ancrel_0159
+	picture = GFX_evt_feast
+
+	is_triggered_only = yes
+
+	has_character_flag = wolf_band_visiting
+	prisoner = no
+
+	fail_trigger_effect = {
+		clr_character_flag = wolf_band_visiting
+		clr_character_flag = wolf_woman_seduced
+		clr_character_flag = wolf_recruited
+	}
+
+	immediate = {
+		clr_character_flag = wolf_band_visiting
+		clr_character_flag = wolf_woman_seduced
+		clr_character_flag = wolf_recruited
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0159 # Give them a farewell feast
+
+		prestige = 10
+		scaled_wealth = -0.05
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_0159 # Let them leave quietly
+
+		prestige = -5
+	}
+}
+
+# Marshal has arrested a wolf warrior
+character_event = {
+	id = ancrel.160
+	desc = EVTDESC_ancrel_0160
+	picture = GFX_evt_melee
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	only_playable = yes
+	religion_group = pagan_group
+	has_global_flag = gwydion_founded
+	prisoner = no
+	war = no
+
+	trigger = {
+		religion_openly_celtic_or_reformed_trigger = yes
+		in_command_trigger = no
+		NOT = { has_character_flag = wolf_band_visiting }
+		job_marshal = { always = yes }
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_0160 # Order him released
+
+		reverse_opinion = {
+			name = marshal_overruled
+			who = job_marshal
+		}
+
+		piety = 5
+		clr_character_flag = hates_gwydion
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_0160 # It is not my concern
+
+		job_marshal = {
+			show_scope_change = no
+
+			prestige = 10
+		}
+
+		prestige = -5
+		set_character_flag = hates_gwydion
+	}
+}
+
+### THE KEEPERS OF TIR NA NOG
+# Written by Superskierpat
+
+# The Keepers of Tír na nÓg Founded (Celtic King)
+narrative_event = {
+	id = ancrel.1150
+	title = EVTNAME_ancrel_1150
+	picture = GFX_evt_celtic_warriors
+	border = GFX_event_narrative_frame_war
+
+	desc = {
+		text = EVTDESC_ancrel_1150
+		trigger = { character = ROOT }
+	}
+	desc = {
+		text = EVTDESC_ancrel_1151
+		trigger = {
+			NOT = { character = ROOT }
+		}
+	}
+
+	is_triggered_only = yes
+	hide_from = yes
+	major = yes
+	show_root = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1150
+
+		trigger = { character = ROOT }
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1151
+
+		trigger = {
+			NOT = { character = ROOT }
+		}
+
+		custom_tooltip = { text = tirnanog_organized }
+	}
+}
+
+## THE FIANNA
+# Fian visiting
+character_event = {
+	id = ancrel.1254
+	desc = EVTDESC_ancrel_1254
+	picture = GFX_evt_emissary
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	only_playable = yes
+	religion_group = pagan_group
+	prisoner = no
+	war = no
+
+	trigger = {
+		religion_openly_celtic_or_reformed_trigger = yes
+		warrior_lodge_celtic = { society_has_members = yes }
+
+		OR = {
+			culture = irish
+			culture = scottish
+			culture = gallawa
+		}
+
+		NOR = {
+			has_character_flag = fian_band_visiting
+			has_character_flag = hates_fianna
+		}
+
+		in_command_trigger = no
+		job_chancellor = { always = yes }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.5
+			trait = gregarious
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			prestige >= 100
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			real_tier = COUNT
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			real_tier = KING
+		}
+
+		mult_modifier = {
+			factor = 0.2
+			real_tier = EMPEROR
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			trait = depressed
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = lunatic
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = possessed
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			trait = ill
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			trait = pneumonic
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			trait = great_pox
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = leper
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			trait = wounded
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			is_maimed_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = infirm
+		}
+
+		mult_modifier = {
+			factor = 0.4
+			is_incapable = yes
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = drunkard
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = consumption
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = slow_fever
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = camp_fever
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = bubonic_plague
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = measles
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = smallpox
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1254 # Welcome them with a lavish feast
+
+		set_character_flag = fian_band_visiting
+		prestige = 10
+
+		add_trait_partially_silently_gregarious_effect = yes
+
+		if = {
+			limit = { trait = greedy }
+
+			scaled_wealth = -0.4
+			remove_trait = greedy
+		}
+		else = {
+			scaled_wealth = -0.2
+		}
+
+		ai_chance = {
+			factor = 10
+
+			trigger = {
+				NOR = {
+					trait = greedy
+					trait = shy
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = gregarious
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = charitable
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_1254 # Welcome them reluctantly
+
+		prestige = 1
+		scaled_wealth = -0.05
+		set_character_flag = fian_band_visiting
+
+		ai_chance = {
+			factor = 10
+
+			trigger = {
+				NOR = {
+					trait = gregarious
+					trait = proud
+					trait = ambitious
+					trait = charitable
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_ancrel_1254 # Refuse them Access
+
+		prestige = -5
+
+		any_courtier = {
+			show_scope_change = no
+
+			opinion = {
+				name = tight_ruler
+				who = ROOT
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+
+			trigger = { trait = greedy }
+		}
+	}
+
+	after = {
+		if = {
+			limit = { has_character_flag = fian_band_visiting }
+
+			character_event = {
+				id = ancrel.1261 # Tombola 1st time
+				days = 10
+				random = 10
+			}
+
+			character_event = {
+				id = ancrel.1261 # Tombola 2nd time
+				days = 21
+				random = 10
+			}
+
+			character_event = {
+				id = ancrel.1259 # Fian leaving
+				days = 35
+				random = 10
+			}
+		}
+	}
+}
+
+# Hedge Knight Tombola
+character_event = {
+	id = ancrel.1261
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_playable = yes
+	has_character_flag = fian_band_visiting
+	prisoner = no
+
+	fail_trigger_effect = {
+		clr_character_flag = fian_band_visiting
+		clr_character_flag = fian_recruited
+		clr_character_flag = fian_woman_seduced
+	}
+
+	immediate = {
+		random_list = {
+			30 = { } # Nothing
+
+			30 = { # Minor brawl - Fennid Injured
+				trigger = {
+					NOR = {
+						has_character_flag = fian_recruited
+						has_character_flag = fian_woman_seduced
+					}
+				}
+
+				character_event = { id = ancrel.1255 }
+			}
+
+			6 = { # One fennid distinguishes himself
+				trigger = {
+					# ai = no
+
+					NOR = {
+						has_character_flag = fian_recruited
+						has_character_flag = fian_woman_seduced
+					}
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = gregarious
+				}
+
+				character_event = { id = ancrel.1256 }
+			}
+
+			20 = { # Male courtier insulted by fennid
+				trigger = {
+					any_courtier = {
+						is_adult = yes
+						is_female = no
+
+						OR = {
+							trait = cruel
+							trait = proud
+							trait = wroth
+							trait = zealous
+							trait = envious
+							prestige >= 100
+						}
+					}
+				}
+
+				mult_modifier = {
+					factor = 1.11
+					trait = arbitrary
+				}
+
+				mult_modifier = {
+					factor = 0.2
+					has_character_flag = fian_recruited
+				}
+
+				mult_modifier = {
+					factor = 0.2
+					has_character_flag = fian_woman_seduced
+				}
+
+				character_event = { id = ancrel.1257 }
+			}
+
+			30 = { # A young woman has been seduced by a fennid
+				trigger = {
+					# ai = no
+
+					any_courtier = {
+						is_female = yes
+						is_adult = yes
+						age < 20
+						fertility >= 0.3
+						is_married = no
+						is_pregnant = no
+						has_lover = no
+						NOT = { trait = homosexual }
+					}
+
+					NOR = {
+						has_character_flag = fian_recruited
+						has_character_flag = fian_woman_seduced
+					}
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = gregarious
+				}
+
+				character_event = { id = ancrel.1258 }
+			}
+		}
+	}
+}
+
+# Minor brawl - Fennid Injured
+character_event = {
+	id = ancrel.1255
+	desc = EVTDESC_ancrel_1255
+	picture = GFX_evt_joust
+
+	is_triggered_only = yes
+
+	immediate = {
+		clr_character_flag = fian_band_visiting
+		clr_character_flag = fian_recruited
+		clr_character_flag = fian_woman_seduced
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1255 # Pay for their expenses, and send them on their way
+
+		scaled_wealth = -0.05
+		piety = 5
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_1255 # Let them stay at the castle while recovering
+
+		prestige = -5
+		piety = 5
+
+		if = {
+			limit = { personality_traits < 5 }
+			add_trait_partially_silently_just_effect = yes
+		}
+	}
+}
+
+# One fennid distinguishes himself
+character_event = {
+	id = ancrel.1256
+	desc = EVTDESC_ancrel_1256
+	picture = GFX_evt_joust
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = fian_recruited
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1256 # Take him in your service
+
+		create_character = {
+			culture = ROOT
+			religion = ROOT
+			random_traits = no
+			dynasty = random
+			female = no
+			age = 16
+			add_trait = brave
+			add_trait = ambitious
+			add_trait = humble
+			add_trait = fian
+			health = 10
+
+			attributes = {
+				martial = 10
+			}
+		}
+
+		scaled_wealth = -0.1
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_1256 # Give him lavish praise
+
+		prestige = 5
+	}
+}
+
+# Male courtier insulted by fennid
+character_event = {
+	id = ancrel.1257
+	desc = EVTDESC_ancrel_1257
+	picture = GFX_evt_joust
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_1257 # Throw them out
+
+		clr_character_flag = fian_band_visiting
+		clr_character_flag = fian_recruited
+		clr_character_flag = fian_woman_seduced
+		piety = -10
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_1257 # Ignore the complaints
+
+		random_courtier = {
+			show_scope_change = no
+
+			limit = {
+				is_adult = yes
+				is_female = no
+
+				OR = {
+					trait = cruel
+					trait = proud
+					trait = wroth
+					trait = zealous
+					trait = envious
+					prestige >= 100
+				}
+			}
+
+			opinion = {
+				name = ruler_not_respect_rank
+				who = ROOT
+				years = 5
+			}
+		}
+	}
+
+}
+
+# A young woman has been seduced by a fennid
+character_event = {
+	id = ancrel.1258
+	desc = EVTDESC_ancrel_1258
+	picture = GFX_evt_lovers
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_character_flag = fian_woman_seduced
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1258 # Stay
+
+		random_courtier = {
+			show_scope_change = no
+
+			limit = {
+				is_female = yes
+				is_adult = yes
+				practical_age < 20
+				fertility >= 0.3
+				is_married = no
+				is_pregnant = no
+				has_lover = no
+			}
+
+			create_character = {
+				random_traits = yes
+				female = no
+				culture = ROOT
+				religion = ROOT
+				dynasty = random
+				fertility = 0.6
+				age = 24
+				add_trait = fian
+				add_trait = lustful
+			}
+
+			add_trait_fully_lustful_effect = yes
+			impregnate_cuckoo = new_character
+			add_lover = new_character
+		}
+
+		piety = -10
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_1258 # Dungeon
+
+		random_courtier = {
+			limit = {
+				is_female = yes
+				is_adult = yes
+				practical_age < 20
+				fertility >= 0.3
+				is_married = no
+				is_pregnant = no
+				has_lover = no
+			}
+
+			create_character = {
+				random_traits = yes
+				female = no
+				culture = ROOT
+				religion = ROOT
+				dynasty = random
+				fertility = 0.6
+				age = 24
+				add_trait = fian
+				add_trait = lustful
+			}
+
+			add_trait_fully_lustful_effect = yes
+			impregnate = new_character
+			add_lover = new_character
+		}
+
+		reverse_imprison = new_character
+
+		ai_chance = {
+			factor = 1
+
+			mult_modifier = {
+				factor = 100
+
+				OR = {
+					trait = cruel
+					trait = zealous
+				}
+			}
+		}
+	}
+}
+
+# Fian leaving
+character_event = {
+	id = ancrel.1259
+	desc = EVTDESC_ancrel_1259
+	picture = GFX_evt_feast
+
+	is_triggered_only = yes
+
+	has_character_flag = fian_band_visiting
+	prisoner = no
+
+	fail_trigger_effect = {
+		clr_character_flag = fian_band_visiting
+		clr_character_flag = fian_woman_seduced
+		clr_character_flag = fian_recruited
+	}
+
+	immediate = {
+		clr_character_flag = fian_band_visiting
+		clr_character_flag = fian_woman_seduced
+		clr_character_flag = fian_recruited
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1259 # Give them a farewell feast
+
+		prestige = 10
+		scaled_wealth = -0.05
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_1259 # Let them leave quietly
+
+		prestige = -5
+	}
+}
+
+# Marshal has arrested a fennid
+character_event = {
+	id = ancrel.1260
+	desc = EVTDESC_ancrel_1260
+	picture = GFX_evt_melee
+
+	is_triggered_only = yes # on_yearly_childhood_pulse, random_events
+
+	only_playable = yes
+	religion_group = pagan_group
+	prisoner = no
+	war = no
+
+	trigger = {
+		religion_openly_celtic_or_reformed_trigger = yes
+		warrior_lodge_celtic = { society_has_members = yes }
+		job_marshal = { always = yes }
+		in_command_trigger = no
+		NOT = { has_character_flag = fian_band_visiting }
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_1260 # Order him released
+
+		reverse_opinion = {
+			name = marshal_overruled
+			who = job_marshal
+		}
+
+		piety = 5
+		clr_character_flag = hates_fianna
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_1260 # It is not my concern
+
+		job_marshal = {
+			show_scope_change = no
+
+			prestige = 10
+		}
+
+		prestige = -5
+		set_character_flag = hates_fianna
+	}
+}
+
+# The birth of the Red Dragon Knights
+province_event = {
+	id = ancrel.1318
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		owner = {
+			narrative_event = { id = ancrel.1319 }
+		}
+	}
+}
+
+narrative_event = {
+	id = ancrel.1319
+	title = EVTTITLEancrel.1319
+	desc = EVTDESCancrel.1319
+	picture = GFX_evt_celtic_warriors
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes # 670, base_on_action_events.txt
+	major = yes
+	hide_from = yes
+
+	only_playable = yes
+
+	trigger = {
+		owns = event_target:pulse_province
+		celtic_pagan = { has_flag = has_been_reformed }
+		NOT = { is_title_active = d_red_dragons }
+	}
+
+	immediate = {
+		activate_title = {
+			title = d_red_dragons
+			status = yes
+		}
+
+		create_character = {
+			random_traits = no
+			dynasty = random
+			religion = celtic_pagan_reformed
+			culture = welsh
+			female = no
+			age = 28
+		}
+
+		new_character = {
+			wealth = 500
+			grant_title = d_red_dragons
+
+			while = {
+				count = 7
+
+				create_character = {
+					random_traits = yes
+					dynasty = random
+					religion = celtic_pagan_reformed
+					culture = welsh
+					female = no
+					age = 16
+				}
+
+				new_character = {
+					random_list = {
+						1 = { }
+						1 = { add_age = 1 }
+						1 = { add_age = 2 }
+						1 = { add_age = 3 }
+						1 = { add_age = 4 }
+						1 = { add_age = 5 }
+						1 = { add_age = 6 }
+						1 = { add_age = 7 }
+						1 = { add_age = 8 }
+						1 = { add_age = 9 }
+						1 = { add_age = 10 }
+						1 = { add_age = 11 }
+						1 = { add_age = 12 }
+					}
+				}
+			}
+
+			while = {
+				count = 2
+
+				create_character = {
+					random_traits = yes
+					dynasty = random
+					religion = celtic_pagan_reformed
+					culture = welsh
+					female = yes
+					age = 16
+				}
+
+				new_character = {
+					random_list = {
+						1 = { }
+						1 = { add_age = 1 }
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = OK
+	}
+}

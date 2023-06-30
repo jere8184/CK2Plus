@@ -1,0 +1,299 @@
+decisions = {
+
+	vassalize_paulician_patriarch = {
+		ai_check_interval = 3
+
+		only_playable = yes
+
+		potential = {
+			religion = paulician
+
+			religion_head = {
+				independent = yes
+				lower_tier_than = KING
+				any_demesne_title = { controls_religion = no }
+			}
+
+			NOT = { rightful_religious_head = ROOT }
+		}
+
+		allow = {
+			real_tier = EMPEROR
+			num_of_holy_sites >= 1
+			piety >= 500
+
+			religion_head = {
+				opinion = {
+					who = ROOT
+					value >= 0
+				}
+
+				war = no
+			}
+
+			war = no
+			is_inaccessible_trigger = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			piety = 500
+
+			religion_head = {
+				show_scope_change = no
+
+				add_friend = ROOT
+
+				if = {
+					limit = { ROOT = { completely_controls = b_hagiasophia } }
+					grant_title = b_hagiasophia
+				}
+				else = {
+					ROOT = {
+						show_scope_change = no
+
+						random_realm_title = {
+							show_scope_change = no
+							limit = { is_holy_site = ROOT }
+							grant_title = PREVPREV
+						}
+					}
+				}
+
+				set_defacto_liege = ROOT
+				pf_liege_change_effect = yes
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	become_paulician_patriarch = {
+		is_high_prio = yes
+		icon_religion = paulician
+		ai_check_interval = 3
+
+		only_playable = yes
+
+		potential = {
+			religion = paulician
+			d_paulician = { has_holder = no }
+		}
+
+		allow = {
+			higher_real_tier_than = DUKE
+			independent = yes
+			num_of_holy_sites >= 1
+			prestige >= 1000
+			piety >= 1000
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			add_trait = paragon
+
+			d_paulician = {
+				show_scope_change = no
+
+				if = {
+					limit = { NOT = { is_title_active = THIS } }
+
+					activate_title = {
+						title = THIS
+						status = yes
+					}
+				}
+
+				gain_title = ROOT
+			}
+
+			narrative_event = { id = Plus.2107 }
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	become_messalian_patriarch = {
+		is_high_prio = yes
+		ai_check_interval = 3
+
+		potential = {
+			religion = messalian
+			is_theocracy = yes
+			has_landed_title = b_antioch
+			NOT = { is_title_active = d_messalian }
+		}
+
+		allow = {
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			piety = 250
+
+			religion_authority = {
+				name = patriarchy_instituted
+				years = 20
+			}
+
+			d_messalian = {
+				show_scope_change = no
+
+				activate_title = {
+					title = THIS
+					status = yes
+				}
+
+				gain_title = ROOT
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	vassalize_religion_head = {
+		is_high_prio = yes
+		ai_check_interval = 3
+
+		only_independent = yes
+
+		potential = {
+			independent = yes
+			NOT = { rightful_religious_head = ROOT }
+
+			religion_head = {
+				independent = yes
+				is_landed = no
+			}
+
+			NOR = {
+				religion = chalcedonian
+				religion = catholic
+				religion = orthodox
+				religion = fraticelli
+				religion_group = muslim
+			}
+		}
+
+		allow = {
+			higher_real_tier_than = DUKE
+			piety >= 500
+			num_of_holy_sites >= 1
+
+			religion_head = {
+				opinion = {
+					who = ROOT
+					value >= 0
+				}
+
+				war = no
+			}
+
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			piety = -500
+			prestige = 500
+			add_trait = paragon
+
+			religion_head = {
+				show_scope_change = no
+
+				add_friend = ROOT
+
+				ROOT = {
+					show_scope_change = no
+
+					if = {
+						limit = {
+							is_miaphysite_branch = yes
+							completely_controls = b_alexandria
+						}
+						grant_title = b_alexandria
+					}
+					else_if = {
+						limit = {
+							OR = {
+								religion = monothelite
+								religion = messalian
+								religion = nestorian
+							}
+							completely_controls = b_antioch
+						}
+						grant_title = b_antioch
+					}
+					else_if = {
+						limit = {
+							OR = {
+								religion = nestorian
+								religion = manichaean
+							}
+							completely_controls = b_bagdad
+						}
+						grant_title = b_bagdad
+					}
+					else_if = {
+						limit = {
+							religion = apostolic
+							completely_controls = b_etchmiadzin
+						}
+						grant_title = b_etchmiadzin
+					}
+					else_if = {
+						limit = {
+							religion = bogomilist
+							completely_controls = b_tyrnovo
+						}
+						grant_title = b_jerusalem
+					}
+					else_if = {
+						limit = {
+							religion = jewish
+							completely_controls = b_jerusalem
+						}
+						grant_title = b_jerusalem
+					}
+					else_if = {
+						limit = {
+							religion = samaritan
+							completely_controls = b_mnttabor
+						}
+						grant_title = b_mnttabor
+					}
+					else_if = {
+						limit = {
+							religion = yazidi
+							completely_controls = b_karamlish
+						}
+						grant_title = b_karamlish
+					}
+					else = {
+						random_realm_title = {
+							show_scope_change = no
+							limit = { is_holy_site = ROOT }
+							grant_title = PREVPREV
+						}
+					}
+				}
+
+				set_defacto_liege = ROOT
+				pf_liege_change_effect = yes
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+}

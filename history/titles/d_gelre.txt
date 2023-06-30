@@ -1,0 +1,34 @@
+769.1.1 = {
+	de_jure_liege = k_frisia
+	name = DUCHY_CHAMAVIA
+	adjective = DUCHY_CHAMAVIA_ADJ
+}
+
+843.8.10 = { # Treaty of Verdun
+	de_jure_liege = k_lotharingia
+}
+
+925.8.1 = { # Henry 'the Fowler' creates the fifth stem duchy of Germany
+	de_jure_liege = k_germany
+}
+
+962.2.2 = { # HRE divided into historical stem duchies on creation
+	de_jure_liege = k_lotharingia
+}
+
+1046.1.1 = { #County of Gelre formed
+	reset_name = yes
+	reset_adjective = yes
+	set_global_flag = hamaland_renamed
+}
+
+1337.1.1 = {
+	liege = e_hre
+#	law = zagnatic_succession
+#	law = zsucc_primogeniture
+}
+
+1337.1.1 = {
+	holder = 30039
+}
+

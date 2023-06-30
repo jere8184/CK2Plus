@@ -1,0 +1,1780 @@
+# Holy Sites
+temple = {
+	## CHRISTIAN
+	# Chalcedonian
+	# Note: Bogomilists don't believe in the concept of separate churches - TODO: account for formalization of Bogomilist church?
+
+	tp_holy_site_holy_sepulchre = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_jerusalem
+			FROMFROM = { is_holy_site = chalcedonian }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_holy_sepulchre }
+
+				AND = {
+					religion_group = christian
+					NOT = { religion = bogomilist }
+				}
+			}
+		}
+
+		trigger = {
+			religion_group = christian
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_group = christian
+					has_secret_religion = no
+					NOT = { religion = bogomilist }
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_group = christian
+					NOT = { religion = bogomilist }
+				}
+
+				liege = {
+					custom_tooltip = {
+						text = follows_correct_religion
+
+						religion_group = christian
+						NOT = { religion = bogomilist }
+					}
+				}
+			}
+		}
+	}
+
+	tp_holy_site_church_st_peter = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_antioch
+			FROMFROM = { is_holy_site = chalcedonian }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_church_st_peter }
+
+				AND = {
+					religion_group = christian
+					is_catholic_branch = no
+					NOT = { religion = bogomilist }
+				}
+			}
+		}
+
+		trigger = {
+			religion_group = christian
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_group = christian
+					has_secret_religion = no
+					is_catholic_branch = no
+					NOT = { religion = bogomilist }
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_group = christian
+					is_catholic_branch = no
+					NOT = { religion = bogomilist }
+				}
+
+				liege = {
+					custom_tooltip = {
+						text = follows_correct_religion
+
+						religion_group = christian
+						is_catholic_branch = no
+						NOT = { religion = bogomilist }
+					}
+				}
+			}
+		}
+	}
+
+	tp_holy_site_school_alexandria = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_alexandria
+			FROMFROM = { is_holy_site = chalcedonian }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_school_alexandria }
+				religion = chalcedonian
+				is_nestorian_branch = yes
+				is_miaphysite_branch = yes
+				is_apostolic_branch = yes
+			}
+		}
+
+		trigger = {
+			religion_group = christian
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					OR = {
+						true_religion = chalcedonian
+						is_nestorian_true_branch = yes
+						is_miaphysite_true_branch = yes
+						is_apostolic_true_branch = yes
+					}
+
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					OR = {
+						true_religion = chalcedonian
+						is_nestorian_branch = yes
+						is_miaphysite_branch = yes
+						is_apostolic_branch = yes
+					}
+				}
+
+				liege = {
+					custom_tooltip = {
+						text = follows_correct_religion
+
+						OR = {
+							true_religion = chalcedonian
+							is_nestorian_branch = yes
+							is_miaphysite_branch = yes
+							is_apostolic_branch = yes
+						}
+					}
+				}
+			}
+		}
+	}
+
+	tp_holy_site_st_peters_basilica = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_roma
+			FROMFROM = { is_holy_site = chalcedonian }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_st_peters_basilica }
+				is_catholic_branch = yes
+			}
+		}
+
+		trigger = {
+			religion_group = christian
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					is_catholic_branch = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+					is_catholic_branch = yes
+				}
+
+				liege = {
+					custom_tooltip = {
+						text = follows_correct_religion
+						is_catholic_branch = yes
+					}
+				}
+			}
+		}
+	}
+
+	tp_holy_site_hagia_sophia = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_constantinopolis
+			FROMFROM = { is_holy_site = chalcedonian }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_hagia_sophia }
+				religion = waldensian
+
+				AND = {
+					is_orthodox_branch = yes
+					NOT = { religion = bogomilist }
+				}
+			}
+		}
+
+		trigger = {
+			religion_group = christian
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					OR = {
+						AND = {
+							is_orthodox_branch = yes
+							NOT = { religion = bogomilist }
+						}
+
+						religion = waldensian
+					}
+
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					OR = {
+						AND = {
+							is_orthodox_branch = yes
+							NOT = { religion = bogomilist }
+						}
+
+						religion = waldensian
+					}
+				}
+
+				liege = {
+					custom_tooltip = {
+						text = follows_correct_religion
+
+						OR = {
+							AND = {
+								is_orthodox_branch = yes
+								NOT = { religion = bogomilist }
+							}
+
+							religion = waldensian
+						}
+					}
+				}
+			}
+		}
+	}
+
+	# CATHOLIC
+	tp_holy_site_canterbury_cathedral = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_kent
+			FROMFROM = { is_holy_site = catholic }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_canterbury_cathedral }
+
+				AND = {
+					is_catholic_branch = yes
+					NOT = { religion = waldensian }
+				}
+			}
+		}
+
+		trigger = {
+			religion_group = christian
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					is_catholic_branch = yes
+					has_secret_religion = no
+					NOT = { religion = waldensian }
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					is_catholic_branch = yes
+					NOT = { religion = waldensian }
+				}
+
+				liege = {
+					custom_tooltip = {
+						text = follows_correct_religion
+
+						is_catholic_branch = yes
+						NOT = { religion = waldensian }
+					}
+				}
+			}
+		}
+	}
+
+	tp_holy_site_koln_cathedral = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_koln
+			FROMFROM = { is_holy_site = catholic }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_koln_cathedral }
+
+				AND = {
+					is_catholic_branch = yes
+					NOT = { religion = waldensian }
+				}
+			}
+		}
+
+		trigger = {
+			religion_group = christian
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					is_catholic_branch = yes
+					has_secret_religion = no
+					NOT = { religion = waldensian }
+				}
+
+				trigger_if = {
+					limit = { ai = yes }
+					year >= 1880
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					is_catholic_branch = yes
+					NOT = { religion = waldensian }
+				}
+
+				liege = {
+					custom_tooltip = {
+						text = follows_correct_religion
+
+						is_catholic_branch = yes
+						NOT = { religion = waldensian }
+					}
+				}
+			}
+		}
+	}
+
+	tp_holy_site_santiago_cathedral = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_santiago
+			FROMFROM = { is_holy_site = catholic }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_santiago_cathedral }
+
+				AND = {
+					is_catholic_branch = yes
+
+					NOR = {
+						religion = cathar
+						religion = waldensian
+						religion = lollard
+					}
+				}
+			}
+		}
+
+		trigger = {
+			religion_group = christian
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					is_catholic_branch = yes
+					has_secret_religion = no
+
+					NOR = {
+						religion = cathar
+						religion = waldensian
+						religion = lollard
+					}
+				}
+
+				trigger_if = {
+					limit = { ai = yes }
+					year >= 1060 # Groundbreaking on actual cathedral
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					is_catholic_branch = yes
+
+					NOR = {
+						religion = cathar
+						religion = waldensian
+						religion = lollard
+					}
+				}
+
+				liege = {
+					custom_tooltip = {
+						text = follows_correct_religion
+
+						is_catholic_branch = yes
+
+						NOR = {
+							religion = cathar
+							religion = waldensian
+							religion = lollard
+						}
+					}
+				}
+			}
+		}
+	}
+
+	# Cathar
+	tp_holy_site_basilica_saints_nazarius_celsus = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_carcassonne
+			FROMFROM = { is_holy_site = cathar }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_basilica_saints_nazarius_celsus }
+				religion = cathar
+			}
+		}
+
+		trigger = {
+			religion_group = christian
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion = cathar
+					has_secret_religion = no
+				}
+
+				trigger_if = {
+					limit = { ai = yes }
+					year >= 1096
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+					religion = cathar
+				}
+
+				liege = {
+					custom_tooltip = {
+						text = follows_correct_religion
+						religion = cathar
+					}
+				}
+			}
+		}
+	}
+
+	# Waldensian
+	tp_holy_site_temple_poor_lombardy = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_piemonte
+			FROMFROM = { is_holy_site = waldensian }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_temple_poor_lombardy }
+				religion = waldensian
+			}
+		}
+
+		trigger = {
+			religion_group = christian
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion = waldensian
+					has_secret_religion = no
+				}
+
+				hidden_trigger = {
+					ai = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+					religion = waldensian
+				}
+
+				liege = {
+					custom_tooltip = {
+						text = follows_correct_religion
+						religion = waldensian
+					}
+				}
+			}
+		}
+	}
+
+	tp_holy_site_temple_poor_lyon = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_lyon
+			FROMFROM = { is_holy_site = waldensian }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_temple_poor_lyon }
+				religion = waldensian
+			}
+		}
+
+		trigger = {
+			religion_group = christian
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion = waldensian
+					has_secret_religion = no
+				}
+
+				hidden_trigger = {
+					ai = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+					religion = waldensian
+				}
+
+				liege = {
+					custom_tooltip = {
+						text = follows_correct_religion
+						religion = waldensian
+					}
+				}
+			}
+		}
+	}
+
+	# Lollard
+	tp_holy_site_leicester_abbey = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_leicester
+			FROMFROM = { is_holy_site = lollard }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_leicester_abbey }
+				religion = lollard
+			}
+		}
+
+		trigger = {
+			religion_group = christian
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion = lollard
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+					religion = lollard
+				}
+
+				liege = {
+					custom_tooltip = {
+						text = follows_correct_religion
+						religion = lollard
+					}
+				}
+			}
+		}
+	}
+
+	# Orthodox
+	tp_holy_site_basilica_saint_john = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_ephesos
+			FROMFROM = { is_holy_site = orthodox }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_basilica_saint_john }
+
+				AND = {
+					is_orthodox_branch = yes
+					NOT = { religion = bogomilist }
+				}
+			}
+		}
+
+		trigger = {
+			religion_group = christian
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					is_orthodox_branch = yes
+					has_secret_religion = no
+					NOT = { religion = bogomilist }
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					is_orthodox_branch = yes
+					NOT = { religion = bogomilist }
+				}
+
+				liege = {
+					custom_tooltip = {
+						text = follows_correct_religion
+
+						is_orthodox_branch = yes
+						NOT = { religion = bogomilist }
+					}
+				}
+			}
+		}
+	}
+
+	tp_holy_site_mount_athos = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_chalkidike
+			FROMFROM = { is_holy_site = orthodox }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_mount_athos }
+
+				AND = {
+					is_orthodox_branch = yes
+					NOT = { religion = bogomilist }
+				}
+			}
+		}
+
+		trigger = {
+			religion_group = christian
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					is_orthodox_branch = yes
+					has_secret_religion = no
+					NOT = { religion = bogomilist }
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					is_orthodox_branch = yes
+					NOT = { religion = bogomilist }
+				}
+
+				liege = {
+					custom_tooltip = {
+						text = follows_correct_religion
+
+						is_orthodox_branch = yes
+						NOT = { religion = bogomilist }
+					}
+				}
+			}
+		}
+	}
+
+	## PAGAN
+	# Baltic
+	tp_holy_site_romuva_temple = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_sambia
+			FROMFROM = { is_holy_site = baltic_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_romuva_temple }
+				religion_openly_baltic_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_baltic_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_baltic_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_baltic_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_baltic_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	tp_holy_site_dieva_sanctuary = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_bryansk
+			FROMFROM = { is_holy_site = baltic_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_dieva_sanctuary }
+				religion_openly_baltic_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_baltic_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_baltic_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_baltic_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_baltic_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	tp_holy_site_perkunas_forest = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_zemgale
+			FROMFROM = { is_holy_site = baltic_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_perkunas_forest }
+				religion_openly_baltic_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_baltic_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_baltic_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_baltic_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_baltic_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	tp_holy_site_laima_grove = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_rugen
+			FROMFROM = { is_holy_site = baltic_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_laima_grove }
+				religion_openly_baltic_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_baltic_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_baltic_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_baltic_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_baltic_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	tp_holy_site_gabija_temple = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_podlasie
+			FROMFROM = { is_holy_site = baltic_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_gabija_temple }
+				religion_openly_baltic_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_baltic_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_baltic_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_baltic_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_baltic_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	# Celtic
+	tp_holy_site_stonehenge = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_wiltshire
+			FROMFROM = { is_holy_site = celtic_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_stonehenge }
+				religion_openly_celtic_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_celtic_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_celtic_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_celtic_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_celtic_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	tp_holy_site_lia_fail = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_meath
+			FROMFROM = { is_holy_site = celtic_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_lia_fail }
+				religion_openly_celtic_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_celtic_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_celtic_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_celtic_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_celtic_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	tp_holy_site_callanish_stones = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_innse_gall
+			FROMFROM = { is_holy_site = celtic_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_callanish_stones }
+				religion_openly_celtic_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_celtic_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_celtic_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_celtic_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_celtic_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	tp_holy_site_bryn_gwyn_stones = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_gwynedd
+			FROMFROM = { is_holy_site = celtic_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_bryn_gwyn_stones }
+				religion_openly_celtic_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_celtic_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_celtic_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_celtic_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_celtic_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	tp_holy_site_carnac_stones = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_vannes
+			FROMFROM = { is_holy_site = celtic_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_carnac_stones }
+				religion_openly_celtic_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_celtic_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_celtic_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_celtic_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_celtic_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	# Germanic
+	tp_holy_site_irminsul = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_paderborn
+			FROMFROM = { is_holy_site = german_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_irminsul }
+				religion_openly_german_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_german_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_german_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_german_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_german_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	# Germanic (continental)
+	tp_holy_site_nerthus_glade = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_sjaelland
+			FROMFROM = { is_holy_site = german_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_nerthus_glade }
+				religion_openly_german_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_german_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_german_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_german_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_german_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	tp_holy_site_grove_nehalennia = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_zeeland
+			FROMFROM = { is_holy_site = german_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_grove_nehalennia }
+				religion_openly_german_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_german_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_german_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_german_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_german_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	tp_holy_site_thunaer_oak = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_wurzburg
+			FROMFROM = { is_holy_site = german_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_thunaer_oak }
+				religion_openly_german_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_german_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_german_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_german_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_german_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	tp_holy_site_wayland_smith = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_oxford
+			FROMFROM = { is_holy_site = german_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_wayland_smith }
+				religion_openly_german_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_german_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_german_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_german_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_german_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	# Nordic
+	tp_holy_site_njorthr_glade = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_sjaelland
+			FROMFROM = { is_holy_site = norse_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_njorthr_glade }
+				religion_openly_norse_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_norse_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_norse_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_norse_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_norse_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	tp_holy_site_frey_temple = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = 	c_uppland
+			FROMFROM = { is_holy_site = norse_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_frey_temple }
+				religion_openly_norse_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_norse_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_norse_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_norse_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_norse_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	tp_holy_site_thor_temple = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_naumadal
+			FROMFROM = { is_holy_site = norse_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_thor_temple }
+				religion_openly_norse_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_norse_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_norse_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_norse_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_norse_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	tp_holy_site_waterfall_of_gods = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			province = c_nordurland
+			FROMFROM = { is_holy_site = norse_pagan }
+
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_waterfall_of_gods }
+				religion_openly_norse_or_reformed_trigger = yes
+			}
+		}
+
+		trigger = {
+			religion_openly_norse_or_reformed_trigger = yes
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					religion_openly_norse_or_reformed_trigger = yes
+					has_secret_religion = no
+				}
+
+				trigger_if = {
+					limit = { ai = yes } # TODO: Account for player lieges?
+					year >= 1000
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROM = {
+				religion_openly_norse_or_reformed_trigger = yes
+
+				liege = {
+					religion_openly_norse_or_reformed_trigger = yes
+				}
+			}
+		}
+	}
+
+	# ALL PAGANS WITHOUT SPECIFIC BUILDINGS
+	tp_holy_site_sacred_grove = {
+		liege_piety = 0.5
+		gold_cost = 250
+		build_time = 2190
+		ai_creation_factor = 100
+
+		add_number_to_name = no
+
+		potential = {
+			OR = {
+				FROMFROM = { has_building = tp_holy_site_sacred_grove }
+
+				AND = {
+					FROMFROM = { is_holy_site = FROM }
+
+					FROM = {
+						OR = {
+							religion_openly_baltic_or_reformed_trigger = yes
+							religion_openly_celtic_or_reformed_trigger = yes
+							religion_openly_norse_or_reformed_trigger = yes
+							religion_openly_egyptian_or_reformed_trigger = yes
+							religion_openly_hellenic_or_reformed_trigger = yes
+						}
+					}
+				}
+			}
+		}
+
+		trigger = {
+			religion_group = pagan_group
+
+			FROM = {
+				custom_tooltip = {
+					text = follows_correct_religion
+
+					OR = {
+						religion_openly_baltic_or_reformed_trigger = yes
+						religion_openly_celtic_or_reformed_trigger = yes
+						religion_openly_norse_or_reformed_trigger = yes
+						religion_openly_egyptian_or_reformed_trigger = yes
+						religion_openly_hellenic_or_reformed_trigger = yes
+					}
+
+					has_secret_religion = no
+				}
+			}
+
+			ai_can_build_trigger = yes
+		}
+
+		is_active_trigger = {
+			FROMFROM = { is_holy_site = ROOT_FROM }
+			FROM = {
+				religion = ROOT
+				liege = {
+					religion = ROOT
+				}
+			}
+		}
+	}
+}

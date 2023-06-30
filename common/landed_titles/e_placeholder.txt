@@ -1,0 +1,17 @@
+##################################
+# Landed Titles
+#
+#
+#
+##################################
+#
+#
+#
+##################################
+
+e_placeholder = {
+	color = { 90 90 90 }
+	creation_requires_capital = no
+	short_name = yes
+	allow = { always = no }
+}

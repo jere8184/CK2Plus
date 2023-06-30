@@ -1,0 +1,77 @@
+british_trade = {
+	wealth = 6			# Total base wealth of British Trade
+
+	modifier = {			# How the trade route modifies the provinces it passes
+		castle_tax_modifier = 0.025
+		city_tax_modifier = 0.05
+		temple_tax_modifier = 0.025
+		trade_route_value = 0.5
+		tech_growth_modifier = 0.10
+		icon = 98
+	}
+
+	start = {				# Start provinces of trade route
+		46 # Middlesex
+		41 # Winchester
+	}
+
+	path = { # Winchester - Middlesex
+		41 # Winchester
+		45 # Surrey
+		46 # Middlesex
+	}
+	path = { # Winchester - Wiltshire
+		41 # Winchester
+		39 # Wiltshire
+	}
+	path = { # Wiltshire - Somerset
+		39 # Wiltshire
+		36 # Bath
+		35 # Somerset
+		34 # Devon
+	}
+	path = { # Wiltshire - Warwick
+		39 # Wiltshire
+		38 # Oxford
+		54 # Warwick
+	}
+	path = { # Winchester - Devon
+		41 # Winchester
+		40 # Dorset
+		34 # Devon
+	}
+	path = { # London - Lincoln
+		46 # Middlesex
+		49 # Northampton
+		52 # Lincoln
+	}
+	path = { # London - Warwick
+		46 # Middlesex
+		48 # Bedford
+		54 # Warwick
+	}
+	path = { # Warwick - Lincoln
+		54 # Warwick
+		53 # Leicester
+		52 # Lincoln
+	}
+	path = { # Warwick - Shrewsbury
+		54 # Warwick
+		55 # Worcester
+		26 # Shrewsbury
+	}
+	path = { # Shrewsbury - Legacaster
+		26 # Shrewsbury
+		57 # Chester
+	}
+	path = { # Shrewsbury - Gloucester
+		26 # Shrewsbury
+		27 # Hereford
+		37 # Gloucester
+	}
+	path = { # Lincoln - York
+		52 # Lincoln
+		59 # Hull
+		61 # York
+	}
+}

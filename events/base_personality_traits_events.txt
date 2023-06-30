@@ -1,0 +1,2905 @@
+###################################
+#
+# Events for Adult Personality Traits
+#
+# Id 1000-1499 is reserved
+#
+###################################
+#
+# Written by Sara Wendel-Örtqvist
+
+# Lustful/Chaste - male
+character_event = {
+	id = 1000
+	desc = EVTDESC1000
+	picture = GFX_evt_lovers
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_men = yes
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			religion_group = muslim
+			trait = chaste
+			trait = lustful
+			trait = celibate
+			trait = homosexual
+			trait = eunuch
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = hedonist
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = gluttonous
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = temperate
+		}
+	}
+
+	option = {
+		name = EVTOPTA1000
+
+		add_trait_lustful_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = gluttonous
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1000
+
+		add_trait_chaste_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = temperate
+			}
+		}
+	}
+}
+
+# Gluttonous/Temperate
+character_event = {
+	id = 1001
+	desc = EVTDESC1001
+	picture = GFX_evt_feast
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = gluttonous
+			trait = temperate
+			trait = hedonist
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+			trait = hedonist
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = lustful
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = slothful
+		}
+	}
+
+	option = {
+		name = EVTOPTA1001
+
+		add_character_modifier = {
+			name = well_fed
+			years = 5
+		}
+
+		add_trait_gluttonous_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = lustful
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1001
+
+		add_trait_temperate_effect = yes
+
+		random = {
+			chance = 25
+			health = -1
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = chaste
+			}
+		}
+	}
+}
+
+# Gluttonous/Temperate
+character_event = {
+	id = 1002
+	desc = EVTDESC1002
+	picture = GFX_evt_feast
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+
+	trigger = {
+		always = no # Disabled in CK2Plus
+		personality_traits < 5
+
+		NOR = {
+			trait = gluttonous
+			trait = temperate
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+			trait = hedonist
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = lustful
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = slothful
+		}
+	}
+
+	option = {
+		name = EVTOPTA1001
+
+		add_character_modifier = {
+			name = well_fed
+			years = 5
+		}
+
+		random = {
+			chance = 1
+
+			mult_modifier = {
+				factor = 70
+				trait = lustful
+			}
+
+			mult_modifier = {
+				factor = 20
+				trait = chaste
+			}
+
+			mult_modifier = {
+				factor = 45
+
+				NOR = {
+					trait = chaste
+					trait = lustful
+				}
+			}
+
+			add_trait_gluttonous_effect = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB1001
+
+		random = {
+			chance = 1
+
+			mult_modifier = {
+				factor = 70
+
+				trait = zealous
+				NOT = { trait = greedy }
+			}
+
+			mult_modifier = {
+				factor = 20
+
+				trait = greedy
+				NOT = { trait = zealous }
+			}
+
+			mult_modifier = {
+				factor = 45
+
+				# Both traits or neither
+				trigger_if = {
+					limit = { trait = greedy }
+					trait = zealous
+				}
+				trigger_else = {
+					NOT = { trait = zealous }
+				}
+			}
+
+			add_trait_temperate_effect = yes
+		}
+	}
+}
+
+# Charitable/Greedy
+character_event = {
+	id = 1003
+	desc = EVTDESC1003
+	picture = GFX_evt_market
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = greedy
+			trait = charitable
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+			trait = kind
+		}
+	}
+
+	option = {
+		name = EVTOPTA1003
+
+		add_trait_charitable_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = kind
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1003
+
+		add_trait_greedy_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = envious
+			}
+		}
+	}
+}
+
+# Slothful/Diligent
+character_event = {
+	id = 1004
+	desc = EVTDESC1004
+	picture = GFX_evt_drunk
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = diligent
+			trait = slothful
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+			trait = gluttonous
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = lustful
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = hedonist
+		}
+	}
+
+	option = {
+		name = EVTOPTA1004
+
+		add_trait_slothful_effect = yes
+		remove_trait_silently_stressed_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = content
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1004
+
+		add_trait_diligent_effect = yes
+
+		random = {
+			chance = 25
+			add_trait_stressed_effect = yes
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = ambitious
+			}
+		}
+	}
+}
+
+# Kind/Envious - female
+character_event = {
+	id = 1005
+	desc = EVTDESC1005
+	picture = GFX_evt_shadowy_cabal
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	only_women = yes
+	min_age = 16
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = envious
+			trait = kind
+			trait = homosexual
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = proud
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = charitable
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = humble
+		}
+	}
+
+	option = {
+		name = EVTOPTA1005
+
+		add_trait_envious_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = greedy
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1005
+
+		add_trait_fully_kind_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = charitable
+			}
+		}
+	}
+}
+
+# Kind/Envious - male
+character_event = {
+	id = 1006
+	desc = EVTDESC1006
+	picture = GFX_evt_shadowy_cabal
+
+	is_triggered_only = yes
+
+	only_men = yes
+	min_age = 16
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = envious
+			trait = kind
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.5
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = proud
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = charitable
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = humble
+		}
+	}
+
+	option = {
+		name = EVTOPTA1006
+
+		add_trait_kind_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = charitable
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1006
+
+		add_trait_envious_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = greedy
+			}
+		}
+	}
+}
+
+# Wroth/Patient
+character_event = {
+	id = 1007
+	desc = EVTDESC1007
+	picture = GFX_evt_spymaster
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = wroth
+			trait = patient
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = cruel
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = gluttonous
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = kind
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = temperate
+		}
+	}
+
+	option = {
+		name = EVTOPTA1007
+
+		add_trait_wroth_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = cruel
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1007
+
+		add_trait_patient_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = kind
+			}
+		}
+	}
+}
+
+# Proud/Humble
+character_event = {
+	id = 1008
+	desc = EVTDESC1008
+	picture = GFX_evt_throne_room
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = proud
+			trait = humble
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = content
+		}
+	}
+
+	option = {
+		name = EVTOPTA1008
+
+		add_trait_proud_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = ambitious
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1008
+
+		add_trait_humble_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = content
+			}
+		}
+	}
+}
+
+# Deceitful/Honest
+character_event = {
+	id = 1009
+	desc = EVTDESC1009
+	picture = GFX_evt_whispers
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = deceitful
+			trait = honest
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = cruel
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = arbitrary
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = kind
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = just
+		}
+	}
+
+	option = {
+		name = EVTOPTA1009
+
+		add_trait_deceitful_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = paranoid
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1009
+
+		add_trait_honest_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = trusting
+			}
+		}
+	}
+}
+
+# Craven/Brave
+character_event = {
+	id = 1010
+	desc = EVTDESC1010
+	picture = GFX_evt_courier
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = craven
+			trait = brave
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+	}
+
+	option = {
+		name = EVTOPTA1010
+
+		add_trait_craven_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = patient
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1010
+
+		add_trait_brave_effect = yes
+
+		random = {
+			chance = 25
+			add_trait_wounded_effect = yes
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = wroth
+			}
+		}
+	}
+}
+
+# Shy/Gregarious
+character_event = {
+	id = 1011
+	desc = EVTDESC1011
+	picture = GFX_evt_garden
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = shy
+			trait = gregarious
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+			trait = chaste
+		}
+
+		mult_modifier = {
+			factor = 0.7
+			trait = celibate
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = lustful
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = hedonist
+		}
+	}
+
+	option = {
+		name = EVTOPTA1011
+
+		add_trait_shy_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = paranoid
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1011
+
+		add_trait_gregarious_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = trusting
+			}
+		}
+	}
+}
+
+# Ambitious/Content
+character_event = {
+	id = 1012
+	desc = EVTDESC1012
+	picture = GFX_evt_council
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = ambitious
+			trait = content
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 15
+
+			any_owned_bloodline = {
+				has_bloodline_flag = bloodline_ambition
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = proud
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = humble
+		}
+	}
+
+	option = {
+		name = EVTOPTA1012
+
+		add_trait_ambitious_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = proud
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1012
+
+		add_trait_content_effect = yes
+		remove_trait_silently_stressed_effect = yes
+		remove_trait_silently_depressed_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = humble
+			}
+		}
+	}
+}
+
+# Arbitrary/Just
+character_event = {
+	id = 1013
+	desc = EVTDESC1013
+	picture = GFX_evt_beheading
+	border = GFX_event_normal_frame_economy
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = arbitrary
+			trait = just
+			has_character_flag = had_event_1013
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+			trait = deceitful
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = cruel
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = honest
+		}
+	}
+
+	immediate = {
+		set_character_flag = had_event_1013
+	}
+
+	option = {
+		name = EVTOPTA1013
+
+		add_trait_arbitrary_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = wroth
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1013
+
+		add_trait_just_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = patient
+			}
+		}
+	}
+}
+
+# Cynical/Zealous
+character_event = {
+	id = 1014
+	desc = EVTDESC1014
+	picture = GFX_evt_bishop
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = cynical
+			trait = zealous
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+
+			OR = {
+				trait = quick
+				trait = shrewd
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = genius
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			OR = {
+				trait = slow
+				trait = dull
+			}
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = imbecile
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = detached_priest
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = mastermind_theologian
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = scholarly_theologian
+		}
+	}
+
+	option = {
+		name = EVTOPTA1014
+
+		add_trait_zealous_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = honest
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1014
+
+		add_trait_cynical_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = deceitful
+			}
+		}
+	}
+}
+
+# Lustful/chaste - female
+character_event = {
+	id = 1015
+	desc = EVTDESC1015
+	picture = GFX_evt_lovers
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	only_women = yes
+	min_age = 16
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			religion_group = muslim
+			trait = chaste
+			trait = lustful
+			trait = celibate
+			trait = homosexual
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = hedonist
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = gluttonous
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = temperate
+		}
+	}
+
+	option = {
+		name = EVTOPTA1015
+
+		add_trait_lustful_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = gluttonous
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1015
+
+		add_trait_chaste_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = temperate
+			}
+		}
+	}
+}
+
+# Paranoid/Trusting
+character_event = {
+	id = 1016
+	desc = EVTDESC1016
+	picture = GFX_evt_lunatic
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = paranoid
+			trait = trusting
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = kind
+		}
+	}
+
+	option = {
+		name = EVTOPTA1016
+
+		add_trait_paranoid_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = gluttonous
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1016
+
+		add_trait_trusting_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = temperate
+			}
+		}
+	}
+}
+
+# Cruel/Kind
+character_event = {
+	id = 1017
+	desc = EVTDESC1017
+	picture = GFX_evt_lunatic
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = kind
+			trait = cruel
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.5
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = kind
+		}
+	}
+
+	option = {
+		name = EVTOPTA1017
+
+		add_trait_cruel_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = wroth
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1017
+
+		add_trait_fully_kind_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = patient
+			}
+		}
+	}
+}
+
+# Lustful/chaste - Homosexual female
+character_event = {
+	id = 1018
+	desc = EVTDESC1018
+	picture = GFX_evt_lovers
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	only_women = yes
+	min_age = 16
+
+	trigger = {
+		trait = homosexual
+		personality_traits < 5
+
+		NOR = {
+			religion_group = muslim
+			trait = chaste
+			trait = lustful
+			trait = celibate
+		}
+
+		any_courtier = {
+			trait = homosexual
+			is_female = yes
+			is_adult = yes
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = hedonist
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = gluttonous
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = temperate
+		}
+	}
+
+	option = {
+		name = EVTOPTA1018
+
+		add_trait_lustful_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = gluttonous
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1018
+
+		add_trait_chaste_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = temperate
+			}
+		}
+	}
+}
+
+# Lustful/chaste - Homosexual male
+character_event = {
+	id = 1019
+	desc = EVTDESC1019
+	picture = GFX_evt_lovers
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	only_men = yes
+	min_age = 16
+
+	trigger = {
+		trait = homosexual
+		personality_traits < 5
+
+		NOR = {
+			religion_group = muslim
+			trait = chaste
+			trait = lustful
+			trait = celibate
+			trait = eunuch
+		}
+
+		any_courtier = {
+			is_female = no
+			is_adult = yes
+			trait = homosexual
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = hedonist
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = gluttonous
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = temperate
+		}
+	}
+
+	option = {
+		name = EVTOPTA1019
+
+		add_trait_lustful_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = gluttonous
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1019
+
+		add_trait_chaste_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2.0
+				trait = temperate
+			}
+		}
+	}
+}
+
+### Lustful Muslim ###
+character_event = {
+	id = 1060
+	desc = EVTDESC1060
+	picture = GFX_evt_lovers
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	religion_group = muslim
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = lustful
+			trait = homosexual
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.7
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = hedonist
+		}
+
+		mult_modifier = {
+			factor = 1.7
+			trait = gluttonous
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = temperate
+		}
+	}
+
+	option = {
+		name = EVTOPTA1060
+
+		random = {
+			chance = 1
+
+			mult_modifier = {
+				factor = 70
+
+				trait = honest
+				NOT = { trait = slothful }
+			}
+
+			mult_modifier = {
+				factor = 20
+
+				trait = slothful
+				NOT = { trait = honest }
+			}
+
+			mult_modifier = {
+				factor = 45
+
+				# Both traits or neither
+				trigger_if = {
+					limit = { trait = slothful }
+					trait = honest
+				}
+				trigger_else = {
+					NOT = { trait = honest }
+				}
+			}
+
+			add_trait_lustful_effect = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB1060
+		piety = 10
+	}
+}
+
+### Hafiz - only for Muslims ###
+character_event = {
+	id = 1070
+	desc = EVTDESC1070
+	picture = GFX_evt_monk
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	religion_group = muslim
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		is_dumb_trigger = no
+
+		NOR = {
+			religion = druze
+			trait = hafiz
+			trait = inbred
+			trait = infirm
+
+			has_alternate_start_parameter = {
+				key = religion_names
+				value = random
+			}
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.5
+			trait = scholar
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = cynical
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = slothful
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = content
+		}
+
+		# CK2Plus
+		mult_modifier = {
+			factor = 1.5
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			piety < 0
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			piety >= 100
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			piety >= 250
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			piety >= 500
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			learning < 5
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			learning < 10
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			learning >= 15
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			learning >= 20
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = faqih
+		}
+	}
+
+	option = {
+		name = EVTOPTA1070
+
+		add_character_modifier = {
+			name = aspiring_hafiz
+			duration = -1
+		}
+
+		if = {
+			limit = {
+				OR = {
+					trait = cynical
+					trait = slothful
+					trait = content
+				}
+
+				NOR = {
+					trait = scholar
+					trait = zealous
+				}
+			}
+
+			character_event = {
+				id = 1071
+				years = 1
+				random = 548 # 1.5 years
+			}
+		}
+		else = {
+			character_event = {
+				id = 1071
+				years = 1
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB1070
+
+		if = {
+			limit = { trait = slothful }
+			piety = -10
+		}
+		else = {
+			random = {
+				chance = 50
+				add_trait_slothful_effect = yes
+			}
+		}
+	}
+}
+
+# Become Hafiz [Root.GetTitledFirstName]
+character_event = {
+	id = 1071
+	desc = EVTDESC1071
+	picture = GFX_evt_monk
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	religion_group = muslim
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_character_modifier = aspiring_hafiz
+		NOT = { trait = hafiz }
+	}
+
+	fail_trigger_effect = {
+		if = {
+			limit = {
+				religion_group = muslim
+				has_character_modifier = aspiring_hafiz
+				NOT = { trait = hafiz }
+			}
+
+			repeat_event = {
+				id = 1071
+				months = 2
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA1071
+
+		add_trait = hafiz
+		remove_character_modifier = aspiring_hafiz
+	}
+}
+
+### THESE EVENTS REMOVE TRAITS ###
+
+# Remove Lustful - male
+character_event = {
+	id = 1028
+	desc = EVTDESC1028
+	picture = GFX_evt_lovers
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_men = yes
+	only_capable = yes
+
+	trigger = {
+		trait = lustful
+		has_enough_personality_traits_trigger = yes
+		NOT = { trait = hedonist }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1028
+
+		remove_trait = lustful
+	}
+}
+
+# Remove Chaste
+character_event = {
+	id = 1029
+	desc = EVTDESC1029
+	picture = GFX_evt_lovers
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = chaste
+		has_enough_personality_traits_trigger = yes
+		NOT = { trait = gluttonous }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = {
+			text = EVTOPTA1000
+			trigger = { prefers_men_trigger = no }
+		}
+		name = {
+			text = EVTOPTB1029
+			trigger = { prefers_men_trigger = yes }
+		}
+
+		remove_trait = chaste
+	}
+}
+
+# Remove Temperate
+character_event = {
+	id = 1030
+	desc = EVTDESC1030
+	picture = GFX_evt_feast
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		trait = temperate
+		has_enough_personality_traits_trigger = yes
+		NOT = { has_character_modifier = voice_of_jesus }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1030
+
+		remove_trait = temperate
+	}
+}
+
+# Remove Gluttonous
+character_event = {
+	id = 1031
+	desc = EVTDESC1031
+	picture = GFX_evt_feast
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = gluttonous
+
+		OR = {
+			has_enough_personality_traits_trigger = yes
+			has_ambition = obj_buddhist_temperance_food
+		}
+
+		NOR = {
+			trait = hedonist
+			has_character_modifier = voice_of_jesus
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+
+		mult_modifier = {
+			factor = 10
+			has_ambition = obj_buddhist_temperance_food
+		}
+	}
+
+	option = {
+		name = EVTOPTA1031
+
+		remove_trait_silently_gluttonous_effect = yes
+	}
+}
+
+# Remove Charitable
+character_event = {
+	id = 1032
+	desc = EVTDESC1032
+	picture = GFX_evt_market
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = charitable
+		has_enough_personality_traits_trigger = yes
+		NOT = { has_character_modifier = voice_of_jesus }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1032
+
+		remove_trait = charitable
+	}
+
+	option = {
+		name = EVTOPTB1032
+
+		add_trait_silently_stressed_effect = yes
+	}
+}
+
+# Remove Greedy
+character_event = {
+	id = 1033
+	desc = EVTDESC1033
+	picture = GFX_evt_market
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = greedy
+
+		OR = {
+			has_enough_personality_traits_trigger = yes
+			has_ambition = obj_buddhist_reject_greed
+		}
+
+		NOT = { has_character_modifier = voice_of_jesus }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			personality_traits > 6
+		}
+
+		mult_modifier = {
+			factor = 20
+			has_ambition = obj_buddhist_reject_greed
+		}
+	}
+
+	option = {
+		name = EVTOPTA1033
+
+		remove_trait = greedy
+	}
+}
+
+# Remove Diligent
+character_event = {
+	id = 1034
+	desc = EVTDESC1034
+	picture = GFX_evt_emissary
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = diligent
+		has_enough_personality_traits_trigger = yes
+		NOT = { has_character_modifier = voice_of_jesus }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1034
+
+		remove_trait = diligent
+	}
+}
+
+# Remove Slothful
+character_event = {
+	id = 1035
+	desc = EVTDESC1035
+	picture = GFX_evt_drunk
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = slothful
+		personality_traits > 5
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1035
+
+		remove_trait = slothful
+	}
+}
+
+# Remove Kind
+character_event = {
+	id = 1036
+	desc = EVTDESC1036
+	picture = GFX_evt_family
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = kind
+		has_enough_personality_traits_trigger = yes
+		NOT = { has_character_modifier = voice_of_jesus }
+	}
+
+	weight_multiplier = {
+		factor = 1
+	}
+
+	option = {
+		name = EVTOPTA1036
+
+		remove_trait = kind
+	}
+}
+
+# Remove Envious
+character_event = {
+	id = 1037
+	desc = EVTDESC1037
+	picture = GFX_evt_shadowy_cabal
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		trait = envious
+
+		OR = {
+			has_enough_personality_traits_trigger = yes
+			has_ambition = obj_buddhist_reject_envy
+		}
+
+		NOT = { has_character_modifier = voice_of_jesus }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			personality_traits > 6
+		}
+
+		mult_modifier = {
+			factor = 20
+			has_ambition = obj_buddhist_reject_envy
+		}
+	}
+
+	option = {
+		name = EVTOPTA1037
+
+		remove_trait = envious
+	}
+}
+
+# Remove Patient
+character_event = {
+	id = 1038
+	desc = EVTDESC1038
+	picture = GFX_evt_emissary
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = patient
+		has_enough_personality_traits_trigger = yes
+		NOT = { has_character_modifier = voice_of_jesus }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1038
+
+		remove_trait = patient
+	}
+}
+
+# Remove Wroth
+character_event = {
+	id = 1039
+	desc = EVTDESC1039
+	picture = GFX_evt_melee
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = wroth
+
+		OR = {
+			has_enough_personality_traits_trigger = yes
+			has_ambition = obj_buddhist_reject_hate
+		}
+
+		NOR = {
+			trait = impaler
+			has_character_modifier = voice_of_satan
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			personality_traits > 6
+		}
+
+		mult_modifier = {
+			factor = 20
+			has_ambition = obj_buddhist_reject_hate
+		}
+	}
+
+	option = {
+		name = EVTOPTA1039
+
+		remove_trait = wroth
+	}
+}
+
+# Remove Humble
+character_event = {
+	id = 1040
+	desc = EVTDESC1040
+	picture = GFX_evt_garden
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = humble
+		has_enough_personality_traits_trigger = yes
+		NOT = { has_character_modifier = voice_of_jesus }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1040
+
+		remove_trait = humble
+	}
+}
+
+# Remove Proud
+character_event = {
+	id = 1041
+	desc = EVTDESC1041
+	picture = GFX_evt_throne_room
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = proud
+
+		OR = {
+			has_enough_personality_traits_trigger = yes
+			has_ambition = obj_buddhist_reject_pride
+		}
+
+		NOT = { has_character_modifier = voice_of_satan }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			personality_traits > 6
+		}
+
+		mult_modifier = {
+			factor = 20
+			has_ambition = obj_buddhist_reject_pride
+		}
+	}
+
+	option = {
+		name = EVTOPTA1041
+
+		remove_trait = proud
+	}
+}
+
+# Remove Lustful - female
+character_event = {
+	id = 1042
+	desc = EVTDESC1042
+	picture = GFX_evt_lovers
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	only_women = yes
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = lustful
+		has_enough_personality_traits_trigger = yes
+		NOT = { trait = hedonist }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1028
+
+		remove_trait = lustful
+	}
+}
+
+# Remove Honest
+character_event = {
+	id = 1043
+	desc = EVTDESC1043
+	picture = GFX_evt_quarrel
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = honest
+		has_enough_personality_traits_trigger = yes
+		NOT = { has_character_modifier = voice_of_jesus }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1043
+
+		remove_trait = honest
+	}
+}
+
+# Remove Deceitful
+character_event = {
+	id = 1044
+	desc = EVTDESC1044
+	picture = GFX_evt_shadowy_cabal
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = deceitful
+		has_enough_personality_traits_trigger = yes
+		NOT = { has_character_modifier = voice_of_satan }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1044
+
+		remove_trait = deceitful
+	}
+}
+
+# Remove Brave
+character_event = {
+	id = 1045
+	desc = EVTDESC1045
+	picture = GFX_evt_melee
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = brave
+		has_enough_personality_traits_trigger = yes
+		NOT = { trait = duelist }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1045
+
+		remove_trait = brave
+	}
+}
+
+# Remove Craven
+character_event = {
+	id = 1046
+	desc = EVTDESC1046
+	picture = GFX_evt_courier
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = craven
+
+		OR = {
+			has_enough_personality_traits_trigger = yes
+			has_ambition = obj_buddhist_defeat_fear
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			personality_traits > 6
+		}
+
+		mult_modifier = {
+			factor = 20
+			has_ambition = obj_buddhist_defeat_fear
+		}
+	}
+
+	option = {
+		name = EVTOPTA1046
+
+		remove_trait = craven
+	}
+}
+
+# Remove Gregarious
+character_event = {
+	id = 1047
+	desc = EVTDESC1047
+	picture = GFX_evt_feast
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = gregarious
+		has_enough_personality_traits_trigger = yes
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1047
+
+		remove_trait = gregarious
+	}
+}
+
+# Remove Shy
+character_event = {
+	id = 1048
+	desc = EVTDESC1048
+	picture = GFX_evt_family
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = shy
+		has_enough_personality_traits_trigger = yes
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1048
+
+		remove_trait = shy
+	}
+}
+
+# Remove Content
+character_event = {
+	id = 1049
+	desc = EVTDESC1049
+	picture = GFX_evt_garden
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		always = no # Disabled in CK2Plus
+		trait = content
+		personality_traits > 5
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1049
+
+		remove_trait = content
+	}
+}
+
+# Remove Ambitious
+character_event = {
+	id = 1050
+	desc = EVTDESC1050
+	picture = GFX_evt_emissary
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		always = no # Disabled in CK2Plus
+		trait = ambitious
+		personality_traits > 5
+
+		NOR = {
+			has_character_flag = is_child_of_destiny
+
+			any_owned_bloodline = {
+				has_bloodline_flag = bloodline_ambition
+			}
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1050
+
+		remove_trait = ambitious
+	}
+}
+
+# Remove Just
+character_event = {
+	id = 1051
+	desc = EVTDESC1051
+	picture = GFX_evt_emissary
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		always = no # Disabled in CK2Plus
+		trait = just
+		is_ruler = no
+		has_enough_personality_traits_trigger = yes
+		NOT = { has_character_modifier = voice_of_jesus }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1051
+
+		remove_trait = just
+	}
+}
+
+# Remove Arbitrary
+character_event = {
+	id = 1052
+	desc = EVTDESC1052
+	picture = GFX_evt_beheading
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = arbitrary
+		has_enough_personality_traits_trigger = yes
+		NOT = { has_character_modifier = voice_of_satan }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1052
+
+		remove_trait = arbitrary
+	}
+}
+
+# Remove Zealous
+character_event = {
+	id = 1053
+	desc = EVTDESC1053
+	picture = GFX_evt_beheading
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = zealous
+		has_enough_personality_traits_trigger = yes
+
+		NOR = {
+			trait = hafiz
+			has_character_modifier = voice_of_jesus
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1053
+
+		remove_trait = zealous
+	}
+}
+
+# Remove Cynical
+character_event = {
+	id = 1054
+	desc = EVTDESC1054
+	picture = GFX_evt_jugglers
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = cynical
+		has_enough_personality_traits_trigger = yes
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1054
+
+		remove_trait = cynical
+	}
+}
+
+# Remove Paranoid
+character_event = {
+	id = 1057
+	desc = EVTDESC1057
+	picture = GFX_evt_lunatic
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = paranoid
+
+		OR = {
+			has_enough_personality_traits_trigger = yes
+			has_ambition = obj_buddhist_defeat_fear
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+
+		mult_modifier = {
+			factor = 20
+			has_ambition = obj_buddhist_defeat_fear
+		}
+	}
+
+	option = {
+		name = EVTOPTA1057
+
+		remove_trait = paranoid
+	}
+}
+
+# Remove Trusting
+character_event = {
+	id = 1058
+	desc = EVTDESC1058
+	picture = GFX_evt_family
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+
+	trigger = {
+		trait = trusting
+		has_enough_personality_traits_trigger = yes
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			personality_traits > 6
+		}
+	}
+
+	option = {
+		name = EVTOPTA1058
+
+		remove_trait = trusting
+	}
+}

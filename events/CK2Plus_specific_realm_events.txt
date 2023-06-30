@@ -1,0 +1,3785 @@
+namespace = Plus
+
+#reserved: Plus.500 to Plus.599
+
+#######################################
+# CK2Plus Specific Realm Events
+#######################################
+
+### ENGLAND
+
+# If William the Conqueror wins, change k_england's CoA to k_englandnormans's
+character_event = {
+	id = Plus.500
+	desc = EVTDESC_Plus_500
+	picture = GFX_evt_throne_room
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_500
+
+		k_england = {
+			show_scope_change = no
+
+			set_coa = k_england_norman
+			clr_global_flag = england_is_saxon
+			set_global_flag = england_is_norman
+			set_title_flag = non_manual_law_change # No prestige loss
+			add_law = succ_primogeniture
+
+			hidden_effect  = {
+				add_law = revoke_title_law_1
+				clr_title_flag = non_manual_law_change # No prestige loss
+
+				any_de_jure_vassal_title = {
+					limit = {
+						has_law = succ_feudal_elective
+						holder_scope = { vassal_of = ROOT }
+					}
+
+					set_title_flag = non_manual_law_change # No prestige loss
+					add_law = succ_primogeniture
+					clr_title_flag = non_manual_law_change # No prestige loss
+				}
+			}
+
+			# Downgrade Anglo-Saxon claims
+			any_claimant = {
+				show_scope_change = no
+
+				limit = { culture = anglo-saxon }
+
+				if = {
+					limit = { has_strong_pressed_claim = PREV }
+					remove_claim = PREV
+					add_claim = PREV
+				}
+				else_if = {
+					limit = { has_strong_claim = PREV }
+					remove_claim = PREV
+					add_weak_pressed_claim = PREV
+				}
+				else_if = {
+					limit = { has_weak_pressed_claim = PREV }
+					remove_claim = PREV
+					add_weak_claim = PREV
+				}
+			}
+		}
+
+		hidden_effect = {
+			d_kent = { set_coa = d_kent_norman }
+			d_cornwall = { set_coa = d_cornwall_norman }
+			d_hwicce = { set_coa = d_hwicce_norman }
+			d_mercia = { set_coa = d_mercia_norman }
+			d_lancaster = { set_coa = d_lancaster_norman }
+			d_east_anglia = { set_coa = d_east_anglia_norman }
+			# d_oxford = { set_coa = d_oxford_norman }
+			d_wessex = { set_coa = d_wessex_norman }
+			d_york = { set_coa = d_york_norman }
+		}
+	}
+}
+
+# If Harald Hardrada wins, change k_england's CoA to k_englandnorwegian's
+character_event = {
+	id = Plus.501
+	desc = EVTDESC_Plus_501
+	picture = GFX_evt_throne_room
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_500
+
+		k_england = {
+			show_scope_change = no
+
+			set_coa = k_englandnorwegian
+			clr_global_flag = england_is_saxon
+			set_global_flag = england_is_norwegian
+			set_title_flag = non_manual_law_change # No prestige loss
+			add_law = succ_gavelkind
+
+			any_de_jure_vassal_title = {
+				limit = {
+					has_law = succ_feudal_elective
+					holder_scope = { vassal_of = ROOT }
+				}
+
+				add_law = succ_gavelkind
+			}
+
+			clr_title_flag = non_manual_law_change # No prestige loss
+
+			# Downgrade Anglo-Saxon claims
+			any_claimant = {
+				show_scope_change = no
+
+				limit = { culture = anglo-saxon }
+
+				if = {
+					limit = { has_strong_pressed_claim = PREV }
+					remove_claim = PREV
+					add_claim = PREV
+				}
+				else_if = {
+					limit = { has_strong_claim = PREV }
+					remove_claim = PREV
+					add_weak_pressed_claim = PREV
+				}
+				else_if = {
+					limit = { has_weak_pressed_claim = PREV }
+					remove_claim = PREV
+					add_weak_claim = PREV
+				}
+			}
+		}
+	}
+}
+
+# Danish invasion of England
+character_event = {
+	id = Plus.543
+	desc = EVTDESC_Plus_543
+	picture = GFX_evt_crusaders
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	only_independent = yes
+	has_character_flag = millenium_england_invasion
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_landed_title = k_denmark
+		k_england = { has_holder = yes }
+
+		NOR = {
+			has_landed_title = k_england
+			religion_group = muslim
+			religion_group = pagan_group
+			has_character_flag = millenium_england_invasion_done
+		}
+	}
+
+	immediate = {
+		set_character_flag = millenium_england_invasion_done
+		add_claim = k_england
+		add_claim = d_essex
+		add_claim = d_east_anglia
+		add_claim = c_middlesex
+		add_claim = c_essex
+		add_claim = c_bedford
+		add_claim = c_norfolk
+		add_claim = c_suffolk
+	}
+
+	option = {
+		name = EVTOPTA_Plus_543 # To the longships!
+
+		wealth = 300
+		prestige = 100
+
+		while = {
+			count = 4
+
+			create_random_soldier = {
+				random_traits = yes
+				dynasty = none
+				religion = ROOT
+				culture = ROOT
+				female = no
+				age = 25
+			}
+
+			new_character = {
+				random_list = {
+					1 = { }
+					1 = { add_age = 1 }
+					1 = { add_age = 2 }
+					1 = { add_age = 3 }
+					1 = { add_age = 4 }
+					1 = { add_age = 5 }
+					1 = { add_age = 6 }
+					1 = { add_age = 7 }
+					1 = { add_age = 8 }
+				}
+			}
+		}
+
+		spawn_fleet = {
+			province = closest # closest sea zone
+			owner = ROOT
+			disband_on_peace = yes
+
+			troops = {
+				galleys = { 150 150 }
+			}
+		}
+
+		war = {
+			target = k_england
+			casus_belli = claim_all
+			thirdparty_title = k_england
+		}
+
+		# No use of 'while', doesn't generate tooltip
+		spawn_unit = {
+			province = c_sjaelland
+			home = c_sjaelland
+			owner = THIS
+			leader = THIS
+			match_character = k_england
+			match_mult = 0.2
+			match_min = 300
+			match_max = 5000
+			attrition = 0.25
+			disband_on_peace = yes
+		}
+
+		spawn_unit = {
+			province = c_sjaelland
+			home = c_sjaelland
+			owner = THIS
+			leader = THIS
+			match_character = k_england
+			match_mult = 0.2
+			match_min = 300
+			match_max = 5000
+			attrition = 0.25
+			disband_on_peace = yes
+		}
+
+		spawn_unit = {
+			province = c_sjaelland
+			home = c_sjaelland
+			owner = THIS
+			leader = THIS
+			match_character = k_england
+			match_mult = 0.2
+			match_min = 300
+			match_max = 5000
+			attrition = 0.25
+			disband_on_peace = yes
+		}
+
+		spawn_unit = {
+			province = c_sjaelland
+			home = c_sjaelland
+			owner = THIS
+			match_character = k_england
+			match_mult = 0.2
+			match_min = 300
+			match_max = 5000
+			attrition = 0.25
+			disband_on_peace = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_543 # I've changed my mind
+
+		remove_claim = k_england
+		remove_claim = d_essex
+		remove_claim = d_east_anglia
+		remove_claim = c_middlesex
+		remove_claim = c_essex
+		remove_claim = c_bedford
+		remove_claim = c_norfolk
+		remove_claim = c_suffolk
+		prestige = -500
+		remove_trait = brave
+		add_trait = craven
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# England informed of coming Danish invasion
+character_event = {
+	id = Plus.544 # formerly 90009021
+	desc = EVTDESC_Plus_544
+	picture = GFX_evt_crusaders
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = CURSES
+	}
+}
+
+### NORMANDY
+
+# Special event for Neustria to be renamed to Normandy
+character_event = {
+	id = Plus.503
+	title = EVTNAME_Plus_503
+	desc = EVTDESC_Plus_503
+	picture = GFX_evt_council
+	border = GFX_event_normal_frame_diplomacy
+
+	is_triggered_only = yes # on_yearly_pulse # TODO: Change to on_new_holder
+
+	only_playable = yes
+
+	trigger = {
+		has_landed_title = d_normandy
+		OR = {
+			culture = norse
+			culture = norman
+		}
+		NOT = { has_global_flag = neustria_renamed }
+	}
+
+	option = {
+		name = OK
+
+		set_global_flag = neustria_renamed
+
+		d_normandy = {
+			show_scope_change = no
+
+			set_name = ""
+			adjective = ""
+		}
+	}
+}
+
+### ITALY / SICILY
+
+# Christians lament the fall of Sicily and pleads for assistance in the peninsula
+narrative_event = {
+	id = Plus.504 # formerly 1000182648
+	title = EVTNAME_Plus_504
+	desc = EVTDESC_Plus_504
+	picture = GFX_evt_heretic
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = {
+			text = EVTOPTA_Plus_504
+			trigger = { religion_group = christian }
+		}
+		name = {
+			text = EVTOPTA_Plus_504
+			trigger = {
+				NOT = { religion_group = christian }
+			}
+		}
+	}
+}
+
+# The pope has found his champions
+character_event = {
+	id = Plus.505 # formerly 1000182649
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		random_list = {
+			50 = {
+				create_character = {
+					random_traits = no
+					religion = ROOT
+					culture = umbrian
+					dynasty = culture
+					female = no
+					age = 24
+					add_trait = brilliant_strategist
+					add_trait = holy_warrior
+					add_trait = strong
+					add_trait = zealous
+					add_trait = gregarious
+
+					attributes = {
+						martial = 8
+						diplomacy = 5
+						stewardship = 5
+						learning = 5
+						intrigue = 5
+					}
+				}
+			}
+
+			40 = {
+				if = {
+					limit = { has_global_flag = neustria_renamed }
+
+					create_character = {
+						random_traits = no
+						religion = ROOT
+						culture = norman
+						dynasty = culture
+						female = no
+						age = 24
+						add_trait = brilliant_strategist
+						add_trait = holy_warrior
+						add_trait = strong
+						add_trait = zealous
+						add_trait = gregarious
+
+						attributes = {
+							martial = 8
+							diplomacy = 5
+							stewardship = 5
+							learning = 5
+							intrigue = 5
+						}
+					}
+				}
+				else = {
+					create_character = {
+						random_traits = no
+						religion = ROOT
+						culture = norse
+						dynasty = culture
+						female = no
+						age = 24
+						add_trait = brilliant_strategist
+						add_trait = holy_warrior
+						add_trait = strong
+						add_trait = zealous
+						add_trait = gregarious
+
+						attributes = {
+							martial = 8
+							diplomacy = 5
+							stewardship = 5
+							learning = 5
+							intrigue = 5
+						}
+					}
+				}
+			}
+
+			3 = {
+				create_character = {
+					random_traits = no
+					religion = ROOT
+					culture = croatian
+					dynasty = culture
+					female = no
+					age = 24
+					add_trait = brilliant_strategist
+					add_trait = holy_warrior
+					add_trait = strong
+					add_trait = zealous
+					add_trait = gregarious
+
+					attributes = {
+						martial = 8
+						diplomacy = 5
+						stewardship = 5
+						learning = 5
+						intrigue = 5
+					}
+				}
+			}
+
+			3 = {
+				trigger = { has_global_flag = neustria_renamed }
+
+				create_character = {
+					random_traits = no
+					religion = ROOT
+					culture = slovene
+					dynasty = culture
+					female = no
+					age = 24
+					add_trait = brilliant_strategist
+					add_trait = holy_warrior
+					add_trait = strong
+					add_trait = zealous
+					add_trait = gregarious
+
+					attributes = {
+						martial = 8
+						diplomacy = 5
+						stewardship = 5
+						learning = 5
+						intrigue = 5
+					}
+				}
+			}
+
+			2 = {
+				create_character = {
+					random_traits = no
+					religion = ROOT
+					culture = serbian
+					dynasty = culture
+					female = no
+					age = 24
+					add_trait = brilliant_strategist
+					add_trait = holy_warrior
+					add_trait = strong
+					add_trait = zealous
+					add_trait = gregarious
+
+					attributes = {
+						martial = 8
+						diplomacy = 5
+						stewardship = 5
+						learning = 5
+						intrigue = 5
+					}
+				}
+			}
+
+			5 = {
+				create_character = {
+					random_traits = no
+					religion = ROOT
+					culture = greek
+					dynasty = culture
+					female = no
+					age = 24
+					add_trait = brilliant_strategist
+					add_trait = holy_warrior
+					add_trait = strong
+					add_trait = zealous
+					add_trait = gregarious
+
+					attributes = {
+						martial = 8
+						diplomacy = 5
+						stewardship = 5
+						learning = 5
+						intrigue = 5
+					}
+				}
+			}
+		}
+
+		new_character = {
+			opinion = {
+				name = papal_champion
+				who = FROM
+				years = 30
+			}
+
+			religion_head = {
+				opinion = {
+					name = my_champion
+					who = PREV
+					years = 30
+				}
+			}
+
+			any_title = {
+				limit = {
+					OR = {
+						title = d_benevento
+						title = d_apulia
+						title = d_capua
+					}
+
+					trigger_if = {
+						limit = { has_holder = yes }
+
+						holder_scope = {
+							NOT = { religion_group = christian }
+						}
+					}
+				}
+
+				add_pressed_claim = PREV
+			}
+
+			gain_title = b_tivoli # Temporarily give them a castle so they won't go republic or theocracy if they win against one of those
+			set_character_flag = duchy_adventurer
+			set_defacto_liege = THIS
+
+			add_character_modifier = {
+				name = italian_reconquest
+				duration = -1
+				inherit = yes
+				hidden = yes
+			}
+
+			create_title = {
+				tier = DUKE
+				landless = yes
+				temporary = yes
+				culture = THIS
+				name = CLAIMANT_ADVENTURE
+				holder = THIS
+				ruler = LORD
+				ruler_female = LADY
+			}
+
+			spawn_unit = {
+				province = c_roma
+				home = c_roma
+				owner = THIS
+				leader = THIS
+				match_character = ROOT
+				match_mult = 0.2
+				match_min = 4000
+				match_max = 5000
+				attrition = 0.25
+				earmark = claimant_adventure
+				cannot_inherit = yes
+			}
+
+			character_event = { id = Plus.506 }
+		}
+	}
+}
+
+# The champions head out
+character_event = {
+	id = Plus.506 # formerly 1000182650
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		# Create some decent commander characters
+		while = {
+			count = 4
+
+			create_random_soldier = {
+				random_traits = yes
+				dynasty = culture
+				religion = ROOT
+				culture = ROOT
+				female = no
+				age = 25
+			}
+
+			new_character = {
+				random_list = {
+					1 = { }
+					1 = { add_age = 1 }
+					1 = { add_age = 2 }
+					1 = { add_age = 3 }
+					1 = { add_age = 4 }
+					1 = { add_age = 5 }
+					1 = { add_age = 6 }
+					1 = { add_age = 7 }
+					1 = { add_age = 8 }
+				}
+			}
+		}
+
+		random_claim = {
+			# TODO: Add logic to select best target, considering target strength and amount of land controlled within claimed duchies
+			save_event_target_as = target_claim
+
+			holder_scope = {
+				save_event_target_as = target_ruler
+			}
+		}
+
+		war = {
+			target = event_target:target_ruler
+			casus_belli = italian_reconquest
+			thirdparty_title = event_target:target_claim
+			infamy = 0
+		}
+
+		# Give the Invaders a boost if targetting players, as players are better at handling the invasion
+		if = {
+			limit = {
+				event_target:target_ruler = { ai = no }
+			}
+
+			spawn_unit = {
+				province = c_roma
+				home = c_roma
+				owner = THIS
+				leader = THIS
+				match_character = ROOT
+				match_mult = 0.2
+				match_min = 2000
+				match_max = 3000
+				attrition = 0.25
+				earmark = claimant_adventure
+				cannot_inherit = yes
+			}
+		}
+
+		any_player = {
+			limit = { religion_group = christian }
+			narrative_event = { id = Plus.509 }
+		}
+	}
+}
+
+# The pope helps on the offensive!
+character_event = {
+	id = Plus.507 # formerly 1000182687
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		religion_head = {
+			join_attacker_wars = FROM
+		}
+	}
+}
+
+# The pope helps on the defensive!
+character_event = {
+	id = Plus.508 # formerly 1000182688
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_playable = yes
+	has_global_flag = italian_reconquest_started
+	only_men = yes
+	min_age = 16
+	war = yes
+
+	trigger = {
+		has_character_modifier = italian_reconquest
+
+		OR = {
+			is_feudal = yes
+			is_tribal = yes
+		}
+
+		NOR = {
+			has_global_flag = italian_rec_success
+			has_global_flag = italian_rec_failure
+		}
+	}
+
+	immediate = {
+		religion_head = {
+			join_defender_wars = ROOT
+		}
+	}
+}
+
+# The Champions head out
+narrative_event = {
+	id = Plus.509 # formerly 1000182689
+	title = EVTNAME_Plus_509
+	picture = GFX_evt_pope
+	border = GFX_event_narrative_frame_diplomacy
+
+	desc = {
+		text = EVTDESC_Plus_509
+		trigger = { FROM = { is_italian_trigger = yes } }
+	}
+	desc = {
+		text = EVTDESC_Plus_511
+		trigger = { FROM = { culture = norse } }
+	}
+	desc = {
+		text = EVTDESC_Plus_512
+		trigger = { FROM = { culture = norman } }
+	}
+	desc = {
+		text = EVTDESC_Plus_513
+		trigger = { FROM = { culture = croatian } }
+	}
+	desc = {
+		text = EVTDESC_Plus_514
+		trigger = { FROM = { culture = serbian } }
+	}
+	desc = {
+		text = EVTDESC_Plus_515
+		trigger = { FROM = { culture = greek } }
+	}
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_Plus_509
+	}
+}
+
+# The King of Sicily is Crowned
+narrative_event = {
+	id = Plus.510 # formerly 1000182690
+	title = EVTNAME_Plus_510
+	desc = EVTDESC_Plus_510
+	picture = GFX_evt_pope
+	border = GFX_event_narrative_frame_diplomacy
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_Plus_509
+	}
+}
+
+# The King of Sicily is Crowned (Recipient)
+narrative_event = {
+	id = Plus.516 # formerly 1000182696
+	title = EVTNAME_Plus_516
+	desc = EVTDESC_Plus_516
+	picture = GFX_evt_pope
+	border = GFX_event_narrative_frame_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_516
+
+		hidden_effect = {
+			disband_event_forces = yes
+		}
+	}
+}
+
+# The Invasion Fails
+narrative_event = {
+	id = Plus.517 # formerly 1000182697
+	title = EVTNAME_Plus_517
+	desc = EVTDESC_Plus_517
+	picture = GFX_evt_rome_falls
+	border = GFX_event_narrative_frame_diplomacy
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	ai = no
+
+	option = {
+		name = {
+			text = EVTOPTA_Plus_517
+			trigger = { religion_group = christian }
+		}
+		name = {
+			text = EVTOPTB_Plus_517
+			trigger = {
+				NOT = { religion_group = christian }
+			}
+		}
+	}
+}
+
+# Maintenance Check for Failed Invasion (landless or vassal invaders)
+character_event = {
+	id = Plus.518 # formerly 1000182698
+
+	is_triggered_only = yes # on_war_ended_victory/whitepeace/defeat/invalid
+	hide_window = yes
+
+	has_global_flag = first_war_success
+	min_age = 16
+	only_men = yes
+	war = no
+
+	trigger = {
+		has_global_flag = italian_reconquest_started
+		has_character_modifier = italian_reconquest
+
+		OR = {
+			independent = no
+			is_ruler = no
+		}
+
+		NOR = {
+			has_global_flag = italian_rec_success
+			has_global_flag = italian_rec_failure
+		}
+	}
+
+	immediate = {
+		remove_character_modifier = italian_reconquest
+
+		religion_head = {
+			remove_opinion = {
+				name = my_champion
+				who = ROOT
+			}
+		}
+
+		set_global_flag = italian_rec_failure
+
+		any_player = {
+			narrative_event = { id = Plus.517 }
+		}
+	}
+}
+
+# Maintenance Check, Start the invasion
+character_event = {
+	id = Plus.519 # formerly 1000182699
+
+	is_triggered_only = yes # on_yearly_pulse
+	hide_window = yes
+
+	has_global_flag = italian_reconquest_planning
+	religion = catholic
+	min_age = 16
+	only_men = yes
+
+	trigger = {
+		has_landed_title = k_papacy
+		has_character_modifier = italian_reconquest_pope
+
+		NOR = {
+			has_global_flag = italian_reconquest_started
+
+			c_benevento = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_foggia = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_capua = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_napoli = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_apulia = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_bari = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_lecce = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_salerno = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_taranto = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_amalfi = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_cosenza = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_reggio = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_palermo = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_messina = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_siracusa = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_agrigento = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_trapani = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+			c_malta = {
+				holder_scope = {
+					top_liege = {
+						has_character_modifier = holy_truce_timer
+					}
+				}
+			}
+		}
+	}
+
+	immediate = {
+		remove_character_modifier = italian_reconquest_pope
+		set_global_flag = italian_reconquest_started
+		character_event = { id = Plus.505 }
+		character_event = { id = Plus.508 }
+	}
+}
+
+### ALBANIA
+
+# Albanian culture arises
+province_event = {
+	id = Plus.520 # formerly 1000183181
+
+	hide_window = yes
+
+	trigger = {
+		OR = {
+			province_id = c_dyrrachion
+			province_id = c_avlonas
+		}
+
+		culture_group = byzantine
+		year >= 1000
+		NOT = { culture = arberian }
+	}
+
+	mean_time_to_happen = {
+		months = 550
+	}
+
+	immediate = {
+		culture = arberian
+
+		owner = {
+			character_event = { id = Plus.521 }
+		}
+	}
+}
+
+# Owner informed of Albanian culture
+character_event = {
+	id = Plus.521 # formerly 1000183182
+	title = EVTNAME_Plus_521
+	desc = EVTDESC_Plus_521
+	picture = GFX_evt_stone_church
+	border = GFX_event_normal_frame_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_521
+
+		prestige = 50
+	}
+
+	option = {
+		name = EVTOPTB_Plus_521
+
+		culture = arberian
+		prestige = -200
+	}
+}
+
+# Special event to create Albania -- triggered by decision: create_kingdomofalbania
+narrative_event = {
+	id = Plus.522 # formerly 1000183183
+	title = EVTNAME_Plus_522
+	desc = EVTDESC_Plus_522
+	picture = GFX_evt_albania
+	border = GFX_event_narrative_frame_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_522
+
+
+		k_albania = {
+			show_scope_change = no
+
+			grant_title = ROOT
+
+			d_albania = { show_scope_change = no de_jure_liege = PREV }
+			c_avlonas = { show_scope_change = no de_jure_liege = PREV }
+
+			c_dyrrachion = {
+				show_scope_change = no
+
+				de_jure_liege = PREV
+
+				holder_scope = {
+					show_scope_change = no
+
+					add_claim = c_dyrrachion
+					add_claim = c_avlonas
+				}
+			}
+		}
+
+		hidden_effect = {
+			any_player = {
+				limit = { NOT = { has_landed_title = k_albania } }
+				narrative_event = { id = Plus.523 }
+			}
+		}
+	}
+}
+
+# Informed about the Creation of Albania
+narrative_event = {
+	id = Plus.523
+	title = EVTNAME_Plus_523
+	desc = EVTDESC_Plus_523
+	picture = GFX_evt_albania
+	border = GFX_event_narrative_frame_diplomacy
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_Plus_523
+	}
+}
+
+### BOHEMIA
+
+# Duke of Bohemia responds to Boleslaw conquering Moravia
+character_event = {
+	id = Plus.524 # formerly 90009009
+	desc = EVTDESC_Plus_524
+	picture = GFX_evt_throne_room
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_524
+
+		set_defacto_liege = e_hre
+		pf_liege_change_effect = yes
+		prestige = -100
+
+		k_bohemia = {
+			show_scope_change = no
+
+			de_jure_liege = e_hre
+		}
+
+		ai_chance = { factor = 70 }
+	}
+
+	option = {
+		name = EVTOPTB_Plus_524
+
+		prestige = 10
+
+		ai_chance = { factor = 30 }
+	}
+}
+
+### BYZANTIUM / BULGARIA
+
+# Byzantine Emperor conquers Bulgaria (flag set in history file -- only valid between 998 and 1018 )
+character_event = {
+	id = Plus.535
+	desc = EVTDESC_Plus_535
+	picture = GFX_evt_throne_room
+
+	is_triggered_only = yes # on_new_holder(_inheritance/usurpation)
+
+	only_independent = yes
+	has_global_flag = byz_bul_prev
+
+	trigger = {
+		has_landed_title = e_byzantium
+		has_landed_title = k_bulgaria
+
+		NOR = {
+			culture = bulgarian
+			has_global_flag = byz_bul
+		}
+	}
+
+	immediate = {
+		set_global_flag = byz_bul
+	}
+
+	option = {
+		name = EVTOPTA_Plus_535
+
+		give_nickname = nick_the_bulgar_slayer
+		prestige = 100
+		destroy_landed_title = k_bulgaria
+	}
+}
+
+# Bulgaria is not conquered by the Byzantines (flag set in history file -- only valid between 998 and 1018 )
+character_event = {
+	id = Plus.536
+	desc = EVTDESC_Plus_536
+	picture = GFX_evt_throne_room
+
+	is_triggered_only = yes # on_war_ended_victory
+
+	only_independent = yes
+	has_global_flag = byz_bul_prev
+	war = no
+
+	trigger = {
+		has_landed_title = k_bulgaria
+
+		NOR = {
+			has_landed_title = e_byzantium
+			has_global_flag = byz_bul
+		}
+	}
+
+	immediate = {
+		set_global_flag = byz_bul
+	}
+
+	option = {
+		name = EVTOPTA_Plus_536 # Take them down
+
+		give_nickname = nick_the_victorious
+		prestige = 300
+		add_claim = e_byzantium
+		add_claim = d_thrace
+
+		e_byzantium = {
+			show_scope_change = no
+
+			holder_scope = {
+				show_scope_change = no
+
+				prestige = -500
+			}
+		}
+
+		war = {
+			target = e_byzantium
+			casus_belli = claim_all
+			thirdparty_title = e_byzantium
+		}
+
+		spawn_unit = {
+			province = c_nikopolis
+			owner = ROOT
+			disband_on_peace = yes
+
+			troops = {
+				light_cavalry = { 1000 1000 }
+				light_infantry = { 300 300 }
+				heavy_infantry = { 200 200 }
+			}
+		}
+
+		spawn_unit = {
+			province = c_nikopolis
+			owner = ROOT
+			disband_on_peace = yes
+
+			troops = {
+				light_cavalry = { 1000 1000 }
+				light_infantry = { 300 300 }
+				heavy_infantry = { 200 200 }
+			}
+		}
+
+		spawn_unit = {
+			province = c_nikopolis
+			owner = ROOT
+			disband_on_peace = yes
+
+			troops = {
+				knights = { 1000 1000 }
+			}
+		}
+
+		ai_chance = {
+			factor = 20
+
+			trigger = { trait = ambitious }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_536 # Macedonia will be more than enough
+
+		add_claim = d_epirus
+		add_claim = d_thessalonika
+
+		war = {
+			target = e_byzantium
+			casus_belli = claim_all
+			thirdparty_title = e_byzantium
+		}
+
+		spawn_unit = {
+			province = c_ohrid
+			owner = ROOT
+			disband_on_peace = yes
+
+			troops = {
+				light_cavalry = { 1000 1000 }
+				light_infantry = { 300 300 }
+				heavy_infantry = { 200 200 }
+			}
+		}
+
+		spawn_unit = {
+			province = c_ohrid
+			owner = ROOT
+			disband_on_peace = yes
+
+			troops = {
+				light_cavalry = { 1000 1000 }
+				light_infantry = { 300 300 }
+				heavy_infantry = { 200 200 }
+			}
+		}
+
+		spawn_unit = {
+			province = c_ohrid
+			owner = ROOT
+			disband_on_peace = yes
+
+			troops = {
+				knights = { 1000 1000 }
+			}
+		}
+
+		ai_chance = { factor = 30 }
+	}
+
+	option = {
+		name = EVTOPTC_Plus_536 # We should be grateful for what we have
+
+		prestige = -100
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 2
+				NOT = { trait = ambitious }
+			}
+		}
+	}
+}
+
+### SWEDEN
+
+# Sigfrid Arrives to convert norse pagans
+character_event = {
+	id = Plus.537
+	desc = EVTDESC_Plus_537
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_playable = yes
+	religion_group = pagan_group
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		year >= 1004
+		year < 1030
+
+		OR = {
+			has_landed_title = k_sweden
+			AND = {
+				k_sweden = { has_holder = no }
+				has_landed_title = d_uppland
+			}
+		}
+
+		NOR = {
+			has_global_flag = sigfrid_arrived
+			has_global_flag = schism_happened
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_537 # What can I do?
+
+		custom_tooltip = { text = preacher_allowed }
+
+		set_global_flag = sigfrid_arrived
+
+		create_random_priest = {
+			random_traits = no
+			name = "Siegfried"
+			dynasty = 1000124226
+			culture = norse
+			religion = chalcedonian
+			female = no
+			age = 30
+			flag = sigfrid_of_sweden
+
+			attributes = {
+				diplomacy = 8
+				stewardship = 2
+				intrigue = 2
+				martial = 1
+				learning = 10
+			}
+
+			add_trait = mastermind_theologian
+			add_trait = patient
+			add_trait = zealous
+			add_trait = humble
+			add_trait = just
+			add_trait = monk
+		}
+	}
+}
+
+# Sigfrid tries to convert Olofr
+character_event = {
+	id = Plus.538
+	desc = EVTDESC_Plus_538
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	only_playable = yes
+	religion_group = pagan_group
+	war = no
+
+	trigger = {
+		trigger_if = {
+			limit = { k_sweden = { has_holder = yes } }
+			has_landed_title = k_sweden
+		}
+		trigger_else = {
+			has_landed_title = d_uppland
+		}
+
+		any_courtier = {
+			has_character_flag = sigfrid_of_sweden
+			religion = chalcedonian
+			prisoner = no
+			is_incapable = no
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.8
+			learning < 2
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			learning < 3
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			learning < 4
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			learning < 5
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			learning >= 10
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			learning >= 11
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			learning >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			learning >= 13
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_538 # Convert
+
+		tooltip = { # For nicer tooltip
+			religion = chalcedonian
+		}
+
+		piety = -100
+
+		random_courtier = {
+			show_scope_change = no
+
+			limit = { has_character_flag = sigfrid_of_sweden }
+
+			clr_character_flag = sigfrid_of_sweden
+			add_friend = ROOT
+		}
+
+		any_courtier = {
+			show_scope_change = no
+
+			limit = {
+				dynasty = ROOT
+				religion = ROOT
+				culture = ROOT
+			}
+
+			religion = chalcedonian
+		}
+
+		any_spouse = {
+			show_scope_change = no
+
+			limit = {
+				dynasty = ROOT
+				religion = ROOT
+				culture = ROOT
+			}
+
+			religion = chalcedonian
+		}
+
+
+		hidden_effect = {
+			religion = chalcedonian
+
+			if = {
+				limit = { has_landed_title = k_sweden }
+
+				any_player = {
+					narrative_event = { id = Plus.539 }
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 3
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = arbitrary
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_538 # We shall bow to no one!
+
+		prestige = -100
+
+		random_courtier = {
+			show_scope_change = no
+
+			limit = { has_character_flag = sigfrid_of_sweden }
+
+			clr_character_flag = sigfrid_of_sweden
+			add_rival = ROOT
+		}
+
+		any_courtier = {
+			show_scope_change = no
+
+			limit = {
+				religion = chalcedonian
+				prisoner = no
+
+				NOR = {
+					dynasty = ROOT
+					is_close_relative = ROOT
+				}
+			}
+
+			imprison = ROOT
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 5
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				rightful_religious_head_scope = {
+					OR = {
+						character = ROOT
+						is_vassal_or_below_of = ROOT
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+				is_not_unreformed_pagan_trigger = yes
+			}
+		}
+	}
+}
+
+# Informed about the conversion
+narrative_event = {
+	id = Plus.539
+	title = EVTNAME_Plus_539
+	desc = EVTDESC_Plus_539
+	picture = GFX_evt_council
+	border = GFX_event_narrative_frame_diplomacy
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_Plus_539
+	}
+}
+
+### NORWAY
+
+# Olafr den Helige begins adventure claim for Norway
+character_event = {
+	id = Plus.545
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_window = yes
+
+	has_character_flag = olafr_den_helige
+	culture = norse
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		k_norway = {
+			holder_scope = {
+				NOT = { has_character_flag = sveinn_forkbeard }
+			}
+		}
+
+		is_ruler = no
+		in_command_trigger = no
+		NOT = { has_global_flag = yngling_reconquest }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 2
+			has_character_flag = flag_denied_title
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			diplomacy >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 1.18
+			trait = proud
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = slothful
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = kind
+		}
+	}
+
+	immediate = {
+		set_global_flag = yngling_reconquest
+		wealth = 500
+		prestige = 300
+
+		create_title = {
+			tier = DUKE
+			landless = yes
+			temporary = yes
+			culture = ROOT
+			name = CLAIMANT_ADVENTURE
+			holder = ROOT
+			ruler = LORD
+			ruler_female = LADY
+		}
+
+		while = {
+			count = 4
+
+			create_random_soldier = {
+				random_traits = yes
+				dynasty = none
+				religion = ROOT
+				culture = ROOT
+				female = no
+				age = 25
+			}
+
+			new_character = {
+				random_list = {
+					1 = { }
+					1 = { add_age = 1 }
+					1 = { add_age = 2 }
+					1 = { add_age = 3 }
+					1 = { add_age = 4 }
+					1 = { add_age = 5 }
+					1 = { add_age = 6 }
+					1 = { add_age = 7 }
+					1 = { add_age = 8 }
+				}
+			}
+
+			spawn_unit = {
+				province = c_gowrie
+				home = c_gowrie
+				owner = ROOT
+				leader = ROOT
+				match_character = k_norway
+				match_mult = 0.7
+				match_min = 1500
+				match_max = 5000
+				attrition = 0.25
+				disband_on_peace = yes
+			}
+		}
+
+		spawn_fleet = {
+			province = closest # closest sea zone
+			owner = ROOT
+			disband_on_peace = yes
+
+			troops = {
+				galleys = { 150 150 }
+			}
+		}
+
+		war = {
+			target = k_norway
+			casus_belli = claim
+			thirdparty_title = k_norway
+			infamy = 0
+		}
+
+		k_norway = {
+			holder_scope = {
+				character_event = {
+					id = Plus.546
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+# Informed of impending Olafr den Helige invasion
+character_event = {
+	id = Plus.546
+	desc = EVTDESC_Plus_545
+	picture = GFX_evt_crusaders
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+	}
+}
+
+### PAPAL EVENTS
+
+# Rightful religion head is declared war upon by a member of their own religion
+character_event = {
+	id = Plus.548
+
+	is_triggered_only = yes # on_war_started
+	hide_window = yes
+
+	only_playable = yes
+	religion_group = christian
+
+	trigger = {
+		rightful_religious_head = ROOT
+		is_theocracy = yes
+		can_excommunicate_trigger = yes
+		is_primary_war_defender = yes
+
+		any_current_enemy = {
+			religion = ROOT
+			rightful_religious_head = ROOT
+			NOT = { trait = excommunicated }
+
+			any_war = {
+				attacker = { character = PREVPREV }
+				defender = { character = ROOT }
+			}
+		}
+	}
+
+	immediate = {
+		random_current_enemy = {
+			limit = {
+				religion = ROOT
+				rightful_religious_head = ROOT
+				NOT = { trait = excommunicated }
+
+				any_war = {
+					attacker = { character = PREVPREV }
+					defender = { character = ROOT }
+				}
+			}
+
+			add_trait = excommunicated
+			character_event = { id = Plus.549 }
+		}
+	}
+}
+
+# Ruler attacking religious head is excommunicated
+character_event = {
+	id = Plus.549
+	desc = EVTDESC_Plus_549
+	picture = GFX_evt_pope
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_549
+
+		tooltip = {
+			add_trait = excommunicated
+		}
+
+		add_rival = FROM
+
+		any_vassal = {
+			show_scope_change = no
+
+			limit = {
+				rightful_religious_head = FROM
+				is_adult = yes
+				is_incapable = no
+				NOT = {  trait = cynical }
+
+				OR = {
+					trait = zealous
+
+					opinion_diff = {
+						first = FROM
+						second = ROOT
+						value >= 25
+					}
+				}
+			}
+
+			opinion = {
+				name = opinion_outraged
+				who = ROOT
+				years = 5
+			}
+		}
+	}
+}
+
+# Other rulers respond to the attack on the religion head
+# TODO: Fire repeating event for religious head to target playable same-religion rulers, or high priority targeted decision?
+character_event = {
+	id = Plus.550
+	desc = EVTDESC_Plus_550
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_war
+
+	only_playable = yes
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		demesne_size >= 1
+		is_inaccessible_trigger = no
+
+		trigger_if = {
+			limit = { independent = no }
+			liege = { war = no }
+		}
+
+		rightful_religious_head_scope = {
+			war = yes
+			is_primary_war_defender = yes
+
+			trigger_if = {
+				limit = { ROOT = { religion_head = { always = yes } } }
+				controls_religion = yes
+			}
+
+			NOR = {
+				is_liege_of = ROOT
+				character = ROOT
+				reverse_has_truce = ROOT
+				is_foe = ROOT
+
+				has_opinion_modifier = {
+					name = opinion_disappointed
+					who = ROOT
+				}
+			}
+
+			any_war = {
+				war_score >= 0
+				defender = { character = PREVPREV }
+
+				attacker = {
+					NOR = {
+						is_vassal_or_below_of = ROOT
+						has_non_aggression_pact_with = ROOT
+						is_allied_with = ROOT
+						is_friend = ROOT
+						reverse_has_truce = ROOT
+					}
+				}
+
+				OR = {
+					using_cb = claim_all
+					using_cb = claim
+					using_cb = other_claim
+					using_cb = tribal_invasion
+					using_cb = overthrow_ruler
+					using_cb = coastal_republic
+					using_cb = viking_invasion
+					using_cb = peasant_revolt
+					using_cb = heretic_revolt
+					using_cb = religious_revolt
+					using_cb = liberation_revolt
+					using_cb = duchy_adventure
+					using_cb = pagan_county_conquest
+					using_cb = dejure_county_claim
+					using_cb = dejure_barony_claim
+					using_cb = other_dejure_county_claim
+					using_cb = tributary_cb
+					using_cb = dejure_duchy_claim
+					using_cb = dejure_duchy_claim_plus
+					using_cb = ducal_county_conquest
+					using_cb = unjust_conquest
+					using_cb = cb_faction_overthrow_ruler
+					attacker = { rightful_religious_head = PREVPREV }
+				}
+			}
+		}
+
+		NOR = {
+			rightful_religious_head = ROOT
+			trait = cynical
+		}
+
+		trigger_if = {
+			limit = { has_character_flag = helped_religious_head }
+
+			had_character_flag = {
+				flag = helped_religious_head
+				years >= 5
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 3
+
+		mult_modifier = {
+			factor = 0.5
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = excommunicated
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = slothful
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			rightful_religious_head_scope = {
+				any_war = {
+					defender = { character = PREVPREV }
+					war_score >= 15
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 2.0
+
+			rightful_religious_head_scope = {
+				NOT = {
+					any_war = {
+						defender = { character = PREVPREV }
+						war_score > 0
+					}
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			rightful_religious_head_scope = {
+				OR = {
+					is_allied_with = ROOT
+					is_friend = ROOT
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			event_target:relhead_enemy = { is_foe = ROOT }
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			rightful_religious_head_scope = {
+				capital_scope = {
+					ROOT = {
+						capital_scope = {
+							distance = {
+								where = PREVPREV
+								value < 75
+							}
+						}
+					}
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			rightful_religious_head_scope = {
+				capital_scope = {
+					ROOT = {
+						capital_scope = {
+							distance = {
+								where = PREVPREV
+								value >= 200
+							}
+						}
+					}
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			rightful_religious_head_scope = {
+				capital_scope = {
+					ROOT = {
+						capital_scope = {
+							distance = {
+								where = PREVPREV
+								value >= 300
+							}
+						}
+					}
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			rightful_religious_head_scope = {
+				capital_scope = {
+					ROOT = {
+						capital_scope = {
+							distance = {
+								where = PREVPREV
+								value >= 400
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	immediate = {
+		set_character_flag = helped_religious_head
+
+		rightful_religious_head_scope = {
+			save_event_target_as = rightful_relhead
+
+			random_current_enemy = {
+				limit = {
+					is_primary_war_attacker = yes
+
+					NOR = {
+						is_vassal_or_below_of = ROOT
+						has_non_aggression_pact_with = ROOT
+						is_allied_with = ROOT
+						is_friend = ROOT
+						reverse_has_truce = ROOT
+					}
+
+					any_war = {
+						war_score >= 0
+						defender = { character = PREVPREVPREV }
+						attacker = { character = PREVPREV }
+
+						OR = {
+							using_cb = claim_all
+							using_cb = claim
+							using_cb = other_claim
+							using_cb = tribal_invasion
+							using_cb = overthrow_ruler
+							using_cb = coastal_republic
+							using_cb = viking_invasion
+							using_cb = peasant_revolt
+							using_cb = heretic_revolt
+							using_cb = religious_revolt
+							using_cb = liberation_revolt
+							using_cb = duchy_adventure
+							using_cb = pagan_county_conquest
+							using_cb = dejure_county_claim
+							using_cb = dejure_barony_claim
+							using_cb = other_dejure_county_claim
+							using_cb = tributary_cb
+							using_cb = dejure_duchy_claim
+							using_cb = cb_faction_overthrow_ruler
+							# TODO: Check if any CBs need to be added here
+							attacker = { rightful_religious_head = PREVPREVPREV }
+						}
+					}
+				}
+
+				save_event_target_as = relhead_enemy
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_550 # We will defend the Pope
+
+		trigger = {
+			NOR	= {
+				is_liege_or_above_of = event_target:relhead_enemy
+				is_vassal_or_below_of = event_target:relhead_enemy
+			}
+		}
+
+		if = {
+			limit = { trait = excommunicated }
+			remove_trait = excommunicated
+		}
+
+		piety = 50
+
+		join_defender_wars = event_target:rightful_relhead
+
+		if = {
+			limit = { is_friend = event_target:rightful_relhead }
+
+			reverse_opinion = {
+				name = opinion_grateful
+				who = event_target:rightful_relhead
+				years = 20
+			}
+		}
+		else = {
+			add_friend = event_target:rightful_relhead
+		}
+
+		reverse_opinion = {
+			name = opinion_outraged
+			who = event_target:relhead_enemy
+			years = 10
+		}
+
+		ai_chance = {
+			factor = 20
+
+			trigger = {
+				OR = {
+					trait = excommunicated
+					trait = zealous
+
+					opinion = {
+						who = event_target:rightful_relhead
+						value >= 0
+					}
+				}
+
+				# Not too far away from both
+				capital_scope = {
+					NAND = {
+						event_target:relhead_enemy = {
+							capital_scope = {
+								distance = {
+									where = PREVPREV
+									value >= 200
+								}
+							}
+						}
+
+						event_target:rightful_relhead = {
+							capital_scope = {
+								distance = {
+									where = PREVPREV
+									value >= 200
+								}
+							}
+						}
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = excommunicated
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = honest
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = chaste
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = temperate
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				piety = 500
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				event_target:rightful_relhead = {
+					NOT = { has_landed_title = k_papacy }
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				capital_scope = {
+					event_target:relhead_enemy = {
+						capital_scope = {
+							distance = {
+								where = PREVPREV
+								value >= 150
+							}
+						}
+					}
+
+					event_target:rightful_relhead = {
+						capital_scope = {
+							distance = {
+								where = PREVPREV
+								value >= 150
+							}
+						}
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				capital_scope = {
+					event_target:relhead_enemy = {
+						capital_scope = {
+							distance = {
+								where = PREVPREV
+								value >= 100
+							}
+						}
+					}
+
+					event_target:rightful_relhead = {
+						capital_scope = {
+							distance = {
+								where = PREVPREV
+								value >= 100
+							}
+						}
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = event_target:rightful_relhead value >= 25 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = event_target:rightful_relhead value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = event_target:rightful_relhead value >= 75 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = event_target:relhead_enemy value < -50 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = event_target:relhead_enemy value < -75 }
+			}
+
+			mult_modifier = {
+				factor = 0.66
+				opinion = { who = event_target:relhead_enemy value >= 25 }
+			}
+
+			mult_modifier = {
+				factor = 0.66
+				opinion = { who = event_target:relhead_enemy value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 0.66
+				opinion = { who = event_target:relhead_enemy value >= 75 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_550 # We will send volunteers and donations
+
+		trigger = {
+			# Not too far away from both
+			capital_scope = {
+				NAND = {
+					event_target:relhead_enemy = {
+						capital_scope = {
+							distance = {
+								where = PREVPREV
+								value >= 250
+							}
+						}
+					}
+
+					event_target:rightful_relhead = {
+						capital_scope = {
+							distance = {
+								where = PREVPREV
+								value >= 250
+							}
+						}
+					}
+				}
+			}
+		}
+
+		piety = 25
+
+		reverse_opinion = {
+			name = opinion_grateful
+			who = event_target:rightful_relhead
+			years = 10
+		}
+
+		transfer_scaled_wealth = {
+			to = event_target:rightful_relhead
+			value = 0.5
+		}
+
+		hidden_effect = {
+			capital_scope = {
+				ROOT = {
+					event_target:rightful_relhead = {
+						spawn_unit =  {
+							province = capital_scope
+							home = capital_scope
+							owner = event_target:rightful_relhead
+							match_character = ROOT
+							match_mult = 0.1
+							match_max = 2000
+							disband_on_peace = yes
+							maintenance_multiplier = 0
+						}
+					}
+				}
+			}
+		}
+
+		any_demesne_province = {
+			show_scope_change = no
+
+			limit = { owned_by = ROOT }
+
+			add_province_modifier = {
+				name = adventurer_recruited
+				days = 1000
+			}
+		}
+
+		reverse_opinion = {
+			name = opinion_furious
+			who = event_target:relhead_enemy
+			years = 5
+		}
+
+		ai_chance = {
+			factor = 30
+
+			mult_modifier = {
+				factor = 0.25
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = deceitful
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = chaste
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = temperate
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				piety >= 250
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				OR = {
+					NOT = { scaled_wealth = 0.5 }
+					has_character_modifier = ai_austerity
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				is_merchant_republic = yes
+			}
+
+			mult_modifier = {
+				factor = 0.75
+
+				event_target:rightful_relhead = {
+					NOT = { has_landed_title = k_papacy }
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				NOR = {
+					trait = excommunicated
+					trait = zealous
+				}
+
+				opinion = {
+					who = event_target:rightful_relhead
+					value < -25
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = event_target:rightful_relhead value >= 0 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = event_target:rightful_relhead value >= 25 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = event_target:rightful_relhead value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:rightful_relhead value >= 75 }
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				opinion = { who = event_target:relhead_enemy value >= 25 }
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				opinion = { who = event_target:relhead_enemy value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				opinion = { who = event_target:relhead_enemy value >= 75 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTD_Plus_550 # We will send donations
+
+		trigger = {
+			# Too far away from both
+			capital_scope = {
+				event_target:relhead_enemy = {
+					capital_scope = {
+						distance = {
+							where = PREVPREV
+							value >= 250
+						}
+					}
+				}
+
+				event_target:rightful_relhead = {
+					capital_scope = {
+						distance = {
+							where = PREVPREV
+							value >= 250
+						}
+					}
+				}
+			}
+		}
+
+		piety = 25
+
+		reverse_opinion = {
+			name = opinion_grateful
+			who = event_target:rightful_relhead
+			years = 10
+		}
+
+		transfer_scaled_wealth = {
+			to = event_target:rightful_relhead
+			value = 0.5
+		}
+
+		reverse_opinion = {
+			name = opinion_furious
+			who = event_target:relhead_enemy
+			years = 5
+		}
+
+		ai_chance = {
+			factor = 30
+
+			mult_modifier = {
+				factor = 0.25
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = deceitful
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = chaste
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = temperate
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				piety >= 250
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				OR = {
+					NOT = { scaled_wealth = 0.5 }
+					has_character_modifier = ai_austerity
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				is_merchant_republic = yes
+			}
+
+			mult_modifier = {
+				factor = 0.75
+
+				event_target:rightful_relhead = {
+					NOT = { has_landed_title = k_papacy }
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				NOR = {
+					trait = excommunicated
+					trait = zealous
+				}
+
+				opinion = {
+					who = event_target:rightful_relhead
+					value < -25
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = event_target:rightful_relhead value >= 0 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = event_target:rightful_relhead value >= 25 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = event_target:rightful_relhead value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:rightful_relhead value >= 75 }
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				opinion = { who = event_target:relhead_enemy value >= 25 }
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				opinion = { who = event_target:relhead_enemy value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				opinion = { who = event_target:relhead_enemy value >= 75 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_550 # This is not our concern
+
+		piety = -25
+
+		reverse_opinion = {
+			name = opinion_disappointed
+			who = event_target:rightful_relhead
+			years = 10
+			multiplier = 2
+		}
+
+		ai_chance = {
+			factor = 40
+
+			mult_modifier = {
+				factor = 0.5
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = excommunicated
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = lustful
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = gluttonous
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 0.25
+				is_theocracy = yes
+			}
+
+			mult_modifier = {
+				factor = 2
+				is_tribal = yes
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = event_target:rightful_relhead value < -25 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = event_target:rightful_relhead value < -50 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = event_target:rightful_relhead value < -75 }
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				opinion = { who = event_target:relhead_enemy value < -25 }
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				opinion = { who = event_target:relhead_enemy value < -50 }
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				opinion = { who = event_target:relhead_enemy value < -75 }
+			}
+		}
+	}
+}
+
+### NORSE HOLY ORDERS
+
+# The Braedralag founded
+narrative_event = {
+	id = Plus.553 # formerly 1000182569
+	title = EVTNAME_Plus_553
+	desc = EVTDESC_Plus_553
+	picture = GFX_evt_blood_eagle
+	border = GFX_event_narrative_frame_war
+
+	is_triggered_only = yes
+
+	hide_from = yes
+
+	option = {
+		name = EXCELLENT
+
+		hidden_effect = {
+			any_player = {
+				narrative_event = { id = Plus.554 }
+			}
+		}
+	}
+}
+
+# The player is informed of the Braedralag
+narrative_event = {
+	id = Plus.554
+	title = EVTNAME_Plus_554
+	desc = EVTDESC_Plus_554
+	picture = GFX_evt_blood_eagle
+	border = GFX_event_narrative_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = {
+			text = EVTOPTA_Plus_554
+			trigger = { religion_openly_norse_or_reformed_trigger = yes }
+		}
+		name = {
+			text = EVTOPTB_Plus_554
+			trigger = { religion_openly_norse_or_reformed_trigger = no }
+		}
+	}
+}
+
+# The Jomsvikings founded
+narrative_event = {
+	id = Plus.555 # formerly 1000182571
+	title = EVTNAME_Plus_555
+	desc = EVTDESC_Plus_555
+	picture = GFX_evt_blood_eagle
+	border = GFX_event_narrative_frame_war
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	option = {
+		name = EXCELLENT
+
+		hidden_effect = {
+			any_player = {
+				narrative_event = { id = Plus.556 }
+			}
+		}
+	}
+}
+
+# The player is informed of the Jomsvikings
+narrative_event = {
+	id = Plus.556
+	title = EVTNAME_Plus_556
+	desc = EVTDESC_Plus_556
+	picture = GFX_evt_blood_eagle
+	border = GFX_event_narrative_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = {
+			text = EVTOPTA_Plus_554
+			trigger = { religion_openly_norse_or_reformed_trigger = yes }
+		}
+		name = {
+			text = EVTOPTB_Plus_554
+			trigger = { religion_openly_norse_or_reformed_trigger = no }
+		}
+	}
+}
+
+### NAVARRA
+
+# Special event for Pamplona to be renamed to Navarra
+character_event = {
+	id = Plus.557
+	title = EVTNAME_Plus_557
+	desc = EVTDESC_Plus_557
+	picture = GFX_evt_council
+	border = GFX_event_normal_frame_diplomacy
+
+	is_triggered_only = yes # on_yearly_pulse # TODO: Change to on_new_holder(_inheritance/usurpation)
+
+	trigger = {
+		has_landed_title = k_navarra
+		NOT = { has_global_flag = pamplona_renamed }
+
+		# If the title is being held by a non-basque ruler this will trigger. Alternatively, if the title is
+		# not being held as a primary title and not by an emperor, this event will also trigger.
+		trigger_if = {
+			limit = { culture = basque }
+
+			real_tier = KING
+			k_navarra = { is_primary_holder_title = no }
+		}
+	}
+
+	option = {
+		name = OK
+
+		set_global_flag = pamplona_renamed
+
+		k_navarra = {
+			show_scope_change = no
+
+			set_name = ""
+			adjective = ""
+		}
+
+		# The tooltip for these two just says the same thing as k_navarra = { ... }
+		hidden_effect = {
+			d_navarra = {
+				set_name = ""
+				adjective = ""
+			}
+
+			c_navarra = {
+				set_name = ""
+				adjective = ""
+
+				location = {
+					set_name = ""
+				}
+			}
+		}
+	}
+}
+
+### HARII FORMATION
+
+# The Harii founded
+narrative_event = {
+	id = Plus.560
+	title = EVTNAME_Plus_560
+	desc = EVTDESC_Plus_560
+	picture = GFX_evt_blood_eagle
+	border = GFX_event_narrative_frame_war
+
+	is_triggered_only = yes
+
+	hide_from = yes
+
+	option = {
+		name = EXCELLENT
+
+		hidden_effect = {
+			any_player = {
+				narrative_event = { id = Plus.561 }
+			}
+		}
+	}
+}
+
+# The player is informed of the Harii
+narrative_event = {
+	id = Plus.561
+	title = EVTNAME_Plus_561
+	desc = EVTDESC_Plus_561
+	picture = GFX_evt_blood_eagle
+	border = GFX_event_narrative_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = {
+			text = EVTOPTA_Plus_561
+			trigger = { religion_openly_german_or_reformed_trigger = yes }
+		}
+		name = {
+			text = EVTOPTB_Plus_554
+			trigger = { religion_openly_german_or_reformed_trigger = no }
+		}
+	}
+}
+
+### MUSLIM CALIPHATES
+
+# A Muslim dynasty head with low decadence claims the caliphate title
+character_event = {
+	id = Plus.562
+	desc = EVTDESC_Plus_562
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	major_trigger = {
+		OR = {
+			character = FROM
+			religion = ROOT
+			same_realm = ROOT
+			same_realm = FROM
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_562 # How dare he!
+
+		trigger = { character = ROOT }
+
+		reverse_opinion = {
+			name = opinion_condemned_decadence
+			who = FROM
+			years = 20
+			multiplier = 2
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_562 # So must it be
+
+		trigger = { character = FROM }
+
+		reverse_opinion = {
+			name = opinion_angry
+			who = ROOT
+			years = 20
+			multiplier = 2
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_562 # He is absolutely right!
+
+		trigger = {
+			religion = ROOT
+
+			NOR = {
+				character = ROOT
+				character = FROM
+			}
+		}
+
+		reverse_remove_opinion = {
+			name = appreciates_support
+			who = ROOT
+		}
+
+		reverse_remove_opinion = {
+			name = opinion_disappointed
+			who = FROM
+		}
+
+		reverse_opinion = {
+			name = opinion_angry
+			who = ROOT
+			years = 5
+		}
+
+		reverse_opinion = {
+			name = appreciates_support
+			who = FROM
+			years = 5
+		}
+
+		hidden_effect = {
+			opinion = {
+				name = opinion_condemned_decadence
+				who = ROOT
+				years = 10
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				opinion = {
+					who = FROM
+					value >= 0
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				likes_better_than = {
+					who = FROM
+					than = ROOT
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				likes_better_than = {
+					who = ROOT
+					than = FROM
+				}
+			}
+
+			mult_modifier = {
+				factor = 4.0
+				dynasty = FROM
+			}
+
+			mult_modifier = {
+				factor = 0.25
+				dynasty = ROOT
+			}
+
+			mult_modifier = {
+				factor = 2.0
+
+				OR = {
+					is_allied_with = FROM
+					is_close_relative = FROM
+				}
+
+				NOT = { dynasty = FROM }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				OR = {
+					is_allied_with = ROOT
+					is_close_relative = ROOT
+				}
+
+				NOT = { dynasty = ROOT }
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				OR = {
+					trait = decadent
+					trait = dynasty_decadence_high
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				trait = dynasty_decadence_med
+				NOT = { trait = dynasty_decadence_high }
+			}
+
+			mult_modifier = {
+				factor = 0.25
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 0.25
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = diligent
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				trait = zealous
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTD_Plus_562 # No, I support the Caliph
+
+		trigger = {
+			religion = ROOT
+
+			NOR = {
+				character = ROOT
+				character = FROM
+			}
+		}
+
+		reverse_opinion = {
+			name = appreciates_support
+			who = ROOT
+			years = 5
+		}
+
+		reverse_opinion = {
+			name = opinion_disappointed
+			who = FROM
+			years = 5
+		}
+
+		ai_chance = { factor = 50 }
+	}
+
+	option = {
+		name = EVTOPTE_Plus_562 # This is none of my concern
+
+		trigger = {
+			NOR = {
+				religion = ROOT
+				character = ROOT
+				character = FROM
+			}
+		}
+	}
+}
+
+### IRELAND
+
+# An Irish duke claims the High King title
+character_event = {
+	id = Plus.563
+	desc = EVTDESC_Plus_563
+	picture = GFX_evt_throne_room
+
+	is_triggered_only = yes
+	major = yes
+
+	major_trigger = {
+		OR = {
+			has_landed_title = k_ireland
+			capital_scope = { region = world_europe_west_ireland }
+		}
+
+		NOT = { character = FROM }
+	}
+
+	option = {
+		name = EVTOPTA_Plus_563
+
+		trigger = { has_landed_title = k_ireland }
+
+		opinion = {
+			name = opinion_outraged
+			who = FROM
+			years = 10
+		}
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = { NOT = { has_landed_title = k_ireland } }
+	}
+}
+
+### ALTAIC TRIBALS
+
+# An Altaic tribal decides to become a nomad
+narrative_event = {
+	id = Plus.564
+	title = EVTNAME_Plus_564
+	desc = EVTDESC_Plus_564
+	picture = GFX_evt_steppe_mercenaries
+
+	is_triggered_only = yes
+	major = yes
+
+	major_trigger = {
+		OR = {
+			same_realm = ROOT
+
+			AND = {
+				ROOT = { independent = yes }
+				is_within_diplo_range = ROOT
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_564
+
+		trigger = { character = ROOT }
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = { NOT = { character = ROOT } }
+	}
+}
+
+### POLAND
+
+# Determine the name and CoA for polish kingdom
+character_event = {
+	id = Plus.565
+
+	is_triggered_only = yes # on_create_title
+	hide_window = yes
+
+	trigger = {
+		has_landed_title = k_poland
+		NOT = { has_global_flag = poland_formed }
+	}
+
+	immediate = {
+		set_global_flag = poland_formed
+
+		# Reset duchy names
+		d_kuyavia = {
+			set_name = ""
+			adjective = ""
+		}
+
+		d_silesia = {
+			set_name = ""
+			adjective = ""
+		}
+
+		d_mazovia = {
+			set_name = ""
+			adjective = ""
+		}
+
+		d_lesser_poland = {
+			set_name = ""
+			adjective = ""
+		}
+
+		d_greater_poland = {
+			set_name = ""
+			adjective = ""
+		}
+
+		# Set kingdom name and CoA
+		# TODO: Use localisation keys instead of text
+		if = {
+			limit = {
+				capital_scope = {
+					duchy = {
+						title = d_kuyavia
+					}
+				}
+			}
+
+			k_poland = {
+				set_name = "Kuyavia"
+				adjective = "Kuyavian"
+				set_coa = d_kuyavia
+			}
+		}
+		else_if = {
+			limit = {
+				capital_scope = {
+					duchy = {
+						title = d_silesia
+					}
+				}
+			}
+
+			k_poland = {
+				set_name = "Silesia"
+				adjective = "Silesian"
+				set_coa = d_silesia
+			}
+		}
+		else_if = {
+			limit = {
+				capital_scope = {
+					duchy = {
+						title = d_mazovia
+					}
+				}
+			}
+
+			k_poland = {
+				set_name = "Mazovia"
+				adjective = "Mazovian"
+				set_coa = d_mazovia
+			}
+		}
+		# Keep the name but change CoA
+		else_if = {
+			limit = {
+				capital_scope = {
+					duchy = {
+						title = d_lesser_poland
+					}
+				}
+			}
+			k_poland = {
+				set_coa = d_lesser_poland
+			}
+		}
+	}
+}
+
+### Successor to Rome
+
+# Eastern Roman Successor
+narrative_event = {
+	id = Plus.566
+	title = EVTNAME_Plus_566
+	desc = EVTDESC_Plus_566
+	picture = GFX_evt_coronation_byzantine
+
+	is_triggered_only = yes
+	major = yes
+
+	immediate = {
+		set_global_flag = east_rome_lives
+		primary_title = { set_title_flag = eastern_roman_successor }
+	}
+
+	option = {
+		name = {
+			text = EVTOPTA_Plus_566
+			trigger = { same_realm = ROOT }
+		}
+		name = {
+			text = I_SEE
+			trigger = { NOT = { same_realm = ROOT } }
+		}
+	}
+}
+
+# Byzantine Precedence
+character_event = {
+	id = Plus.567
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		clr_global_flag = east_rome_lives
+		set_global_flag = east_rome_lives
+		e_byzantium = { set_title_flag = eastern_roman_successor }
+
+		any_title = {
+			limit = {
+				real_tier = EMPEROR
+				has_title_flag = eastern_roman_successor
+			}
+
+			clr_title_flag = eastern_roman_successor
+		}
+	}
+}
+
+# Remove global flag if Eastern Rome has fallen (again)
+character_event = {
+	id = Plus.568
+
+	is_triggered_only = yes # on_yearly_pulse
+	hide_window = yes
+
+	has_global_flag = east_rome_lives
+
+	trigger = {
+		owns = event_target:pulse_province
+
+		NOT = {
+			any_independent_ruler = {
+				real_tier = EMPEROR
+				primary_title = { has_title_flag = eastern_roman_successor }
+			}
+		}
+	}
+
+	immediate = {
+		clr_global_flag = east_rome_lives
+	}
+}
+
+# Western Roman Successor
+narrative_event = {
+	id = Plus.569
+	title = EVTNAME_Plus_569
+	desc = EVTDESC_Plus_569
+	picture = GFX_evt_coronation
+
+	is_triggered_only = yes
+	major = yes
+
+	immediate = {
+		set_global_flag = west_rome_lives
+		primary_title = { set_title_flag = western_roman_successor }
+	}
+
+	option = {
+		name = {
+			text = EVTOPTA_Plus_566
+			trigger = { same_realm = ROOT }
+		}
+		name = {
+			text = I_SEE
+			trigger = { NOT = { same_realm = ROOT } }
+		}
+	}
+}
+
+# Remove global flag if Western Rome has fallen (again)
+character_event = {
+	id = Plus.570
+
+	is_triggered_only = yes # on_yearly_pulse
+	hide_window = yes
+
+	only_playable = yes
+	has_global_flag = west_rome_lives
+
+	trigger = {
+		owns = event_target:pulse_province
+
+		NOT = {
+			any_independent_ruler = {
+				real_tier = EMPEROR
+				primary_title = { has_title_flag = western_roman_successor }
+			}
+		}
+	}
+
+	immediate = {
+		clr_global_flag = west_rome_lives
+	}
+}
+
+# Add global flag if there is a Roman successor (in case of errors)
+character_event = {
+	id = Plus.571
+
+	is_triggered_only = yes # on_yearly_pulse
+	hide_window = yes
+
+	only_independent = yes
+	has_dlc = "Legacy of Rome"
+
+	trigger = {
+		trigger_if = {
+			limit = {
+				primary_title = {
+					has_title_flag = eastern_roman_successor
+					real_tier = EMPEROR
+				}
+			}
+			NOT = { has_global_flag = east_rome_lives }
+		}
+		trigger_else_if = {
+			limit = {
+				primary_title = {
+					has_title_flag = western_roman_successor
+					real_tier = EMPEROR
+				}
+			}
+			NOT = { has_global_flag = west_rome_lives }
+		}
+		trigger_else = {
+			primary_title = { title = e_roman_empire }
+			NOT = { has_global_flag = rome_restored }
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				primary_title = { has_title_flag = eastern_roman_successor }
+				NOT = { has_global_flag = east_rome_lives }
+			}
+			set_global_flag = east_rome_lives
+		}
+		else_if = {
+			limit = {
+				primary_title = { has_title_flag = western_roman_successor }
+				NOT = { has_global_flag = east_rome_lives }
+			}
+			set_global_flag = west_rome_lives
+		}
+		else_if = {
+			limit = {
+				primary_title = { title = e_roman_empire }
+				NOT = { has_global_flag = rome_restored }
+			}
+			set_global_flag = rome_restored
+		}
+	}
+}

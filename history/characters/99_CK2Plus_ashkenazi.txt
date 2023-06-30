@@ -1,0 +1,19 @@
+248128 = {
+	name = "Saad al-Dawla"
+	dynasty = 1059019
+	stewardship = 5
+	religion = jewish
+	culture = ashkenazi
+	add_trait = fortune_builder
+	add_trait = ambitious
+	add_trait = physician
+	1240.1.1 = {
+		birth = yes
+	}
+	1285.1.1 = {
+		employer = 478008
+	}
+	1291.3.3 = {
+		death = yes
+	}
+}

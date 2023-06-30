@@ -1,0 +1,840 @@
+namespace = Plus
+
+#reserved: Plus.2500 to Plus.2599
+
+#######################################
+# MUSLIM DECADENCE EVENTS
+#######################################
+
+# Add decadent dynasty trait
+character_event = {
+	id = Plus.2500
+	picture = GFX_evt_throne_room
+
+	desc = {
+		text = EVTDESC_Plus_2500_low
+		trigger = { trait = dynasty_decadence_low }
+	}
+	desc = {
+		text = EVTDESC_Plus_2500_med
+		trigger = { trait = dynasty_decadence_med }
+	}
+	desc = {
+		text = EVTDESC_Plus_2500_high
+		trigger = { trait = dynasty_decadence_high }
+	}
+
+	is_triggered_only = yes
+	notification = yes
+
+	only_playable = yes
+	religion_group = muslim
+
+	trigger = {
+		dynasty_head = { character = ROOT }
+		num_of_dynasty_members >= 10 # Does not apply to tiny dynasties
+
+		OR = {
+			independent = yes
+			NOT = { any_dynasty_member = { is_liege_or_above_of = ROOT } }
+		}
+
+		OR = {
+			trait = decadent
+
+			any_dynasty_member = {
+				count >= 3
+				trait = decadent
+				is_vassal_or_below_of = ROOT
+			}
+		}
+
+		NOR = {
+			trait = dynasty_decadence_low
+			trait = dynasty_decadence_med
+			trait = dynasty_decadence_high
+		}
+	}
+
+	immediate = {
+		set_character_flag = has_dynasty_decadence
+
+		if = {
+			limit = {
+				trigger_if = {
+					limit = { trait = decadent }
+
+					any_dynasty_member = {
+						count >= 8
+						trait = decadent
+						is_vassal_or_below_of = ROOT
+					}
+				}
+				trigger_else = {
+					any_dynasty_member = {
+						count >= 15
+						trait = decadent
+						is_vassal_or_below_of = ROOT
+					}
+				}
+			}
+
+			add_trait = dynasty_decadence_high
+		}
+		else_if = {
+			limit = {
+				trigger_if = {
+					limit = { trait = decadent }
+
+					any_dynasty_member = {
+						count >= 3
+						trait = decadent
+						is_vassal_or_below_of = ROOT
+					}
+				}
+				trigger_else = {
+					any_dynasty_member = {
+						count >= 8
+						trait = decadent
+						is_vassal_or_below_of = ROOT
+					}
+				}
+			}
+
+			add_trait = dynasty_decadence_med
+		}
+		else_if = {
+			limit = {
+				OR = {
+					trait = decadent
+
+					any_dynasty_member = {
+						count >= 3
+						trait = decadent
+						is_vassal_or_below_of = ROOT
+					}
+				}
+			}
+
+			add_trait = dynasty_decadence_low
+		}
+	}
+
+	option = {
+		name = OK
+	}
+}
+
+# Lower decadent dynasty trait
+character_event = {
+	id = Plus.2501
+	desc = EVTDESC_Plus_2501
+	picture = GFX_evt_throne_room
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	only_playable = yes
+	religion_group = muslim
+	has_character_flag = has_dynasty_decadence
+
+	trigger = {
+		OR = {
+			independent = yes
+			NOT = { any_dynasty_member = { is_liege_or_above_of = ROOT } }
+		}
+
+		trigger_if = {
+			limit = { trait = dynasty_decadence_low }
+
+			NOR = {
+				trait = decadent
+
+				any_dynasty_member = {
+					count >= 3
+					trait = decadent
+					is_vassal_or_below_of = ROOT
+				}
+			}
+		}
+		trigger_else_if = {
+			limit = { trait = dynasty_decadence_med }
+
+			trigger_if = {
+				limit = { trait = decadent }
+
+				NOT = {
+					any_dynasty_member = {
+						count >= 3
+						trait = decadent
+						is_vassal_or_below_of = ROOT
+					}
+				}
+			}
+			trigger_else = {
+				NOT = {
+					any_dynasty_member = {
+						count >= 8
+						trait = decadent
+						is_vassal_or_below_of = ROOT
+					}
+				}
+			}
+		}
+		trigger_else = {
+			trait = dynasty_decadence_high
+
+			trigger_if = {
+				limit = { trait = decadent }
+
+				NOT = {
+					any_dynasty_member = {
+						count >= 8
+						trait = decadent
+						is_vassal_or_below_of = ROOT
+					}
+				}
+			}
+			trigger_else = {
+				NOT = {
+					any_dynasty_member = {
+						count >= 15
+						trait = decadent
+						is_vassal_or_below_of = ROOT
+					}
+				}
+			}
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.67
+			trait = dynasty_decadence_med
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = dynasty_decadence_high
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2501
+
+		trigger_switch = {
+			on_trigger = trait
+
+			dynasty_decadence_low = { remove_trait = dynasty_decadence_low }
+			dynasty_decadence_med = { remove_trait = dynasty_decadence_med }
+			dynasty_decadence_high = { remove_trait = dynasty_decadence_high }
+		}
+
+		if = {
+			limit = {
+				trigger_if = {
+					limit = { trait = decadent }
+
+					any_dynasty_member = {
+						count >= 3
+						trait = decadent
+						is_vassal_or_below_of = ROOT
+					}
+				}
+				trigger_else = {
+					any_dynasty_member = {
+						count >= 8
+						trait = decadent
+						is_vassal_or_below_of = ROOT
+					}
+				}
+			}
+
+			add_trait = dynasty_decadence_med
+		}
+		else_if = {
+			limit = {
+				OR = {
+					trait = decadent
+
+					any_dynasty_member = {
+						count >= 3
+						trait = decadent
+						is_vassal_or_below_of = ROOT
+					}
+				}
+			}
+
+			add_trait = dynasty_decadence_low
+		}
+		else = {
+			clr_character_flag = has_dynasty_decadence
+		}
+	}
+}
+
+# Raise decadent dynasty trait
+character_event = {
+	id = Plus.2502
+	desc = EVTDESC_Plus_2502
+	picture = GFX_evt_throne_room
+
+	is_triggered_only = yes
+
+	only_playable = yes
+	religion_group = muslim
+	has_character_flag = has_dynasty_decadence
+
+	trigger = {
+		OR = {
+			independent = yes
+			NOT = { any_dynasty_member = { is_liege_or_above_of = ROOT } }
+		}
+
+		trigger_if = {
+			limit = { trait = dynasty_decadence_med }
+
+			trigger_if = {
+				limit = { trait = decadent }
+
+				any_dynasty_member = {
+					count >= 8
+					trait = decadent
+					is_vassal_or_below_of = ROOT
+				}
+			}
+			trigger_else = {
+				any_dynasty_member = {
+					count >= 15
+					trait = decadent
+					is_vassal_or_below_of = ROOT
+				}
+			}
+		}
+		trigger_else = {
+			trait = dynasty_decadence_low
+
+			trigger_if = {
+				limit = { trait = decadent }
+
+				any_dynasty_member = {
+					count >= 3
+					trait = decadent
+					is_vassal_or_below_of = ROOT
+				}
+			}
+			trigger_else = {
+				any_dynasty_member = {
+					count >= 8
+					trait = decadent
+					is_vassal_or_below_of = ROOT
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2502
+
+		trigger_switch = {
+			on_trigger = trait
+
+			dynasty_decadence_low = { remove_trait = dynasty_decadence_low }
+			dynasty_decadence_med = { remove_trait = dynasty_decadence_med }
+			dynasty_decadence_high = { remove_trait = dynasty_decadence_high }
+		}
+
+		if = {
+			limit = {
+				trigger_if = {
+					limit = { trait = decadent }
+
+					any_dynasty_member = {
+						count >= 8
+						trait = decadent
+						is_vassal_or_below_of = ROOT
+					}
+				}
+				trigger_else = {
+					any_dynasty_member = {
+						count >= 15
+						trait = decadent
+						is_vassal_or_below_of = ROOT
+					}
+				}
+			}
+
+			add_trait = dynasty_decadence_high
+		}
+		else_if = {
+			limit = {
+				trigger_if = {
+					limit = { trait = decadent }
+
+					any_dynasty_member = {
+						count >= 3
+						trait = decadent
+						is_vassal_or_below_of = ROOT
+					}
+				}
+				trigger_else = {
+					any_dynasty_member = {
+						count >= 8
+						trait = decadent
+						is_vassal_or_below_of = ROOT
+					}
+				}
+			}
+
+			add_trait = dynasty_decadence_med
+		}
+	}
+}
+
+# Remove decadent dynasty trait
+character_event = {
+	id = Plus.2503
+
+	hide_window = yes
+
+	has_character_flag = has_dynasty_decadence
+
+	trigger = {
+		OR = {
+			NOT = { religion_group = muslim }
+			NOR = {
+				independent = yes
+				NOT = { any_dynasty_member = { is_liege_or_above_of = ROOT } }
+			}
+			num_of_dynasty_members < 10
+			is_playable = no
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 1
+	}
+
+	immediate = {
+		clr_character_flag = has_dynasty_decadence
+
+		trigger_switch = {
+			on_trigger = trait
+
+			dynasty_decadence_low = { remove_trait = dynasty_decadence_low }
+			dynasty_decadence_med = { remove_trait = dynasty_decadence_med }
+			dynasty_decadence_high = { remove_trait = dynasty_decadence_high }
+		}
+	}
+}
+
+# Decadent character loses money
+# TODO: Let player know what happened?
+character_event = {
+	id = Plus.2505
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_window = yes
+
+	religion_group = muslim
+	only_men = yes
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	ai = yes
+
+	trigger = {
+		trait = decadent
+		wealth >= -50
+		stewardship < 16
+
+		NOR = {
+			trait = genius
+			has_character_modifier = planning_claimant_adventure
+			has_character_modifier = planning_duchy_adventure
+			has_character_flag = claimant_adventurer
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.33
+			stewardship < 2
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			stewardship < 4
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			stewardship >= 8
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			stewardship >= 10
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			stewardship >= 12
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			stewardship >= 14
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			OR = {
+				trait = quick
+				trait = shrewd
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = temperate
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 4
+			trait = imbecile
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			trait = charitable
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			OR = {
+				trait = slow
+				trait = dull
+			}
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = depressed
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = drunkard
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = hedonist
+		}
+	}
+
+	immediate = {
+		wealth = -25
+	}
+}
+
+# Decadent character asks dynasty member for money
+character_event = {
+	id = Plus.2506
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	religion_group = muslim
+	only_men = yes
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	ai = yes
+
+	trigger = {
+		trait = decadent
+
+		OR = {
+			wealth < 25
+			trait = greedy
+		}
+
+		any_close_relative = {
+			dynasty = ROOT
+			religion = ROOT
+			same_realm = ROOT
+			wealth >= 100
+			war = no
+			reverse_opinion = { who = ROOT value = -25 }
+			opinion = { who = ROOT value >= -25 }
+			distance = { who = ROOT value < 75 }
+
+			NOR = {
+				liege = { war = yes }
+				reverse_has_opinion_modifier = { who = ROOT name = negotiated_to_drop_decadence }
+				reverse_has_opinion_modifier = { who = ROOT name = grievously_offended }
+				reverse_has_opinion_modifier = { who = ROOT name = opinion_angry }
+				reverse_has_opinion_modifier = { who = ROOT name = opinion_grateful }
+				has_opinion_modifier = { who = ROOT name = opinion_takfir }
+				has_character_modifier = decadent_request_timer
+			}
+		}
+
+		NOR = {
+			trait = proud
+			trait = humble
+			has_character_modifier = planning_claimant_adventure
+			has_character_modifier = planning_duchy_adventure
+			has_character_flag = claimant_adventurer
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.83
+			has_character_modifier = estates_1
+		}
+
+		mult_modifier = {
+			factor = 2
+			wealth < 0
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			trait = greedy
+			wealth < 25
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			trait = gluttonous
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			trait = gregarious
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = charitable
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = temperate
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = shy
+		}
+	}
+
+	immediate = {
+		random_close_relative = {
+			limit = {
+				dynasty = ROOT
+				religion = ROOT
+				same_realm = ROOT
+				wealth >= 100
+				war = no
+				reverse_opinion = { who = ROOT value >= -25 }
+				opinion = { who = ROOT value >= -25 }
+				distance = { who = ROOT value < 75 }
+
+				NOR = {
+					liege = { war = yes }
+					reverse_has_opinion_modifier = { who = ROOT name = negotiated_to_drop_decadence }
+					reverse_has_opinion_modifier = { who = ROOT name = grievously_offended }
+					reverse_has_opinion_modifier = { who = ROOT name = opinion_angry }
+					reverse_has_opinion_modifier = { who = ROOT name = opinion_grateful }
+					has_opinion_modifier = { who = ROOT name = opinion_takfir }
+					has_character_modifier = decadent_request_timer
+				}
+			}
+
+			if = {
+				limit = { ai = no }
+
+				add_character_modifier = {
+					name = decadent_request_timer
+					years = 2
+					hidden = yes
+				}
+			}
+			else = {
+				add_character_modifier = {
+					name = decadent_request_timer
+					months = 6
+					hidden = yes
+				}
+			}
+
+			opinion = {
+				name = opinion_disgusted
+				who = ROOT
+				years = 2
+			}
+
+			character_event = { id = Plus.2507 }
+		}
+	}
+}
+
+# Relative is asked for money
+character_event = {
+	id = Plus.2507
+	desc = EVTDESC_Plus_2507
+	picture = GFX_evt_emissary
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2507 # Give him money
+
+		transfer_scaled_wealth = {
+			to = FROM
+			value = 1
+			min = 50
+			max = 50
+		}
+
+		reverse_opinion = {
+			name = opinion_grateful
+			who = FROM
+			years = 2
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value >= 25 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value >= 75 }
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = kind
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				wealth >= 200
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2507 # Send him away
+
+		FROM = {
+			show_scope_change = no
+
+			if = {
+				limit = {
+					OR = {
+						trait = lunatic
+						trait = possessed
+						trait = wroth
+						trait = cruel
+					}
+				}
+
+				opinion = {
+					name = grievously_offended
+					who = ROOT
+					years = 5
+				}
+			}
+			else = {
+				opinion = {
+					name = opinion_angry
+					who = ROOT
+					years = 5
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 2
+				opinion = { who = FROM value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 2
+				opinion = { who = FROM value < -25 }
+			}
+
+			mult_modifier = {
+				factor = 4
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 2
+				NOT = { is_child_of = ROOT }
+			}
+		}
+	}
+}

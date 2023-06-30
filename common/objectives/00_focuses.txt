@@ -1,0 +1,1449 @@
+# Supported types: character
+#
+# Note: if 'chance' evaluates to 0, an AI character will also abandon the focus
+#
+
+###############
+# FOCUSES
+###############
+
+focus_rulership = {
+	type = character
+
+	modifier_name = RULERSHIP_FOCUS
+
+	# Modifiers
+	stewardship = 3
+	intrigue = -1
+
+	potential = {
+		is_playable = yes
+	}
+
+	allow = {
+		is_adult = yes
+		prisoner = no
+		is_incapable = no
+	}
+
+	# Focuses have no success conditions
+	success = {
+		always = no
+	}
+
+	abort = {
+		OR = {
+			prisoner = yes
+			is_incapable = yes
+			is_playable = no
+		}
+	}
+
+	# AI Pick chance - based on personality, not needs!
+	chance = {
+		factor = 100
+
+		trigger = {
+			NOT = { trait = stressed }
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = depressed
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			is_republic = yes
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = arbitrary
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = slothful
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = diligent
+		}
+
+		mult_modifier = {
+			factor = 3.0
+			trait = just
+		}
+
+		# CK2Plus
+		mult_modifier = {
+			factor = 2.0
+
+			OR = {
+				has_job_title = job_treasurer
+				has_ambition = obj_become_treasurer
+			}
+		}
+	}
+}
+
+focus_business = {
+	type = character
+
+	modifier_name = BUSINESS_FOCUS
+
+	# Modifiers
+	stewardship = 2
+	martial = -1
+	town_opinion = 20
+
+	potential = {
+		is_playable = yes
+	}
+
+	allow = {
+		is_adult = yes
+		prisoner = no
+		is_incapable = no
+	}
+
+	# Focuses have no success conditions
+	success = {
+		always = no
+	}
+
+	abort = {
+		OR = {
+			prisoner = yes
+			is_playable = no
+			is_incapable = yes
+		}
+	}
+
+	# AI Pick chance - based on personality, not needs!
+	chance = {
+		factor = 100
+
+		mult_modifier = {
+			factor = 0.2
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = depressed
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = slothful
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = charitable
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = diligent
+		}
+
+		mult_modifier = {
+			factor = 3.0
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			is_republic = yes
+		}
+
+		# CK2Plus
+		mult_modifier = {
+			factor = 0.5
+
+			NOR = {
+				is_republic = yes
+				has_job_title = job_treasurer
+				has_ambition = obj_become_treasurer
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			wealth < 100
+
+			NOR = {
+				has_job_title = job_treasurer
+				has_ambition = obj_become_treasurer
+			}
+		}
+
+		mult_modifier = {
+			factor = 2.0
+
+			OR = {
+				has_job_title = job_treasurer
+				has_ambition = obj_become_treasurer
+			}
+		}
+	}
+}
+
+focus_seduction = {
+	type = character
+
+	modifier_name = SEDUCTION_FOCUS
+
+	# Modifiers
+	intrigue = 2
+	learning = -1
+	fertility = 0.25
+	sex_appeal_opinion = 10
+
+	potential = {
+		# is_playable = yes # TODO: See what to do about this
+	}
+
+	allow = {
+		is_adult = yes
+		prisoner = no
+		is_incapable = no
+		is_not_ascetic_trigger = yes
+
+		NOR = {
+			trait = celibate
+			trait = eunuch
+			trait = perfecti
+			religion = cathar
+			has_ambition = obj_become_saint
+		}
+	}
+
+	# Focuses have no success conditions
+	success = {
+		always = no
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			# is_playable = no
+			trait = eunuch
+			trait = celibate
+			trait = perfecti
+			religion = cathar
+			is_ascetic_trigger = yes
+			has_character_modifier = messalian_prayer
+		}
+	}
+
+	abort_effect = {
+		clear_delayed_event = { id = WoL.110 }
+	}
+
+	# AI Pick chance - based on personality, not needs!
+	chance = {
+		factor = 75
+
+		trigger = {
+			NOR = {
+				has_game_rule = {
+					name = ai_seduction
+					value = off
+				}
+
+				trait = chaste
+
+				# Faithful spouse/consort
+				any_lover = {
+					OR = {
+						is_married = ROOT
+						is_consort = ROOT
+					}
+				}
+			}
+
+			trigger_if = {
+				limit = {
+					is_theocracy = yes
+					religion_group = christian
+				}
+
+				trait = bad_priest_christian
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = shy
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = ugly
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = uncouth
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = honest
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = gregarious
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = cruel
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = deceitful
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = hedonist
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = attractive
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = groomed
+		}
+
+		mult_modifier = {
+			factor = 5.0
+			trait = lustful
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			has_character_modifier = african_adulthood_rites_3
+		}
+
+		mult_modifier = { # Loveless marriage
+			factor = 4.0
+
+			OR = {
+				is_married = yes
+				is_senior_consort_party = yes
+			}
+
+			trigger_if = {
+				limit = { trait = homosexual }
+
+				NOR = {
+					any_spouse ={
+						same_sex = ROOT
+						trait = homosexual
+					}
+
+					any_consort ={
+						same_sex = ROOT
+						trait = homosexual
+					}
+				}
+			}
+			trigger_else = {
+				NOR = {
+					any_spouse ={
+						is_opposite_sex = ROOT
+						NOT = { trait = homosexual }
+					}
+
+					any_consort ={
+						is_opposite_sex = ROOT
+						NOT = { trait = homosexual }
+					}
+				}
+			}
+		}
+
+		# CK2Plus
+		mult_modifier = {
+			factor = 0.1
+
+			# Likes spouse/consort
+			OR = {
+				any_spouse = {
+					reverse_opinion = {
+						who = ROOT
+						value >= 0
+					}
+				}
+
+				any_consort = {
+					reverse_opinion = {
+						who = ROOT
+						value >= 25
+					}
+				}
+			}
+
+			NOR = {
+				trait = deceitful
+				trait = lustful
+				trait = hedonist
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.1
+
+			has_lover = yes
+
+			NOR = {
+				trait = master_seducer
+				trait = master_seductress
+				trait = lustful
+				trait = hedonist
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.75
+
+			trigger_if = {
+				limit = { is_female = yes }
+				practical_age <= 30
+			}
+			trigger_else = {
+				practical_age >= 40
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = craven
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			trait = paranoid
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = temperate
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = just
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = slothful
+		}
+	}
+}
+
+focus_intrigue = {
+	type = character
+
+	modifier_name = INTRIGUE_FOCUS
+
+	# Modifiers
+	intrigue = 3
+	stewardship = -1
+	plot_power_modifier = 0.05
+
+	potential = {
+		is_playable = yes
+	}
+
+	allow = {
+		is_adult = yes
+		prisoner = no
+		is_incapable = no
+		NOT = { has_ambition = obj_become_saint }
+	}
+
+	# Focuses have no success conditions
+	success = {
+		always = no
+	}
+
+	abort = {
+		OR = {
+			prisoner = yes
+			is_playable = no
+			is_incapable = yes
+			has_ambition = obj_become_saint
+		}
+	}
+
+	# AI Pick chance - based on personality, not needs!
+	chance = {
+		factor = 100
+
+		trigger = {
+			NOR = {
+				has_game_rule = {
+					name = ai_intrigue
+					value = off
+				}
+
+				trait = honest
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			has_education_intrigue_trigger = no
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = kind
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = trusting
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = wroth
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = patient
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = cruel
+		}
+
+		mult_modifier = {
+			factor = 5.0
+			trait = paranoid
+		}
+
+		mult_modifier = {
+			factor = 4.0
+			trait = deceitful
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			has_character_modifier = african_adulthood_rites_3
+		}
+
+		# CK2Plus
+		mult_modifier = {
+			factor = 10
+
+			any_close_relative = {
+				prisoner = yes
+				vassal_of = ROOT
+
+				host = {
+					NOT = { character = ROOT }
+				}
+
+				reverse_opinion = {
+					who = ROOT
+					value >= 75
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 10
+
+			any_close_relative = {
+				is_consort = yes
+				is_female = yes
+				prisoner = no
+
+				consort = {
+					NOT = { character = ROOT }
+
+					reverse_has_opinion_modifier = {
+						name = opinion_forced_consort
+						who = PREV
+					}
+				}
+
+				reverse_opinion = {
+					who = ROOT
+					value >= 75
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			has_plot = no
+		}
+
+		mult_modifier = {
+			factor = 5.0
+
+			OR = {
+				has_job_title = job_spymaster
+				has_ambition = obj_become_spymaster
+			}
+		}
+	}
+}
+
+focus_hunting = {
+	type = character
+
+	modifier_name = HUNTING_FOCUS
+
+	# Modifiers
+	martial = 2
+	intrigue = -1
+	health = 1
+
+	potential = {
+		is_playable = yes
+	}
+
+	allow = {
+		is_adult = yes
+		pacifist = no
+		prisoner = no
+		is_incapable = no
+
+		NOR = {
+			religion = jain
+			religion = cathar
+			trait = perfecti
+			trait = infirm
+		}
+	}
+
+	# Focuses have no success conditions
+	success = {
+		always = no
+	}
+
+	abort = {
+		OR = {
+			prisoner = yes
+			is_playable = no
+			is_incapable = yes
+			pacifist = yes
+			religion = jain
+			religion = cathar
+			trait = perfecti
+			trait = infirm
+		}
+	}
+
+	abort_effect = {
+		clear_delayed_event = { id = WoL.5004 }
+		clear_delayed_event = { id = WoL.5010 }
+		clear_delayed_event = { id = WoL.5011 }
+	}
+
+	# AI Pick chance - based on personality, not needs!
+	chance = {
+		factor = 100
+
+		mult_modifier = {
+			factor = 0.1
+
+			trigger_if = {
+				limit = { is_female = yes }
+
+				NOR = {
+					has_religion_feature = religion_matriarchal
+					has_law = status_of_women_4
+					has_gender_equal_game_rule_trigger = yes
+				}
+			}
+			trigger_else = {
+				has_religion_feature = religion_matriarchal
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = craven
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = hunter
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = falconer
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			has_character_modifier = african_adulthood_rites_2
+		}
+
+		# CK2Plus
+		mult_modifier = {
+			factor = 1.25
+			has_education_martial_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			OR = {
+				has_job_title = job_marshal
+				has_ambition = obj_become_marshal
+			}
+		}
+	}
+}
+
+focus_war = {
+	type = character
+
+	modifier_name = WAR_FOCUS
+
+	# Modifiers
+	martial = 3
+	diplomacy = -1
+	combat_rating = 10
+
+	potential = {
+		is_playable = yes
+	}
+
+	allow = {
+		is_adult = yes
+		prisoner = no
+		is_incapable = no
+
+		NOR = {
+			trait = infirm
+			has_ambition = obj_become_saint
+		}
+	}
+
+	# Focuses have no success conditions
+	success = {
+		always = no
+	}
+
+	abort = {
+		OR = {
+			prisoner = yes
+			is_playable = no
+			is_incapable = yes
+			trait = infirm
+			has_ambition = obj_become_saint
+		}
+	}
+
+	# AI Pick chance - based on personality, not needs!
+	chance = {
+		factor = 100
+
+		trigger = {
+			trigger_if = {
+				limit = {
+					OR = {
+						pacifist = yes
+						religion = cathar
+						religion = jain
+						trait = perfecti
+					}
+				}
+
+				trait = cynical
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.1
+
+			trigger_if = {
+				limit = { is_female = yes }
+
+				NOR = {
+					trait = shieldmaiden
+					trait = martial_lady_pagan
+					trait = martial_lady
+					trait = martial_lady_tengri
+				}
+			}
+			trigger_else = {
+				has_religion_feature = religion_matriarchal
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.2
+			trait = craven
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			has_education_martial_trigger = no
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = kind
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			is_feudal = yes
+		}
+
+		mult_modifier = {
+			factor = 3.0
+			is_tribal = yes
+		}
+
+		mult_modifier = {
+			factor = 3.0
+			is_nomadic = yes
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = wroth
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = duelist
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			has_character_modifier = african_adulthood_rites_2
+		}
+
+		# CK2Plus
+		mult_modifier = {
+			factor = 1.25
+			has_education_martial_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 5.0
+
+			OR = {
+				has_job_title = job_marshal
+				has_ambition = obj_become_marshal
+				has_character_modifier = planning_claimant_adventure
+				trait = adventurer
+			}
+		}
+	}
+}
+
+focus_carousing = {
+	type = character
+
+	modifier_name = CAROUSING_FOCUS
+
+	# Modifiers
+	diplomacy = 3
+	learning = -1
+
+	potential = {
+		is_playable = yes
+	}
+
+	allow = {
+		is_adult = yes
+		prisoner = no
+		is_incapable = no
+		is_not_ascetic_trigger = yes
+		NOT = { has_ambition = obj_become_saint }
+
+		trigger_if = {
+			limit = { religion_group = muslim }
+
+			OR = {
+				trait = decadent
+				trait = hedonist
+				trait = drunkard
+			}
+		}
+	}
+
+	# Focuses have no success conditions
+	success = {
+		always = no
+	}
+
+	abort = {
+		OR = {
+			prisoner = yes
+			is_playable = no
+			is_incapable = yes
+			is_ascetic_trigger = yes
+			has_ambition = obj_become_saint
+			has_character_modifier = messalian_prayer
+
+			trigger_if = {
+				limit = { religion_group = muslim }
+
+				NOR = {
+					trait = decadent
+					trait = hedonist
+					trait = drunkard
+				}
+			}
+		}
+	}
+
+	# AI Pick chance - based on personality, not needs!
+	chance = {
+		factor = 100
+
+		trigger = {
+			trigger_if = {
+				limit = {
+					is_theocracy = yes
+					religion_group = christian
+				}
+
+				trait = bad_priest_christian
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = shy
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = temperate
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = diligent
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = slothful
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = gluttonous
+		}
+
+		mult_modifier = {
+			factor = 3.0
+			trait = hedonist
+		}
+
+		mult_modifier = {
+			factor = 3.0
+			trait = drunkard
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			has_character_modifier = african_adulthood_rites_1
+		}
+
+		# CK2Plus
+		mult_modifier = {
+			factor = 2.0
+
+			OR = {
+				has_job_title = job_chancellor
+				has_ambition = obj_become_chancellor
+				has_character_modifier = planning_claimant_adventure
+			}
+		}
+	}
+}
+
+focus_family = {
+	type = character
+
+	modifier_name = FAMILY_FOCUS
+
+	# Modifiers
+	diplomacy = 2
+	martial = -1
+	health = 1
+	fertility = 0.25
+
+	potential = {
+		is_playable = yes
+	}
+
+	allow = {
+		is_adult = yes
+		prisoner = no
+		is_incapable = no
+
+		NOR = {
+			religion = cathar
+			trait = perfecti
+			has_character_modifier = messalian_prayer
+		}
+	}
+
+	# Focuses have no success conditions
+	success = {
+		always = no
+	}
+
+	abort = {
+		OR = {
+			prisoner = yes
+			is_playable = no
+			is_incapable = yes
+			religion = cathar
+			trait = perfecti
+			has_character_modifier = messalian_prayer
+		}
+	}
+
+	# AI Pick chance - based on personality, not needs!
+	chance = {
+		factor = 100
+
+		mult_modifier = {
+			factor = 0.01
+
+			NOT = {
+				any_sibling = {
+					is_alive = yes
+				}
+			}
+
+			has_living_children = no
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			practical_age < 25
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			is_female = no
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = gregarious
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			trait = proud
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = gardener
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = craven
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = shy
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = infirm
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = kind
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			has_character_modifier = african_adulthood_rites_1
+		}
+
+		mult_modifier = {
+			factor = 3.0
+
+			is_female = yes
+
+			NOR = {
+				trait = shieldmaiden
+				trait = martial_lady
+				trait = martial_lady_pagan
+				trait = martial_lady_tengri
+			}
+		}
+
+		# CK2Plus
+		mult_modifier = {
+			factor = 1.5
+
+			is_married = yes
+			has_living_children = no
+		}
+
+		mult_modifier = {
+			factor = 2.0
+
+			OR = {
+				has_job_title = job_chancellor
+				has_ambition = obj_become_chancellor
+				has_character_modifier = planning_claimant_adventure
+			}
+		}
+	}
+}
+
+focus_scholarship = {
+	type = character
+
+	modifier_name = SCHOLARSHIP_FOCUS
+
+	# Modifiers
+	learning = 3
+	diplomacy = -1
+
+	potential = {
+		is_playable = yes
+	}
+
+	allow = {
+		is_adult = yes
+		is_incapable = no
+		prisoner = no
+	}
+
+	# Focuses have no success conditions
+	success = {
+		always = no
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			is_playable = no
+			prisoner = yes
+		}
+	}
+
+	# AI Pick chance - based on personality, not needs!
+	chance = {
+		factor = 100
+
+		trigger = {
+			NOR = {
+				trait = inbred
+				trait = imbecile
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = wroth
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = craven
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = patient
+		}
+
+		mult_modifier = {
+			factor = 5.0
+
+			has_education_learning_trigger = yes
+			trait = cynical
+		}
+
+		mult_modifier = {
+			factor = 5.0
+			trait = scholar
+		}
+
+		mult_modifier = {
+			factor = 3.0
+			is_theocracy = yes
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			has_character_modifier = african_adulthood_rites_4
+		}
+
+		# CK2Plus
+		mult_modifier = {
+			factor = 0.75
+			has_education_learning_trigger = no
+		}
+
+		mult_modifier = {
+			factor = 2.0
+
+			has_education_learning_trigger = yes
+			NOT = { trait = cynical }
+		}
+
+		mult_modifier = {
+			factor = 2.0
+
+			OR = {
+				has_job_title = job_spiritual
+				has_ambition = obj_become_spiritual
+			}
+		}
+
+		mult_modifier = {
+			factor = 3.0
+
+			religion = hurufi
+			NOT = { trait = cynical }
+		}
+	}
+}
+
+focus_theology = {
+	type = character
+
+	modifier_name = THEOLOGY_FOCUS
+
+	# Modifiers
+	learning = 2
+	stewardship = -1
+	health = 1.0
+	church_opinion = 20
+
+	potential = {
+		is_playable = yes
+	}
+
+	allow = {
+		is_adult = yes
+		is_incapable = no
+		prisoner = no
+	}
+
+	creation_effect = {
+		if = {
+			limit = { has_quest = quest_monastic_order_theology_focus }
+			letter_event = { id = MNM.4016 } # complete quest
+		}
+	}
+
+	# Focuses have no success conditions
+	success = {
+		always = no
+	}
+
+	abort = {
+		OR = {
+			is_incapable = yes
+			is_playable = no
+			prisoner = yes
+		}
+	}
+
+	# AI Pick chance - based on personality, not needs!
+	chance = {
+		factor = 100
+
+		trigger = { # TODO: What if they have quest_monastic_order_theology_focus?
+			NOR = {
+				trait = inbred
+				trait = imbecile
+				trait = cynical
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = wroth
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = craven
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = patient
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			has_education_learning_trigger = yes
+		}
+
+		mult_modifier = {
+			factor = 3.0
+			trait = mystic
+		}
+
+		mult_modifier = {
+			factor = 3.0
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 3.0
+			is_theocracy = yes
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			has_character_modifier = african_adulthood_rites_4
+		}
+
+		# CK2Plus
+		mult_modifier = {
+			factor = 1.5
+			piety < 0
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			piety < 100
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			has_education_learning_trigger = no
+		}
+
+		mult_modifier = {
+			factor = 5.0
+
+			OR = {
+				has_job_title = job_spiritual
+				has_ambition = obj_become_spiritual
+			}
+		}
+
+		mult_modifier = {
+			factor = 10
+			has_ambition = obj_become_saint
+		}
+	}
+}

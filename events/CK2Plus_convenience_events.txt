@@ -1,0 +1,1255 @@
+namespace = Plus
+
+# Reserved: Plus.970 to Plus.999
+
+#######################################
+# CONVENIENCE EVENTS
+# Written by Rylock
+#######################################
+
+### NO HASSLES VASSALS
+
+# Begin
+narrative_event = {
+	id = Plus.970
+	title = EVTNAME_Plus_970
+	desc = EVTDESC_Plus_970
+	picture = GFX_evt_council
+	border = GFX_event_narrative_frame_diplomacy
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	option = {
+		name = EVTOPTA_Plus_970
+	}
+}
+
+# Vassalize All Titles
+character_event = {
+	id = Plus.974
+	desc = EVTDESC_Plus_974
+	picture = GFX_evt_council
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	option = {
+		name = EVTOPTA_Plus_974
+
+		hidden_effect = {
+			if = {
+				limit = {
+					any_demesne_title = {
+						tier = baron
+						is_capital = no
+						NOT = { holding_type = family_palace }
+						location = { NOT = { has_province_flag = keep_baronies } }
+					}
+				}
+				character_event = { id = Plus.989 }
+			}
+			else_if = {
+				limit = {
+					any_demesne_title = {
+						tier = baron
+						is_capital = yes
+						NOT = { holding_type = family_palace }
+						location = { NOT = { has_province_flag = keep_it } }
+					}
+				}
+				character_event = { id = Plus.990 }
+			}
+		}
+	}
+}
+
+# Vassalize Baronies
+character_event = {
+	id = Plus.975
+	desc = EVTDESC_Plus_975
+	picture = GFX_evt_council
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	option = {
+		name = EVTOPTA_Plus_975
+
+		hidden_effect = {
+			set_character_flag = baronies_only
+
+			if = {
+				limit = {
+					any_demesne_title = {
+						tier = baron
+						is_capital = no
+						NOT = { holding_type = family_palace }
+						location = { NOT = { has_province_flag = keep_baronies } }
+					}
+				}
+
+				character_event = { id = Plus.989 }
+			}
+		}
+	}
+}
+
+
+### RANSOM ALL
+
+# Prisoner receives ransom demand
+character_event = {
+	id = Plus.985
+	desc = EVTDESC_Plus_985
+	picture = GFX_evt_into_the_dungeon
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_985 # Will pay
+
+		# Require money for ransom
+		if = {
+			limit = {
+				is_ruler = no
+				wealth < 10
+				NOT = { vassal_of = FROM }
+			}
+
+			liege = {
+				character_event = { id = Plus.986 } # Request liege to pay ransom
+			}
+		}
+		else = {
+			if = {
+				limit = {
+					real_tier = EMPEROR
+					wealth >= 385
+				}
+
+				host = {
+					show_scope_change = no
+
+					transfer_scaled_wealth = {
+						from = ROOT
+						value = 1
+						min = 385
+						max = 385
+					}
+				}
+
+				imprison = no
+			}
+
+			if = {
+				limit = {
+					real_tier = KING
+					wealth >= 250
+				}
+
+				host = {
+					show_scope_change = no
+
+					transfer_scaled_wealth = {
+						from = ROOT
+						value = 1
+						min = 250
+						max = 250
+					}
+				}
+
+				imprison = no
+			}
+
+			if = {
+				limit = {
+					real_tier = DUKE
+
+					trigger_if = {
+						limit = { mercenary = no }
+						wealth >= 145
+					}
+				}
+
+				host = {
+					show_scope_change = no
+
+					transfer_scaled_wealth = {
+						from = ROOT
+						value = 1
+						min = 145
+						max = 145
+					}
+				}
+
+				imprison = no
+			}
+
+			if = {
+				limit = {
+					real_tier = COUNT
+					wealth >= 70
+				}
+
+				host = {
+					show_scope_change = no
+
+					transfer_scaled_wealth = {
+						from = ROOT
+						value = 1
+						min = 70
+						max = 70
+					}
+				}
+
+				imprison = no
+			}
+
+			if = {
+				limit = {
+					real_tier = BARON
+					wealth >= 25
+				}
+
+				host = {
+					show_scope_change = no
+
+					transfer_scaled_wealth = {
+						from = ROOT
+						value = 1
+						min = 25
+						max = 25
+					}
+				}
+
+				imprison = no
+			}
+
+			if = {
+				limit = {
+					is_ruler = no
+					wealth >= 10
+				}
+
+				host = {
+					show_scope_change = no
+
+					transfer_scaled_wealth = {
+						from = ROOT
+						value = 1
+						min = 10
+						max = 10
+					}
+				}
+
+				imprison = no
+			}
+		}
+
+		ai_chance = { factor = 100 }
+	}
+
+	option = {
+		name = EVTOPTB_Plus_985 # Will not pay
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+character_event = { #Liege of landless prisoner receives ransom demand
+	id = Plus.986
+	desc = EVTDESC_Plus_986
+	picture = GFX_evt_into_the_dungeon
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_986 # Will pay
+
+		transfer_scaled_wealth = {
+			to = FROMFROM
+			value = 1
+			min = 10
+			max = 10
+		}
+
+		FROM = {
+			show_scope_change = no
+			imprison = no
+		}
+
+		ai_chance = {
+			factor = 1
+
+			mult_modifier = {
+				factor = 2
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = kind
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				wealth >= 200
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				wealth >= 250
+			}
+
+			mult_modifier = {
+				factor = 2
+				wealth >= 300
+			}
+
+			mult_modifier = {
+				factor = 50
+				wealth >= 400
+			}
+
+			mult_modifier = {
+				factor = 100
+				wealth >= 500
+			}
+
+			mult_modifier = {
+				factor = 100
+				is_close_relative = FROM
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_986 # Will not
+
+		FROMFROM = {
+			character_event = { id = Plus.987 }
+		}
+
+		ai_chance = {
+			factor = 0.5
+
+			mult_modifier = {
+				factor = 2
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 2.5
+				wealth < 75
+			}
+
+			mult_modifier = {
+				factor = 5
+				wealth < 50
+			}
+
+			mult_modifier = {
+				factor = 10
+				wealth < 25
+			}
+		}
+	}
+}
+
+character_event = { # Jailer is informed of denied ransom
+	id = Plus.987
+	desc = EVTDESC_Plus_987
+	picture = GFX_evt_into_the_dungeon
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_Plus_987 # Denied
+	}
+}
+
+# Assign rulers to baronies
+character_event = {
+	id = Plus.989
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		random_demesne_title = {
+			limit = {
+				real_tier = BARON
+				is_capital = no
+				NOT = { holding_type = family_palace }
+				location = { NOT = { has_province_flag = keep_baronies } }
+			}
+
+			if = {
+				limit = { holding_type = temple }
+
+				random_list = {
+					50 = {
+						trigger = {
+							ROOT = { religion_allows_female_temple_holders = no }
+						}
+
+						create_random_priest = {
+							random_traits = yes
+							dynasty = random
+							female = no
+							religion = ROOT
+							culture = ROOT
+						}
+					}
+
+					50 = {
+						trigger = {
+							ROOT = { religion_allows_female_temple_holders = yes }
+						}
+
+						create_random_priest = {
+							random_traits = yes
+							dynasty = random
+							female = yes
+							religion = ROOT
+							culture = ROOT
+						}
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = {
+						ROOT = {
+							OR = {
+								has_law = agnatic_succession
+								has_law = cognatic_succession
+							}
+						}
+					}
+
+					create_random_soldier = {
+						random_traits = yes
+						dynasty = random
+						female = no
+						religion = ROOT
+						culture = ROOT
+					}
+				}
+				else_if = {
+					limit = {
+						ROOT = { has_law = true_cognatic_succession  }
+					}
+
+					create_character = {
+						random_traits = yes
+						dynasty = random
+						female = 50
+						religion = ROOT
+						culture = ROOT
+					}
+				}
+				else_if = {
+					limit = {
+						ROOT = {
+							OR = {
+								has_law = enatic_succession
+								has_law = enatic_cognatic_succession
+							}
+						}
+					}
+
+					random_list = {
+						30 = {
+							create_random_diplomat = {
+								random_traits = yes
+								dynasty = random
+								female = yes
+								religion = ROOT
+								culture = ROOT
+							}
+						}
+						30 = {
+							create_random_intriguer = {
+								random_traits = yes
+								dynasty = random
+								female = yes
+								religion = ROOT
+								culture = ROOT
+							}
+						}
+						30 = {
+							create_random_steward = {
+								random_traits = yes
+								dynasty = random
+								female = yes
+								religion = ROOT
+								culture = ROOT
+							}
+						}
+						10 = {
+							create_random_soldier = {
+								random_traits = yes
+								dynasty = random
+								female = yes
+								religion = ROOT
+								culture = ROOT
+							}
+						}
+					}
+				}
+			}
+
+			new_character = {
+				set_defacto_liege = ROOT
+				grant_title = PREV
+			}
+		}
+
+		if = {
+			limit = {
+				any_demesne_title = {
+					real_tier = BARON
+					is_capital = no
+					NOT = { holding_type = family_palace }
+					location = { NOT = { has_province_flag = keep_baronies } }
+				}
+			}
+			character_event = { id = Plus.989 }
+		}
+		else_if = {
+			limit = { has_character_flag = baronies_only }
+			clr_character_flag = baronies_only
+		}
+		else_if = {
+			limit = {
+				any_demesne_title = {
+					real_tier = BARON
+					is_capital = yes
+					NOT = { holding_type = family_palace }
+					location = { NOT = { has_province_flag = keep_it } }
+				}
+			}
+			character_event = { id = Plus.990 }
+		}
+	}
+}
+
+# Assign rulers to counties
+character_event = {
+	id = Plus.990
+
+	hide_window = yes
+	is_triggered_only = yes
+
+	immediate = {
+		random_demesne_title = {
+			limit = {
+				tier = baron
+				is_capital = yes
+				NOT = { holding_type = family_palace }
+				location = { NOT = { has_province_flag = keep_it } }
+			}
+
+			if = {
+				limit = { holding_type = temple }
+
+				random_list = {
+					50 = {
+						trigger = {
+							ROOT = { religion_allows_female_temple_holders = no }
+						}
+
+						create_random_priest = {
+							random_traits = yes
+							dynasty = random
+							female = no
+							religion = ROOT
+							culture = ROOT
+						}
+					}
+
+					50 = {
+						trigger = {
+							ROOT = { religion_allows_female_temple_holders = yes }
+						}
+
+						create_random_priest = {
+							random_traits = yes
+							dynasty = random
+							female = yes
+							religion = ROOT
+							culture = ROOT
+						}
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = {
+						ROOT = {
+							OR = {
+								has_law = agnatic_succession
+								has_law = cognatic_succession
+							}
+						}
+					}
+
+					create_random_soldier = {
+						random_traits = yes
+						dynasty = random
+						female = no
+						religion = ROOT
+						culture = ROOT
+					}
+				}
+				else_if = {
+					limit = {
+						ROOT = { has_law = true_cognatic_succession  }
+					}
+
+					create_character = {
+						random_traits = yes
+						dynasty = random
+						female = 50
+						religion = ROOT
+						culture = ROOT
+					}
+				}
+				else_if = {
+					limit = {
+						ROOT = {
+							OR = {
+								has_law = enatic_succession
+								has_law = enatic_cognatic_succession
+							}
+						}
+					}
+
+					random_list = {
+						30 = {
+							create_random_diplomat = {
+								random_traits = yes
+								dynasty = random
+								female = yes
+								religion = ROOT
+								culture = ROOT
+							}
+						}
+						30 = {
+							create_random_intriguer = {
+								random_traits = yes
+								dynasty = random
+								female = yes
+								religion = ROOT
+								culture = ROOT
+							}
+						}
+						30 = {
+							create_random_steward = {
+								random_traits = yes
+								dynasty = random
+								female = yes
+								religion = ROOT
+								culture = ROOT
+							}
+						}
+						10 = {
+							create_random_soldier = {
+								random_traits = yes
+								dynasty = random
+								female = yes
+								religion = ROOT
+								culture = ROOT
+							}
+						}
+					}
+				}
+			}
+
+			new_character = {
+				set_defacto_liege = ROOT
+				grant_title = PREV
+			}
+		}
+
+		if = {
+			limit = {
+				any_demesne_title = {
+					tier = baron
+					is_capital = yes
+					NOT = { holding_type = family_palace }
+					location = { NOT = { has_province_flag = keep_it } }
+				}
+			}
+
+			character_event = { id = Plus.990 }
+		}
+	}
+}
+
+### CUSTOMIZE RULER DESIGNED CHARACTERS
+
+# Verify relation to target
+character_event = {
+	id = Plus.991
+	desc = EVTDESC_Plus_991
+	picture = GFX_evt_book_carolingian_script
+
+	is_triggered_only = yes
+
+	option = { # Parent
+		name = EVTOPTA_Plus_991
+
+		trigger = {
+			FROM = {
+				could_be_parent_of = ROOT
+
+				trigger_if = {
+					limit = { is_female = yes }
+					is_married_matrilineally = yes
+				}
+				trigger_else = {
+					OR = {
+						is_married_matrilineally = no
+						is_married = no
+					}
+				}
+			}
+		}
+
+		if = {
+			limit = { NOT = { trait = bastard } }
+			tooltip = { dynasty = FROM }
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			save_event_target_as = new_parent
+			custom_tooltip = { text = WILL_BECOME_PARENT }
+
+			if = {
+				limit = {
+					ROOT = {
+						NOR = {
+							trait = bastard
+							trait = legit_bastard
+						}
+					}
+
+					spouse_even_if_dead = {
+						could_be_parent_of = ROOT
+					}
+				}
+
+				spouse_even_if_dead = {
+					show_scope_change = no
+
+					custom_tooltip = { text = WILL_BECOME_PARENT }
+				}
+			}
+		}
+
+		character_event = { id = Plus.992 }
+	}
+
+	option = { # Sibling
+		name = {
+			text = EVTOPTB_Plus_991_brother
+			trigger = { FROM = { is_female = no } }
+		}
+		name = {
+			text = EVTOPTB_Plus_991_sister
+			trigger = { FROM = { is_female = yes } }
+		}
+
+		trigger = {
+			FROM = {
+				age_diff = {
+					who = ROOT
+					years < 16
+				}
+
+				OR = {
+					father_even_if_dead = {
+						dynasty = PREV
+						could_be_parent_of = ROOT
+					}
+
+					mother_even_if_dead = {
+						dynasty = PREV
+						could_be_parent_of = ROOT
+					}
+				}
+			}
+		}
+
+		if = {
+			limit = { NOT = { trait = bastard } }
+			tooltip = { dynasty = FROM }
+		}
+
+		if = {
+			limit = {
+				FROM = {
+					father_even_if_dead = {
+						dynasty = PREV
+						could_be_parent_of = ROOT
+					}
+				}
+			}
+
+			FROM = {
+				show_scope_change = no
+
+				father_even_if_dead = {
+					show_scope_change = no
+
+					save_event_target_as = new_parent
+					custom_tooltip = { text = WILL_BECOME_PARENT }
+
+					if = {
+						limit = {
+							ROOT = {
+								NOR = {
+									trait = bastard
+									trait = legit_bastard
+								}
+							}
+
+							spouse_even_if_dead = {
+								could_be_parent_of = ROOT
+							}
+						}
+
+						spouse_even_if_dead = {
+							show_scope_change = no
+
+							custom_tooltip = { text = WILL_BECOME_PARENT }
+						}
+					}
+				}
+			}
+
+			character_event = { id = Plus.992 }
+		}
+		else_if = {
+			limit = {
+				FROM = {
+					mother_even_if_dead = {
+						dynasty = PREV
+						could_be_parent_of = ROOT
+					}
+				}
+			}
+
+			FROM = {
+				show_scope_change = no
+
+				mother_even_if_dead = {
+					show_scope_change = no
+
+					save_event_target_as = new_parent
+					custom_tooltip = { text = WILL_BECOME_PARENT }
+
+					if = {
+						limit = {
+							ROOT = {
+								NOR = {
+									trait = bastard
+									trait = legit_bastard
+								}
+							}
+
+							spouse_even_if_dead = {
+								could_be_parent_of = ROOT
+							}
+						}
+
+						spouse_even_if_dead = {
+							show_scope_change = no
+
+							custom_tooltip = { text = WILL_BECOME_PARENT }
+						}
+					}
+				}
+			}
+
+			character_event = { id = Plus.992 }
+		}
+	}
+
+	option = { # Nephew/Niece
+		name = {
+			text = EVTOPTC_Plus_991_nephew
+			trigger = { FROM = { is_female = no } }
+		}
+		name = {
+			text = EVTOPTC_Plus_991_niece
+			trigger = { FROM = { is_female = yes } }
+		}
+
+		trigger = {
+			could_be_parent_of = FROM
+
+			FROM = {
+				OR = {
+					father_even_if_dead = {
+						dynasty = PREV
+
+						OR = {
+							father_even_if_dead = {
+								dynasty = PREV
+								could_be_parent_of = ROOT
+							}
+
+							mother_even_if_dead = {
+								dynasty = PREV
+								could_be_parent_of = ROOT
+							}
+						}
+					}
+
+					mother_even_if_dead = {
+						dynasty = PREV
+
+						OR = {
+							father_even_if_dead = {
+								dynasty = PREV
+								could_be_parent_of = ROOT
+							}
+
+							mother_even_if_dead = {
+								dynasty = PREV
+								could_be_parent_of = ROOT
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if = {
+			limit = { NOT = { trait = bastard } }
+			tooltip = { dynasty = FROM }
+		}
+
+		if = {
+			limit = {
+				FROM = {
+					father_even_if_dead = {
+						dynasty = PREV
+
+						father_even_if_dead = {
+							dynasty = PREV
+							could_be_parent_of = ROOT
+						}
+					}
+				}
+			}
+
+			FROM = {
+				show_scope_change = no
+
+				father_even_if_dead = {
+					show_scope_change = no
+
+					father_even_if_dead = {
+						show_scope_change = no
+
+						save_event_target_as = new_parent
+						custom_tooltip = { text = WILL_BECOME_PARENT }
+
+						if = {
+							limit = {
+								ROOT = {
+									NOR = {
+										trait = bastard
+										trait = legit_bastard
+									}
+								}
+
+								spouse_even_if_dead = {
+									could_be_parent_of = ROOT
+								}
+							}
+
+							spouse_even_if_dead = {
+								show_scope_change = no
+
+								custom_tooltip = { text = WILL_BECOME_PARENT }
+							}
+						}
+					}
+				}
+			}
+
+			character_event = { id = Plus.992 }
+		}
+		else_if = {
+			limit = {
+				FROM = {
+					father_even_if_dead = {
+						dynasty = PREV
+
+						mother_even_if_dead = {
+							dynasty = PREV
+							could_be_parent_of = ROOT
+						}
+					}
+				}
+			}
+
+			FROM = {
+				show_scope_change = no
+
+				father_even_if_dead = {
+					show_scope_change = no
+
+					mother_even_if_dead = {
+						save_event_target_as = new_parent
+						custom_tooltip = { text = WILL_BECOME_PARENT }
+
+						if = {
+							limit = {
+								ROOT = {
+									NOR = {
+										trait = bastard
+										trait = legit_bastard
+									}
+								}
+
+								spouse_even_if_dead = {
+									could_be_parent_of = ROOT
+								}
+							}
+
+							spouse_even_if_dead = {
+								show_scope_change = no
+
+								custom_tooltip = { text = WILL_BECOME_PARENT }
+							}
+						}
+					}
+				}
+			}
+
+			character_event = { id = Plus.992 }
+		}
+		else_if = {
+			limit = {
+				FROM = {
+					mother_even_if_dead = {
+						dynasty = PREV
+
+						father_even_if_dead = {
+							dynasty = PREV
+							could_be_parent_of = ROOT
+						}
+					}
+				}
+			}
+
+			FROM = {
+				show_scope_change = no
+
+				mother_even_if_dead = {
+					show_scope_change = no
+
+					father_even_if_dead = {
+						show_scope_change = no
+
+						save_event_target_as = new_parent
+						custom_tooltip = { text = WILL_BECOME_PARENT }
+
+						if = {
+							limit = {
+								ROOT = {
+									NOR = {
+										trait = bastard
+										trait = legit_bastard
+									}
+								}
+
+								spouse_even_if_dead = {
+									could_be_parent_of = ROOT
+								}
+							}
+
+							spouse_even_if_dead = {
+								show_scope_change = no
+
+								custom_tooltip = { text = WILL_BECOME_PARENT }
+							}
+						}
+					}
+				}
+			}
+
+			character_event = { id = Plus.992 }
+		}
+		else_if = {
+			limit = {
+				FROM = {
+					mother_even_if_dead = {
+						dynasty = PREV
+
+						mother_even_if_dead = {
+							dynasty = PREV
+							could_be_parent_of = ROOT
+						}
+					}
+				}
+			}
+
+			FROM = {
+				show_scope_change = no
+
+				mother_even_if_dead = {
+					show_scope_change = no
+
+					mother_even_if_dead = {
+						show_scope_change = no
+
+						save_event_target_as = new_parent
+						custom_tooltip = { text = WILL_BECOME_PARENT }
+
+						if = {
+							limit = {
+								ROOT = {
+									NOR = {
+										trait = bastard
+										trait = legit_bastard
+									}
+								}
+
+								spouse_even_if_dead = {
+									could_be_parent_of = ROOT
+								}
+							}
+
+							spouse_even_if_dead = {
+								show_scope_change = no
+
+								custom_tooltip = { text = WILL_BECOME_PARENT }
+							}
+						}
+					}
+				}
+			}
+
+			character_event = { id = Plus.992 }
+		}
+	}
+
+	option = { # Distant Relation
+		name = EVTOPTE_Plus_991
+
+		trigger = { NOT = { trait = bastard } }
+
+		hidden_effect = {
+			remove_trait = customize_ruler
+			clr_character_flag = customizing_ruler
+		}
+
+		dynasty = FROM
+
+		any_child = {
+			show_scope_change = no
+
+			dynasty = FROM
+		}
+	}
+
+	option = { # Never Mind
+		name = EVTOPTF_Plus_991
+
+		clr_character_flag = customizing_ruler
+	}
+}
+
+# Set the appropriate character as the father
+character_event = {
+	id = Plus.992
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		clr_character_flag = customizing_ruler
+		remove_trait = customize_ruler
+
+		event_target:new_parent = {
+			if = {
+				limit = { ROOT = { NOT = { trait = bastard } } }
+
+				ROOT = {
+					dynasty = PREV
+					any_child = { dynasty = PREVPREV }
+				}
+			}
+
+			if = {
+				limit = { is_female = no }
+				ROOT = { set_father = PREV }
+			}
+			else = {
+				ROOT = { set_mother = PREV }
+			}
+
+			if = {
+				limit = {
+					ROOT = {
+						NOR = {
+							trait = bastard
+							trait = legit_bastard
+						}
+					}
+
+					spouse_even_if_dead = {
+						could_be_parent_of = ROOT
+					}
+				}
+
+				spouse_even_if_dead = {
+					if = {
+						limit = { is_female = no }
+						ROOT = { set_father = PREV }
+					}
+					else = {
+						ROOT = { set_mother = PREV }
+					}
+
+					recalc_succession = yes
+				}
+			}
+
+			recalc_succession = yes
+		}
+
+		recalc_succession = yes
+
+		# Add new relative opinions
+		add_cousin_opinion_effect = yes
+		any_child = { add_cousin_opinion_effect = yes }
+	}
+}

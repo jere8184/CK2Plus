@@ -1,0 +1,6982 @@
+namespace = GoPagan
+
+# Reserved: GoPagan.100 to Plus.199
+
+#######################################
+# REVERSION TO PAGAN RELIGIONS
+# Written by Rylock
+#######################################
+
+### EVENT CHAIN TO TRIGGER CONVERSION EVENTS
+
+# Ruler following Scholarship focus gets opportunity to pursue ancient knowledge
+character_event = {
+	id = GoPagan.125
+	title = EVTNAME_GoPagan_125
+	desc = EVTDESC_GoPagan_125
+	picture = GFX_evt_library
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	only_playable = yes
+	has_dlc = "Way of Life"
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_focus = focus_scholarship
+		is_ill = no
+		is_theocracy = no
+		controls_religion = no
+		in_command_trigger = no
+		is_inaccessible_trigger = no
+
+		NOR = {
+			rightful_religious_head = ROOT
+			trait = zealous
+			trait = imbecile
+			religion = zoroastrian
+			religion = manichaean
+			religion_group = pagan_group
+			culture_group = mesoamerican
+			culture_group = indo_aryan_group
+			culture_group = dravidian_group
+			AND = {
+				culture_group = chinese_group
+				religion = taoist
+			}
+			has_character_modifier = voice_of_jesus
+			has_character_modifier = voice_of_satan
+			has_character_flag = seeks_pagan_knowledge
+			has_character_flag = refused_pagan_knowledge
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.33
+			ai = yes
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			NOT = { religion_authority >= 0.3 }
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			NOT = { religion_authority >= 0.2 }
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			NOT = { religion_authority >= 0.1 }
+		}
+
+		mult_modifier = {
+			factor = 0.83
+			religion_authority >= 0.7
+		}
+
+		mult_modifier = {
+			factor = 0.83
+			religion_authority >= 0.8
+		}
+
+		mult_modifier = {
+			factor = 0.83
+			religion_authority >= 0.9
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = cynical
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = sympathy_pagans
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			OR = {
+				trait = mystic
+				trait = scholar
+				trait = theologian
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			OR = {
+				trait = slow
+				trait = dull
+				trait = depressed
+				trait = stressed
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = slothful
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_125 # Pursue it
+
+		set_character_flag = seeks_pagan_knowledge
+		piety = -25
+
+		custom_tooltip = {
+			text = PURSUE_PAGAN_KNOWLEDGE
+
+			change_variable = {
+				which = lifestyle_learning
+				value = 1
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				NOT = { religion = jewish }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				OR = {
+					culture = bedouin_arabic
+					culture = maghreb_arabic
+					culture = levantine_arabic
+					culture = andalusian_arabic
+					culture = sicilian_arabic
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 3
+				trait = mystic
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				OR = {
+					trait = scholar
+					trait = theologian
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = sympathy_pagans
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				NOT = { religion_authority >= 0.3 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				NOT = { religion_authority >= 0.2 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				NOT = { religion_authority >= 0.1 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				religion_authority >= 0.6
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				religion_authority >= 0.7
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				religion_authority >= 0.8
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				religion_authority >= 0.9
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_125 # This doesn't interest me
+
+		set_character_flag = refused_pagan_knowledge
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 0.1
+
+				OR = {
+					trait = lunatic
+					trait = possessed
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				OR = {
+					trait = cynical
+					trait = mystic
+					trait = scholar
+					trait = theologian
+				}
+			}
+		}
+	}
+}
+
+# A ruler pursuing ancient knowledge has a mystic show up
+character_event = {
+	id = GoPagan.126
+	title = EVTNAME_GoPagan_125
+	desc = EVTDESC_GoPagan_126
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	only_playable = yes
+	has_character_flag = seeks_pagan_knowledge
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		trigger_if = {
+			limit = { has_dlc = "Way of Life" }
+			has_focus = focus_scholarship
+		}
+
+		is_theocracy = no
+		controls_religion = no
+		in_command_trigger = no
+		is_inaccessible_trigger = no
+
+		NOR = {
+			rightful_religious_head = ROOT
+			religion = zoroastrian
+			religion = manichaean
+			religion_group = pagan_group
+			culture_group = mesoamerican
+			culture_group = indo_aryan_group
+			culture_group = dravidian_group
+			AND = {
+				culture_group = chinese_group
+				religion = taoist
+			}
+			has_character_flag = refused_pagan_knowledge
+
+			any_courtier = {
+				has_opinion_modifier = {
+					name = opinion_pagan_advisor
+					who = ROOT
+				}
+			}
+		}
+
+		trigger_if = {
+			limit = { has_character_flag = received_pagan_mystic }
+
+			had_character_flag = {
+				flag = received_pagan_mystic
+				years >= 10
+			}
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.5
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = cynical
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			OR = {
+				trait = mystic
+				trait = scholar
+				trait = theologian
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_126 # Let him stay
+
+		trigger = {
+			NOR = {
+				trait = zealous
+				has_character_modifier = voice_of_jesus
+				has_character_modifier = voice_of_satan
+			}
+		}
+
+		set_character_flag = received_pagan_mystic
+
+		create_random_priest = {
+			random_traits = yes
+			dynasty = none
+			culture = ROOT
+			religion = ROOT
+			female = no
+			health = 8
+			age = 50
+		}
+
+		new_character = {
+			add_trait = mystic
+			remove_trait = cynical
+			remove_trait = zealous
+
+			if = {
+				limit = { celtic_pagan_culture_trigger = yes }
+				religion = celtic_pagan
+			}
+			else_if = {
+				limit = { norse_pagan_culture_trigger = yes }
+				religion = norse_pagan
+			}
+			else_if = {
+				limit = { german_pagan_culture_trigger = yes }
+				religion = german_pagan
+			}
+			else_if = {
+				limit = { finnish_pagan_culture_trigger = yes }
+				religion = finnish_pagan
+			}
+			else_if = {
+				limit = { baltic_pagan_culture_trigger = yes }
+				religion = baltic_pagan
+			}
+			else_if = {
+				limit = { tengri_pagan_culture_trigger = yes }
+				religion = tengri_pagan
+			}
+			else_if = {
+				limit = { slavic_pagan_culture_trigger = yes }
+				religion = slavic_pagan
+			}
+			else_if = {
+				limit = { west_african_pagan_culture_trigger = yes }
+				religion = west_african_pagan
+			}
+			else_if = {
+				limit = { egyptian_pagan_culture_trigger = yes }
+				religion = egyptian_pagan
+			}
+			else_if = {
+				limit = { roman_pagan_culture_trigger = yes }
+				religion = roman_pagan
+			}
+			else_if = {
+				limit = { hellenic_pagan_culture_trigger = yes }
+				religion = hellenic_pagan
+			}
+			else_if = {
+				limit = { zoroastrian_culture_trigger = yes }
+				religion = zoroastrian
+			}
+			else_if = {
+				limit = { canaan_pagan_culture_trigger = yes }
+
+				if = {
+					limit = { ROOT = { religion_group = jewish_group } }
+					religion = canaan_pagan
+				}
+				else = {
+					religion = jewish
+				}
+			}
+			else_if = {
+				limit = { zun_pagan_culture_trigger = yes }
+				religion = zun_pagan
+			}
+			else_if = {
+				limit = { berber_pagan_culture_trigger = yes }
+				religion = berber_pagan
+			}
+			else_if = {
+				limit = { arabic_pagan_culture_trigger = yes }
+				religion = arabic_pagan
+			}
+			else_if = {
+				limit = { culture_group = tibetan_group }
+				religion = bon_pagan
+			}
+			else_if = {
+				limit = { culture_group = chinese_group }
+				religion = taoist
+			}
+
+			opinion = {
+				name = opinion_pagan_advisor
+				who = ROOT
+				years = 100
+			}
+
+			reverse_opinion = {
+				name = opinion_pagan_advisor
+				who = ROOT
+				years = 100
+			}
+		}
+
+		piety = -50
+
+		if = {
+			limit = {
+				zoroastrian_culture_trigger = yes
+				NOT = { trait = sympathy_zoroastrianism }
+			}
+			add_trait = sympathy_zoroastrianism
+		}
+		else_if = {
+			limit = {
+				culture_group = israelite
+				canaan_pagan_culture_trigger = yes
+				NOT = { trait = sympathy_judaism }
+			}
+			add_trait = sympathy_judaism
+		}
+		else_if = {
+			limit = {
+				culture_group = israelite
+				canaan_pagan_culture_trigger = yes
+				NOT = { trait = sympathy_judaism }
+			}
+			add_trait = sympathy_pagans
+		}
+		else_if = {
+			limit = {
+				NOR = {
+					zoroastrian_culture_trigger = yes
+					canaan_pagan_culture_trigger = yes
+					trait = sympathy_pagans
+				}
+			}
+			add_trait = sympathy_pagans
+		}
+
+		random = {
+			chance = 50
+			change_learning = 1
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 3
+				trait = mystic
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				OR = {
+					trait = scholar
+					trait = theologian
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = sympathy_pagans
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_126 # Send him away
+
+		clr_character_flag = seeks_pagan_knowledge
+		set_character_flag = refused_pagan_knowledge
+		piety = 25
+
+		if = {
+			limit = { trait = cynical }
+
+			random = {
+				chance = 50
+				remove_trait = cynical
+			}
+		}
+		else_if = {
+			limit = { NOT = { trait = zealous } }
+
+			random = {
+				chance = 25
+				add_trait = zealous
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				NOR = {
+					trait = sympathy_pagans
+					trait = sympathy_judaism
+					trait = sympathy_zoroastrianism
+				}
+			}
+		}
+	}
+}
+
+# A ruler pursuing ancient knowledge is approached by the mystic
+character_event = {
+	id = GoPagan.127
+	title = EVTNAME_GoPagan_125
+	desc = EVTDESC_GoPagan_127
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	only_playable = yes
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	has_character_flag = seeks_pagan_knowledge
+	war = no
+
+	trigger = {
+		trigger_if = {
+			limit = { has_dlc = "Way of Life" }
+			has_focus = focus_scholarship
+		}
+
+		any_opinion_modifier_target = {
+			has_opinion_modifier = {
+				name = opinion_pagan_advisor
+				who = ROOT
+			}
+
+			trait = mystic
+			prisoner = no
+			is_adult = yes
+			same_realm = ROOT
+			is_incapable = no
+
+			OR = {
+				religion_group = pagan_group
+
+				AND = {
+					ROOT = { zoroastrian_culture_trigger = yes }
+					religion = zoroastrian
+				}
+
+				AND = {
+					ROOT = { canaan_pagan_culture_trigger = yes }
+					religion = jewish
+				}
+			}
+		}
+
+		is_theocracy = no
+		controls_religion = no
+		in_command_trigger = no
+		is_inaccessible_trigger = no
+
+		NOR = {
+			rightful_religious_head = ROOT
+			trait = zealous
+			religion = zoroastrian
+			religion = manichaean
+			religion_group = pagan_group
+			culture_group = mesoamerican
+			culture_group = indo_aryan_group
+			culture_group = dravidian_group
+			AND = {
+				culture_group = chinese_group
+				religion = taoist
+			}
+			has_character_modifier = voice_of_jesus
+			has_character_modifier = voice_of_satan
+			has_character_flag = refused_pagan_knowledge
+			has_character_flag = may_go_pagan
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			trait = cynical
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			OR = {
+				trait = mystic
+				trait = scholar
+				trait = theologian
+			}
+		}
+	}
+
+	immediate = {
+		random_opinion_modifier_target = {
+			limit = {
+				has_opinion_modifier = {
+					name = opinion_pagan_advisor
+					who = ROOT
+				}
+
+				trait = mystic
+				prisoner = no
+				is_adult = yes
+				same_realm = ROOT
+				is_incapable = no
+
+				OR = {
+					religion_group = pagan_group
+
+					AND = {
+						ROOT = { zoroastrian_culture_trigger = yes }
+						religion = zoroastrian
+					}
+
+					AND = {
+						ROOT = { canaan_pagan_culture_trigger = yes  }
+						religion = jewish
+					}
+				}
+			}
+
+			save_event_target_as = target_pagan_advisor
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_127 # Tell me more...
+
+		set_character_flag = may_go_pagan
+		piety = -50
+
+		if = {
+			limit = {
+				zoroastrian_culture_trigger = yes
+				NOT = { trait = sympathy_zoroastrianism }
+			}
+			add_trait = sympathy_zoroastrianism
+		}
+		else_if = {
+			limit = { canaan_pagan_culture_trigger = yes }
+
+			if = {
+				limit = {
+					NOR = {
+						religion_group = jewish_group
+						trait = sympathy_judaism
+					}
+				}
+				add_trait = sympathy_judaism
+			}
+			else_if = {
+				limit = {
+					religion_group = jewish_group
+					NOT = { trait = sympathy_pagans }
+				}
+				add_trait = sympathy_pagans
+			}
+		}
+		else_if = {
+			limit = { NOT = { trait = sympathy_pagans } }
+			add_trait = sympathy_pagans
+		}
+
+		if = {
+			limit = { lifestyle_traits < 1 }
+			add_trait = mystic
+		}
+
+		change_learning = 1
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 2
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 3
+				trait = mystic
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				OR = {
+					trait = scholar
+					trait = theologian
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = sympathy_pagans
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				NOT = { religion_authority >= 0.3 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				NOT = { religion_authority >= 0.2 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				NOT = { religion_authority >= 0.1 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				religion_authority >= 0.6
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				religion_authority >= 0.7
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				religion_authority >= 0.8
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				religion_authority >= 0.9
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_127 # Enough! This has gone too far!
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 0.1
+
+				OR = {
+					trait = lunatic
+					trait = possessed
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				OR = {
+					trait = cynical
+					trait = mystic
+					trait = scholar
+					trait = theologian
+				}
+			}
+		}
+
+		clr_character_flag = may_go_pagan
+		clr_character_flag = seeks_pagan_knowledge
+		set_character_flag = refused_pagan_knowledge
+		piety = 25
+
+		if = {
+			limit = { trait = cynical }
+
+			random = {
+				chance = 50
+				remove_trait = cynical
+			}
+		}
+		else_if = {
+			limit = { NOT = { trait = zealous } }
+
+			random = {
+				chance = 25
+				add_trait = zealous
+			}
+		}
+
+		if = {
+			limit = {
+				zoroastrian_culture_trigger = yes
+				trait = sympathy_zoroastrianism
+			}
+			remove_trait = sympathy_zoroastrianism
+		}
+		else_if = {
+			limit = { canaan_pagan_culture_trigger = yes }
+
+			if = {
+				limit = { trait = sympathy_judaism }
+				remove_trait = sympathy_judaism
+			}
+
+			if = {
+				limit = { trait = sympathy_pagans }
+				remove_trait = sympathy_pagans
+			}
+		}
+		else_if = {
+			limit = { trait = sympathy_pagans }
+			remove_trait = sympathy_pagans
+		}
+
+		event_target:target_pagan_advisor = {
+			show_scope_change = no
+
+			remove_opinion = {
+				name = opinion_pagan_advisor
+				who = ROOT
+			}
+
+			reverse_remove_opinion = {
+				name = opinion_pagan_advisor
+				who = ROOT
+			}
+
+			opinion = {
+				name = opinion_very_disappointed
+				who = ROOT
+				years = 5
+			}
+
+			reverse_opinion = {
+				name = tried_to_convert_me
+				who = ROOT
+				years = 20
+			}
+
+			if = {
+				limit = { is_ruler = no }
+				banish = yes
+			}
+		}
+	}
+}
+
+# A non-cynical ruler is appealed to by a religious leader
+character_event = {
+	id = GoPagan.128
+	title = EVTNAME_GoPagan_125
+	desc = EVTDESC_GoPagan_128
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	only_playable = yes
+	has_character_flag = seeks_pagan_knowledge
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		trigger_if = {
+			limit = { has_dlc = "Way of Life" }
+			has_focus = focus_scholarship
+		}
+
+		trigger_if = {
+			limit = { zoroastrian_culture_trigger = yes }
+			trait = sympathy_zoroastrianism
+		}
+		trigger_else_if = {
+			limit = { canaan_pagan_culture_trigger = yes }
+
+			OR = {
+				trait = sympathy_judaism
+				trait = sympathy_pagans
+			}
+		}
+		trigger_else = {
+			trait = sympathy_pagans
+		}
+
+		top_liege = {
+			any_realm_character = {
+				is_priest = yes
+				religion = ROOT
+				is_adult = yes
+				prisoner = no
+				is_incapable = no
+				ai = yes
+			}
+		}
+
+		is_theocracy = no
+		controls_religion = no
+		in_command_trigger = no
+		is_inaccessible_trigger = no
+
+		NOR = {
+			rightful_religious_head = ROOT
+			trait = cynical
+			religion = zoroastrian
+			religion = manichaean
+			religion_group = pagan_group
+			culture_group = mesoamerican
+			culture_group = indo_aryan_group
+			culture_group = dravidian_group
+			AND = {
+				culture_group = chinese_group
+				religion = taoist
+			}
+			has_character_flag = refused_pagan_knowledge
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+	}
+
+	immediate = {
+		top_liege = {
+			random_realm_character = {
+				limit = {
+					is_priest = yes
+					religion = ROOT
+					is_adult = yes
+					prisoner = no
+					is_incapable = no
+					ai = yes
+				}
+
+				preferred_limit = { is_liege_of = ROOT } # Liege first
+				preferred_limit = { independent = yes } # Then top liege
+
+				preferred_limit = { # Then any vassal priest of count rank or higher
+					vassal_of = ROOT
+					is_playable = yes
+				}
+
+				preferred_limit = { # Then any realm priest of count rank or higher
+					is_playable = yes
+				}
+
+				preferred_limit = { # Then any vassal priest
+					vassal_of = ROOT
+					is_ruler = yes
+				}
+
+				preferred_limit = { # Then any realm priest
+					is_ruler = yes
+				}
+
+				# With fallback to an unlanded court chaplain
+
+				save_event_target_as = target_concerned_priest
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_128 # I am not one of your faithful
+
+		trigger = {
+			NOR = {
+				trait = zealous
+				has_character_modifier = voice_of_jesus
+				has_character_modifier = voice_of_satan
+			}
+		}
+
+		prestige = -50
+		add_trait = cynical
+
+		reverse_opinion = {
+			name = opinion_very_disappointed
+			who = event_target:target_concerned_priest
+			years = 5
+		}
+
+		add_character_modifier = {
+			name = strange_ideas
+			years = 3
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 0.8
+
+				opinion = {
+					who = event_target:target_concerned_priest
+					value >= 25
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.8
+
+				opinion = {
+					who = event_target:target_concerned_priest
+					value >= 50
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.8
+
+				opinion = {
+					who = event_target:target_concerned_priest
+					value >= 75
+				}
+			}
+
+			mult_modifier = {
+				factor = 3
+				trait = mystic
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				OR = {
+					trait = scholar
+					trait = theologian
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				NOT = { religion_authority >= 0.3 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				NOT = { religion_authority >= 0.2 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				NOT = { religion_authority >= 0.1 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				religion_authority >= 0.6
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				religion_authority >= 0.7
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				religion_authority >= 0.8
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				religion_authority >= 0.9
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_128 # Perhaps you are right
+
+		clr_character_flag = may_go_pagan
+		clr_character_flag = seeks_pagan_knowledge
+		set_character_flag = refused_pagan_knowledge
+		piety = 25
+
+		if = {
+			limit = {
+				zoroastrian_culture_trigger = yes
+				trait = sympathy_zoroastrianism
+			}
+			remove_trait = sympathy_zoroastrianism
+		}
+		else_if = {
+			limit = { canaan_pagan_culture_trigger = yes }
+
+			if = {
+				limit = { trait = sympathy_judaism }
+				remove_trait = sympathy_judaism
+			}
+			else_if = {
+				limit = { trait = sympathy_pagans }
+				remove_trait = sympathy_pagans
+			}
+		}
+		else_if = {
+			limit = { trait = sympathy_pagans }
+			remove_trait = sympathy_pagans
+		}
+
+		reverse_opinion = {
+			name = opinion_pleased
+			who = event_target:target_concerned_priest
+			years = 5
+		}
+
+		random_opinion_modifier_target = {
+			show_scope_change = no
+
+			limit = {
+				has_opinion_modifier = {
+					name = opinion_pagan_advisor
+					who = ROOT
+				}
+			}
+
+			remove_opinion = {
+				name = opinion_pagan_advisor
+				who = ROOT
+			}
+
+			reverse_remove_opinion = {
+				name = opinion_pagan_advisor
+				who = ROOT
+			}
+
+			opinion = {
+				name = opinion_very_disappointed
+				who = ROOT
+				years = 5
+			}
+
+			reverse_opinion = {
+				name = tried_to_convert_me
+				who = ROOT
+				years = 20
+			}
+
+			if = {
+				limit = { is_ruler = no }
+				banish = yes
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 0.8
+
+				opinion = {
+					who = event_target:target_concerned_priest
+					value < 0
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.8
+
+				opinion = {
+					who = event_target:target_concerned_priest
+					value < -25
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.8
+
+				opinion = {
+					who = event_target:target_concerned_priest
+					value < -50
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				OR = {
+					trait = lunatic
+					trait = possessed
+				}
+			}
+		}
+	}
+}
+
+### CONVERSION EVENTS
+
+# Main conversion event
+character_event = {
+	id = GoPagan.100
+	title = EVTNAME_GoPagan_100
+	desc = EVTDESC_GoPagan_100
+	picture = GFX_evt_book_carolingian_script
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		# Setup old and new religions
+		religion_scope = { save_event_target_as = old_religion }
+
+		if = {
+			limit = { zoroastrian_culture_trigger = yes }
+			zoroastrian = { save_event_target_as = new_religion }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					culture_group = iranian
+					culture = pecheneg
+					culture = karluk
+					culture = kirghiz
+					culture = mongol
+				}
+			}
+			manichaean = { save_event_target_as = new_religion }
+		}
+		else_if = {
+			limit = { celtic_pagan_culture_trigger = yes }
+
+			if = {
+				limit = {
+					has_game_rule = {
+						name = pagan_reformation
+						value = start_reformed
+					}
+				}
+				celtic_pagan_reformed = { save_event_target_as = new_religion }
+			}
+			else = {
+				celtic_pagan = { save_event_target_as = new_religion }
+			}
+		}
+		else_if = {
+			limit = { tengri_pagan_culture_trigger = yes }
+
+			if = {
+				limit = {
+					has_game_rule = {
+						name = pagan_reformation
+						value = start_reformed
+					}
+				}
+				tengri_pagan_reformed = { save_event_target_as = new_religion }
+			}
+			else = {
+				tengri_pagan = { save_event_target_as = new_religion }
+			}
+		}
+		else_if = {
+			limit = { baltic_pagan_culture_trigger = yes }
+
+			if = {
+				limit = {
+					has_game_rule = {
+						name = pagan_reformation
+						value = start_reformed
+					}
+				}
+				baltic_pagan_reformed = { save_event_target_as = new_religion }
+			}
+			else = {
+				baltic_pagan = { save_event_target_as = new_religion }
+			}
+		}
+		else_if = {
+			limit = { slavic_pagan_culture_trigger = yes }
+
+			if = {
+				limit = {
+					has_game_rule = {
+						name = pagan_reformation
+						value = start_reformed
+					}
+				}
+				slavic_pagan_reformed = { save_event_target_as = new_religion }
+			}
+			else = {
+				slavic_pagan = { save_event_target_as = new_religion }
+			}
+		}
+		else_if = {
+			limit = { west_african_pagan_culture_trigger = yes }
+
+			if = {
+				limit = {
+					has_game_rule = {
+						name = pagan_reformation
+						value = start_reformed
+					}
+				}
+				west_african_pagan_reformed = { save_event_target_as = new_religion }
+			}
+			else = {
+				west_african_pagan = { save_event_target_as = new_religion }
+			}
+		}
+		else_if = {
+			limit = { celtic_pagan_culture_trigger = yes }
+
+			if = {
+				limit = {
+					has_game_rule = {
+						name = pagan_reformation
+						value = start_reformed
+					}
+				}
+				celtic_pagan_reformed = { save_event_target_as = new_religion }
+			}
+			else = {
+				celtic_pagan = { save_event_target_as = new_religion }
+			}
+		}
+		else_if = {
+			limit = { berber_pagan_culture_trigger = yes }
+
+			#if = {
+			#	limit = {
+			#		has_game_rule = {
+			#			name = pagan_reformation
+			#			value = start_reformed
+			#		}
+			#	}
+			#	berber_pagan_reformed = { save_event_target_as = new_religion }
+			#}
+			#else = {
+				berber_pagan = { save_event_target_as = new_religion }
+			#}
+		}
+		else_if = {
+			limit = { arabic_pagan_culture_trigger = yes }
+
+			#if = {
+			#	limit = {
+			#		has_game_rule = {
+			#			name = pagan_reformation
+			#			value = start_reformed
+			#		}
+			#	}
+			#	arabic_pagan_reformed = { save_event_target_as = new_religion }
+			#}
+			#else = {
+				arabic_pagan = { save_event_target_as = new_religion }
+			#}
+		}
+		else_if = {
+			limit = { culture_group = tibetan_group }
+
+			if = {
+				limit = {
+					has_game_rule = {
+						name = pagan_reformation
+						value = start_reformed
+					}
+				}
+				bon_pagan_reformed = { save_event_target_as = new_religion }
+			}
+			else = {
+				bon_pagan = { save_event_target_as = new_religion }
+			}
+		}
+		else_if = {
+				limit = { culture_group = chinese_group }
+			taoist = { save_event_target_as = new_religion }
+		}
+		else_if = {
+			limit = { egyptian_pagan_culture_trigger = yes }
+
+			#if = {
+			#	limit = {
+			#		has_game_rule = {
+			#			name = pagan_reformation
+			#			value = start_reformed
+			#		}
+			#	}
+			#	egyptian_pagan_reformed = { save_event_target_as = new_religion }
+			#}
+			#else = {
+				egyptian_pagan = { save_event_target_as = new_religion }
+			#}
+		}
+		else_if = {
+			limit = { zun_pagan_culture_trigger = yes }
+
+			if = {
+				limit = {
+					has_game_rule = {
+						name = pagan_reformation
+						value = start_reformed
+					}
+				}
+				zun_pagan_reformed = { save_event_target_as = new_religion }
+			}
+			else = {
+				zun_pagan = { save_event_target_as = new_religion }
+			}
+		}
+		else_if = {
+			limit = { finnish_pagan_culture_trigger = yes }
+
+			if = {
+				limit = {
+					has_game_rule = {
+						name = pagan_reformation
+						value = start_reformed
+					}
+				}
+				finnish_pagan_reformed = { save_event_target_as = new_religion }
+			}
+			else = {
+				finnish_pagan = { save_event_target_as = new_religion }
+			}
+		}
+		else_if = {
+			limit = { norse_pagan_culture_trigger = yes }
+
+			if = {
+				limit = {
+					has_game_rule = {
+						name = pagan_reformation
+						value = start_reformed
+					}
+				}
+				norse_pagan_reformed = { save_event_target_as = new_religion }
+			}
+			else = {
+				norse_pagan = { save_event_target_as = new_religion }
+			}
+		}
+		else_if = {
+			limit = { german_pagan_culture_trigger = yes }
+
+			if = {
+				limit = {
+					has_game_rule = {
+						name = pagan_reformation
+						value = start_reformed
+					}
+				}
+				german_pagan_reformed = { save_event_target_as = new_religion }
+			}
+			else = {
+				german_pagan = { save_event_target_as = new_religion }
+			}
+		}
+		else_if = {
+			limit = { canaan_pagan_culture_trigger = yes }
+
+			if = {
+				limit = { religion_group = jewish_group }
+
+				#if = {
+				#	limit = {
+				#		has_game_rule = {
+				#			name = pagan_reformation
+				#			value = start_reformed
+				#		}
+				#	}
+				#	canaan_pagan_reformed = { save_event_target_as = new_religion }
+				#}
+				#else = {
+					canaan_pagan = { save_event_target_as = new_religion }
+				#}
+			}
+			else = {
+				jewish = { save_event_target_as = new_religion }
+			}
+		}
+		else_if = {
+			limit = { roman_pagan_culture_trigger = yes }
+
+			#if = {
+			#	limit = {
+			#		has_game_rule = {
+			#			name = pagan_reformation
+			#			value = start_reformed
+			#		}
+			#	}
+			#	roman_pagan_reformed = { save_event_target_as = new_religion }
+			#}
+			#else = {
+				roman_pagan = { save_event_target_as = new_religion }
+			#}
+		}
+		else_if = {
+			limit = { hellenic_pagan_culture_trigger = yes }
+
+			if = {
+				limit = {
+					has_game_rule = {
+						name = pagan_reformation
+						value = start_reformed
+					}
+				}
+				hellenic_pagan_reformed = { save_event_target_as = new_religion }
+			}
+			else = {
+				hellenic_pagan = { save_event_target_as = new_religion }
+			}
+		}
+	}
+
+	option = {
+		name = {
+			text = EVTOPTA_GoPagan_100 # Zoroaster will lead us to enlightenment!
+			trigger = { event_target:new_religion = { religion = zoroastrian } }
+		}
+		name = {
+			text = EVTOPTN_GoPagan_100 # We will follow the teachings of Mani
+			trigger = { event_target:new_religion = { religion = manichaean } }
+		}
+		name = {
+			text = EVTOPTB_GoPagan_100 # It's time to visit the elder druids
+			trigger = { event_target:new_religion = { religion_openly_celtic_or_reformed_trigger = yes } }
+		}
+		name = {
+			text = EVTOPTC_GoPagan_100 # To the gods of old!
+			trigger = { event_target:new_religion = { religion_openly_tengri_or_reformed_trigger = yes } }
+		}
+		name = {
+			text = EVTOPTC_GoPagan_100 # To the gods of old!
+			trigger = { event_target:new_religion = { religion_openly_baltic_or_reformed_trigger = yes } }
+		}
+		name = {
+			text = EVTOPTC_GoPagan_100 # To the gods of old!
+			trigger = { event_target:new_religion = { religion_openly_slavic_or_reformed_trigger = yes } }
+		}
+		name = {
+			text = EVTOPTC_GoPagan_100 # To the gods of old!
+			trigger = { event_target:new_religion = { religion_openly_west_african_or_reformed_trigger = yes } }
+		}
+		name = {
+			text = EVTOPTC_GoPagan_100 # To the gods of old!
+			trigger = { event_target:new_religion = { religion_openly_berber_pagan_or_reformed_trigger = yes } }
+		}
+		name = {
+			text = EVTOPTC_GoPagan_100 # To the gods of old!
+			trigger = { event_target:new_religion = { religion_openly_arabic_or_reformed_trigger = yes } }
+		}
+		name = {
+			text = EVTOPTC_GoPagan_100 # To the gods of old!
+			trigger = { event_target:new_religion = { religion_openly_bon_or_reformed_trigger = yes } }
+		}
+		name = {
+			text = EVTOPTC_GoPagan_100 # To the gods of old!
+			trigger = { event_target:new_religion = { religion = taoist } }
+		}
+		name = {
+			text = EVTOPTC_GoPagan_100 # To the gods of old!
+			trigger = { event_target:new_religion = { religion_openly_egyptian_or_reformed_trigger = yes } }
+		}
+		name = {
+			text = EVTOPTC_GoPagan_100 # To the gods of old!
+			trigger = { event_target:new_religion = { religion_openly_zun_or_reformed_trigger = yes } }
+		}
+		name = {
+			text = EVTOPTC_GoPagan_100 # To the gods of old!
+			trigger = { event_target:new_religion = { religion_openly_finnish_or_reformed_trigger = yes } }
+		}
+		name = {
+			text = EVTOPTD_GoPagan_100 # Valhalla awaits!
+			trigger = { event_target:new_religion = { religion_openly_norse_or_reformed_trigger = yes } }
+		}
+		name = {
+			text = EVTOPTE_GoPagan_100 # To the gods of old!
+			trigger = { event_target:new_religion = { religion_openly_german_or_reformed_trigger = yes } }
+		}
+		name = {
+			text = EVTOPTL_GoPagan_100 # God will not lead us astray
+			trigger = { event_target:new_religion = { religion_group = jewish_group } }
+		}
+		name = {
+			text = EVTOPTC_GoPagan_100 # To the gods of old!
+			trigger = { event_target:new_religion = { religion_openly_canaan_pagan_or_reformed_trigger = yes } }
+		}
+		name = {
+			text = EVTOPTM_GoPagan_100 # Let us look to the pantheon for guidance
+			trigger = { event_target:new_religion = { religion_openly_roman_or_reformed_trigger = yes } }
+		}
+		name = {
+			text = EVTOPTM_GoPagan_100 # Let us look to the pantheon for guidance
+			trigger = { event_target:new_religion = { religion_openly_hellenic_or_reformed_trigger = yes } }
+		}
+
+		religion = event_target:new_religion
+		piety = -100
+
+		if = {
+			limit = { higher_real_tier_than = BARON }
+
+			event_target:old_religion = {
+				show_scope_change = no
+				religion_authority = { name = ruler_converted_from }
+			}
+
+			event_target:new_religion = {
+				show_scope_change = no
+				religion_authority = { name = ruler_converted_to }
+			}
+		}
+
+		if = {
+			limit = { trait = cynical }
+			remove_trait = cynical
+		}
+		if = {
+			limit = { has_character_modifier = strange_ideas }
+			remove_character_modifier = strange_ideas
+		}
+
+		hidden_effect = {
+			any_courtier = {
+				limit = {
+					is_ruler = no
+
+					OR = {
+						is_close_relative = ROOT
+						dynasty = ROOT
+					}
+				}
+
+				religion = event_target:new_religion
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 0.1
+				religion_group = jewish_group
+			}
+		}
+	}
+
+	option = { # Convert secretly
+		name = EVTOPTX_GoPagan_100
+
+		set_secret_religion = event_target:new_religion
+		piety = -250
+
+		if = {
+			limit = { trait = cynical }
+			remove_trait = cynical
+		}
+
+		if = {
+			limit = { has_character_modifier = strange_ideas }
+			remove_character_modifier = strange_ideas
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 0.1
+				religion_group = jewish_group
+			}
+		}
+	}
+	option = {
+		name = EVTOPTZ_GoPagan_100 # Maybe Not
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# AI allowed to use the decision
+character_event = {
+	id = GoPagan.120
+
+	hide_window = yes
+
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	ai = yes
+	war = no
+	is_sick = no
+
+	trigger = {
+		trigger_if = {
+			limit = { trait = lunatic }
+			NOT = { religion_authority = 0.40 }
+		}
+		trigger_else = {
+			NOT = { religion_authority = 0.20 }
+		}
+
+		in_command_trigger = no
+		controls_religion = no
+		health >= 4
+		piety < 500
+
+		trigger_if = {
+			limit = {
+				is_female = yes
+				is_ruler = no
+				is_married = yes
+				religion = spouse
+			}
+
+			is_married_matrilineally = yes
+		}
+
+		trigger_if = {
+			limit = { is_ruler = yes }
+			is_theocracy = no
+		}
+
+		NOR = {
+			rightful_religious_head = ROOT
+			trait = zealous
+			trait = crusader
+			trait = mujahid
+			trait = holy_crusader
+			trait = holy_warrior
+			religion = jewish
+			religion_group = zoroastrian_group
+			religion_group = pagan_group
+			culture_group = mesoamerican
+			culture_group = indo_aryan_group
+			culture_group = dravidian_group
+			AND = {
+				culture_group = chinese_group
+				religion = taoist
+			}
+			culture = bedouin_arabic
+			culture = maghreb_arabic
+			culture = levantine_arabic
+			culture = andalusian_arabic
+			culture = sicilian_arabic
+			has_character_modifier = voice_of_jesus
+			has_character_modifier = voice_of_satan
+			has_character_flag = refused_pagan_knowledge
+			has_character_flag = gone_pagan
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 200
+
+		mult_modifier = {
+			factor = 0.25
+			trait = lunatic
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = cynical
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			has_character_modifier = defied_church
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			NOT = { religion_authority = 0.15 }
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			NOT = { religion_authority = 0.10 }
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			OR = {
+				trait = mystic
+				trait = scholar
+				trait = theologian
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			location = { religion_group = pagan_group }
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			independent = no
+			liege = { religion_group = pagan_group }
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			OR = {
+				trait = sympathy_pagans
+				trait = sympathy_zoroastrianism
+				trait = sympathy_judaism
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			learning < 5
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			learning < 2
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			piety >= 100
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			piety >= 200
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			piety >= 300
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			piety >= 400
+		}
+
+		mult_modifier = {
+			factor = 3
+			trait = slothful
+		}
+
+		mult_modifier = {
+			factor = 3
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 3
+			trait = craven
+		}
+
+		mult_modifier = {
+			factor = 3
+			trait = patient
+		}
+
+		mult_modifier = {
+			factor = 3
+			learning >= 10
+		}
+
+		mult_modifier = {
+			factor = 3
+			learning >= 15
+		}
+
+		mult_modifier = {
+			factor = 5
+
+			OR = {
+				trait = pilgrim
+				trait = hajjaj
+			}
+		}
+
+		mult_modifier = {
+			factor = 5
+
+			independent = no
+			religion = liege
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = { NOT = { trait = cynical } }
+			add_trait = cynical
+		}
+		else = {
+			if = {
+				limit = {
+					NOR = {
+						trait = sympathy_zoroastrianism
+						trait = sympathy_judaism
+						trait = sympathy_pagans
+					}
+				}
+
+				if = {
+					limit = {
+						zoroastrian_culture_trigger = yes
+						NOT = { trait = sympathy_zoroastrianism }
+					}
+					add_trait = sympathy_zoroastrianism
+				}
+				if = {
+					limit = {
+						canaan_pagan_culture_trigger = yes
+						NOT = { trait = sympathy_judaism }
+					}
+					add_trait = sympathy_judaism
+				}
+				if = {
+					limit = {
+						NOR = {
+							zoroastrian_culture_trigger = yes
+							canaan_pagan_culture_trigger = yes
+							trait = sympathy_pagans
+						}
+					}
+					add_trait = sympathy_pagans
+				}
+			}
+		}
+	}
+}
+
+#######################################
+# DEMAND CONVERSION EVENTS
+# Written by Rylock
+# Tweaked by Vukica
+#######################################
+
+# WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+#
+# If you edit these events keep in mind that modifiers and effects exist
+# both in effect and tooltip blocks. EVERYTHING IS DUPLICATED.
+# That means you MUST CHANGE BOTH INSTANCES.
+#
+# WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+
+# Ruler considers approach to conversion
+character_event = {
+	id = GoPagan.130
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_GoPagan_130_a
+		trigger = { NOT = { religion = event_target:conversion_target } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_130_b
+		trigger = { religion = event_target:conversion_target } # Chalcedonians and their rites
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		save_event_target_as = conversion_ruler
+		FROM = { save_event_target_as = conversion_target }
+	}
+
+	option = { # Convince him
+		name = {
+			text = EVTOPTA_GoPagan_130_a
+			trigger = { NOT = { religion = event_target:conversion_target } }
+		}
+		name = {
+			text = EVTOPTA_GoPagan_130_b
+			trigger = { religion = event_target:conversion_target }
+		}
+
+		trigger = { event_target:conversion_target = { prisoner = no } }
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 1.5
+				trait = kind
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = gregarious
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = shy
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				diplomacy < 8
+			}
+
+			mult_modifier = {
+				factor = 2.0
+
+				OR = {
+					diplomacy >= 15
+					trait = socializer
+					trait = poet
+				}
+			}
+		}
+
+		event_target:conversion_target = {
+			show_scope_change = no
+
+			character_event = {
+				id = GoPagan.131
+				tooltip = CONVINCE_CONVERSION
+			}
+		}
+
+		tooltip = {
+			event_target:conversion_target = {
+				show_scope_change = no
+
+				random_list = {
+					50 = { # Accept
+						plus_accept_conversion_effect = yes
+
+						trigger = { # Opinion < 0 means that there's no conversion chance
+							opinion = {
+								who = event_target:conversion_ruler
+								value >= 0
+							}
+
+							# Male shiite claimant should always refuse
+							NAND = {
+								is_female = no
+								father = { trait = shiite_claimant }
+								any_sibling = { trait = shiite_claimant }
+							}
+						}
+
+						mult_modifier = { # Having a correct sympathy trait increases chances
+							factor = 2
+
+							OR = {
+								AND = {
+									trait = sympathy_christendom
+									event_target:conversion_ruler = { religion_group = christian }
+								}
+								AND = {
+									trait = sympathy_islam
+									event_target:conversion_ruler = { religion_group = muslim }
+								}
+								AND = {
+									trait = sympathy_pagans
+									event_target:conversion_ruler = { religion_group = pagan_group }
+								}
+								AND = {
+									trait = sympathy_zoroastrianism
+									event_target:conversion_ruler = { religion_group = zoroastrian_group }
+								}
+								AND = {
+									trait = sympathy_judaism
+									event_target:conversion_ruler = { religion_group = jewish_group }
+								}
+								AND = {
+									trait = sympathy_indian
+									event_target:conversion_ruler = { religion_group = indian_group }
+								}
+							}
+						}
+
+						mult_modifier = { # Reduce acceptance chance if my religion MA > 60%
+							factor = 0.9
+
+							is_heretic = no
+							religion_authority >= 0.6
+						}
+
+						mult_modifier = { # Reduce acceptance chance if my religion MA > 70%
+							factor = 0.9
+
+							is_heretic = no
+							religion_authority >= 0.7
+						}
+
+						mult_modifier = { # Reduce acceptance chance if my religion MA > 80%
+							factor = 0.9
+
+							is_heretic = no
+							religion_authority >= 0.8
+						}
+
+						mult_modifier = { # Reduce acceptance chance if my religion MA > 90%
+							factor = 0.9
+
+							is_heretic = no
+							religion_authority >= 0.9
+						}
+
+						mult_modifier = { # Increase acceptance chance if my religion MA < 40%
+							factor = 1.1
+
+							is_heretic = no
+							NOT = { religion_authority >= 0.4 }
+						}
+
+						mult_modifier = { # Increase acceptance chance if my religion MA < 30%
+							factor = 1.1
+
+							is_heretic = no
+							NOT = { religion_authority >= 0.3 }
+						}
+
+						mult_modifier = { # Increase acceptance chance if my religion MA < 20%
+							factor = 1.1
+
+							is_heretic = no
+							NOT = { religion_authority >= 0.2 }
+						}
+
+						mult_modifier = { # Increase acceptance chance if my religion MA < 10%
+							factor = 1.1
+
+							is_heretic = no
+							NOT = { religion_authority >= 0.1 }
+						}
+
+						mult_modifier = { # Decrease acceptance chance if a pagan is trying to convert me
+							factor = 0.75
+
+							event_target:conversion_ruler = { religion_group = pagan_group }
+							NOT = { religion_group = pagan_group }
+						}
+
+						mult_modifier = { # Increase acceptance chance if conversion demander diplomacy > 12
+							factor = 1.1
+							event_target:conversion_ruler = { diplomacy >= 12 }
+						}
+
+						mult_modifier = { # Increase acceptance chance if conversion demander diplomacy > 16
+							factor = 1.1
+							event_target:conversion_ruler = { diplomacy >= 16 }
+						}
+
+						mult_modifier = { # Increase acceptance chance if conversion demander diplomacy > 20
+							factor = 1.1
+							event_target:conversion_ruler = { diplomacy >= 20 }
+						}
+
+						mult_modifier = { # Increase conversion chance if east_slavic pagan being converted by orthodox etc. non-heretic
+							factor = 1.5
+
+							culture_group = east_slavic
+							religion_group = pagan_group
+
+							event_target:conversion_ruler = {
+								is_orthodox_branch = yes
+								is_heretic = no
+							}
+						}
+
+						mult_modifier = { # Increase conversion chance if north_germanic pagan being converted by catholic etc. non-heretic
+							factor = 1.5
+
+							culture_group = north_germanic
+							religion_group = pagan_group
+
+							event_target:conversion_ruler = {
+								is_catholic_branch = yes
+								is_heretic = no
+							}
+						}
+
+						mult_modifier = { # Increase conversion chance if my location is converted
+							factor = 1.25
+							location = { religion = event_target:conversion_ruler }
+						}
+
+						mult_modifier = { # Baltic pagans are harder to convert
+							factor = 0.2
+
+							culture_group = baltic
+							religion_group = pagan_group
+						}
+
+						mult_modifier = { # north_germanic and east_slavic pagans hard to convert for muslims
+							factor = 0.1
+
+							OR = {
+								culture_group = north_germanic
+								culture_group = east_slavic
+							}
+
+							religion_group = pagan_group
+							event_target:conversion_ruler = { religion_group = muslim }
+						}
+
+						mult_modifier = { # Unreformed pagans are vulnerable
+							factor = 1.2
+
+							is_unreformed_pagan_trigger = yes
+							event_target:conversion_ruler = { NOT = { religion_group = pagan_group } }
+						}
+
+						mult_modifier = { # Jewish hard to convert for other groups
+							factor = 0.1
+
+							religion_group = jewish_group
+							event_target:conversion_ruler = { NOT = { religion_group = jewish_group } }
+						}
+
+						mult_modifier = { # Opinion < 25 decreases the chance by half
+							factor = 0.5
+							opinion = { who = event_target:conversion_ruler value < 25 }
+						}
+
+						mult_modifier = { # Opinion < 25, 49 > has 75% chance decrease
+							factor = 0.75
+
+							opinion = { who = event_target:conversion_ruler value >= 25 }
+							opinion = { who = event_target:conversion_ruler value < 50 }
+						}
+
+						mult_modifier = { # Opinion < 50, 74 > has slight chance increase
+							factor = 1.1
+
+							opinion = { who = event_target:conversion_ruler value >= 50 }
+							opinion = { who = event_target:conversion_ruler value < 75 }
+						}
+
+						mult_modifier = { # Opinion < 75, 100 > has a bigger chance increase
+							factor = 1.5
+							opinion = { who = event_target:conversion_ruler value >= 75 }
+						}
+
+						mult_modifier = { # I'm not a ruler and my spouse is asking me to convert
+							factor = 1.2
+
+							is_married = event_target:conversion_ruler
+							is_ruler = no
+						}
+
+						mult_modifier = { # My relative or lover is asking me to convert
+							factor = 1.1
+
+							is_ruler = no
+
+							OR = {
+								is_close_relative = event_target:conversion_ruler
+								is_lover = event_target:conversion_ruler
+							}
+						}
+
+						mult_modifier = { # Whatever
+							factor = 2.0
+							trait = cynical
+						}
+
+						mult_modifier = { # Neat way to get out of this
+							factor = 2.0
+							trait = excommunicated
+						}
+
+						mult_modifier = { # One of us is a heretic, so this may not be the best idea
+							factor = 0.75
+
+							OR = {
+								is_heresy_of = event_target:conversion_ruler
+								is_parent_religion = event_target:conversion_ruler
+							}
+						}
+
+						mult_modifier = { # My Allah is stronger than your Allah
+							factor = 0.75
+
+							religion_group = muslim
+							event_target:conversion_ruler = { religion_group = muslim }
+
+							NOR = {
+								is_heresy_of = event_target:conversion_ruler
+								is_parent_religion = event_target:conversion_ruler
+							}
+						}
+
+						mult_modifier = { # My Thor has a bigger hammer than your Thor
+							factor = 0.75
+
+							religion_group = pagan_group
+							event_target:conversion_ruler = { religion_group = pagan_group }
+
+							NOR = {
+								is_heresy_of = event_target:conversion_ruler
+								is_parent_religion = event_target:conversion_ruler
+							}
+						}
+					}
+
+					50 = { # Gain Sympathy
+						plus_sympathy_conversion_effect = yes
+
+						trigger = {
+							NOR = {
+								religion = chalcedonian # Not applicable
+
+								# Never refuse if already have same secret religion
+								secret_religion = {
+									target = event_target:conversion_ruler
+									target_type = public
+								}
+							}
+
+							# Male shiite claimant should always refuse
+							NAND = {
+								is_female = no
+								father = { trait = shiite_claimant }
+								any_sibling = { trait = shiite_claimant }
+							}
+
+							# Opinion < 0 means that there's no conversion chance
+							opinion = {
+								who = event_target:conversion_ruler
+								value >= 0
+							}
+						}
+
+						mult_modifier = { # Reduce sympathy chance if my religion MA > 60%
+							factor = 0.9
+
+							is_heretic = no
+							religion_authority >= 0.6
+						}
+
+						mult_modifier = { # Reduce sympathy chance if my religion MA > 70%
+							factor = 0.9
+
+							is_heretic = no
+							religion_authority >= 0.7
+						}
+
+						mult_modifier = { # Reduce sympathy chance if my religion MA > 80%
+							factor = 0.9
+
+							is_heretic = no
+							religion_authority >= 0.8
+						}
+
+						mult_modifier = { # Reduce sympathy chance if my religion MA > 90%
+							factor = 0.9
+
+							is_heretic = no
+							religion_authority >= 0.9
+						}
+
+						mult_modifier = { # Increase sympathy chance if my religion MA < 40%
+							factor = 1.1
+
+							is_heretic = no
+							NOT = { religion_authority >= 0.4 }
+						}
+
+						mult_modifier = { # Increase sympathy chance if my religion MA < 30%
+							factor = 1.1
+
+							is_heretic = no
+							NOT = { religion_authority >= 0.3 }
+						}
+
+						mult_modifier = { # Increase sympathy chance if my religion MA < 20%
+							factor = 1.1
+
+							is_heretic = no
+							NOT = { religion_authority >= 0.2 }
+						}
+
+						mult_modifier = { # Increase sympathy chance if my religion MA < 10%
+							factor = 1.1
+
+							is_heretic = no
+							NOT = { religion_authority >= 0.1 }
+						}
+
+						mult_modifier = { # Increase sympathy chance if east_slavic pagan being converted by orthodox etc. non-heretic
+							factor = 2 # a bit more than for conversion chance
+
+							culture_group = east_slavic
+							religion_group = pagan_group
+
+							event_target:conversion_ruler = {
+								is_orthodox_branch = yes
+								is_heretic = no
+							}
+						}
+
+						mult_modifier = { # Increase sympathy chance if north_germanic pagan being converted by catholic etc. non-heretic
+							factor = 2 # a bit more than for conversion chance
+
+							culture_group = north_germanic
+							religion_group = pagan_group
+
+							event_target:conversion_ruler = {
+								is_catholic_branch = yes
+								is_heretic = no
+							}
+						}
+
+						mult_modifier = { # Increase sympathy chance if my location is converted
+							factor = 1.25
+							location = { religion = event_target:conversion_ruler }
+						}
+
+						mult_modifier = { # Baltic pagans are harder to convert
+							factor = 0.5
+
+							culture_group = baltic
+							religion_group = pagan_group
+						}
+
+						mult_modifier = { # north_germanic and east_slavic pagans hard to convert for muslims
+							factor = 0.2
+
+							OR = {
+								culture_group = north_germanic
+								culture_group = east_slavic
+							}
+
+							religion_group = pagan_group
+							event_target:conversion_ruler = { religion_group = muslim }
+						}
+
+						mult_modifier = { # Unreformed pagans are vulnerable
+							factor = 1.5
+
+							is_unreformed_pagan_trigger = yes
+							event_target:conversion_ruler = { NOT = { religion_group = pagan_group } }
+						}
+
+						mult_modifier = { # Jewish hard to convert for other groups
+							factor = 0.2
+
+							religion_group = jewish_group
+							event_target:conversion_ruler = { NOT = { religion_group = jewish_group } }
+						}
+
+						mult_modifier = { # Opinion < 25 decreases the chance by half
+							factor = 0.5
+							opinion = { who = event_target:conversion_ruler value < 25 }
+						}
+
+						mult_modifier = { # Opinion < 25, 49 > has 75% chance decrease
+							factor = 0.75
+							opinion = { who = event_target:conversion_ruler value >= 25 }
+							opinion = { who = event_target:conversion_ruler value < 50 }
+						}
+
+						mult_modifier = { # Opinion < 50, 74 > has slight chance increase
+							factor = 1.1
+							opinion = { who = event_target:conversion_ruler value >= 50 }
+							opinion = { who = event_target:conversion_ruler value < 75 }
+						}
+
+						mult_modifier = { # Opinion < 75, 100 > has a bigger chance increase
+							factor = 1.5
+							opinion = { who = event_target:conversion_ruler value >= 75 }
+						}
+					}
+
+					100 = { # Nope
+						plus_refuse_conversion_effect = yes
+
+						trigger = { # Never refuse if already have same secret religion
+							NOT = {
+								secret_religion = {
+									target = event_target:conversion_ruler
+									target_type = public
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	option = { # Engage him in religious debate
+		name = EVTOPTB_GoPagan_130
+		tooltip_info = learning
+
+		trigger = {
+			event_target:conversion_target = { prisoner = no }
+			learning >= 8
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2
+				is_priest = yes
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 10
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 12
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 14
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 16
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 18
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 20
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 2.0
+
+				OR = {
+					trait = scholar
+					trait = theologian
+					trait = faqih
+				}
+			}
+		}
+
+		event_target:conversion_target = {
+			show_scope_change = no
+
+			character_event = {
+				id = GoPagan.135
+				tooltip = DEBATE_CONVERSION
+			}
+		}
+
+		tooltip = {
+			event_target:conversion_target = {
+				show_scope_change = no
+
+				random_list = {
+					100 = { # Agrees to a debate
+						custom_tooltip = { text = AGREES_TO_RELIGIOUS_DEBATE }
+
+						trigger = {
+							# Male shiite claimant should always refuse
+							NAND = {
+								is_female = no
+								father = { trait = shiite_claimant }
+								any_sibling = { trait = shiite_claimant }
+							}
+						}
+
+						mult_modifier = { # Meh, who cares
+							factor = 1.2
+							trait = cynical
+						}
+
+						mult_modifier = { # One of us is a heretic, so this may not be the best idea
+							factor = 0.75
+
+							OR = {
+								is_heresy_of = event_target:conversion_ruler
+								is_parent_religion = event_target:conversion_ruler
+							}
+						}
+
+						mult_modifier = { # I really don't want to... learning < 2
+							factor = 0.8
+							learning < 2
+						}
+
+						mult_modifier = { # I really don't want to... learning < 4
+							factor = 0.8
+							learning < 4
+						}
+
+						mult_modifier = { # I really don't want to... learning < 6
+							factor = 0.8
+							learning < 6
+						}
+
+						mult_modifier = { # I really don't want to... learning < 8
+							factor = 0.8
+							learning < 8
+						}
+
+						mult_modifier = { # My knowlege is vast... learning > 10
+							factor = 1.1
+							learning >= 10
+						}
+
+						mult_modifier = { # Surely you're not saying you're smarter than me? learning > 15
+							factor = 1.2
+							learning >= 15
+						}
+
+						mult_modifier = { # First the debate, then we take over the world! learning > 20
+							factor = 1.3
+							learning >= 20
+						}
+
+						random_list = {
+							50 = { # Converted
+								trigger = { # A really short debate.
+
+									# Opinion < 0 means that there's no conversion chance
+									opinion = {
+										who = event_target:conversion_ruler
+										value >= 0
+									}
+
+									NOT = {
+										secret_religion = {
+											target = event_target:conversion_ruler
+											target_type = public
+										}
+									}
+								}
+
+								mult_modifier = { # Reduce acceptance chance if my religion MA > 60%
+									factor = 0.9
+
+									is_heretic = no
+									religion_authority >= 0.6
+								}
+
+								mult_modifier = { # Reduce acceptance chance if my religion MA > 70%
+									factor = 0.9
+
+									is_heretic = no
+									religion_authority >= 0.7
+								}
+
+								mult_modifier = { # Reduce acceptance chance if my religion MA > 80%
+									factor = 0.9
+
+									is_heretic = no
+									religion_authority >= 0.8
+								}
+
+								mult_modifier = { # Reduce acceptance chance if my religion MA > 90%
+									factor = 0.9
+
+									is_heretic = no
+									religion_authority >= 0.9
+								}
+
+								mult_modifier = { # Increase acceptance chance if my religion MA < 40%
+									factor = 1.1
+
+									is_heretic = no
+									NOT = { religion_authority >= 0.4 }
+								}
+
+								mult_modifier = { # Increase acceptance chance if my religion MA < 30%
+									factor = 1.1
+
+									is_heretic = no
+									NOT = { religion_authority >= 0.3 }
+								}
+
+								mult_modifier = { # Increase acceptance chance if my religion MA < 20%
+									factor = 1.1
+
+									is_heretic = no
+									NOT = { religion_authority >= 0.2 }
+								}
+
+								mult_modifier = { # Increase acceptance chance if my religion MA < 10%
+									factor = 1.1
+
+									is_heretic = no
+									NOT = { religion_authority >= 0.1 }
+								}
+
+								mult_modifier = { # Having a correct sympathy trait increases chances
+									factor = 2
+
+									OR = {
+										AND = {
+											trait = sympathy_christendom
+											event_target:conversion_ruler = { religion_group = christian }
+										}
+										AND = {
+											trait = sympathy_islam
+											event_target:conversion_ruler = { religion_group = muslim }
+										}
+										AND = {
+											trait = sympathy_pagans
+											event_target:conversion_ruler = { religion_group = pagan_group }
+										}
+										AND = {
+											trait = sympathy_zoroastrianism
+											event_target:conversion_ruler = { religion_group = zoroastrian_group }
+										}
+										AND = {
+											trait = sympathy_judaism
+											event_target:conversion_ruler = { religion_group = jewish_group }
+										}
+										AND = {
+											trait = sympathy_indian
+											event_target:conversion_ruler = { religion_group = indian_group }
+										}
+									}
+								}
+
+								mult_modifier = { # Increase conversion chance if east_slavic pagan being converted by orthodox etc. non-heretic
+									factor = 1.5
+
+									culture_group = east_slavic
+									religion_group = pagan_group
+
+									event_target:conversion_ruler = {
+										is_orthodox_branch = yes
+										is_heretic = no
+									}
+								}
+
+								mult_modifier = { # Increase conversion chance if north_germanic pagan being converted by catholic etc. non-heretic
+									factor = 1.5
+
+									culture_group = north_germanic
+									religion_group = pagan_group
+
+									event_target:conversion_ruler = {
+										is_catholic_branch = yes
+										is_heretic = no
+									}
+								}
+
+								mult_modifier = { # Baltic pagans are harder to convert
+									factor = 0.2
+
+									culture_group = baltic
+									religion_group = pagan_group
+								}
+
+								mult_modifier = { # north_germanic and east_slavic pagans hard to convert for muslims
+									factor = 0.1
+
+									OR = {
+										culture_group = north_germanic
+										culture_group = east_slavic
+									}
+
+									religion_group = pagan_group
+									event_target:conversion_ruler = { religion_group = muslim }
+								}
+
+								mult_modifier = { # Unreformed pagans are vulnerable
+									factor = 1.2
+
+									is_unreformed_pagan_trigger = yes
+									event_target:conversion_ruler = { NOT = { religion_group = pagan_group } }
+								}
+
+								mult_modifier = { # Increase conversion chance if my location is converted
+									factor = 1.25
+									location = { religion = event_target:conversion_ruler }
+								}
+
+								mult_modifier = { # Jewish hard to convert for other groups
+									factor = 0.1
+
+									religion_group = jewish_group
+									event_target:conversion_ruler = { NOT = { religion_group = jewish_group } }
+								}
+
+								mult_modifier = { # Opinion < 25 decreases the chance by half
+									factor = 0.5
+									opinion = { who = event_target:conversion_ruler value < 25 }
+								}
+
+								mult_modifier = { # Opinion < 25, 49 > has 75% chance decrease
+									factor = 0.75
+
+									opinion = { who = event_target:conversion_ruler value >= 25 }
+									opinion = { who = event_target:conversion_ruler value < 50 }
+								}
+
+								mult_modifier = { # Opinion < 50, 74 > has slight chance increase
+									factor = 1.1
+
+									opinion = { who = event_target:conversion_ruler value >= 50 }
+									opinion = { who = event_target:conversion_ruler value < 75 }
+								}
+
+								mult_modifier = { # Opinion < 75, 100 > has a bigger chance increase
+									factor = 1.5
+									opinion = { who = event_target:conversion_ruler value >= 75 }
+								}
+
+								mult_modifier = { # My Allah is stronger than your Allah
+									factor = 0.75
+
+									religion_group = muslim
+									event_target:conversion_ruler = { religion_group = muslim }
+
+									NOR = {
+										is_heresy_of = event_target:conversion_ruler
+										is_parent_religion = event_target:conversion_ruler
+									}
+								}
+
+								mult_modifier = { # My Thor has a bigger hammer than your Thor
+									factor = 0.75
+
+									religion_group = pagan_group
+									event_target:conversion_ruler = { religion_group = pagan_group }
+
+									NOR = {
+										is_heresy_of = event_target:conversion_ruler
+										is_parent_religion = event_target:conversion_ruler
+									}
+								}
+
+								custom_tooltip = {
+									text = RELIGIOUS_DEBATE_SUCCEEDS
+
+									opinion = {
+										name = converted_me
+										who = event_target:conversion_ruler
+										years = 20
+									}
+
+									event_target:conversion_ruler = {
+										character_event = { id = GoPagan.137 }
+									}
+
+									character_event = { id = GoPagan.136 }
+								}
+							}
+							50 = { # Sympathy
+								trigger = { # A really short debate.
+									NOT = {
+										secret_religion = {
+											target = event_target:conversion_ruler
+											target_type = public
+										}
+									}
+
+									# Already have sympathy
+									NOR = {
+										religion_group = event_target:conversion_ruler
+
+										AND = {
+											trait = sympathy_christendom
+											event_target:conversion_ruler = { religion_group = christian }
+										}
+										AND = {
+											trait = sympathy_islam
+											event_target:conversion_ruler = { religion_group = muslim }
+										}
+										AND = {
+											trait = sympathy_pagans
+											event_target:conversion_ruler = { religion_group = pagan_group }
+										}
+										AND = {
+											trait = sympathy_zoroastrianism
+											event_target:conversion_ruler = { religion_group = zoroastrian_group }
+										}
+										AND = {
+											trait = sympathy_judaism
+											event_target:conversion_ruler = { religion_group = jewish_group }
+										}
+										AND = {
+											trait = sympathy_indian
+											event_target:conversion_ruler = { religion_group = indian_group }
+										}
+									}
+
+									# Opinion < 0 means that there's no conversion chance
+									opinion = {
+										who = event_target:conversion_ruler
+										value >= 0
+									}
+								}
+
+								mult_modifier = { # Increase sympathy chance if east_slavic pagan being converted by orthodox etc. non-heretic
+									factor = 2 # a bit more than for conversion chance
+
+									culture_group = east_slavic
+									religion_group = pagan_group
+
+									event_target:conversion_ruler = {
+										is_orthodox_branch = yes
+										is_heretic = no
+									}
+								}
+
+								mult_modifier = { # Increase sympathy chance if north_germanic pagan being converted by catholic etc. non-heretic
+									factor = 2 # a bit more than for conversion chance
+
+									culture_group = north_germanic
+									religion_group = pagan_group
+
+									event_target:conversion_ruler = {
+										is_catholic_branch = yes
+										is_heretic = no
+									}
+								}
+
+								mult_modifier = { # Baltic pagans are harder to convert
+									factor = 0.5
+
+									culture_group = baltic
+									religion_group = pagan_group
+								}
+
+								mult_modifier = { # north_germanic and east_slavic pagans hard to convert for muslims
+									factor = 0.2
+
+									OR = {
+										culture_group = north_germanic
+										culture_group = east_slavic
+									}
+
+									religion_group = pagan_group
+									event_target:conversion_ruler = { religion_group = muslim }
+								}
+
+								mult_modifier = { # Unreformed pagans are vulnerable
+									factor = 1.5
+
+									is_unreformed_pagan_trigger = yes
+									event_target:conversion_ruler = { NOT = { religion_group = pagan_group } }
+								}
+
+								mult_modifier = { # Jewish hard to convert for other groups
+									factor = 0.2
+
+									religion_group = jewish_group
+									event_target:conversion_ruler = { NOT = { religion_group = jewish_group } }
+								}
+
+								mult_modifier = { # Opinion < 25 decreases the chance by half
+									factor = 0.5
+									opinion = { who = event_target:conversion_ruler value < 25 }
+								}
+
+								mult_modifier = { # Opinion < 25, 49 > has 75% chance decrease
+									factor = 0.75
+
+									opinion = { who = event_target:conversion_ruler value >= 25 }
+									opinion = { who = event_target:conversion_ruler value < 50 }
+								}
+
+								mult_modifier = { # Opinion < 50, 74 > has slight chance increase
+									factor = 1.1
+
+									opinion = { who = event_target:conversion_ruler value >= 50 }
+									opinion = { who = event_target:conversion_ruler value < 75 }
+								}
+
+								mult_modifier = { # Opinion < 75, 100 > has a bigger chance increase
+									factor = 1.5
+									opinion = { who = event_target:conversion_ruler value >= 75 }
+								}
+
+								mult_modifier = { # Reduce sympathy chance if my religion MA > 60%
+									factor = 0.9
+
+									is_heretic = no
+									religion_authority >= 0.6
+								}
+
+								mult_modifier = { # Reduce sympathy chance if my religion MA > 70%
+									factor = 0.9
+
+									is_heretic = no
+									religion_authority >= 0.7
+								}
+
+								mult_modifier = { # Reduce sympathy chance if my religion MA > 80%
+									factor = 0.9
+
+									is_heretic = no
+									religion_authority >= 0.8
+								}
+
+								mult_modifier = { # Reduce sympathy chance if my religion MA > 90%
+									factor = 0.9
+
+									is_heretic = no
+									religion_authority >= 0.9
+								}
+
+								mult_modifier = { # Increase sympathy chance if my religion MA < 40%
+									factor = 1.1
+
+									is_heretic = no
+									NOT = { religion_authority >= 0.4 }
+								}
+
+								mult_modifier = { # Increase sympathy chance if my religion MA < 30%
+									factor = 1.1
+
+									is_heretic = no
+									NOT = { religion_authority >= 0.3 }
+								}
+
+								mult_modifier = { # Increase sympathy chance if my religion MA < 20%
+									factor = 1.1
+
+									is_heretic = no
+									NOT = { religion_authority >= 0.2 }
+								}
+
+								mult_modifier = { # Increase sympathy chance if my religion MA < 10%
+									factor = 1.1
+
+									is_heretic = no
+									NOT = { religion_authority >= 0.1 }
+								}
+
+								custom_tooltip = {
+									text = RELIGIOUS_DEBATE_SYMPATHY
+
+									event_target:conversion_ruler = {
+										character_event = { id = GoPagan.139 }
+									}
+
+									character_event = { id = GoPagan.138 }
+								}
+							}
+
+							10 = { # Liege gets Sympathy
+								trigger = {
+									NOR = {
+										# A really short debate.
+										secret_religion = {
+											target = event_target:conversion_ruler
+											target_type = public
+										}
+
+										# I'm a zealot!
+										event_target:conversion_ruler = { trait = zealous }
+
+										# I'm not sympathetic already
+										religion_group = event_target:conversion_ruler
+
+										AND = {
+											event_target:conversion_ruler = { trait = sympathy_christendom }
+											religion_group = christian
+										}
+										AND = {
+											event_target:conversion_ruler = { trait = sympathy_islam }
+											religion_group = muslim
+										}
+										AND = {
+											event_target:conversion_ruler = { trait = sympathy_pagans }
+											religion_group = pagan_group
+										}
+										AND = {
+											event_target:conversion_ruler = { trait = sympathy_zoroastrianism }
+											religion_group = zoroastrian_group
+										}
+										AND = {
+											event_target:conversion_ruler = { trait = sympathy_judaism }
+											religion_group = jewish_group
+										}
+										AND = {
+											event_target:conversion_ruler = { trait = sympathy_indian }
+											religion_group = indian_group
+										}
+									}
+
+									# We're equals
+									attribute_diff = {
+										character = event_target:conversion_ruler
+										attribute = learning
+										value >= 1
+									}
+								}
+
+
+								mult_modifier = { # Sure, whatever.
+									factor = 1.2
+									event_target:conversion_ruler = { trait = cynical }
+								}
+
+								mult_modifier = { # Look at you with all your book smarts! learning_diff > 3
+									factor = 1.1
+									attribute_diff = { character = event_target:conversion_ruler attribute = learning value >= 3 }
+								}
+
+								mult_modifier = { # Look at you with all your book smarts! learning_diff > 5
+									factor = 1.1
+									attribute_diff = { character = event_target:conversion_ruler attribute = learning value >= 5 }
+								}
+
+								mult_modifier = { # Look at you with all your book smarts! learning_diff > 7
+									factor = 1.1
+									attribute_diff = { character = event_target:conversion_ruler attribute = learning value >= 7 }
+								}
+
+								mult_modifier = { # Look at you with all your book smarts! learning_diff > 9
+									factor = 1.1
+									attribute_diff = { character = event_target:conversion_ruler attribute = learning value >= 9 }
+								}
+
+								mult_modifier = { # Man, this is what *I* do.
+									factor = 1.2
+
+									is_priest = yes
+									event_target:conversion_ruler = { is_priest = no }
+								}
+
+								mult_modifier = { # You're the priest... What the hell do I know.
+									factor = 0.8
+
+									is_priest = no
+									event_target:conversion_ruler = { is_priest = yes }
+								}
+
+								event_target:conversion_ruler = {
+									show_scope_change = no
+
+									character_event = {
+										id = GoPagan.141
+										tooltip = RELIGIOUS_DEBATE_LIEGE_SYMPATHY
+									}
+								}
+
+								character_event = { id = GoPagan.140 }
+							}
+
+							50 = { # Fails
+								mult_modifier = { # Look at you with all your book smarts! learning_diff > 3
+									factor = 1.2
+									attribute_diff = { character = event_target:conversion_ruler attribute = learning value >= 3 }
+								}
+
+								mult_modifier = { # Look at you with all your book smarts! learning_diff > 5
+									factor = 1.2
+									attribute_diff = { character = event_target:conversion_ruler attribute = learning value >= 5 }
+								}
+
+								mult_modifier = { # Look at you with all your book smarts! learning_diff > 7
+									factor = 1.2
+									attribute_diff = { character = event_target:conversion_ruler attribute = learning value >= 7 }
+								}
+
+								mult_modifier = { # Look at you with all your book smarts! learning_diff > 9
+									factor = 1.2
+									attribute_diff = { character = event_target:conversion_ruler attribute = learning value >= 9 }
+								}
+
+								mult_modifier = { # Look at you with all your book smarts! learning_diff > -3
+									factor = 0.8
+									attribute_diff = { character = event_target:conversion_ruler attribute = learning value <= -3 }
+								}
+
+								mult_modifier = { # Look at you with all your book smarts! learning_diff > -5
+									factor = 0.8
+									attribute_diff = { character = event_target:conversion_ruler attribute = learning value <= -5 }
+								}
+
+								mult_modifier = { # Look at you with all your book smarts! learning_diff > -7
+									factor = 0.8
+									attribute_diff = { character = event_target:conversion_ruler attribute = learning value <= -7 }
+								}
+
+								mult_modifier = { # Look at you with all your book smarts! learning_diff > -9
+									factor = 0.8
+									attribute_diff = { character = event_target:conversion_ruler attribute = learning value <= -9 }
+								}
+
+								mult_modifier = { # I genuinely dislike you
+									factor = 1.5
+
+									opinion = { who = event_target:conversion_ruler value < 0 }
+									opinion = { who = event_target:conversion_ruler value >= -25 }
+								}
+
+								mult_modifier = { # Not that I hate you, but... stop talking.
+									factor = 1.5
+
+									opinion = { who = event_target:conversion_ruler value < -25 }
+									opinion = { who = event_target:conversion_ruler value >= -50 }
+								}
+
+								mult_modifier = { # Are you serious. I wouldn't believe you if you said water was wet.
+									factor = 2.0
+									opinion = { who = event_target:conversion_ruler value <= -50 }
+								}
+
+								set_character_flag = debate_failed
+								character_event = { id = GoPagan.142 }
+
+								event_target:conversion_ruler = {
+									show_scope_change = no
+
+									character_event = {
+										id = GoPagan.134
+										tooltip = RELIGIOUS_DEBATE_FAILS
+									}
+								}
+							}
+						}
+					}
+
+					30 = { # Refuses a debate
+						trigger = {
+							NOT = {
+								secret_religion = {
+									target = event_target:conversion_ruler
+									target_type = public
+								}
+							}
+						}
+
+						mult_modifier = {
+							factor = 0.25
+
+							OR = {
+								trait = scholar
+								trait = theologian
+								trait = faqih
+							}
+						}
+
+						set_character_flag = refused_debate
+
+						event_target:conversion_ruler = {
+							show_scope_change = no
+
+							opinion = {
+								who = ROOT
+								name = opinion_failed_conversion
+								years = 10
+							}
+
+							character_event = { id = GoPagan.134 }
+						}
+					}
+				}
+			}
+		}
+	}
+
+	option = { # Threaten him
+		name = EVTOPTC_GoPagan_130
+
+		trigger = {
+			event_target:conversion_target = { prisoner = no }
+
+			trigger_if = {
+				limit = { is_tribal = yes }
+
+				OR = {
+					has_law = tribal_organization_2
+					has_law = tribal_organization_3
+					has_law = tribal_organization_4
+				}
+			}
+			trigger_else = {
+				crownlaw_title = {
+					OR = {
+						has_law = crown_authority_2
+						has_law = crown_authority_3
+						has_law = crown_authority_4
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				OR = {
+					trait = wroth
+					trait = proud
+					trait = cruel
+					trait = arbitrary
+					trait = zealous
+					trait = impaler
+				}
+
+				NOR = {
+					trait = kind
+					trait = just
+					trait = humble
+					is_friend = event_target:conversion_target
+
+					AND = {
+						trait = sympathy_christendom
+						event_target:conversion_target = { religion_group = christian }
+					}
+					AND = {
+						trait = sympathy_islam
+						event_target:conversion_target = { religion_group = muslim }
+					}
+					AND = {
+						trait = sympathy_pagans
+						event_target:conversion_target = { religion_group = pagan_group }
+					}
+					AND = {
+						trait = sympathy_zoroastrianism
+						event_target:conversion_target = { religion_group = zoroastrian_group }
+					}
+					AND = {
+						trait = sympathy_judaism
+						event_target:conversion_target = { religion_group = jewish_group }
+					}
+					AND = {
+						trait = sympathy_indian
+						event_target:conversion_target = { religion_group = indian_group }
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				is_close_relative = event_target:conversion_target
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = impaler
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = paranoid
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				reverse_opinion = { who = event_target:conversion_target value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				reverse_opinion = { who = event_target:conversion_target value >= 75 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				reverse_opinion = { who = event_target:conversion_target value < 25 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				reverse_opinion = { who = event_target:conversion_target value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = tyrant1
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = tyrant2
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = tyrant3
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = tyrant4
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = tyrant5
+			}
+		}
+
+		tyrant_plus_1_effect = yes
+
+		event_target:conversion_target = {
+			show_scope_change = no
+
+			opinion = {
+				name = opinion_tyrant
+				who = ROOT
+			}
+
+			character_event = {
+				id = GoPagan.143
+				tooltip = THREATEN_CONVERSION
+			}
+
+			custom_tooltip = { text = IMPRISON_IF_REFUSE }
+		}
+
+		tooltip = {
+			event_target:conversion_target = {
+				show_scope_change = no
+
+				random_list = {
+					100 = { # Accept
+						plus_accept_conversion_under_threat_effect = yes
+
+						trigger = { # Male shiite claimant should always refuse
+							NAND = {
+								is_female = no
+								father = { trait = shiite_claimant }
+								any_sibling = { trait = shiite_claimant }
+							}
+
+							# Opinion < 0 means that there's no conversion chance
+							opinion = {
+								who = event_target:conversion_ruler
+								value >= 0
+							}
+						}
+
+						mult_modifier = { # Having a correct sympathy trait increases chances
+							factor = 2
+
+							OR = {
+								AND = {
+									trait = sympathy_christendom
+									event_target:conversion_ruler = { religion_group = christian }
+								}
+								AND = {
+									trait = sympathy_islam
+									event_target:conversion_ruler = { religion_group = muslim }
+								}
+								AND = {
+									trait = sympathy_pagans
+									event_target:conversion_ruler = { religion_group = pagan_group }
+								}
+								AND = {
+									trait = sympathy_zoroastrianism
+									event_target:conversion_ruler = { religion_group = zoroastrian_group }
+								}
+								AND = {
+									trait = sympathy_judaism
+									event_target:conversion_ruler = { religion_group = jewish_group }
+								}
+								AND = {
+									trait = sympathy_indian
+									event_target:conversion_ruler = { religion_group = indian_group }
+								}
+							}
+						}
+
+						mult_modifier = { # Increase conversion chance if my location is converted
+							factor = 1.25
+							location = { religion = event_target:conversion_ruler }
+						}
+
+						mult_modifier = { # Jewish hard to convert for other groups
+							factor = 0.1
+
+							religion_group = jewish_group
+							event_target:conversion_ruler = { NOT = { religion_group = jewish_group } }
+						}
+
+						mult_modifier = { # One of us is a heretic, so this may not be the best idea
+							factor = 0.75
+
+							OR = {
+								is_heresy_of = event_target:conversion_ruler
+								is_parent_religion = event_target:conversion_ruler
+							}
+						}
+
+						mult_modifier = { # Brave or stupid?
+							factor = 0.8
+							trait = brave
+						}
+
+						mult_modifier = { # Pride goeth before fall
+							factor = 0.8
+							trait = proud
+						}
+
+						mult_modifier = { # Too pissed off to think
+							factor = 0.8
+							trait = wroth
+						}
+
+						mult_modifier = { # Coward or smart?
+							factor = 1.2
+							trait = craven
+						}
+
+						mult_modifier = { # Meh, who cares
+							factor = 1.2
+							trait = cynical
+						}
+
+						mult_modifier = { # Opinion < 25 decreases the chance by half
+							factor = 0.5
+							opinion = { who = event_target:conversion_ruler value < 25 }
+						}
+
+						mult_modifier = { # Opinion < 25, 49 > has 75% chance decrease
+							factor = 0.75
+
+							opinion = { who = event_target:conversion_ruler value >= 25 }
+							opinion = { who = event_target:conversion_ruler value < 50 }
+						}
+
+						mult_modifier = { # Opinion < 50, 74 > has slight chance increase
+							factor = 1.1
+
+							opinion = { who = event_target:conversion_ruler value >= 50 }
+							opinion = { who = event_target:conversion_ruler value < 75 }
+						}
+
+						mult_modifier = { # Opinion < 75, 100 > has a bigger chance increase
+							factor = 1.5
+							opinion = { who = event_target:conversion_ruler value >= 75 }
+						}
+
+						mult_modifier = { # Decrease acceptance chance if a pagan is trying to convert me
+							factor = 0.75
+
+							event_target:conversion_ruler = { religion_group = pagan_group }
+							NOT = { religion_group = pagan_group }
+						}
+
+						mult_modifier = { # Increase chance if CA/TO is high
+							factor = 1.1
+
+							event_target:conversion_ruler = {
+								trigger_if = {
+									limit = { is_tribal = yes }
+									has_law = tribal_organization_3
+								}
+								trigger_else = {
+									crownlaw_title = { has_law = crown_authority_3 }
+								}
+							}
+						}
+
+						mult_modifier = { # Further increase if CA/TO is max
+							factor = 1.1
+
+							event_target:conversion_ruler = {
+								trigger_if = {
+									limit = { is_tribal = yes }
+									has_law = tribal_organization_4
+								}
+								trigger_else = {
+									crownlaw_title = { has_law = crown_authority_4 }
+								}
+							}
+						}
+					}
+
+					100 = { # Refuse and maybe get jailed
+						plus_refuse_conversion_under_threat_effect = yes
+
+						trigger = { # Never refuse if already have same secret religion
+							NOT = {
+								secret_religion = {
+									target = event_target:conversion_ruler
+									target_type = public
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	option = { # He may go free if he agrees
+		name = {
+			text = EVTOPTD_GoPagan_130_a
+			trigger = { NOT = { religion = event_target:conversion_ruler } }
+		}
+		name = {
+			text = EVTOPTD_GoPagan_130_b
+			trigger = { religion = event_target:conversion_ruler }
+		}
+
+		trigger = {
+			event_target:conversion_target = {
+				prisoner = yes
+				host = { character = event_target:conversion_ruler }
+			}
+		}
+
+		event_target:conversion_target = {
+			show_scope_change = no
+
+			tooltip = {
+				if = {
+					limit = { NOT = { religion = event_target:conversion_ruler } } # Chalcedonians can switch rites instead
+					religion = event_target:conversion_ruler
+				}
+				else = {
+					set_character_flag = changed_rites
+
+					trigger_switch = {
+						on_trigger = trait
+
+						latin_rites = { remove_trait = latin_rites }
+						greek_rites = { remove_trait = greek_rites }
+						iconoclast_rites = { remove_trait = iconoclast_rites }
+					}
+
+					event_target:conversion_ruler = {
+						show_scope_change = no
+
+						trigger_switch = {
+							on_trigger = trait
+
+							latin_rites = { PREV = { show_scope_change = no add_trait = latin_rites } }
+							greek_rites = { PREV = { show_scope_change = no add_trait = greek_rites } }
+							iconoclast_rites = { PREV = { show_scope_change = no add_trait = iconoclast_rites } }
+						}
+					}
+				}
+
+				imprison = no
+			}
+
+			character_event = { id = GoPagan.146 }
+		}
+
+		ai_chance = { factor = 100 }
+	}
+
+	option = { # Forget it
+		name = EVTOPTE_GoPagan_130
+
+		if = {
+			limit = { event_target:conversion_target = { is_ruler = yes } }
+			piety = 50
+		}
+		else = {
+			piety = 10
+		}
+
+		hidden_effect = {
+			event_target:conversion_target = {
+				clr_character_flag = considering_conversion
+			}
+		}
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Ruler attempts to convince courtier/vassal to convert
+character_event = {
+	id = GoPagan.131
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_GoPagan_131_a
+		trigger = { NOT = { religion = event_target:conversion_ruler } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_131_b
+		trigger = { religion = event_target:conversion_ruler }
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		clr_character_flag = considering_conversion
+
+		# In case the event is fired from soa_heresy_events.txt
+		save_event_target_as = conversion_target
+		FROM = { save_event_target_as = conversion_ruler }
+	}
+
+	option = { # Accept
+		name = {
+			text = EVTOPTA_GoPagan_131_a
+			trigger = { NOT = { religion = event_target:conversion_ruler } }
+		}
+		name = {
+			text = EVTOPTA_GoPagan_131_b
+			trigger = { religion = event_target:conversion_ruler }
+		}
+
+		plus_accept_conversion_effect = yes
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				# Male shiite claimant should always refuse
+				NAND = {
+					is_female = no
+					father = { trait = shiite_claimant }
+					any_sibling = { trait = shiite_claimant }
+				}
+
+				# Opinion < 0 means that there's no conversion chance
+				opinion = {
+					who = event_target:conversion_ruler
+					value >= 0
+				}
+			}
+
+			modifier = { # Having a correct sympathy trait increases chances
+				factor = 2
+
+				OR = {
+					AND = {
+						trait = sympathy_christendom
+						event_target:conversion_ruler = { religion_group = christian }
+					}
+					AND = {
+						trait = sympathy_islam
+						event_target:conversion_ruler = { religion_group = muslim }
+					}
+					AND = {
+						trait = sympathy_pagans
+						event_target:conversion_ruler = { religion_group = pagan_group }
+					}
+					AND = {
+						trait = sympathy_zoroastrianism
+						event_target:conversion_ruler = { religion_group = zoroastrian_group }
+					}
+					AND = {
+						trait = sympathy_judaism
+						event_target:conversion_ruler = { religion_group = jewish_group }
+					}
+					AND = {
+						trait = sympathy_indian
+						event_target:conversion_ruler = { religion_group = indian_group }
+					}
+				}
+			}
+
+			mult_modifier = { # Reduce acceptance chance if my religion MA > 60%
+				factor = 0.9
+
+				is_heretic = no
+				religion_authority >= 0.6
+			}
+
+			mult_modifier = { # Reduce acceptance chance if my religion MA > 70%
+				factor = 0.9
+
+				is_heretic = no
+				religion_authority >= 0.7
+			}
+
+			mult_modifier = { # Reduce acceptance chance if my religion MA > 80%
+				factor = 0.9
+
+				is_heretic = no
+				religion_authority >= 0.8
+			}
+
+			mult_modifier = { # Reduce acceptance chance if my religion MA > 90%
+				factor = 0.9
+
+				is_heretic = no
+				religion_authority >= 0.9
+			}
+
+			mult_modifier = { # Increase acceptance chance if my religion MA < 40%
+				factor = 1.1
+
+				is_heretic = no
+				NOT = { religion_authority >= 0.4 }
+			}
+
+			mult_modifier = { # Increase acceptance chance if my religion MA < 30%
+				factor = 1.1
+
+				is_heretic = no
+				NOT = { religion_authority >= 0.3 }
+			}
+
+			mult_modifier = { # Increase acceptance chance if my religion MA < 20%
+				factor = 1.1
+
+				is_heretic = no
+				NOT = { religion_authority >= 0.2 }
+			}
+
+			mult_modifier = { # Increase acceptance chance if my religion MA < 10%
+				factor = 1.1
+
+				is_heretic = no
+				NOT = { religion_authority >= 0.1 }
+			}
+
+			mult_modifier = { # Decrease acceptance chance if a pagan is trying to convert me
+				factor = 0.75
+
+				event_target:conversion_ruler = { religion_group = pagan_group }
+				NOT = { religion_group = pagan_group }
+			}
+
+			mult_modifier = { # Increase acceptance chance if conversion demander diplomacy > 12
+				factor = 1.1
+				event_target:conversion_ruler = { diplomacy >= 12 }
+			}
+
+			mult_modifier = { # Increase acceptance chance if conversion demander diplomacy > 16
+				factor = 1.1
+				event_target:conversion_ruler = { diplomacy >= 16 }
+			}
+
+			mult_modifier = { # Increase acceptance chance if conversion demander diplomacy > 20
+				factor = 1.1
+				event_target:conversion_ruler = { diplomacy >= 20 }
+			}
+
+			mult_modifier = { # Increase conversion chance if east_slavic pagan being converted by orthodox etc. non-heretic
+				factor = 1.5
+
+				culture_group = east_slavic
+				religion_group = pagan_group
+
+				event_target:conversion_ruler = {
+					is_orthodox_branch = yes
+					is_heretic = no
+				}
+			}
+
+			mult_modifier = { # Increase conversion chance if north_germanic pagan being converted by catholic etc. non-heretic
+				factor = 1.5
+
+				culture_group = north_germanic
+				religion_group = pagan_group
+
+				event_target:conversion_ruler = {
+					is_catholic_branch = yes
+					is_heretic = no
+				}
+			}
+
+			mult_modifier = { # Increase conversion chance if my location is converted
+				factor = 1.25
+				location = { religion = event_target:conversion_ruler }
+			}
+
+			mult_modifier = { # Baltic pagans are harder to convert
+				factor = 0.2
+
+				culture_group = baltic
+				religion_group = pagan_group
+			}
+
+			mult_modifier = { # north_germanic and east_slavic pagans hard to convert for muslims
+				factor = 0.1
+
+				OR = {
+					culture_group = north_germanic
+					culture_group = east_slavic
+				}
+
+				religion_group = pagan_group
+				event_target:conversion_ruler = { religion_group = muslim }
+			}
+
+			mult_modifier = { # Unreformed pagans are vulnerable
+				factor = 1.2
+
+				is_unreformed_pagan_trigger = yes
+				event_target:conversion_ruler = { NOT = { religion_group = pagan_group } }
+			}
+
+			mult_modifier = { # Jewish hard to convert for other groups
+				factor = 0.1
+
+				religion_group = jewish_group
+				event_target:conversion_ruler = { NOT = { religion_group = jewish_group } }
+			}
+
+			mult_modifier = { # Opinion < 25 decreases the chance by half
+				factor = 0.5
+				opinion = { who = event_target:conversion_ruler value < 25 }
+			}
+
+			mult_modifier = { # Opinion < 25, 49 > has 75% chance decrease
+				factor = 0.75
+
+				opinion = { who = event_target:conversion_ruler value >= 25 }
+				opinion = { who = event_target:conversion_ruler value < 50 }
+			}
+
+			mult_modifier = { # Opinion < 50, 74 > has slight chance increase
+				factor = 1.1
+
+				opinion = { who = event_target:conversion_ruler value >= 50 }
+				opinion = { who = event_target:conversion_ruler value < 75 }
+			}
+
+			mult_modifier = { # Opinion < 75, 100 > has a bigger chance increase
+				factor = 1.5
+
+				opinion = { who = event_target:conversion_ruler value >= 75 }
+			}
+
+			mult_modifier = { # I'm not a ruler and my spouse is asking me to convert
+				factor = 1.2
+
+				is_married = event_target:conversion_ruler
+				is_ruler = no
+			}
+
+			mult_modifier = { # My relative or lover is asking me to convert
+				factor = 1.1
+
+				is_ruler = no
+
+				OR = {
+					is_close_relative = event_target:conversion_ruler
+					is_lover = event_target:conversion_ruler
+				}
+			}
+
+			mult_modifier = { # Whatever
+				factor = 2.0
+				trait = cynical
+			}
+
+			mult_modifier = { # Neat way to get out of this
+				factor = 2.0
+				trait = excommunicated
+			}
+
+			mult_modifier = { # One of us is a heretic, so this may not be the best idea
+				factor = 0.75
+
+				OR = {
+					is_heresy_of = event_target:conversion_ruler
+					is_parent_religion = event_target:conversion_ruler
+				}
+			}
+
+			mult_modifier = { # My Allah is stronger than your Allah
+				factor = 0.75
+
+				religion_group = muslim
+				event_target:conversion_ruler = { religion_group = muslim }
+
+				NOR = {
+					is_heresy_of = event_target:conversion_ruler
+					is_parent_religion = event_target:conversion_ruler
+				}
+			}
+
+			mult_modifier = { # My Thor has a bigger hammer than your Thor
+				factor = 0.75
+
+				religion_group = pagan_group
+				event_target:conversion_ruler = { religion_group = pagan_group }
+
+				NOR = {
+					is_heresy_of = event_target:conversion_ruler
+					is_parent_religion = event_target:conversion_ruler
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_GoPagan_131 # He makes some sense
+
+		trigger = {
+			is_heretic = no
+
+			NOR = {
+				religion_group = event_target:conversion_ruler
+
+				AND = {
+					trait = sympathy_christendom
+					event_target:conversion_ruler = { religion_group = christian }
+				}
+				AND = {
+					trait = sympathy_islam
+					event_target:conversion_ruler = { religion_group = muslim }
+				}
+				AND = {
+					trait = sympathy_pagans
+					event_target:conversion_ruler = { religion_group = pagan_group }
+				}
+				AND = {
+					trait = sympathy_zoroastrianism
+					event_target:conversion_ruler = { religion_group = zoroastrian_group }
+				}
+				AND = {
+					trait = sympathy_judaism
+					event_target:conversion_ruler = { religion_group = jewish_group }
+				}
+				AND = {
+					trait = sympathy_indian
+					event_target:conversion_ruler = { religion_group = indian_group }
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				# Never refuse if already have same secret religion
+				NOT = {
+					secret_religion = {
+						target = event_target:conversion_ruler
+						target_type = public
+					}
+				}
+
+				# Male shiite claimant should always refuse
+				NAND = {
+					is_female = no
+					father = { trait = shiite_claimant }
+					any_sibling = { trait = shiite_claimant }
+				}
+
+				# Opinion < 0 means that there's no conversion chance
+				opinion = {
+					who = event_target:conversion_ruler
+					value >= 0
+				}
+			}
+
+			mult_modifier = { # Reduce sympathy chance if my religion MA > 60%
+				factor = 0.9
+
+				is_heretic = no
+				religion_authority >= 0.6
+			}
+
+			mult_modifier = { # Reduce sympathy chance if my religion MA > 70%
+				factor = 0.9
+
+				is_heretic = no
+				religion_authority >= 0.7
+			}
+
+			mult_modifier = { # Reduce sympathy chance if my religion MA > 80%
+				factor = 0.9
+
+				is_heretic = no
+				religion_authority >= 0.8
+			}
+
+			mult_modifier = { # Reduce sympathy chance if my religion MA > 90%
+				factor = 0.9
+
+				is_heretic = no
+				religion_authority >= 0.9
+			}
+
+			mult_modifier = { # Increase sympathy chance if my religion MA < 40%
+				factor = 1.1
+
+				is_heretic = no
+				NOT = { religion_authority >= 0.4 }
+			}
+
+			mult_modifier = { # Increase sympathy chance if my religion MA < 30%
+				factor = 1.1
+
+				is_heretic = no
+				NOT = { religion_authority >= 0.3 }
+			}
+
+			mult_modifier = { # Increase sympathy chance if my religion MA < 20%
+				factor = 1.1
+
+				is_heretic = no
+				NOT = { religion_authority >= 0.2 }
+			}
+
+			mult_modifier = { # Increase sympathy chance if my religion MA < 10%
+				factor = 1.1
+
+				is_heretic = no
+				NOT = { religion_authority >= 0.1 }
+			}
+
+			mult_modifier = { # Increase sympathy chance if east_slavic pagan being converted by orthodox etc. non-heretic
+				factor = 2 # a bit more than for conversion chance
+
+				culture_group = east_slavic
+				religion_group = pagan_group
+
+				event_target:conversion_ruler = {
+					is_orthodox_branch = yes
+					is_heretic = no
+				}
+			}
+
+			mult_modifier = { # Increase sympathy chance if north_germanic pagan being converted by catholic etc. non-heretic
+				factor = 2 # a bit more than for conversion chance
+
+				culture_group = north_germanic
+				religion_group = pagan_group
+
+				event_target:conversion_ruler = {
+					is_catholic_branch = yes
+					is_heretic = no
+				}
+			}
+
+			mult_modifier = { # Increase sympathy chance if my location is converted
+				factor = 1.25
+				location = { religion = event_target:conversion_ruler }
+			}
+
+			mult_modifier = { # Baltic pagans are harder to convert
+				factor = 0.5
+
+				culture_group = baltic
+				religion_group = pagan_group
+			}
+
+			mult_modifier = { # north_germanic and east_slavic pagans hard to convert for muslims
+				factor = 0.2
+
+				OR = {
+					culture_group = north_germanic
+					culture_group = east_slavic
+				}
+
+				religion_group = pagan_group
+				event_target:conversion_ruler = { religion_group = muslim }
+			}
+
+			mult_modifier = { # Unreformed pagans are vulnerable
+				factor = 1.5
+
+				is_unreformed_pagan_trigger = yes
+				event_target:conversion_ruler = { NOT = { religion_group = pagan_group } }
+			}
+
+			mult_modifier = { # Jewish hard to convert for other groups
+				factor = 0.2
+
+				religion_group = jewish_group
+				event_target:conversion_ruler = { NOT = { religion_group = jewish_group } }
+			}
+
+			mult_modifier = { # Opinion < 25 decreases the chance by half
+				factor = 0.5
+				opinion = { who = event_target:conversion_ruler value < 25 }
+			}
+
+			mult_modifier = { # Opinion < 25, 49 > has 75% chance decrease
+				factor = 0.75
+
+				opinion = { who = event_target:conversion_ruler value >= 25 }
+				opinion = { who = event_target:conversion_ruler value < 50 }
+			}
+
+			mult_modifier = { # Opinion < 50, 74 > has slight chance increase
+				factor = 1.1
+
+				opinion = { who = event_target:conversion_ruler value >= 50 }
+				opinion = { who = event_target:conversion_ruler value < 75 }
+			}
+
+			mult_modifier = { # Opinion < 75, 100 > has a bigger chance increase
+				factor = 1.5
+				opinion = { who = event_target:conversion_ruler value >= 75 }
+			}
+		}
+
+		plus_sympathy_conversion_effect = yes
+	}
+
+	option = {
+		name = EVTOPTC_GoPagan_131 # Refuse
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				# Never refuse if already have same secret religion
+				NOT = {
+					secret_religion = {
+						target = event_target:conversion_ruler
+						target_type = public
+					}
+				}
+			}
+		}
+
+		plus_refuse_conversion_effect = yes
+	}
+}
+
+# Ruler informed that conversion has been accepted
+character_event = {
+	id = GoPagan.132
+	desc = {
+		text = EVTDESC_GoPagan_132_a
+		trigger = { FROM = { NOT = { has_character_flag = changed_rites } } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_132_b
+		trigger = { FROM = { has_character_flag = changed_rites } }
+	}
+
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		reverse_opinion = {
+			name = converted_me
+			who = FROM
+			years = 20
+		}
+	}
+
+	after = {
+		FROM = { clr_character_flag = changed_rites }
+
+		character_event = {
+			id = GoPagan.147
+			days = 20
+		}
+	}
+}
+
+# Ruler informed that conversion failed, but target is now sympathetic
+character_event = {
+	id = GoPagan.133
+	desc = EVTDESC_GoPagan_133
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_133
+
+		reverse_opinion = {
+			name = opinion_mutual_respect
+			who = FROM
+			years = 10
+			multiplier = 2
+		}
+	}
+
+	after = {
+		character_event = {
+			id = GoPagan.147
+			days = 20
+		}
+	}
+}
+
+# Ruler informed that conversion was refused
+character_event = {
+	id = GoPagan.134
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		trigger = {
+			event_target:conversion_target = {
+				NOR = {
+					religion = ROOT
+					has_character_flag = refused_debate
+					has_character_flag = debate_failed
+				}
+			}
+		}
+		text = EVTDESC_GoPagan_134A_1
+	}
+	desc = {
+		trigger = {
+			event_target:conversion_target = {
+				religion = ROOT
+				NOR = {
+					has_character_flag = refused_debate
+					has_character_flag = debate_failed
+				}
+			}
+		}
+		text = EVTDESC_GoPagan_134A_2
+	}
+	desc = {
+		trigger = {
+			event_target:conversion_target = {
+				NOT = { religion = ROOT }
+				has_character_flag = refused_debate
+			}
+		}
+		text = EVTDESC_GoPagan_134B_1
+	}
+	desc = {
+		trigger = {
+			event_target:conversion_target = {
+				religion = ROOT
+				has_character_flag = refused_debate
+			}
+		}
+		text = EVTDESC_GoPagan_134B_2
+	}
+	desc = {
+		trigger = {
+			event_target:conversion_target = {
+				NOT = { religion = ROOT }
+				has_character_flag = debate_failed
+			}
+		}
+		text = EVTDESC_GoPagan_134C_1
+	}
+	desc = {
+		trigger = {
+			event_target:conversion_target = {
+				religion = ROOT
+				has_character_flag = debate_failed
+			}
+		}
+		text = EVTDESC_GoPagan_134C_2
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_134 # Accept his decision
+
+		event_target:conversion_target = {
+			show_scope_change = no
+
+			opinion = {
+				name = tried_to_convert_me
+				who = ROOT
+				years = 10
+			}
+
+			clr_character_flag = refused_debate
+			clr_character_flag = debate_failed
+
+			if = {
+				limit = { is_ruler = yes }
+				ROOT = { show_scope_change = no piety = 25 }
+			}
+			else = {
+				ROOT = { show_scope_change = no piety = 5 }
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = arbitrary
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_GoPagan_134 # Imprison him at once!
+
+		trigger = {
+			trigger_if = {
+				limit = { is_tribal = yes }
+
+				OR = {
+					has_law = tribal_organization_2
+					has_law = tribal_organization_3
+					has_law = tribal_organization_4
+				}
+			}
+			trigger_else = {
+				crownlaw_title = {
+					OR = {
+						has_law = crown_authority_2
+						has_law = crown_authority_3
+						has_law = crown_authority_4
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				OR = {
+					trait = wroth
+					trait = proud
+					trait = cruel
+					trait = arbitrary
+					trait = zealous
+					trait = impaler
+				}
+
+				NOR = {
+					trait = kind
+					trait = just
+					trait = humble
+					is_friend = event_target:conversion_target
+
+					AND = {
+						trait = sympathy_christendom
+						event_target:conversion_target = { religion_group = christian }
+					}
+					AND = {
+						trait = sympathy_islam
+						event_target:conversion_target = { religion_group = muslim }
+					}
+					AND = {
+						trait = sympathy_pagans
+						event_target:conversion_target = { religion_group = pagan_group }
+					}
+					AND = {
+						trait = sympathy_zoroastrianism
+						event_target:conversion_target = { religion_group = zoroastrian_group }
+					}
+					AND = {
+						trait = sympathy_judaism
+						event_target:conversion_target = { religion_group = jewish_group }
+					}
+					AND = {
+						trait = sympathy_indian
+						event_target:conversion_target = { religion_group = indian_group }
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				is_close_relative = event_target:conversion_target
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = impaler
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = paranoid
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:conversion_target value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:conversion_target value >= 75 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:conversion_target value >= 0 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = event_target:conversion_target value < -25 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = event_target:conversion_target value < -50 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = tyrant1
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = tyrant2
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = tyrant3
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = tyrant4
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = tyrant5
+			}
+		}
+
+		if = {
+			limit = {
+				event_target:conversion_target = { religion_group = christian }
+				trait = sympathy_christendom
+			}
+			remove_trait = sympathy_christendom
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_target = { religion_group = muslim }
+				trait = sympathy_islam
+			}
+			remove_trait = sympathy_islam
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_target = { religion_group = pagan_group }
+				trait = sympathy_pagans
+			}
+			remove_trait = sympathy_pagans
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_target = { religion_group = zoroastrian_group }
+				trait = sympathy_zoroastrianism
+			}
+			remove_trait = sympathy_zoroastrianism
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_target = { religion_group = jewish_group }
+				trait = sympathy_judaism
+			}
+			remove_trait = sympathy_judaism
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_target = { religion_group = indian_group }
+				trait = sympathy_indian
+			}
+			remove_trait = sympathy_indian
+		}
+
+		if = {
+			limit = { trait = kind }
+			remove_trait = kind
+		}
+		else_if = {
+			limit = { NOT = { trait = cruel } }
+
+			random = {
+				chance = 50
+				add_trait_cruel_effect = yes
+			}
+		}
+
+		tyrant_plus_1_effect = yes
+
+		event_target:conversion_target = {
+			show_scope_change = no
+
+			character_event = {
+				id = 39024
+				tooltip = ATTEMPT_IMPRISON
+			}
+
+			clr_character_flag = refused_debate
+			clr_character_flag = debate_failed
+		}
+	}
+
+	after = {
+		character_event = {
+			id = GoPagan.147
+			days = 20
+		}
+	}
+}
+
+# Ruler attempts to engage courtier/vassal in a religious debate
+character_event = {
+	id = GoPagan.135
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_GoPagan_135_a
+		trigger = { NOT = { religion = event_target:conversion_ruler } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_135_b
+		trigger = { religion = event_target:conversion_ruler }
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		clr_character_flag = considering_conversion
+
+		# In case the event is fired from soa_heresy_events.txt
+		save_event_target_as = conversion_target
+		FROM = { save_event_target_as = conversion_ruler }
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_135 # Agree to debate
+
+		custom_tooltip = { text = AGREES_TO_RELIGIOUS_DEBATE }
+
+		random_list = {
+			50 = { # Converted
+				trigger = { # A really short debate.
+					NOT = {
+						secret_religion = {
+							target = event_target:conversion_ruler
+							target_type = public
+						}
+					}
+
+					# Opinion < 0 means that there's no conversion chance
+					opinion = {
+						who = event_target:conversion_ruler
+						value < 0
+					}
+				}
+
+				mult_modifier = { # Reduce acceptance chance if my religion MA > 60%
+					factor = 0.9
+
+					is_heretic = no
+					religion_authority >= 0.6
+				}
+
+				mult_modifier = { # Reduce acceptance chance if my religion MA > 70%
+					factor = 0.9
+
+					is_heretic = no
+					religion_authority >= 0.7
+				}
+
+				mult_modifier = { # Reduce acceptance chance if my religion MA > 80%
+					factor = 0.9
+
+					is_heretic = no
+					religion_authority >= 0.8
+				}
+
+				mult_modifier = { # Reduce acceptance chance if my religion MA > 90%
+					factor = 0.9
+
+					is_heretic = no
+					religion_authority >= 0.9
+				}
+
+				mult_modifier = { # Increase acceptance chance if my religion MA < 40%
+					factor = 1.1
+
+					is_heretic = no
+					NOT = { religion_authority >= 0.4 }
+				}
+
+				mult_modifier = { # Increase acceptance chance if my religion MA < 30%
+					factor = 1.1
+
+					is_heretic = no
+					NOT = { religion_authority >= 0.3 }
+				}
+
+				mult_modifier = { # Increase acceptance chance if my religion MA < 20%
+					factor = 1.1
+
+					is_heretic = no
+					NOT = { religion_authority >= 0.2 }
+				}
+
+				mult_modifier = { # Increase acceptance chance if my religion MA < 10%
+					factor = 1.1
+
+					is_heretic = no
+					NOT = { religion_authority >= 0.1 }
+				}
+
+				mult_modifier = { # Having a correct sympathy trait increases chances
+					factor = 2
+
+					OR = {
+						AND = {
+							trait = sympathy_christendom
+							event_target:conversion_ruler = { religion_group = christian }
+						}
+						AND = {
+							trait = sympathy_islam
+							event_target:conversion_ruler = { religion_group = muslim }
+						}
+						AND = {
+							trait = sympathy_pagans
+							event_target:conversion_ruler = { religion_group = pagan_group }
+						}
+						AND = {
+							trait = sympathy_zoroastrianism
+							event_target:conversion_ruler = { religion_group = zoroastrian_group }
+						}
+						AND = {
+							trait = sympathy_judaism
+							event_target:conversion_ruler = { religion_group = jewish_group }
+						}
+						AND = {
+							trait = sympathy_indian
+							event_target:conversion_ruler = { religion_group = indian_group }
+						}
+					}
+				}
+
+				mult_modifier = { # Increase conversion chance if east_slavic pagan being converted by orthodox etc. non-heretic
+					factor = 1.5
+
+					culture_group = east_slavic
+					religion_group = pagan_group
+
+					event_target:conversion_ruler = {
+						is_orthodox_branch = yes
+						is_heretic = no
+					}
+				}
+
+				mult_modifier = { # Increase conversion chance if north_germanic pagan being converted by catholic etc. non-heretic
+					factor = 1.5
+
+					culture_group = north_germanic
+					religion_group = pagan_group
+
+					event_target:conversion_ruler = {
+						is_catholic_branch = yes
+						is_heretic = no
+					}
+				}
+
+				mult_modifier = { # Baltic pagans are harder to convert
+					factor = 0.2
+
+					culture_group = baltic
+					religion_group = pagan_group
+				}
+
+				mult_modifier = { # north_germanic and east_slavic pagans hard to convert for muslims
+					factor = 0.1
+
+					OR = {
+						culture_group = north_germanic
+						culture_group = east_slavic
+					}
+
+					religion_group = pagan_group
+					event_target:conversion_ruler = { religion_group = muslim }
+				}
+
+				mult_modifier = { # Unreformed pagans are vulnerable
+					factor = 1.2
+
+					is_unreformed_pagan_trigger = yes
+					event_target:conversion_ruler = { NOT = { religion_group = pagan_group } }
+				}
+
+				mult_modifier = { # Increase conversion chance if my location is converted
+					factor = 1.25
+					location = { religion = event_target:conversion_ruler }
+				}
+
+				mult_modifier = { # Jewish hard to convert for other groups
+					factor = 0.1
+
+					religion_group = jewish_group
+					event_target:conversion_ruler = { NOT = { religion_group = jewish_group } }
+				}
+
+				mult_modifier = { # Opinion < 25 decreases the chance by half
+					factor = 0.5
+					opinion = { who = event_target:conversion_ruler value < 25 }
+				}
+
+				mult_modifier = { # Opinion < 25, 49 > has 75% chance decrease
+					factor = 0.75
+
+					opinion = { who = event_target:conversion_ruler value >= 25 }
+					opinion = { who = event_target:conversion_ruler value < 50 }
+				}
+
+				mult_modifier = { # Opinion < 50, 74 > has slight chance increase
+					factor = 1.1
+
+					opinion = { who = event_target:conversion_ruler value >= 50 }
+					opinion = { who = event_target:conversion_ruler value < 75 }
+				}
+
+				mult_modifier = { # Opinion < 75, 100 > has a bigger chance increase
+					factor = 1.5
+					opinion = { who = event_target:conversion_ruler value >= 75 }
+				}
+
+				mult_modifier = { # My Allah is stronger than your Allah
+					factor = 0.75
+
+					religion_group = muslim
+					event_target:conversion_ruler = { religion_group = muslim }
+
+					NOR = {
+						is_heresy_of = event_target:conversion_ruler
+						is_parent_religion = event_target:conversion_ruler
+					}
+				}
+
+				mult_modifier = { # My Thor has a bigger hammer than your Thor
+					factor = 0.75
+
+					religion_group = pagan_group
+					event_target:conversion_ruler = { religion_group = pagan_group }
+
+					NOR = {
+						is_heresy_of = event_target:conversion_ruler
+						is_parent_religion = event_target:conversion_ruler
+					}
+				}
+
+				custom_tooltip = {
+					text = RELIGIOUS_DEBATE_SUCCEEDS
+
+					opinion = {
+						name = converted_me
+						who = event_target:conversion_ruler
+						years = 20
+					}
+
+					event_target:conversion_ruler = { character_event = { id = GoPagan.137 } }
+					character_event = { id = GoPagan.136 }
+				}
+			}
+
+			50 = { # Sympathy
+				trigger = { # A really short debate.
+					NOT = {
+						secret_religion = {
+							target = event_target:conversion_ruler
+							target_type = public
+						}
+					}
+
+					# Already have sympathy
+					NOR = {
+						religion_group = event_target:conversion_ruler
+
+						AND = {
+							trait = sympathy_christendom
+							event_target:conversion_ruler = { religion_group = christian }
+						}
+						AND = {
+							trait = sympathy_islam
+							event_target:conversion_ruler = { religion_group = muslim }
+						}
+						AND = {
+							trait = sympathy_pagans
+							event_target:conversion_ruler = { religion_group = pagan_group }
+						}
+						AND = {
+							trait = sympathy_zoroastrianism
+							event_target:conversion_ruler = { religion_group = zoroastrian_group }
+						}
+						AND = {
+							trait = sympathy_judaism
+							event_target:conversion_ruler = { religion_group = jewish_group }
+						}
+						AND = {
+							trait = sympathy_indian
+							event_target:conversion_ruler = { religion_group = indian_group }
+						}
+					}
+
+					# Opinion < 0 means that there's no conversion chance
+					opinion = {
+						who = event_target:conversion_ruler
+						value > 0
+					}
+				}
+
+				mult_modifier = { # Increase sympathy chance if east_slavic pagan being converted by orthodox etc. non-heretic
+					factor = 2 # a bit more than for conversion chance
+
+					culture_group = east_slavic
+					religion_group = pagan_group
+
+					event_target:conversion_ruler = {
+						is_orthodox_branch = yes
+						is_heretic = no
+					}
+				}
+
+				mult_modifier = { # Increase sympathy chance if north_germanic pagan being converted by catholic etc. non-heretic
+					factor = 2 # a bit more than for conversion chance
+
+					culture_group = north_germanic
+					religion_group = pagan_group
+
+					event_target:conversion_ruler = {
+						is_catholic_branch = yes
+						is_heretic = no
+					}
+				}
+
+				mult_modifier = { # Baltic pagans are harder to convert
+					factor = 0.5
+
+					culture_group = baltic
+					religion_group = pagan_group
+				}
+
+				mult_modifier = { # north_germanic and east_slavic pagans hard to convert for muslims
+					factor = 0.2
+
+					OR = {
+						culture_group = north_germanic
+						culture_group = east_slavic
+					}
+
+					religion_group = pagan_group
+					event_target:conversion_ruler = { religion_group = muslim }
+				}
+
+				mult_modifier = { # Unreformed pagans are vulnerable
+					factor = 1.5
+
+					is_unreformed_pagan_trigger = yes
+					event_target:conversion_ruler = { NOT = { religion_group = pagan_group } }
+				}
+
+				mult_modifier = { # Jewish hard to convert for other groups
+					factor = 0.2
+
+					religion_group = jewish_group
+					event_target:conversion_ruler = { NOT = { religion_group = jewish_group } }
+				}
+
+				mult_modifier = { # Opinion < 25 decreases the chance by half
+					factor = 0.5
+					opinion = { who = event_target:conversion_ruler value < 25 }
+				}
+
+				mult_modifier = { # Opinion < 25, 49 > has 75% chance decrease
+					factor = 0.75
+
+					opinion = { who = event_target:conversion_ruler value >= 25 }
+					opinion = { who = event_target:conversion_ruler value < 50 }
+				}
+
+				mult_modifier = { # Opinion < 50, 74 > has slight chance increase
+					factor = 1.1
+
+					opinion = { who = event_target:conversion_ruler value >= 50 }
+					opinion = { who = event_target:conversion_ruler value < 75 }
+				}
+
+				mult_modifier = { # Opinion < 75, 100 > has a bigger chance increase
+					factor = 1.5
+					opinion = { who = event_target:conversion_ruler value >= 75 }
+				}
+
+				mult_modifier = { # Reduce sympathy chance if my religion MA > 60%
+					factor = 0.9
+
+					is_heretic = no
+					religion_authority >= 0.6
+				}
+
+				mult_modifier = { # Reduce sympathy chance if my religion MA > 70%
+					factor = 0.9
+
+					is_heretic = no
+					religion_authority >= 0.7
+				}
+
+				mult_modifier = { # Reduce sympathy chance if my religion MA > 80%
+					factor = 0.9
+
+					is_heretic = no
+					religion_authority >= 0.8
+				}
+
+				mult_modifier = { # Reduce sympathy chance if my religion MA > 90%
+					factor = 0.9
+
+					is_heretic = no
+					religion_authority >= 0.9
+				}
+
+				mult_modifier = { # Increase sympathy chance if my religion MA < 40%
+					factor = 1.1
+
+					is_heretic = no
+					NOT = { religion_authority >= 0.4 }
+				}
+
+				mult_modifier = { # Increase sympathy chance if my religion MA < 30%
+					factor = 1.1
+
+					is_heretic = no
+					NOT = { religion_authority >= 0.3 }
+				}
+
+				mult_modifier = { # Increase sympathy chance if my religion MA < 20%
+					factor = 1.1
+
+					is_heretic = no
+					NOT = { religion_authority >= 0.2 }
+				}
+
+				mult_modifier = { # Increase sympathy chance if my religion MA < 10%
+					factor = 1.1
+
+					is_heretic = no
+					NOT = { religion_authority >= 0.1 }
+				}
+
+				custom_tooltip = {
+					text = RELIGIOUS_DEBATE_SYMPATHY
+
+					event_target:conversion_ruler = { character_event = { id = GoPagan.139 } }
+					character_event = { id = GoPagan.138 }
+				}
+			}
+
+			10 = { # Liege gets Sympathy
+				trigger = {
+					# We're equals
+					attribute_diff = {
+						character = event_target:conversion_ruler
+						attribute = learning
+						value >= 1
+					}
+
+					NOR = {
+						# A really short debate.
+						secret_religion = {
+							target = event_target:conversion_ruler
+							target_type = public
+						}
+
+						# I'm a zealot!
+						event_target:conversion_ruler = { trait = zealous }
+
+						# I'm not sympathetic already.
+						religion_group = event_target:conversion_ruler
+
+						AND = {
+							event_target:conversion_ruler = { trait = sympathy_christendom }
+							religion_group = christian
+						}
+						AND = {
+							event_target:conversion_ruler = { trait = sympathy_islam }
+							religion_group = muslim
+						}
+						AND = {
+							event_target:conversion_ruler = { trait = sympathy_pagans }
+							religion_group = pagan_group
+						}
+						AND = {
+							event_target:conversion_ruler = { trait = sympathy_zoroastrianism }
+							religion_group = zoroastrian_group
+						}
+						AND = {
+							event_target:conversion_ruler = { trait = sympathy_judaism }
+							religion_group = jewish_group
+						}
+						AND = {
+							event_target:conversion_ruler = { trait = sympathy_indian }
+							religion_group = indian_group
+						}
+					}
+				}
+
+				mult_modifier = { # Sure, whatever.
+					factor = 1.2
+					event_target:conversion_ruler = { trait = cynical }
+				}
+
+				mult_modifier = { # Look at you with all your book smarts! learning_diff > 3
+					factor = 1.1
+					attribute_diff = { character = event_target:conversion_ruler attribute = learning value >= 3 }
+				}
+
+				mult_modifier = { # Look at you with all your book smarts! learning_diff > 5
+					factor = 1.1
+					attribute_diff = { character = event_target:conversion_ruler attribute = learning value >= 5 }
+				}
+
+				mult_modifier = { # Look at you with all your book smarts! learning_diff > 7
+					factor = 1.1
+					attribute_diff = { character = event_target:conversion_ruler attribute = learning value >= 7 }
+				}
+
+				mult_modifier = { # Look at you with all your book smarts! learning_diff > 9
+					factor = 1.1
+					attribute_diff = { character = event_target:conversion_ruler attribute = learning value >= 9 }
+				}
+
+				mult_modifier = { # Man, this is what *I* do.
+					factor = 1.2
+
+					is_priest = yes
+					event_target:conversion_ruler = { is_priest = no }
+				}
+
+				mult_modifier = { # You're the priest... What the hell do I know.
+					factor = 0.8
+
+					is_priest = no
+					event_target:conversion_ruler = { is_priest = yes }
+				}
+
+				event_target:conversion_ruler = {
+					show_scope_change = no
+
+					character_event = {
+						id = GoPagan.141
+						tooltip = RELIGIOUS_DEBATE_LIEGE_SYMPATHY
+					}
+				}
+
+				character_event = { id = GoPagan.140 }
+			}
+
+			50 = { # Fails
+				mult_modifier = { # Look at you with all your book smarts! learning_diff > 3
+					factor = 1.2
+					attribute_diff = { character = event_target:conversion_ruler attribute = learning value >= 3 }
+				}
+
+				mult_modifier = { # Look at you with all your book smarts! learning_diff > 5
+					factor = 1.2
+					attribute_diff = { character = event_target:conversion_ruler attribute = learning value >= 5 }
+				}
+
+				mult_modifier = { # Look at you with all your book smarts! learning_diff > 7
+					factor = 1.2
+					attribute_diff = { character = event_target:conversion_ruler attribute = learning value >= 7 }
+				}
+
+				mult_modifier = { # Look at you with all your book smarts! learning_diff > 9
+					factor = 1.2
+					attribute_diff = { character = event_target:conversion_ruler attribute = learning value >= 9 }
+				}
+
+				mult_modifier = { # Look at you with all your book smarts! learning_diff > -3
+					factor = 0.8
+					attribute_diff = { character = event_target:conversion_ruler attribute = learning value <= -3 }
+				}
+
+				mult_modifier = { # Look at you with all your book smarts! learning_diff > -5
+					factor = 0.8
+					attribute_diff = { character = event_target:conversion_ruler attribute = learning value <= -5 }
+				}
+
+				mult_modifier = { # Look at you with all your book smarts! learning_diff > -7
+					factor = 0.8
+					attribute_diff = { character = event_target:conversion_ruler attribute = learning value <= -7 }
+				}
+
+				mult_modifier = { # Look at you with all your book smarts! learning_diff > -9
+					factor = 0.8
+					attribute_diff = { character = event_target:conversion_ruler attribute = learning value <= -9 }
+				}
+
+				mult_modifier = { # I genuinely dislike you
+					factor = 1.5
+
+					opinion = { who = event_target:conversion_ruler value < 0 }
+					opinion = { who = event_target:conversion_ruler value >= -25 }
+				}
+
+				mult_modifier = { # Not that I hate you, but... stop talking.
+					factor = 1.5
+
+					opinion = { who = event_target:conversion_ruler value < -25 }
+					opinion = { who = event_target:conversion_ruler value >= -50 }
+				}
+
+				mult_modifier = { # Are you serious. I wouldn't belive you if you said water was wet.
+					factor = 2.0
+					opinion = { who = event_target:conversion_ruler value < -50 }
+				}
+
+				set_character_flag = debate_failed
+				character_event = { id = GoPagan.142 }
+
+				event_target:conversion_ruler = {
+					show_scope_change = no
+
+					character_event = {
+						id = GoPagan.134
+						tooltip = RELIGIOUS_DEBATE_FAILS
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				# Male shiite claimant should always refuse
+				NAND = {
+					is_female = no
+					father = { trait = shiite_claimant }
+					any_sibling = { trait = shiite_claimant }
+				}
+			}
+
+			mult_modifier = { # Meh, who cares
+				factor = 1.2
+				trait = cynical
+			}
+
+			mult_modifier = { # One of us is a heretic, so this may not be the best idea
+				factor = 0.75
+
+				OR = {
+					is_heresy_of = event_target:conversion_ruler
+					is_parent_religion = event_target:conversion_ruler
+				}
+			}
+
+			mult_modifier = { # I really don't want to... learning < 2
+				factor = 0.8
+				learning < 2
+			}
+
+			mult_modifier = { # I really don't want to... learning < 4
+				factor = 0.8
+				learning < 4
+			}
+
+			mult_modifier = { # I really don't want to... learning < 6
+				factor = 0.8
+				learning < 6
+			}
+
+			mult_modifier = { # I really don't want to... learning < 8
+				factor = 0.8
+				learning < 8
+			}
+
+			mult_modifier = { # My knowlege is vast... learning > 10
+				factor = 1.1
+				learning >= 10
+			}
+
+			mult_modifier = { # Surely you're not saying you're smarter than me? learning > 15
+				factor = 1.2
+				learning >= 15
+			}
+
+			mult_modifier = { # First the debate, then we take over the world! learning > 20
+				factor = 1.3
+				learning >= 20
+			}
+		}
+	}
+	option = { # Refused debate
+		name = {
+			text = EVTOPTB_GoPagan_135_a
+			trigger = { NOT = { religion = event_target:conversion_ruler } }
+		}
+		name = {
+			text = EVTOPTB_GoPagan_135_b
+			trigger = { religion = event_target:conversion_ruler }
+		}
+
+		ai_chance = {
+			factor = 30
+
+			trigger = {
+				NOT = {
+					secret_religion = {
+						target = event_target:conversion_ruler
+						target_type = public
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.25
+
+				OR = {
+					trait = scholar
+					trait = theologian
+					trait = faqih
+				}
+			}
+		}
+
+		set_character_flag = refused_debate
+
+		event_target:conversion_ruler = {
+			show_scope_change = no
+
+			character_event = { id = GoPagan.134 }
+
+			opinion = {
+				name = opinion_failed_conversion
+				who = ROOT
+				years = 10
+			}
+		}
+	}
+}
+
+# Target converted via religious debate
+character_event = {
+	id = GoPagan.136
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_GoPagan_136_a
+		trigger = { NOT = { religion = event_target:conversion_ruler } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_136_b
+		trigger = { religion = event_target:conversion_ruler }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_136
+
+		if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = christian }
+				trait = sympathy_christendom
+			}
+			remove_trait = sympathy_christendom
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = muslim }
+				trait = sympathy_islam
+			}
+			remove_trait = sympathy_islam
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = pagan_group }
+				trait = sympathy_pagans
+			}
+			remove_trait = sympathy_pagans
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = zoroastrian_group }
+				trait = sympathy_zoroastrianism
+			}
+			remove_trait = sympathy_zoroastrianism
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = jewish_group }
+				trait = sympathy_judaism
+			}
+			remove_trait = sympathy_judaism
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = indian_group }
+				trait = sympathy_indian
+			}
+			remove_trait = sympathy_indian
+		}
+
+		if = {
+			limit = { religion_group = christian }
+			random = {
+				chance = 50
+				add_trait = sympathy_christendom
+			}
+		}
+		else_if = {
+			limit = { religion_group = muslim }
+			random = {
+				chance = 50
+				add_trait = sympathy_islam
+			}
+		}
+		else_if = {
+			limit = { religion_group = pagan_group }
+			random = {
+				chance = 50
+				add_trait = sympathy_pagans
+			}
+		}
+		else_if = {
+			limit = { religion_group = zoroastrian_group }
+			random = {
+				chance = 50
+				add_trait = sympathy_zoroastrianism
+			}
+		}
+		else_if = {
+			limit = { religion_group = jewish_group }
+			random = {
+				chance = 50
+				add_trait = sympathy_judaism
+			}
+		}
+		else_if = {
+			limit = { religion_group = indian_group }
+			random = {
+				chance = 50
+				add_trait = sympathy_indian
+			}
+		}
+
+		if = {
+			limit = { has_secret_religion = yes }
+			clear_secret_religion = yes
+		}
+
+		if = {
+			limit = { NOT = { religion = event_target:conversion_ruler } } # Chalcedonians can switch rites instead
+			religion = event_target:conversion_ruler
+		}
+		else = {
+			set_character_flag = changed_rites
+
+			trigger_switch = {
+				on_trigger = trait
+
+				latin_rites = { remove_trait = latin_rites }
+				greek_rites = { remove_trait = greek_rites }
+				iconoclast_rites = { remove_trait = iconoclast_rites }
+			}
+
+			event_target:conversion_ruler = {
+				show_scope_change = no
+
+				trigger_switch = {
+					on_trigger = trait
+
+					latin_rites = { PREV = { show_scope_change = no add_trait = latin_rites } }
+					greek_rites = { PREV = { show_scope_change = no add_trait = greek_rites } }
+					iconoclast_rites = { PREV = { show_scope_change = no add_trait = iconoclast_rites } }
+				}
+
+				if = {
+					limit = { trait = latin_rites }
+
+					# Change from open elective to investiture succession
+					any_demesne_title = {
+						limit = { is_law_potential = succ_catholic_bishopric }
+						add_law = succ_catholic_bishopric
+					}
+				}
+				else = {
+					# Change from investiture succession to open elective
+					any_demesne_title = {
+						limit = {
+							is_law_potential = succ_open_elective
+							NOT = { has_law = succ_open_elective }
+						}
+						add_law = succ_open_elective
+					}
+				}
+			}
+		}
+
+		add_character_modifier = {
+			name = recently_converted
+			years = 2
+		}
+
+		if = {
+			limit = { trait = cynical }
+			remove_trait = cynical
+		}
+		else_if = {
+			limit = {
+				NOR = {
+					trait = sympathy_christendom
+					trait = sympathy_islam
+					trait = sympathy_pagans
+					trait = sympathy_zoroastrianism
+					trait = sympathy_judaism
+					trait = sympathy_indian
+				}
+			}
+
+			random = {
+				chance = 25
+				add_trait_zealous_effect = yes
+			}
+		}
+
+		reverse_opinion = {
+			name = agreed_to_convert
+			who = event_target:conversion_ruler
+			years = 20
+		}
+
+		hidden_effect = {
+			if = {
+				limit = { religion_group = indian_group }
+
+				set_character_flag = india_converted
+				character_event = { id = RoI.30122 }
+			}
+
+			if = {
+				limit = { is_ruler = yes }
+
+				any_courtier = {
+					limit = {
+						is_adult = no
+						is_ruler = no
+						dynasty = event_target:conversion_target
+					}
+
+					religion = event_target:conversion_target
+
+					if = {
+						limit = { religion_group = indian_group }
+
+						set_character_flag = india_converted
+						character_event = { id = RoI.30122 }
+					}
+				}
+			}
+		}
+	}
+}
+
+# Ruler informed that religious debate was successful
+character_event = {
+	id = GoPagan.137
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_GoPagan_137_a
+		trigger = { FROM = { NOT = { has_character_flag = changed_rites } } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_137_b
+		trigger = { FROM = { has_character_flag = changed_rites } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_137
+
+		reverse_opinion = {
+			name = converted_me
+			who = FROM
+			years = 20
+		}
+	}
+
+	after = {
+		FROM = { clr_character_flag = changed_rites }
+
+		character_event = {
+			id = GoPagan.147
+			days = 20
+		}
+	}
+}
+
+# Target made sympathetic due to religious debate
+character_event = {
+	id = GoPagan.138
+	desc = EVTDESC_GoPagan_138
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_138
+
+		if = {
+			limit = { event_target:conversion_ruler = { religion_group = christian } }
+			add_trait = sympathy_christendom
+		}
+		else_if = {
+			limit = { event_target:conversion_ruler = { religion_group = muslim } }
+			add_trait = sympathy_islam
+		}
+		else_if = {
+			limit = { event_target:conversion_ruler = { religion_group = pagan_group } }
+			add_trait = sympathy_pagans
+		}
+		else_if = {
+			limit = { event_target:conversion_ruler = { religion_group = zoroastrian_group } }
+			add_trait = sympathy_zoroastrianism
+		}
+		else_if = {
+			limit = { event_target:conversion_ruler = { religion_group = jewish_group } }
+			add_trait = sympathy_judaism
+		}
+		else_if = {
+			limit = { event_target:conversion_ruler = { religion_group = indian_group } }
+			add_trait = sympathy_indian
+		}
+
+		if = {
+			limit = { NOT = { trait = cynical } }
+
+			random = {
+				chance = 50
+				add_trait_fully_cynical_effect = yes
+			}
+		}
+
+		reverse_opinion = {
+			name = opinion_mutual_respect
+			who = event_target:conversion_ruler
+			years = 10
+			multiplier = 2
+		}
+	}
+}
+
+# Ruler informed that religious debate made target sympathetic
+character_event = {
+	id = GoPagan.139
+	desc = EVTDESC_GoPagan_139
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_139
+
+		reverse_opinion = {
+			name = opinion_mutual_respect
+			who = FROM
+			years = 10
+			multiplier = 2
+		}
+	}
+
+	after = {
+		character_event = {
+			id = GoPagan.147
+			days = 20
+		}
+	}
+}
+
+# Target informed that ruler made sympathetic due to debate
+character_event = {
+	id = GoPagan.140
+	desc = EVTDESC_GoPagan_140
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_136
+
+		reverse_opinion = {
+			name = opinion_mutual_respect
+			who = FROMFROM
+			years = 10
+		}
+	}
+}
+
+# Ruler informed that religious debate made them sympathetic
+character_event = {
+	id = GoPagan.141
+	desc = EVTDESC_GoPagan_141
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_141
+
+		piety = -100
+
+		if = {
+			limit = { event_target:conversion_target = { religion_group = christian } }
+			add_trait = sympathy_christendom
+		}
+		else_if = {
+			limit = { event_target:conversion_target = { religion_group = muslim } }
+			add_trait = sympathy_islam
+		}
+		else_if = {
+			limit = { event_target:conversion_target = { religion_group = pagan_group } }
+			add_trait = sympathy_pagans
+		}
+		else_if = {
+			limit = { event_target:conversion_target = { religion_group = zoroastrian_group } }
+			add_trait = sympathy_zoroastrianism
+		}
+		else_if = {
+			limit = { event_target:conversion_target = { religion_group = jewish_group } }
+			add_trait = sympathy_judaism
+		}
+		else_if = {
+			limit = { event_target:conversion_target = { religion_group = indian_group } }
+			add_trait = sympathy_indian
+		}
+
+		if = {
+			limit = { NOT = { trait = cynical } }
+
+			random = {
+				chance = 50
+				add_trait_fully_cynical_effect = yes
+			}
+		}
+
+		reverse_opinion = {
+			name = opinion_mutual_respect
+			who = event_target:conversion_target
+			years = 10
+		}
+	}
+
+	after = {
+		character_event = {
+			id = GoPagan.147
+			days = 20
+		}
+	}
+}
+
+# Target informed that religious debate failed
+character_event = {
+	id = GoPagan.142
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_GoPagan_142_a
+		trigger = { NOT = { religion = FROMFROM } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_142_b
+		trigger = { religion = FROMFROM }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_142
+
+		reverse_opinion = {
+			name = opinion_failed_conversion
+			who = FROMFROM
+			years = 10
+		}
+	}
+}
+
+# Ruler threatens the target unless he converts
+character_event = {
+	id = GoPagan.143
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_GoPagan_143_a
+		trigger = { NOT = { religion = event_target:conversion_ruler } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_143_b
+		trigger = { religion = event_target:conversion_ruler }
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		clr_character_flag = considering_conversion
+
+		# In case the event is fired from soa_heresy_events.txt
+		save_event_target_as = conversion_target
+		FROM = { save_event_target_as = conversion_ruler }
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_143 # Agree
+
+		plus_accept_conversion_under_threat_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				# Male shiite claimant should always refuse
+				NAND = {
+					is_female = no
+					father = { trait = shiite_claimant }
+					any_sibling = { trait = shiite_claimant }
+				}
+
+				# Opinion < 0 means that there's no conversion chance
+				opinion = {
+					who = event_target:conversion_ruler
+					value >= 0
+				}
+			}
+
+			mult_modifier = { # Having a correct sympathy trait increases chances
+				factor = 2
+
+				OR = {
+					AND = {
+						trait = sympathy_christendom
+						event_target:conversion_ruler = { religion_group = christian }
+					}
+					AND = {
+						trait = sympathy_islam
+						event_target:conversion_ruler = { religion_group = muslim }
+					}
+					AND = {
+						trait = sympathy_pagans
+						event_target:conversion_ruler = { religion_group = pagan_group }
+					}
+					AND = {
+						trait = sympathy_zoroastrianism
+						event_target:conversion_ruler = { religion_group = zoroastrian_group }
+					}
+					AND = {
+						trait = sympathy_judaism
+						event_target:conversion_ruler = { religion_group = jewish_group }
+					}
+					AND = {
+						trait = sympathy_indian
+						event_target:conversion_ruler = { religion_group = indian_group }
+					}
+				}
+			}
+
+			mult_modifier = { # Increase conversion chance if my location is converted
+				factor = 1.25
+				location = { religion = event_target:conversion_ruler }
+			}
+
+			mult_modifier = { # Jewish hard to convert for other groups
+				factor = 0.1
+
+				religion_group = jewish_group
+				event_target:conversion_ruler = { NOT = { religion_group = jewish_group } }
+			}
+
+			mult_modifier = { # One of us is a heretic, so this may not be the best idea
+				factor = 0.75
+
+				OR = {
+					is_heresy_of = event_target:conversion_ruler
+					is_parent_religion = event_target:conversion_ruler
+				}
+			}
+
+			mult_modifier = { # Brave or stupid?
+				factor = 0.8
+				trait = brave
+			}
+
+			mult_modifier = { # Pride goeth before fall
+				factor = 0.8
+				trait = proud
+			}
+
+			mult_modifier = { # Too pissed off to think
+				factor = 0.8
+				trait = wroth
+			}
+
+			mult_modifier = { # Coward or smart?
+				factor = 1.2
+				trait = craven
+			}
+
+			mult_modifier = { # Meh, who cares
+				factor = 1.2
+				trait = cynical
+			}
+
+			mult_modifier = { # Opinion < 25 decreases the chance by half
+				factor = 0.5
+				opinion = { who = event_target:conversion_ruler value < 25 }
+			}
+
+			mult_modifier = { # Opinion < 25, 49 > has 75% chance decrease
+				factor = 0.75
+
+				opinion = { who = event_target:conversion_ruler value >= 25 }
+				opinion = { who = event_target:conversion_ruler value < 50 }
+			}
+
+			mult_modifier = { # Opinion < 50, 74 > has slight chance increase
+				factor = 1.1
+
+				opinion = { who = event_target:conversion_ruler value >= 50 }
+				opinion = { who = event_target:conversion_ruler value < 75 }
+			}
+
+			mult_modifier = { # Opinion < 75, 100 > has a bigger chance increase
+				factor = 1.5
+				opinion = { who = event_target:conversion_ruler value >= 75 }
+			}
+
+			mult_modifier = { # Decrease acceptance chance if a pagan is trying to convert me
+				factor = 0.75
+
+				event_target:conversion_ruler = { religion_group = pagan_group }
+				NOT = { religion_group = pagan_group }
+			}
+
+			mult_modifier = { # Increase chance if CA/TO is high
+				factor = 1.1
+
+				event_target:conversion_ruler = {
+					trigger_if = {
+						limit = { is_tribal = yes }
+						has_law = tribal_organization_3
+					}
+					trigger_else = {
+						crownlaw_title = { has_law = crown_authority_3 }
+					}
+				}
+			}
+
+			mult_modifier = { # Further increase if CA/TO is max
+				factor = 1.1
+
+				event_target:conversion_ruler = {
+					trigger_if = {
+						limit = { is_tribal = yes }
+						has_law = tribal_organization_4
+					}
+					trigger_else = {
+						crownlaw_title = { has_law = crown_authority_4 }
+					}
+				}
+			}
+		}
+	}
+
+	option = { # Refuse
+		name = {
+			text = EVTOPTB_GoPagan_143_a
+			trigger = { NOT = { religion = event_target:conversion_ruler } }
+		}
+		name = {
+			text = EVTOPTB_GoPagan_143_b
+			trigger = { religion = event_target:conversion_ruler }
+		}
+
+		plus_refuse_conversion_under_threat_effect = yes
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				# Never refuse if already have same secret religion
+				NOT = {
+					secret_religion = {
+						target = event_target:conversion_ruler
+						target_type = public
+						}
+					}
+			}
+		}
+	}
+}
+
+# Ruler informed that the threat worked
+character_event = {
+	id = GoPagan.144
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_GoPagan_144_a
+		trigger = { FROM = { NOT = { has_character_flag = changed_rites } } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_144_b
+		trigger = { FROM = { has_character_flag = changed_rites } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		reverse_opinion = {
+			name = opinion_demanded_conversion
+			who = FROM
+			years = 20
+		}
+	}
+
+	after = {
+		FROM = { clr_character_flag = changed_rites }
+
+		character_event = {
+			id = GoPagan.147
+			days = 20
+		}
+	}
+}
+
+# Ruler informed that the threat failed
+character_event = {
+	id = GoPagan.145
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_GoPagan_145_a
+		trigger = { NOT = { religion = event_target:conversion_target } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_145_b
+		trigger = { religion = event_target:conversion_target }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_GoPagan_145 # Let it slide
+
+		if = {
+			limit = { event_target:conversion_target = { is_ruler = yes } }
+			piety = 25
+		}
+		else = {
+			piety = 5
+		}
+
+		prestige = -50
+		tyrant_plus_1_effect = yes
+
+		reverse_opinion = {
+			name = opinion_demanded_conversion
+			who = event_target:conversion_target
+			years = 5
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 2
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = arbitrary
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_GoPagan_145 # Imprison him at once!
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 0.5
+
+				OR = {
+					trait = kind
+					trait = just
+					trait = humble
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				NOR = {
+					trait = wroth
+					trait = proud
+					trait = cruel
+					trait = arbitrary
+					trait = zealous
+					trait = impaler
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				is_close_relative = event_target:conversion_target
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = impaler
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = paranoid
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:conversion_target value >= 25 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:conversion_target value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:conversion_target value >= 75 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = event_target:conversion_target value < 25 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = event_target:conversion_target value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = event_target:conversion_target value < -25 }
+			}
+		}
+
+		if = {
+			limit = {
+				event_target:conversion_target = { religion_group = christian }
+				trait = sympathy_christendom
+			}
+			remove_trait = sympathy_christendom
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_target = { religion_group = muslim }
+				trait = sympathy_islam
+			}
+			remove_trait = sympathy_islam
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_target = { religion_group = pagan_group }
+				trait = sympathy_pagans
+			}
+			remove_trait = sympathy_pagans
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_target = { religion_group = zoroastrian_group }
+				trait = sympathy_zoroastrianism
+			}
+			remove_trait = sympathy_zoroastrianism
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_target = { religion_group = jewish_group }
+				trait = sympathy_judaism
+			}
+			remove_trait = sympathy_judaism
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_target = { religion_group = indian_group }
+				trait = sympathy_indian
+			}
+			remove_trait = sympathy_indian
+		}
+
+		if = {
+			limit = { trait = kind }
+			remove_trait = kind
+		}
+		else_if = {
+			limit = { NOT = { trait = cruel } }
+
+			random = {
+				chance = 50
+				add_trait_cruel_effect = yes
+			}
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = 39024
+				tooltip = ATTEMPT_IMPRISON
+			}
+		}
+	}
+
+	after = {
+		character_event = {
+			id = GoPagan.147
+			days = 20
+		}
+	}
+}
+
+# Ruler releases a prisoner if they convert
+character_event = {
+	id = GoPagan.146
+	picture = GFX_evt_into_the_dungeon
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_GoPagan_146_a
+		trigger = { NOT = { religion = event_target:conversion_ruler } }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_146_b
+		trigger = { religion = event_target:conversion_ruler }
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		clr_character_flag = considering_conversion
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_146
+
+		if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = christian }
+				trait = sympathy_christendom
+			}
+			remove_trait = sympathy_christendom
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = muslim }
+				trait = sympathy_islam
+			}
+			remove_trait = sympathy_islam
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = pagan_group }
+				trait = sympathy_pagans
+			}
+			remove_trait = sympathy_pagans
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = zoroastrian_group }
+				trait = sympathy_zoroastrianism
+			}
+			remove_trait = sympathy_zoroastrianism
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = jewish_group }
+				trait = sympathy_judaism
+			}
+			remove_trait = sympathy_judaism
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = indian_group }
+				trait = sympathy_indian
+			}
+			remove_trait = sympathy_indian
+		}
+
+		trigger_switch = {
+			on_trigger = religion_group
+
+			christian = { add_trait = sympathy_christendom }
+			muslim = { add_trait = sympathy_islam }
+			pagan_group = { add_trait = sympathy_pagans }
+			zoroastrian_group = { add_trait = sympathy_zoroastrianism }
+			jewish_group = { add_trait = sympathy_judaism }
+			indian_group = { add_trait = sympathy_indian }
+		}
+
+		if = {
+			limit = { NOT = { trait = cynical } }
+			add_trait_fully_silently_cynical_effect = yes
+		}
+
+		if = {
+			limit = { has_secret_religion = yes }
+			clear_secret_religion = yes
+		}
+
+		religion = event_target:conversion_ruler
+
+		add_character_modifier = {
+			name = recently_converted
+			years = 2
+		}
+
+		imprison = no
+
+		opinion = {
+			name = opinion_demanded_conversion
+			who = event_target:conversion_ruler
+			years = 20
+			multiplier = 2
+		}
+
+		if = {
+			limit = { religion_group = indian_group }
+
+			set_character_flag = india_converted
+			character_event = { id = RoI.30122 }
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_146
+
+		trigger = { has_secret_religion = no }
+
+		if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = christian }
+				trait = sympathy_christendom
+			}
+			remove_trait = sympathy_christendom
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = muslim }
+				trait = sympathy_islam
+			}
+			remove_trait = sympathy_islam
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = pagan_group }
+				trait = sympathy_pagans
+			}
+			remove_trait = sympathy_pagans
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = zoroastrian_group }
+				trait = sympathy_zoroastrianism
+			}
+			remove_trait = sympathy_zoroastrianism
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = jewish_group }
+				trait = sympathy_judaism
+			}
+			remove_trait = sympathy_judaism
+		}
+		else_if = {
+			limit = {
+				event_target:conversion_ruler = { religion_group = indian_group }
+				trait = sympathy_indian
+			}
+			remove_trait = sympathy_indian
+		}
+
+		trigger_switch = {
+			on_trigger = religion_group
+
+			christian = { add_trait = sympathy_christendom }
+			muslim = { add_trait = sympathy_islam }
+			pagan_group = { add_trait = sympathy_pagans }
+			zoroastrian_group = { add_trait = sympathy_zoroastrianism }
+			jewish_group = { add_trait = sympathy_judaism }
+			indian_group = { add_trait = sympathy_indian }
+		}
+
+		if = {
+			limit = { NOT = { trait = cynical } }
+			add_trait_fully_silently_cynical_effect = yes
+		}
+
+		if = {
+			limit = { has_secret_religion = yes }
+			clear_secret_religion = yes
+		}
+
+		religion_scope = {
+			save_event_target_as = my_old_religion
+		}
+
+		religion = event_target:conversion_ruler
+
+		set_secret_religion = {
+			target_type = public
+			target = event_target:my_old_religion
+		}
+
+		clear_event_target = my_old_religion
+
+		add_character_modifier = {
+			name = recently_converted
+			years = 2
+		}
+
+		imprison = no
+
+		opinion = {
+			name = opinion_demanded_conversion
+			who = event_target:conversion_ruler
+			years = 20
+			multiplier = 2
+		}
+
+		if = {
+			limit = { religion_group = indian_group }
+
+			set_character_flag = india_converted
+			character_event = { id = RoI.30122 }
+		}
+	}
+
+	after = {
+		character_event = {
+			id = GoPagan.147
+			days = 20
+		}
+	}
+}
+
+character_event = {
+	id = GoPagan.147
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		clear_event_target = conversion_ruler
+		clear_event_target = conversion_target
+	}
+}
+
+### SYMPATHY EVENTS
+
+# Character has more than one sympathy trait
+character_event = {
+	id = GoPagan.150
+	desc = EVTDESC_GoPagan_150
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	min_age = 16
+	prisoner = no
+	only_capable = no
+
+	trigger = {
+		calc_true_if = {
+			amount >= 2
+
+			trait = sympathy_christendom
+			trait = sympathy_islam
+			trait = sympathy_pagans
+			trait = sympathy_zoroastrianism
+			trait = sympathy_judaism
+			trait = sympathy_indian
+		}
+
+		any_courtier = {
+			religion = ROOT
+			trait = zealous
+			is_adult = yes
+			at_location = ROOT
+			prisoner = no
+			is_incapable = no
+			is_inaccessible_trigger = no
+
+			NOR = {
+				is_liege_of = ROOT
+				is_rival = ROOT
+			}
+		}
+
+		is_inaccessible_trigger = no
+		NOT = { has_character_flag = sympathy_challenged }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			religion = location
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			calc_true_if = {
+				amount >= 3
+
+				trait = sympathy_christendom
+				trait = sympathy_islam
+				trait = sympathy_pagans
+				trait = sympathy_zoroastrianism
+				trait = sympathy_judaism
+				trait = sympathy_indian
+			}
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				religion = ROOT
+				trait = zealous
+				is_adult = yes
+				at_location = ROOT
+				prisoner = no
+				is_incapable = no
+				is_inaccessible_trigger = no
+
+				NOR = {
+					is_liege_of = ROOT
+					is_rival = ROOT
+				}
+			}
+
+			save_event_target_as = zealous_courtier
+		}
+	}
+
+	option = {
+		name = EVTOPTA_GoPagan_150 # Maybe our faith should be questioned
+
+		trigger = { NOT = { trait = cynical } }
+
+		set_character_flag = sympathy_challenged
+		add_trait = cynical
+		add_rival = event_target:zealous_courtier
+
+		ai_chance = { factor = 20}
+	}
+	option = {
+		name = EVTOPTB_GoPagan_150 # What's so good about our faith?
+		tooltip_info = cynical
+
+		trigger = { trait = cynical }
+
+		set_character_flag = sympathy_challenged
+		piety = -100
+		add_rival = event_target:zealous_courtier
+
+		ai_chance = { factor = 80 }
+	}
+
+	option = {
+		name = EVTOPTC_GoPagan_150 # Perhaps I am too open-minded
+
+		random = {
+			chance = 50
+			remove_trait_cynical_effect = yes
+		}
+
+		random_list = {
+			50 = {
+				trigger = { trait = sympathy_christendom }
+				remove_trait = sympathy_christendom
+			}
+
+			50 = {
+				trigger = { trait = sympathy_islam }
+				remove_trait = sympathy_islam
+			}
+
+			50 = {
+				trigger = { trait = sympathy_pagans }
+				remove_trait = sympathy_pagans
+			}
+
+			50 = {
+				trigger = { trait = sympathy_zoroastrianism }
+				remove_trait = sympathy_zoroastrianism
+			}
+
+			50 = {
+				trigger = { trait = sympathy_judaism }
+				remove_trait = sympathy_judaism
+			}
+
+			50 = {
+				trigger = { trait = sympathy_indian }
+				remove_trait = sympathy_indian
+			}
+		}
+
+		ai_chance = {
+			factor = 80
+
+			mult_modifier = {
+				factor = 0.5
+				trait = cynical
+			}
+		}
+	}
+}
+
+### NEW CARDINAL EVENTS
+
+# Character has become a religious elector
+character_event = {
+	id = GoPagan.155
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_GoPagan_155_manichaean
+		trigger = { religion = manichaean }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_155_celtic
+		trigger = { religion = celtic_pagan_reformed }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_155_hellenic
+		trigger = { religion_openly_hellenic_or_reformed_trigger = yes }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_155_cathar
+		trigger = { religion = cathar }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_155_bogomilist
+		trigger = { religion = bogomilist }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		hidden_effect = {
+			if = {
+				limit = {
+					independent = no
+					religion = liege
+				}
+
+				liege = {
+					character_event = { id = GoPagan.156 }
+				}
+			}
+
+			any_player = {
+				limit = {
+					religion = ROOT
+					NOT = { is_liege_of = ROOT }
+				}
+
+				character_event = { id = GoPagan.157 }
+			}
+		}
+	}
+}
+
+# Inform liege
+character_event = {
+	id = GoPagan.156
+	picture = GFX_evt_bishop
+
+	desc = {
+		text = EVTDESC_GoPagan_156_manichaean
+		trigger = { religion = manichaean }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_156_celtic
+		trigger = { religion_openly_celtic_or_reformed_trigger = yes }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_156_hellenic
+		trigger = { religion_openly_hellenic_or_reformed_trigger = yes }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_156_cathar
+		trigger = { religion = cathar }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_156_bogomilist
+		trigger = { religion = bogomilist }
+	}
+
+	is_triggered_only = yes
+	notification = yes
+
+	ai = no
+
+	option = {
+		name = OK
+	}
+}
+
+# Inform everyone else
+character_event = {
+	id = GoPagan.157
+	picture = GFX_evt_bishop
+
+	desc = {
+		text = EVTDESC_GoPagan_157_manichaean
+		trigger = { religion = manichaean }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_157_celtic
+		trigger = { religion_openly_celtic_or_reformed_trigger = yes }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_157_hellenic
+		trigger = { religion_openly_hellenic_or_reformed_trigger = yes }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_157_cathar
+		trigger = { religion = cathar }
+	}
+	desc = {
+		text = EVTDESC_GoPagan_157_bogomilist
+		trigger = { religion = bogomilist }
+	}
+
+	is_triggered_only = yes
+	notification = yes
+
+	ai = no
+
+	option = {
+		name = OK
+	}
+}

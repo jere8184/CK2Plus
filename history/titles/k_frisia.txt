@@ -1,0 +1,40 @@
+100.1.1 = {
+	pentarch = b_roma
+}
+
+646.1.1 = {
+	holder = 131727 # Aldgisl
+}
+
+680.1.1 = {
+	holder = 131725 # Radbod
+	de_jure_liege = e_francia
+}
+
+719.1.1 = {
+	holder = 131726 # Poppo
+}
+
+734.1.1 = {
+	holder = 131728 # Aldgisl II
+}
+
+748.1.1 = {
+	holder = 131729 # Gundebold
+}
+
+760.1.1 = {
+	holder = 131730 # Radbod II
+}
+
+775.1.1 = {
+	holder = 0 # Charlemagne officially makes Frisia part of the Frankish Realm
+}
+
+800.12.25 = { # Coronation of Karl as Emperor
+	de_jure_liege = e_karling
+}
+
+887.11.17 = { # abdication of Karl 'the Fat', dissolution of Carolingian Empire
+	de_jure_liege = e_hre
+}

@@ -1,0 +1,94 @@
+# What is this used for? TODO: Verify continued need.
+is_historic_title_trigger = {
+	OR = {
+		title = e_hre
+		title = e_byzantium
+		title = e_karling
+		title = e_arabia
+		title = k_scotland
+		title = k_asturias
+		title = k_andalusia
+		title = k_france
+		title = k_lotharingia
+		title = k_africa
+		title = k_egypt
+		title = k_bulgaria
+		title = k_carpathia
+		title = k_saxony
+		title = k_abyssinia
+		title = k_lombardy
+		title = k_armenia
+		title = k_sindh
+		title = k_malwa
+		title = k_maharastra
+		title = k_lanka
+		title = k_kosala
+		title = k_bengal
+		title = k_kamarupa
+		title = k_ghana
+	#	title = k_takrur
+	#	title = k_morocco
+		title = k_nubia
+		title = k_ireland
+		title = k_navarra
+		title = k_aquitaine
+		title = k_burgundy
+		title = k_germany
+		title = k_georgia
+		title = k_sistan
+		title = k_denmark
+		title = k_norway
+		title = k_england
+		title = k_sweden
+		title = k_novgorod
+		title = k_croatia
+		title = k_hungary
+		title = k_al-jazira
+		title = k_kabulistan
+		title = k_persia
+		title = k_tamilakam
+		title = k_gondwana
+		title = k_aragon
+		title = k_leon
+		title = k_castille
+		title = k_poland
+		title = k_gujarat
+		title = k_gondar
+		title = k_rum
+		title = k_jerusalem
+		title = k_portugal
+		title = k_ruthenia
+		title = k_sicily
+		title = k_serbia
+		title = k_trebizond
+		title = k_delhi
+		title = k_bohemia
+		title = k_lithuania
+		title = k_epirus
+	#	title = k_muscovy
+		title = k_ottoman
+		title = k_candar
+		title = k_eretnid
+		title = k_naples
+		title = k_trinacria
+	}
+}
+
+is_mongol_empire = {
+	OR = {
+		title = e_golden_horde
+		title = e_ilkhanate
+		title = e_mongol_empire
+		title = e_chagatai
+	}
+}
+
+is_pentarch_trigger = {
+	OR = {
+		has_landed_title = b_roma
+		has_landed_title = b_hagiasophia
+		has_landed_title = b_alexandria
+		has_landed_title = b_jerusalem
+		has_landed_title = b_antioch
+	}
+}

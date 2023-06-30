@@ -1,0 +1,9737 @@
+########
+#Plus CBs:
+#
+#holy_war - resist_viceroy_revocation_cb - unjust_conquest_exclave - truce_notifier - dejure_duchy_claim_plus
+#vassalize - restore_papacy - restore_byzantium - coastal_city_republic - other_claim_on_liege_plot
+#religious_overthrow_ruler - italian_reconquest - carolingian_reconquest - byzantine_vassalize - carolingian_manifest_destiny
+#dejure_duchy_claim_holy - dejure_county_claim_holy - dejure_barony_claim_holy - other_dejure_county_claim_holy - decadence_revolt
+#druze_invasion - reconquista_cb - aghlabid_867 - invasion_nc - magyar_invasion
+#almoravid_1066 - two_eriks_cb - the_anarchy_cb - cb_faction_overthrow_ruler - subjugation
+#subjugation_duke - overpower_imperial_suzerain_cb
+#
+#Total = 32
+########
+
+# Holy War
+holy_war = {
+	name = CB_NAME_RELIGIOUS
+	war_name = WAR_NAME_RELIGIOUS
+	sprite = 9
+	truce_days = 3650
+	sort_priority = 800
+
+	allowed_to_target_tributaries = no
+	check_de_jure_tier = DUKE
+	can_ask_to_join_war = yes
+	is_holy_war = yes
+	is_permanent = yes
+
+	# Starting scope is attacker
+	# ROOT is third-party claimant
+	# FROM is defender
+	# FROMFROM is attacker
+	can_use = {
+		# Attacker
+		ROOT = {
+			can_use_holy_war_cb = yes
+			num_of_count_titles >= 1
+			mercenary = no
+		}
+	}
+
+	# Starting scope is attacker
+	# ROOT is attacker
+	# FROM is defender
+	can_use_gui = {
+		ROOT = {
+			can_use_cb_preamble = yes
+			has_secret_religion = no
+			is_nomadic = no
+
+			trigger_if = {
+				limit = {
+					religion = buddhist
+					NOT = { culture_group = tibetan_group }
+				}
+
+				piety >= 250
+			}
+			trigger_else_if = {
+				limit = {
+					controls_religion = no
+
+					NOR = {
+						has_opinion_modifier = {
+							name = holy_war_sanction
+							who = FROM
+						}
+
+						FROMFROM = {
+							any_de_jure_vassal_title = { is_holy_site = ROOT }
+						}
+					}
+				}
+
+				trigger_if = {
+					limit = {
+						has_character_modifier = holy_war_timer
+						NOT = { religion = kharijite }
+					}
+
+					piety >= 250
+				}
+				trigger_else = {
+					piety >= 100
+				}
+			}
+		}
+
+		# Defender
+		FROM = {
+			NOT = { has_character_modifier = holy_truce_timer }
+		}
+	}
+
+	on_add = {
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	# Starting scope is claimed title
+	# ROOT is attacker
+	# FROM is defender
+	can_use_title = {
+		# Is neighbor title or close
+		FROM = {
+			num_of_realm_counties = {
+				value >= 1
+				title = PREV
+			}
+		}
+
+		# Attacker needs a border with target duchy, or a county inside it
+		any_direct_de_jure_vassal_title = {
+			OR = {
+				holder_scope = {
+					OR = {
+						character = ROOT
+						is_vassal_or_below_of = ROOT
+					}
+				}
+
+				location = {
+					OR = {
+						any_neighbor_province = {
+							owner = {
+								OR = {
+									character = ROOT
+									is_vassal_or_below_of = ROOT
+								}
+							}
+						}
+
+						distance_from_realm = {
+							who = ROOT
+							value < 75
+						}
+					}
+				}
+			}
+		}
+
+		# Use reconquista instead
+		trigger_if = {
+			limit = {
+				capital_scope = { region = world_europe_west_iberia }
+
+				FROM = {
+					independent = yes
+					religion_group = muslim
+				}
+			}
+
+			ROOT = {
+				NAND = {
+					capital_scope = { region = world_europe_west_iberia }
+					independent = yes
+					religion_group = christian
+					is_heretic = no
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		ROOT = { can_use_holy_war_cb = yes }
+	}
+
+	# Starting scope is claimed title
+	# ROOT is attacker
+	# FROM is defender
+	on_add_title = {
+		attacker = {
+			show_scope_change = no
+
+			if = {
+				limit = {
+					religion = buddhist
+					NOT = { culture_group = tibetan_group }
+				}
+
+				piety = -250
+			}
+			else_if = {
+				limit = {
+					controls_religion = no
+
+					NOR = {
+						has_opinion_modifier = {
+							name = holy_war_sanction
+							who = defender
+						}
+
+						PREV = {
+							any_de_jure_vassal_title = { is_holy_site = attacker }
+						}
+					}
+				}
+
+				if = {
+					limit = {
+						has_character_modifier = holy_war_timer
+						NOT = { religion = kharijite }
+					}
+
+					piety = -250
+				}
+				else = {
+					piety = -100
+				}
+			}
+		}
+	}
+
+	# ROOT is attacker
+	# FROM is defender
+	on_success = {
+		attacker = {
+			show_scope_change = no
+
+			religion_authority = {
+				name = won_holy_war
+				years = 20
+			}
+
+			hidden_effect = {
+				if = {
+					limit = {
+						has_nickname = no
+						religion_group = pagan_group
+					}
+
+					random_list = {
+						10 = { give_nickname = nick_the_dragon }
+						10 = { give_nickname = nick_the_holy }
+						10 = { give_nickname = nick_bloodaxe }
+						10 = { give_nickname = nick_the_great }
+						40 = { give_nickname = nick_the_sword_of_god }
+					}
+				}
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			religion_authority = {
+				name = lost_holy_war
+				years = 20
+			}
+		}
+
+		any_attacker = {
+			hidden_effect = {
+				participation_scaled_piety = 200
+				participation_scaled_prestige = 200
+
+				dynasty_head = {
+					if = {
+						limit = { uses_decadence = yes }
+						participation_scaled_decadence = -10
+					}
+				}
+
+				if = {
+					limit = { has_ambition = obj_strengthen_religion }
+
+					change_variable = {
+						which = strengthen_religion
+						value = 1
+					}
+				}
+			}
+		}
+
+	}
+
+	on_success_title = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their holy war for the [This.GetFullName] against [From.GetBestName] (ID: [From.GetID])"
+
+		hidden_effect = {
+			destroy_tradeposts_effect = yes
+
+			if = {
+				limit = {
+					holder_scope = {
+						OR = {
+							character = defender
+							is_vassal_or_below_of = defender
+						}
+					}
+				}
+
+				set_title_flag = usurp_duchy
+			}
+		}
+
+		attacker = {
+			show_scope_change = no
+
+			vassalize_or_take_under_title = {
+				title = PREV
+				enemy = FROM
+				same_religion = yes # Only vassalize rulers of my religion
+				is_religious = yes
+				type = holy_war
+			}
+		}
+
+		hidden_effect = {
+			if = {
+				limit = { has_title_flag = usurp_duchy }
+
+				destroy_landed_title = yes
+				usurp_title = attacker
+				clr_title_flag = usurp_duchy
+			}
+
+			attacker = {
+				show_scope_change = no
+
+				add_character_modifier = {
+					name = holy_war_timer
+					years = 5
+				}
+
+				# Pick temple to grant if ruler has promised one
+				if = {
+					limit = { has_character_flag = pledged_temple }
+
+					random_demesne_title = {
+						limit = {
+							real_tier = BARON
+							holding_type = temple
+							location = { duchy = { title = PREVPREVPREVPREV } }
+						}
+
+						save_event_target_as = granted_temple
+						attacker = { character_event = { id = Plus.1659 } }
+					}
+
+					clr_character_flag = pledged_temple
+				}
+			}
+
+			check_war_effect = yes
+			defender = { landless_pope_effect = yes }
+		}
+	}
+
+	# Starting scope is attacker
+	# ROOT is attacker
+	# FROM is defender
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+
+			piety = -100
+			prestige = -100
+
+			hidden_effect = {
+				clr_character_flag = pledged_temple
+
+				add_character_modifier = {
+					name = holy_war_timer
+					years = 5
+				}
+			}
+
+			# NOTE: There was an empty IF here, unsure why, just deleted it for now.
+			religion_authority = {
+				name = lost_holy_war
+				years = 20
+			}
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			piety = -200
+			prestige = -200
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+
+			hidden_effect = {
+				clr_character_flag = pledged_temple
+
+				add_character_modifier = {
+					name = holy_war_timer
+					years = 5
+				}
+			}
+		}
+
+		any_attacker = {
+			limit = { uses_decadence = yes }
+			hidden_effect = { participation_scaled_decadence = 20 }
+		}
+
+		defender = {
+			show_scope_change = no
+
+			if = {
+				limit = { is_heretic = no }
+
+				religion_authority = {
+					name = won_holy_war
+					years = 20
+				}
+			}
+		}
+
+		any_defender = {
+			hidden_effect = {
+				participation_scaled_prestige = 200
+				participation_scaled_piety = 200
+
+				dynasty_head = {
+					if = {
+						limit = { uses_decadence = yes }
+						participation_scaled_decadence = -10
+					}
+				}
+
+				if = {
+					limit = { has_ambition = obj_strengthen_religion }
+
+					change_variable = {
+						which = strengthen_religion
+						value = 1
+					}
+				}
+			}
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+
+	ai_will_do = {
+		factor = 1
+
+		trigger = {
+			ROOT = {
+				sufficient_treasury_for_war_trigger = yes
+
+				trigger_if = {
+					limit = {
+						NOT = {
+							has_opinion_modifier = {
+								name = holy_war_sanction
+								who = FROM
+							}
+						}
+					}
+
+					trigger_if = {
+						limit = { piety < 200 }
+
+						trigger_if = {
+							limit = {
+								religion_group = christian
+								NOT = {
+									has_game_rule = {
+										name = crusade_rules
+										value = activate_immediately
+									}
+								}
+							}
+							has_global_flag = christian_crusades_unlocked
+						}
+						trigger_else_if = {
+							limit = {
+								religion_group = muslim
+								NOT = {
+									has_game_rule = {
+										name = crusade_rules
+										value = activate_immediately
+									}
+								}
+							}
+							has_global_flag = muslim_jihads_unlocked
+						}
+						trigger_else_if = {
+							limit = {
+								religion_group = pagan_group
+								NOT = {
+									has_game_rule = {
+										name = crusade_rules
+										value = activate_immediately
+									}
+								}
+							}
+							is_reformed_religion = yes
+							has_global_flag = pagan_ghws_unlocked
+						}
+						# Note: I don't get why this is here.
+						trigger_else_if = {
+							limit = {
+								FROM = { religion_group = pagan_group }
+								NOT = {
+									has_game_rule = {
+										name = crusade_rules
+										value = activate_immediately
+									}
+								}
+							}
+							has_global_flag = pagan_ghws_unlocked
+						}
+					}
+					trigger_else_if = {
+						limit = {
+							piety < 300
+
+							NOT = {
+								PREV = {
+									any_de_jure_vassal_title = {
+										is_holy_site = ROOT
+									}
+								}
+							}
+						}
+
+						trigger_if = {
+							limit = { has_dharmic_religion_trigger = yes }
+
+							PREV = {
+								OR = {
+									# Slow down Indian expansion outside of India
+									capital_scope = {
+										NOT = { culture_group = tibetan_group }
+										region = world_india
+									}
+
+									# Slow down Tibetan expansion outside of Bengal and Tibet
+									capital_scope = {
+										culture_group = tibetan_group
+
+										OR = {
+											region = world_himalayas
+											region = world_steppe_tarim
+											region = world_india_bengal
+											duchy = { title = d_kumul } # aka Xizhou
+										}
+									}
+								}
+							}
+						}
+
+						# Avoid invading Africa
+						PREV = {
+							trigger_if = {
+								limit = { capital_scope = { region = world_africa_west } }
+								ROOT = { capital_scope = { region = world_africa_west } }
+							}
+							trigger_else_if = {
+								limit = { capital_scope = { region = world_africa_central } }
+								ROOT = { capital_scope = { region = world_africa_central } }
+							}
+							trigger_else_if = {
+								limit = { capital_scope = { region = world_africa_east } }
+								ROOT = { capital_scope = { region = world_africa_east } }
+							}
+						#	trigger_else_if = {
+						#		limit = { capital_scope = { region = custom_sahara } }
+						#		ROOT = { capital_scope = { region = custom_sahara } }
+						#	}
+						}
+
+						# Anti-blob
+						top_liege = {
+							NOR = {
+								has_landed_title = e_hre
+								has_landed_title = e_karling
+							}
+						}
+					}
+					trigger_else_if = {
+						limit = {
+							piety < 400
+
+							NOT = {
+								PREV = {
+									any_de_jure_vassal_title = {
+										is_holy_site = ROOT
+									}
+								}
+							}
+						}
+
+						trigger_if = {
+							limit = { religion_group = christian }
+
+							# Christians should leave tengris alone
+							trigger_if = {
+								limit = { FROM = { religion = tengri_pagan } }
+								has_global_flag = mongol_horde_arrival
+							}
+
+							# Orthodox should avoid Holy Wars for the most part
+							trigger_if = {
+								limit = {
+									OR = {
+										religion = orthodox
+										religion = bogomilist
+										religion = nestorian
+										religion = monothelite
+										religion = iconoclast
+
+										AND = {
+											religion = chalcedonian
+											trait = greek_rites
+										}
+									}
+								}
+
+								OR = {
+									FROM = { religion_group = muslim }
+
+									PREV = {
+										kingdom = {
+											ROOT = {
+												capital_scope = {
+													kingdom = {
+														title = PREVPREVPREV
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						# Jewish AI should avoid holy wars
+						trigger_else_if = {
+							limit = { religion_group = jewish_group }
+							always = no
+						}
+					}
+				}
+				# Need boats to war across oceans
+				trigger_if = {
+					limit = {
+						NOT = {
+							any_realm_province = {
+								TECH_NAVAL >= 1
+								is_coastal = yes
+								held_under_PREV = yes
+							}
+						}
+					}
+
+					shares_realm_border_with = FROM
+				}
+
+				trigger_if = {
+					limit = { religion = ibadi }
+					trait = zealous
+				}
+
+				trigger_if = {
+					limit = { controls_religion = yes }
+					realm_size >= 0
+				}
+
+				# Give Asturias a chance, use regular CBs instead
+				trigger_if = {
+					limit = {
+						religion_group = muslim
+
+						FROM = {
+							capital_scope = { region = world_europe_west_iberia }
+							independent = yes
+							religion_group = christian
+						}
+					}
+
+					year >= 1000
+				}
+
+				# Byzantine shouldn't attack for Jerusalem or Mesopotamia if they don't control Syria.
+				trigger_if = {
+					limit = {
+						ROOT = {
+							OR = {
+								has_landed_title = e_byzantium
+								any_liege = { has_landed_title = e_byzantium }
+							}
+						}
+
+						PREV = {
+							capital_scope = {
+								NOR = {
+									region = custom_jerusalem
+									region = custom_mesopotamia
+								}
+							}
+						}
+					}
+
+					ROOT = {
+						NOR = {
+							completely_controls_region = custom_syria
+							any_liege = { completely_controls_region = custom_syria }
+						}
+					}
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.2
+
+			FROM = {
+				independent = yes
+				num_of_count_titles_in_realm < 4
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.2
+
+			any_direct_de_jure_vassal_title = {
+				location = { religion = ROOT }
+			}
+		}
+
+		mult_modifier = {
+			factor = 25.0
+
+			ROOT = {
+				has_opinion_modifier = {
+					name = holy_war_sanction
+					who = FROM
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.2
+			ROOT = { trait = zealous }
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			ROOT = { trait = cynical }
+		}
+
+		mult_modifier = {
+			factor = 1.2
+			any_de_jure_vassal_title = { is_holy_site = ROOT }
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			NOT = {
+				any_de_jure_vassal_title = {
+					is_holy_site = ROOT
+				}
+			}
+
+			kingdom = {
+				any_de_jure_vassal_title = {
+					is_holy_site = ROOT
+				}
+			}
+		}
+
+		# Try to guide the Hordes in the right direction
+		mult_modifier = {
+			factor = 0.1
+
+			ROOT = {
+				OR = {
+					dynasty = 613 # Seljuks
+					dynasty = 800 # Timurids
+					has_landed_title = e_ilkhanate
+				}
+			}
+
+			OR = {
+				capital_scope = {
+					OR = {
+						region = custom_bulgaria
+						region = custom_croatia
+						region = custom_serbia
+						region = custom_wallachia
+						region = custom_crimea
+						region = custom_cuman
+						region = custom_perm
+						region = custom_volga_bulgaria
+						region = custom_ruthenia
+						region = world_india_bengal
+						region = world_india_deccan
+						region = world_india_rajastan
+					}
+				}
+
+				FROM = {
+					OR = {
+						has_landed_title = e_golden_horde
+						has_landed_title = e_chagatai
+					}
+
+					year < 1300
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.1
+
+			ROOT = { has_landed_title = e_golden_horde }
+
+			OR = {
+				capital_scope = {
+					OR = {
+						region = custom_persia
+						region = custom_baluchistan
+						region = custom_afghanistan
+						region = custom_mesopotamia
+						region = custom_azerbaijan
+						region = custom_armenia
+						region = custom_trebizond
+						region = custom_nikaea
+						region = custom_byzantium
+						region = custom_norway
+						region = custom_sweden
+						region = custom_syria
+						region = custom_arabia
+						region = custom_jerusalem
+						region = custom_egypt
+						region = custom_africa
+						region = world_india_bengal
+						region = world_india_deccan
+						region = world_india_rajastan
+					}
+				}
+
+				FROM = {
+					OR = {
+						has_landed_title = e_ilkhanate
+						has_landed_title = e_chagatai
+					}
+
+					year < 1300
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.1
+
+			ROOT = { has_landed_title = e_chagatai }
+
+			trigger_if = {
+				limit = {
+					capital_scope = {
+						OR = {
+							region = custom_baluchistan
+							region = custom_afghanistan
+							region = world_india_bengal
+							region = world_india_deccan
+							region = world_india_rajastan
+						}
+					}
+				}
+
+				FROM = {
+					OR = {
+						has_landed_title = e_ilkhanate
+						has_landed_title = e_chagatai
+					}
+
+					year < 1300
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 2.0
+
+			ROOT = {
+				OR = {
+					culture = persian
+					culture = baloch
+					culture = afghan
+					culture = turkish
+				}
+			}
+
+			capital_scope = {
+				OR = {
+					# Persian Empire
+					region = custom_persia
+					region = custom_afghanistan
+					region = custom_mesopotamia
+					region = custom_azerbaijan
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.1
+
+			ROOT = { has_dharmic_religion_trigger = yes }
+
+			capital_scope = {
+				OR = {
+					region = custom_persia
+					region = custom_khwarizm
+				}
+			}
+		}
+
+		# Byzantine should favour attacking world_asia_minor and world_europe_south_east
+		mult_modifier = {
+			factor = 0.1
+
+			ROOT = {
+				OR = {
+					has_landed_title = e_byzantium
+					any_liege = { has_landed_title = e_byzantium }
+				}
+			}
+
+			capital_scope = {
+				OR = {
+					region = custom_cuman
+					region = custom_alania
+					region = custom_volga_bulgaria
+					region = custom_ruthenia
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.2
+
+			ROOT = {
+				OR = {
+					has_landed_title = e_byzantium
+					any_liege = { has_landed_title = e_byzantium }
+				}
+			}
+
+			capital_scope = {
+				NOR = {
+					region = world_asia_minor
+					region = world_europe_south_east
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			ROOT = {
+				OR = {
+					has_landed_title = e_hre
+					has_landed_title = e_karling
+
+					any_liege = {
+						OR = {
+							has_landed_title = e_hre
+							has_landed_title = e_karling
+						}
+					}
+				}
+			}
+
+			capital_scope = {
+				OR = {
+					region = custom_denmark
+					region = custom_england
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 2.0
+
+			ROOT = {
+				OR = {
+					has_character_flag = is_charlemagne
+					has_landed_title = e_karling
+					has_landed_title = e_hre
+
+					any_liege = {
+						OR = {
+							has_landed_title = e_karling
+							has_landed_title = e_hre
+						}
+					}
+				}
+			}
+
+			capital_scope = {
+				OR = {
+					region = custom_germany
+					region = custom_pomerania
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.1
+
+			ROOT = { culture = hungarian }
+
+			capital_scope = {
+				OR = {
+					region = custom_cuman
+					region = custom_volga_bulgaria
+					region = custom_alania
+					region = custom_novgorod
+					region = custom_muscovy
+					region = custom_ruthenia
+					region = custom_byzantium
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.1
+
+			ROOT = { culture = khazar }
+
+			capital_scope = {
+				OR = {
+					region = world_steppe_tarim
+					region = world_steppe_east
+					region = custom_cuman
+					region = custom_perm
+					region = custom_volga_bulgaria
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.5
+
+			ROOT = { culture = hungarian }
+
+			capital_scope = {
+				OR = {
+					region = custom_bulgaria
+					region = custom_carpathia
+					region = custom_croatia
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.1
+
+			ROOT = {
+				religion_group = muslim
+				NOT = { religion = kharijite }
+			}
+
+			FROM = { religion = ibadi }
+		}
+
+		mult_modifier = {
+			factor = 0.1
+
+			FROM = {
+				religion_group = muslim
+				NOT = { religion = kharijite }
+			}
+
+			ROOT = { religion = ibadi }
+		}
+
+		coronation_factor = yes
+	}
+}
+
+# Refuse Viceroy Revocation
+resist_viceroy_revocation_cb = {
+	name = CB_NAME_OVERTHROWRULER
+	war_name = WAR_NAME_OVERTHROWRULER
+	sprite = 12
+	truce_days = 3650
+
+	is_revolt_cb = yes
+	can_call_vassals = yes
+	attacker_can_call_allies = no
+
+	can_use = {
+		ROOT = {
+			has_character_flag = resisting_viceroy_revocation
+			de_facto_liege = FROM
+		}
+	}
+
+	is_valid = {
+		ROOT = {
+			trigger_if = {
+				limit = { independent = no }
+				same_liege = FROM
+			}
+		}
+
+		FROM = {
+			any_demesne_title = {
+				NOT = { lower_tier_than = ROOT }
+				temporary = no
+			}
+		}
+	}
+
+	on_add = {
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+
+		attacker = {
+			clr_character_flag = resisting_viceroy_revocation
+		}
+	}
+
+	on_success = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their resist_viceroy_revocation_cb against [From.GetBestName] (ID: [From.GetID])"
+
+		defender = {
+			show_scope_change = no
+
+			prestige = -500
+
+			remove_opinion = {
+				name = declared_war
+				who = attacker
+			}
+
+			any_demesne_title = {
+				show_scope_change = no
+
+				if = {
+					limit = { can_destroy_title_trigger = yes }
+
+					custom_tooltip = {
+						text = TITLE_ENDANGERED
+						set_title_flag = destroy_title
+					}
+				}
+
+				title_reduce_CA_effect = yes
+				title_reduce_TO_effect = yes
+			}
+
+			# Destroy primary title if it has been reduced too much
+			if = {
+				limit = { primary_title = { has_title_flag = destroy_title } }
+
+				character_event = {
+					id = Plus.1620
+					days = 4
+				}
+			}
+		}
+
+		any_attacker = {
+			hidden_effect = {
+				participation_scaled_prestige = 250
+			}
+		}
+
+		hidden_effect = {
+			check_if_reconquista_finished_effect = yes
+			defender = { landless_pope_effect = yes }
+		}
+	}
+
+	on_fail = {
+		defender = {
+			show_scope_change = no
+
+			prestige = -100
+
+			remove_opinion = {
+				name = declared_war
+				who = attacker
+			}
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -200
+			imprison = defender
+
+		}
+
+		any_defender = {
+			hidden_effect = {
+				participation_scaled_prestige = 50
+			}
+		}
+	}
+
+	on_attacker_leader_death = {
+		end_war = invalid
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# ???
+unjust_conquest_exclave = {
+	name = CB_NAME_EXCLAVE_COUNTY_CONQUEST
+	war_name = WAR_NAME_EXCLAVE_COUNTY_CONQUEST
+	sprite = 27
+	truce_days = 1825
+	infamy_modifier = 2
+	att_ticking_war_score_multiplier = 3.0
+	def_ticking_war_score_multiplier = 3.0
+
+	allowed_to_target_tributaries = no
+	can_ask_to_join_war = no
+	check_all_titles = yes # if permanent, setting this to true will check against all of someones titles, including vassal held titles
+	hostile_against_others = yes
+	is_permanent = yes
+	press_claim = yes
+
+	can_use_gui = {
+		check_if_crusader_trigger = yes
+
+		ROOT = {
+			show_scope_change = no
+
+			prestige >= 100
+			can_use_cb_preamble = yes
+		}
+	}
+
+	can_use = {
+		ROOT = {
+			is_republic = no
+			can_use_holy_war_cb = no
+			NOT = { is_vassal_or_below_of = FROM }
+			mercenary = no
+			pacifist = no
+		}
+
+		FROM = { # Should have at least 2 other provinces, and be a duke.
+			num_of_count_titles_in_realm >= 3
+			higher_real_tier_than = COUNT
+		}
+	}
+
+	can_use_title = {
+		real_tier = COUNT
+
+		holder_scope = {
+			OR = {
+				AND = {
+					is_vassal_or_below_of = FROM
+					NOT = { same_realm = ROOT }
+				}
+
+				character = FROM
+			}
+
+			NOR = {
+				is_vassal_or_below_of = ROOT
+				character = ROOT
+			}
+		}
+
+		FROM = { capital_scope = { NOT = { province = PREVPREV } } } # Can't be used on the capital province of FROM
+
+		location = {
+			# Attackers neighbour province
+			any_neighbor_province = {
+				owner = {
+					OR = {
+						character = ROOT
+						is_vassal_or_below_of = ROOT
+					}
+				}
+			}
+
+			# Exclave of any kind
+			NOT = {
+				any_neighbor_province = {
+					owner = {
+						OR = {
+							character = FROM
+							is_vassal_or_below_of = FROM
+						}
+					}
+				}
+			}
+		}
+
+		# Attacker and defender hold no de jure liege titles
+		NOT = {
+			any_de_jure_liege_title = {
+				holder_scope = {
+					character = ROOT
+					character = FROM
+				}
+			}
+		}
+	}
+
+	is_valid_title = {
+		holder_scope = {
+			OR = {
+				is_vassal_or_below_of = FROM
+				character = FROM
+			}
+		}
+	}
+
+	on_add = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -100
+
+			custom_tooltip = {
+				text = EXCLAVE_CONQUEST_OPINION_TARGET
+
+				defender = {
+					opinion = {
+						name = opinion_declared_unjust_conquest
+						who = attacker
+						years = 10
+					}
+
+					any_realm_lord = {
+						opinion = {
+							name = opinion_declared_unjust_conquest
+							who = attacker
+							years = 10
+						}
+					}
+				}
+			}
+
+			custom_tooltip = {
+				text = EXCLAVE_CONQUEST_OPINION_NEIGHBOURS
+
+				any_neighbor_independent_ruler = {
+					limit = { NOT = { character = defender } }
+
+					opinion = {
+						name = opinion_declared_unjust_conquest
+						who = attacker
+						years = 10
+					}
+
+					any_realm_lord = {
+						limit = { shares_realm_border_with = attacker }
+
+						opinion = {
+							name = opinion_declared_unjust_conquest
+							who = attacker
+							years = 10
+						}
+					}
+				}
+			}
+		}
+
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success_title = {
+		if = {
+			limit = {
+				holder_scope = {
+					real_tier = COUNT
+					num_of_count_titles == 1
+					lower_real_tier_than = attacker
+					is_patrician = no
+				}
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				set_defacto_liege = attacker
+			}
+		}
+
+		else = {
+			usurp_title_plus_barony_if_unlanded = {
+				target = attacker
+				type = invasion
+			}
+
+			# Take all baronies under the one we're fighting for
+			any_de_jure_vassal_title = {
+				show_scope_change = no
+
+				limit = {
+					holder_scope = {
+						OR = {
+							character = defender
+							is_vassal_or_below_of = defender
+						}
+					}
+
+					NOT = { de_facto_liege = PREV }
+				}
+
+				usurp_title_plus_barony_if_unlanded = {
+					target = attacker
+					type = invasion
+				}
+			}
+		}
+
+		add_pressed_claim = defender
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = { participation_scaled_prestige = 100 }
+		}
+
+		hidden_effect = {
+			check_war_effect = yes
+			defender = { landless_pope_effect = yes }
+		}
+	}
+
+	on_fail_title = {
+		defender = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 50
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 50 }
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -200
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+			participation_scaled_prestige = 100
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 100 }
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 25
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 75
+	}
+
+	ai_will_do = {
+		factor = 0.5 # Prefer using CB's without on_add costs
+
+		trigger = {
+			ROOT = {
+				sufficient_treasury_for_war_trigger = yes
+
+				# AI don't use this within their own realm
+				trigger_if = {
+					limit = { independent = no }
+					NOT = { same_liege = FROM }
+				}
+
+				OR = {
+					trait = arbitrary
+					trait = ambitious
+				}
+
+				NOR = {
+					trait = just
+					trait = content
+				}
+
+				trigger_if = {
+					limit = {
+						has_character_flag = is_temujin
+						has_landed_title = e_mongol_empire
+						demesne_size >= 1
+					}
+
+					FROM = {
+						NOT = { has_landed_title = e_china_west_governor }
+					}
+				}
+			}
+		}
+
+		# Why bother with a county
+		mult_modifier = {
+			factor = 0.5
+			higher_real_tier_than = DUKE
+		}
+	}
+}
+
+# Truce Notifier
+truce_notifier = {
+	name = CB_NAME_TRUCE_NOTIFIER
+	war_name = WAR_NAME_TRUCE_NOTIFIER
+	sprite = 1
+	truce_days = 3650
+
+	can_ask_to_join_war = yes
+	# is_holy_war = yes
+	is_permanent = yes
+
+	can_use = {
+		ai = no
+
+		OR = {
+			ROOT = { has_character_modifier = holy_truce_timer }
+			FROM = { has_character_modifier = holy_truce_timer }
+		}
+	}
+
+	is_valid = {
+		always = no
+	}
+
+	on_success = {}
+
+	on_fail = {}
+
+	on_reverse_demand = {}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# Duchy Claim
+dejure_duchy_claim_plus = {
+	name = CB_NAME_DEJURECLAIM
+	war_name = WAR_NAME_DEJURECLAIM
+	sprite = 16
+	truce_days = 3650
+	infamy_modifier = 0.5
+	sort_priority = 790
+
+	allowed_to_target_tributaries = yes
+	can_ask_to_join_war = yes
+	check_all_titles = yes # if permanent, setting this to true will check against all of someones titles, including vassal held titles
+	hostile_against_others = yes
+	# is_holy_war = yes
+	is_permanent = yes
+	press_claim = yes
+
+	can_use_gui = {
+		ROOT = {
+			can_use_cb_preamble = yes
+		}
+	}
+
+	can_use_title = {
+		# Target title is Duke level and non-titular
+		real_tier = DUKE
+		is_titular = no
+
+		# Check to ensure the target is not valid for a holy war
+		ROOT = {
+			NOT = {
+				can_use_cb = {
+					casus_belli = holy_war
+					target = FROM
+					thirdparty_title = PREV
+					only_check_triggers = yes
+				}
+			}
+		}
+
+		holder_scope = {
+			# Either the target has the title or their top liege is the target
+			OR = {
+				is_vassal_or_below_of = FROM
+				character = FROM
+			}
+
+			# Neither the attacker nor any of their vassals has the title
+			NOR = {
+				character = ROOT
+				is_vassal_or_below_of = ROOT
+			}
+		}
+
+		OR = {
+			# Either a king/emperor is using it to reclaim own de jure duchy
+			empire = {
+				holder = ROOT
+
+				OR = {
+					has_law = crown_authority_2
+					has_law = crown_authority_3
+					has_law = crown_authority_4
+				}
+			}
+
+			kingdom = {
+				holder = ROOT
+
+				OR = {
+					has_law = crown_authority_2
+					has_law = crown_authority_3
+					has_law = crown_authority_4
+				}
+			}
+
+			# or the attacker has a county in the duchy & neither the target or anyone else who isn't a liege or vassal of the attacker does
+			AND = {
+				ROOT = {
+					num_of_realm_counties = {
+						value >= 1
+						title = PREV
+					}
+				}
+
+				NOR = {
+					FROM = {
+						num_of_realm_counties = {
+							value >= 1
+							title = PREV
+						}
+					}
+
+					any_direct_de_jure_vassal_title = {
+						holder_scope = {
+							NOR = {
+								character = ROOT
+								is_vassal_or_below_of = ROOT
+								is_liege_or_above_of = ROOT
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	is_valid_title = {
+		holder_scope = {
+			OR = {
+				character = FROM
+				is_vassal_or_below_of = FROM
+			}
+		}
+	}
+
+	on_add = {
+		# Lose 500 piety if the target is a holy order of the same religion
+		if = {
+			limit = {
+				defender = {
+					holy_order = yes
+					religion = attacker
+				}
+			}
+
+			attacker = {
+				show_scope_change = no
+				piety = -500
+			}
+		}
+
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		attacker = {
+			show_scope_change = no
+			participation_scaled_prestige = 200
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = { participation_scaled_prestige = 200 }
+		}
+	}
+
+	on_success_title = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their duchy de jure claim for the [This.GetFullName] against [From.GetBestName] (ID: [From.GetID])"
+
+		# Change imperial decadence
+		# TODO: Fix missing stuff?
+		if = {
+			limit = {
+				empire = {
+					holder = attacker
+					is_primary_holder_title = yes
+				}
+			}
+		}
+
+		usurp_title_plus_barony_if_unlanded = {
+			target = attacker
+			type = claim
+		}
+
+		hidden_effect = {
+			check_war_effect = yes
+			defender = { landless_pope_effect = yes }
+		}
+
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+			prestige = -100
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -200
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+			participation_scaled_prestige = 200
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 200 }
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+
+	ai_will_do = {
+		factor = 1
+
+		trigger = {
+			ROOT = {
+				sufficient_treasury_for_war_trigger = yes
+
+				# Most Christian and Jewish AI will not attack their religion head
+				can_attack_religion_head_trigger = yes
+
+				# Only dishonorable ai will break the a tributary's trust
+				can_attack_tributary_trigger = yes
+
+				trigger_if = {
+					limit = { rightful_religious_head = FROM }
+
+					OR = {
+						trait = cynical
+						trait = ambitious
+					}
+				}
+
+				trigger_if = {
+					limit = {
+						has_character_flag = is_temujin
+						has_landed_title = e_mongol_empire
+						demesne_size >= 1
+					}
+
+					FROM = {
+						NOT = { has_landed_title = e_china_west_governor }
+					}
+				}
+			}
+
+			# AI will only use on same religion AI holy orders if they're kings/emperors
+			FROM = {
+				NAND = {
+					holy_order = yes
+					religion = ROOT
+					has_dlc = "Sons of Abraham"
+					lower_real_tier_than = KING
+					ai = yes
+				}
+			}
+
+			# Mongol pagans don't use this against other mongol pagans
+			NAND = {
+				ROOT = {
+					culture = mongol
+					religion_group = pagan_group
+				}
+
+				FROM = {
+					culture = mongol
+					religion_group = pagan_group
+				}
+			}
+		}
+	}
+}
+
+# Vassalize
+vassalize = {
+	name = CB_NAME_VASSALIZE
+	war_name = WAR_NAME_VASSALIZE
+	sprite = 16
+	truce_days = 3650
+	infamy_modifier = 0.25
+	sort_priority = 830
+
+	allowed_to_target_tributaries = no
+	can_ask_to_join_war = yes
+	is_permanent = yes
+
+	can_use_gui = {
+		ROOT = {
+			can_use_cb_preamble = yes
+		}
+	}
+
+	can_use = {
+		ROOT = {
+			is_tribal = no
+			is_nomadic = no
+		}
+
+		# Target is a non-rebelling count+ and the same religion and culture group as the attacker or a former vassal
+		FROM = {
+			lower_real_tier_than = ROOT
+			higher_real_tier_than = BARON
+			is_tribal = no
+			is_nomadic = no
+			in_revolt = no
+			NOT = { trait = pf_rebel }
+
+			OR = {
+				AND = {
+					religion = ROOT
+					culture_group = ROOT
+				}
+
+				reverse_has_opinion_modifier = {
+					name = opinion_independent
+					who = ROOT
+				}
+
+				has_character_flag = is_rollo
+			}
+
+			# Target is either independent or is of the same realm but under a different liege
+			OR = {
+				independent = yes
+
+				AND = {
+					same_realm = ROOT
+					NOT = { is_vassal_or_below_of = ROOT }
+				}
+			}
+
+			# The attacker is their de jure liege or a former liege
+			OR = {
+				de_jure_liege_or_above = ROOT
+
+				reverse_has_opinion_modifier = {
+					name = opinion_independent
+					who = ROOT
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		FROM = {
+			lower_real_tier_than = ROOT
+			in_revolt = no
+			NOT = { trait = pf_rebel }
+
+			OR = {
+				independent = yes
+
+				AND = {
+					same_realm = ROOT
+					NOT = { is_vassal_or_below_of = ROOT }
+				}
+			}
+
+			OR = {
+				de_jure_liege_or_above = ROOT
+
+				reverse_has_opinion_modifier = {
+					name = opinion_independent
+					who = ROOT
+				}
+			}
+		}
+	}
+
+	on_add = {
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their vassalize CB against [From.GetBestName] (ID: [From.GetID])"
+
+		attacker = {
+			show_scope_change = no
+			participation_scaled_prestige = 100
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = { participation_scaled_prestige = 100 }
+		}
+
+		defender = {
+			show_scope_change = no
+
+			hidden_effect = {
+				opinion = {
+					name = force_vassalized
+					who = attacker
+					years = 20
+				}
+			}
+
+			set_defacto_liege = attacker
+			pf_liege_change_effect = yes
+
+			# Imprison the target if they originally became independent
+			if = {
+				limit = {
+					reverse_has_opinion_modifier = {
+						name = opinion_independent
+						who = attacker
+					}
+				}
+
+				hidden_effect = {
+					reverse_remove_opinion = {
+						name = opinion_independent
+						who = attacker
+					}
+				}
+
+				imprison = attacker
+			}
+		}
+
+		hidden_effect = {
+			check_if_reconquista_finished_effect = yes
+			defender = { landless_pope_effect = yes }
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+			prestige = -100
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -200
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+		}
+
+		any_defender = {
+			limit = { character = defender }
+			participation_scaled_prestige = 100
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 100 }
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+
+	ai_will_do = {
+		factor = 1
+
+		trigger = {
+			ROOT = {
+				sufficient_treasury_for_war_trigger = yes
+
+				# Most Christian and Jewish AI will not attack their religion head
+				can_attack_religion_head_trigger = yes
+
+				OR = {
+					opinion = { who = FROM value >= -25 }
+					reverse_opinion = { who = FROM value >= -25 }
+
+					has_opinion_modifier = {
+						name = opinion_independent
+						who = FROM
+					}
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.5
+
+			ROOT = {
+				opinion = { who = FROM value >= 10 }
+				reverse_opinion = { who = FROM value >= 10 }
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.5
+
+			ROOT = {
+				has_opinion_modifier = {
+					name = opinion_independent
+					who = FROM
+				}
+			}
+		}
+	}
+}
+
+# Restore Papacy
+restore_papacy = {
+	name = CB_NAME_RESTORE_PAPACY
+	war_name = WAR_NAME_RESTORE_PAPACY
+	sprite = 10
+	truce_days = 3650
+	infamy_modifier = 0.25
+
+	allowed_to_target_tributaries = no
+	can_ask_to_join_war = yes
+	# is_holy_war = yes
+	is_permanent = yes
+
+	can_use_gui = {
+		ROOT = {
+			can_use_cb_preamble = yes
+		}
+	}
+
+	can_use = {
+		ROOT = {
+			# The attacker follows the Pope and has a RA of 20%+
+			rightful_religious_head_scope = {
+				has_landed_title = k_papacy
+				religion_authority >= 0.2
+
+				# The pope is either independent or is a vassal of the target or of the attacker and the target controls Rome
+				OR = {
+					is_vassal_or_below_of = FROM
+
+					AND = {
+						OR = {
+							independent = yes
+							is_vassal_or_below_of = ROOT
+						}
+
+						c_roma = {
+							holder_scope = {
+								OR = {
+									character = FROM
+									is_vassal_or_below_of = FROM
+								}
+							}
+						}
+					}
+				}
+			}
+
+			NOR = {
+				# Target is not the same religion as any liege
+				any_liege = { religion = FROM }
+
+				# Target is not part of the attacker's realm
+				same_realm = FROM
+			}
+		}
+
+		FROM = {
+			NOR = {
+				# Target is not already involved in a restore papacy war
+				any_war = { using_cb = restore_papacy }
+
+				# Target is not the pope
+				has_landed_title = k_papacy
+			}
+		}
+	}
+
+	on_add = {
+		attacker = {
+			set_character_flag = restore_papacy_attempted
+		}
+
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their restore papacy CB against [From.GetBestName] (ID: [From.GetID])"
+
+		k_papacy = {
+			show_scope_change = no
+
+			holder_scope = {
+				show_scope_change = no
+
+				# The Pope regains Rome if owned by the target's realm and becomes independent if vassalized
+				if = {
+					limit = {
+						c_roma = {
+							holder_scope = {
+								OR = {
+									is_vassal_or_below_of = defender
+									character = defender
+								}
+							}
+						}
+					}
+
+					add_character_modifier = {
+						name = new_land_timer
+						duration = 1
+						hidden = yes
+					}
+
+					usurp_title_plus_barony_if_unlanded = {
+						target = c_roma
+						type = claim
+					}
+				}
+
+				if = {
+					limit = { is_vassal_or_below_of = defender }
+
+					set_defacto_liege = THIS
+					pf_liege_change_effect = yes
+				}
+			}
+		}
+
+		attacker = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 100
+			participation_scaled_piety = 100
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = {
+				participation_scaled_prestige = 100
+				participation_scaled_piety = 100
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+			prestige = -200
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -100
+			piety = -100
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -200
+			piety = -200
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+			participation_scaled_prestige = 200
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 200 }
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+
+	ai_will_do = {
+		factor = 2
+
+		trigger = {
+			ROOT = {
+				sufficient_treasury_for_war_trigger = yes
+
+				# AI will not attempt to use this CB a second time
+				NOT = { has_character_flag = restore_papacy_attempted }
+			}
+		}
+
+		mult_modifier = {
+			factor = 5
+			ROOT = { trait = zealous }
+		}
+
+		mult_modifier = {
+			factor = 0
+			ROOT = { trait = cynical }
+		}
+	}
+}
+
+# Restore Byzantium
+restore_byzantium = {
+	name = CB_NAME_RESTOREBYZANTIUM
+	war_name = WAR_NAME_RESTOREBYZANTIUM
+	sprite = 16
+	truce_days = 3650
+
+	allowed_to_target_tributaries = no
+	can_ask_to_join_war = yes
+	check_de_jure_tier = EMPEROR
+	is_permanent = yes
+	# is_holy_war = yes
+
+	can_use_gui = {
+		ROOT = {
+			can_use_cb_preamble = yes
+		}
+	}
+
+	can_use_title = {
+		# The Byzantine Empire does not exist
+		title = e_byzantium
+		has_holder = no
+
+		# The attacker is an independent Greek Orthodox (or a heretic) king or emperor
+		ROOT = {
+			independent = yes
+			culture_group = byzantine
+			higher_real_tier_than = DUKE
+			is_orthodox_branch = yes
+		}
+
+		# The defender is either not Orthodox (or a heretic) or not Greek
+		FROM = {
+			NAND = {
+				is_orthodox_branch = yes
+				culture_group = byzantine
+			}
+		}
+
+		# Constantinople's holder is in the target's realm
+		c_constantinopolis = {
+			holder_scope = {
+				same_realm = FROM
+			}
+		}
+	}
+
+	is_valid_title = {
+		ROOT = {
+			independent = yes
+			culture_group = byzantine
+			is_orthodox_branch = yes
+		}
+
+		FROM = {
+			NAND = {
+				is_orthodox_branch = yes
+				culture_group = byzantine
+			}
+		}
+
+		title = e_byzantium
+		has_holder = no
+		c_constantinopolis = { holder_scope = { same_realm = FROM } }
+	}
+
+	on_add = {
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		attacker = {
+			show_scope_change = no
+			participation_scaled_prestige = 200
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = { participation_scaled_prestige = 200 }
+		}
+
+		defender = {
+			show_scope_change = no
+			prestige = -200
+		}
+	}
+
+	on_success_title = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their restore byzantium CB for the [This.GetFullName] against [From.GetBestName] (ID: [From.GetID])"
+
+		tooltip = { gain_title = attacker }
+
+		hidden_effect = {
+			# Take all baronies under the one we're fighting for
+			any_de_jure_vassal_title = {
+				limit = {
+					holder_scope = {
+						OR = {
+							is_vassal_or_below_of = defender
+							character = defender
+						}
+					}
+				}
+
+				usurp_title_plus_barony_if_unlanded = {
+					target = attacker
+					type = claim
+				}
+			}
+
+			attacker = { set_character_flag = centralize_without_penalties }
+
+			if = {
+				limit = {
+					c_constantinopolis = { holder_scope = { same_realm = attacker } }
+				}
+
+				e_byzantium = {
+					set_title_flag = non_manual_law_change # No prestige loss
+					revoke_law = investiture_law_0
+					revoke_law = investiture_law_1
+					add_law = crown_authority_1
+					add_law = council_privileges_0
+					add_law = succ_primogeniture
+					add_law = cognatic_succession
+					gain_title = attacker
+					clr_title_flag = non_manual_law_change # No prestige loss
+				}
+			}
+
+			attacker = { clr_character_flag = centralize_without_penalties }
+
+			# Shatter empire if it's too small
+			defender = {
+				character_event = { id = realmPlus.100 }
+			}
+		}
+	}
+
+	on_fail = {
+		prestige = -100
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -200
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+			participation_scaled_prestige = 200
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 200 }
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# Seize Coastal City
+coastal_city_republic = {
+	name = CB_NAME_COASTAL_CITY_REPUBLIC
+	war_name = WAR_NAME_COASTAL_CITY_REPUBLIC
+	sprite = 1
+	truce_days = 3650
+
+	allow_distant = yes # AI parameter
+	allowed_to_target_tributaries = no
+	check_all_titles = yes
+	can_ask_to_join_war = yes
+	is_permanent = yes
+
+	can_use_gui = {
+		check_if_crusader_trigger = yes
+
+		ROOT = {
+			can_use_cb_preamble = yes
+		}
+	}
+
+	can_use = {
+		ROOT = {
+			is_patrician = yes
+			prisoner = no
+			has_regent = no
+
+			NOR = {
+				same_realm = FROM
+				has_character_modifier = rep_cb_cd
+			}
+
+		}
+	}
+
+	can_use_title = {
+		real_tier = BARON
+		holding_type = city
+		NOT = { holder = FROM } # Can't take the primary holding away from someone
+
+		location = {
+			is_coastal = yes
+			has_trade_post = yes
+
+			trade_post_owner = {
+				character = ROOT
+			}
+
+			OR = {
+				# Within Free CB range
+				ROOT = {
+					capital_scope = {
+						distance = {
+							where = PREVPREV # Comparing the distance between ROOT's capital and the title in question
+							value < 650	#  From aprox. Venice to East Cyprus and from Venice to Gibraltar
+						}
+					}
+				}
+
+				PREV = {
+					holder_scope = {
+						is_patrician = yes
+						NOT = { same_realm = ROOT }
+					}
+				}
+
+				trade_post_owner = {
+					OR = {
+						character = ROOT
+						is_vassal_or_below_of = ROOT
+					}
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		ROOT = {
+			OR = {
+				is_merchant_republic = yes
+				is_patrician = yes
+			}
+		}
+	}
+
+	is_valid_title = {
+		NOT = { holder = FROM } # Can't take the primary holding away from someone
+	}
+
+	on_add = {
+		attacker = {
+			show_scope_change = no
+
+			add_character_modifier = {
+				name = rep_cb_cd
+				years = 5
+				inherit = yes
+			}
+		}
+
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success_title = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their coastal city republic war for the [This.GetFullName] against [From.GetBestName] (ID: [From.GetID])"
+		usurp_title = attacker
+
+		if = {
+			limit = {
+				location = {
+					is_coastal = yes
+
+					attacker = {
+						capital_scope = {
+							distance = {
+								where = PREVPREV # Comparing the distance between ROOT's capital and the title in question
+								value < 650	#  From  aprox.Venice to East Cyprus and from Venice to Gibraltar
+							}
+						}
+					}
+				}
+			}
+
+			custom_tooltip = { text = CTT_REP_IN_RANGE }
+		}
+		else = {
+			custom_tooltip = { text = CTT_REP_OUT_RANGE}
+		}
+
+		attacker = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 100
+
+			hidden_effect = {
+				remove_character_modifier = rep_cb_cd
+
+				add_character_modifier = {
+					name = rep_cb_cd
+					years = 5
+					inherit = yes
+				}
+			}
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = { participation_scaled_prestige = 100 }
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -100
+			hidden_effect = { remove_character_modifier = rep_cb_cd }
+		}
+
+		defender = {
+			show_scope_change = no
+			participation_scaled_prestige = 50
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 50 }
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -200
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+
+			hidden_effect = {
+				remove_character_modifier = rep_cb_cd
+			}
+		}
+
+		defender = {
+			participation_scaled_prestige = 100
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 100 }
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+
+	ai_will_do = {
+		factor = 1
+
+		trigger = {
+			ROOT = {
+				sufficient_treasury_for_war_trigger = yes
+
+				# Most Christian and Jewish AI will not attack their religion head
+				can_attack_religion_head_trigger = yes
+
+				trigger_if = {
+					limit = { rightful_religious_head = FROM }
+
+					OR = {
+						trait = cynical
+						trait = ambitious
+					}
+				}
+
+				# Prevent the AI from overextending itself, it won't understand the mechanic anyways
+				capital_scope = {
+					distance = {
+						where = PREVPREV # Comparing the distance between ROOT's capital and the title in question
+						value < 650	#  From aprox. Venice to East Cyprus and from Venice to Gibraltar
+					}
+				}
+			}
+		}
+	}
+}
+
+# ???
+other_claim_on_liege_plot = {
+	name = CB_NAME_CLAIM
+	war_name = WAR_NAME_OTHER_PRETENDER
+	sprite = 3
+	truce_days = 3650
+	infamy_modifier = 0.5
+
+	can_call_allies = no
+	can_ask_to_join_war = no
+	hostile_against_others = yes
+	major_revolt = yes
+
+	can_use_title = {
+		holder = FROM
+
+		FROMFROM = {
+			has_opinion_modifier = {
+				name = revolting_against
+				who = ROOT_FROM
+			}
+		}
+	}
+
+	is_valid_title = {
+		holder = FROM
+
+		FROM = {
+			reverse_has_opinion_modifier = {
+				name = revolting_against
+				who = ROOT_FROMFROM
+			}
+
+			in_revolt = no
+
+			liege_before_war = {
+				in_revolt = no
+
+				liege_before_war = {
+					in_revolt = no
+				}
+			}
+		}
+	}
+
+	on_add = {
+		log = "CB(other_claim_on_liege_plot): START: [This.GetTitledFirstName] of [This.PrimaryTitle.GetBaseName] (ID: [This.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID]), supporting claimant [Root.GetBestName] (ID: [Root.GetID])"
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+
+		FROM = { pf_log_state_effect = yes }
+
+		ROOT = {
+			pf_log_state_effect = yes
+			set_character_flag = claim_being_pressed
+		}
+	}
+
+	on_success = {
+		# claimant is grateful to the attacker
+		ROOT = {
+			show_scope_change = no
+
+			add_character_modifier = {
+				name = new_land_timer
+				duration = 1
+				hidden = yes
+			}
+
+			opinion = {
+				name = pressed_my_claim
+				who = PREV
+			}
+
+			hidden_effect = {
+				clr_character_flag = claim_being_pressed
+			}
+		}
+
+		any_attacker = {
+			show_scope_change = no
+
+			if = {
+				limit = {
+					OR = {
+						character = ROOT
+						character = PREV
+					}
+				}
+
+				participation_scaled_prestige = 200
+			}
+			else = {
+				hidden_effect = { participation_scaled_prestige = 200 }
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			prestige = -500
+			imprison = ROOT
+
+			# Existing vassals may declare independence
+			if = {
+			 	limit = { independent = yes }
+
+			 	hidden_effect = {
+					any_vassal = {
+						character_event = {
+							id = Plus.430
+							days = 3
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_success_title = {
+		log = "CB(other_claim_on_liege_plot): VICTORY: [FromFrom.GetTitledFirstName] of [FromFrom.PrimaryTitle.GetBaseName] (ID: [FromFrom.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID]), supporting claimant [Root.GetBestName] (ID: [Root.GetID])"
+
+		# Check to see if the claimant should stay with their current liege
+		if = {
+			limit = {
+				FROM = {
+					independent = no
+					liege = { higher_real_tier_than = ROOT }
+				}
+			}
+
+			FROM = {
+				liege = { save_event_target_as = new_liege }
+			}
+		}
+		else_if = {
+			limit = {
+				ROOT = {
+					is_ruler = yes
+					independent = no
+					NOT = { lower_real_tier_than = PREV }
+				}
+			}
+
+			ROOT = {
+				liege = { save_event_target_as = new_liege }
+			}
+		}
+
+		# Prevent on_new_holder / on_unlanded edge case handlers from tearing-down any civil war state while the CB
+		# completes due to, e.g., liege changes or gained titles.
+		set_global_flag = pf_teardown_lock
+
+		# If the claimant has the wrong government type, take care of that first.
+		if = {
+			limit = {
+				higher_real_tier_than = ROOT
+
+				holder_scope = {
+					OR = {
+						is_feudal = yes
+						is_tribal = yes
+					}
+				}
+
+				ROOT = {
+					is_ruler = yes
+
+					OR = {
+						is_theocracy = yes
+						is_republic = yes
+					}
+				}
+			}
+
+			ROOT = {
+				show_scope_change = no
+
+				abdicate = { move = no }
+			}
+		}
+
+		# Usurp primary title
+		if = {
+			limit = { is_primary_holder_title = yes }
+
+			FROM = {
+				# Check whether title will be destroyed
+				any_demesne_title = {
+					show_scope_change = no
+
+					if = {
+						limit = { can_destroy_title_trigger = yes }
+
+						custom_tooltip = {
+							text = TITLE_ENDANGERED
+							set_title_flag = destroy_title
+						}
+					}
+
+					# Reduce CA & TO
+					title_reduce_CA_effect = yes
+					title_reduce_TO_effect = yes
+
+					# Usurp primary and primary-tier titles
+					if = {
+						limit = {
+							is_primary_holder_title_tier = yes
+							is_primary_holder_title = no
+						}
+
+						usurp_title_plus_barony_if_unlanded = {
+							target = ROOT
+							type = claim
+						}
+					}
+				}
+
+				primary_title = {
+					show_scope_change = no
+
+					usurp_title_plus_barony_if_unlanded = {
+						target = ROOT
+						type = claim
+					}
+
+					hidden_effect = {
+						make_primary_title = yes
+					}
+				}
+
+				set_defacto_liege = ROOT
+
+				# Destroy primary title if it has been reduced too much
+				if = {
+					limit = { primary_title = { has_title_flag = destroy_title } }
+
+					character_event = {
+						id = Plus.1620
+						days = 4
+					}
+				}
+			}
+
+			hidden_effect = {
+				FROM = {
+					# Check whether usurper needs to be given the capital county
+					if = {
+						limit = {
+							OR = {
+								num_of_count_titles >= 2
+								higher_real_tier_than = COUNT
+							}
+
+							ROOT = {
+								primary_title = {
+									FROM = {
+										capital_scope = {
+											de_jure_liege_or_above = PREVPREV
+										}
+									}
+
+									NOR = {
+										has_law = succ_feudal_elective
+										has_law = succ_hre_elective
+										has_law = succ_byzantine_elective
+									}
+								}
+							}
+						}
+
+						capital_scope = {
+							county = {
+								usurp_title_plus_barony_if_unlanded = {
+									target = ROOT
+									type = claim
+								}
+							}
+						}
+					}
+
+					# Set proper liege statuses
+					set_defacto_liege = ROOT
+
+					any_vassal = {
+						limit = {
+							NOT = { primary_title = { de_jure_liege_or_above = PREVPREV } }
+						}
+
+						set_defacto_liege = ROOT
+					}
+				}
+			}
+		}
+
+		# Usurp non-primary titles
+		if = {
+			limit = {
+				holder = FROM
+				is_primary_holder_title = no
+			}
+
+			title_reduce_CA_effect = yes
+			title_reduce_TO_effect = yes
+
+			usurp_title_plus_barony_if_unlanded = {
+				target = ROOT
+				type = claim
+			}
+		}
+
+		# Assign the claimant to a new liege or go independent, if necessary
+		ROOT = {
+			show_scope_change = no
+
+			if = {
+				limit = { event_target:new_liege = { always = yes } }
+				set_defacto_liege = event_target:new_liege
+			}
+			else = {
+				set_defacto_liege = THIS
+			}
+		}
+
+		clr_global_flag = pf_teardown_lock
+
+		# figure out who are the supporters, losers, and neutrals
+		hidden_effect = {
+			ROOT = {
+				# Clear previous civil war opinions
+				pf_civil_war_clear_old_opinions_effect = yes
+
+				opinion = {
+					name = opinion_civil_war_loser
+					who = FROM
+					years = 5
+				}
+
+				# Mark rebels as supporters
+				FROM = {
+					any_opinion_modifier_target = {
+						limit = {
+							pf_part_of_this_revolt_trigger = yes
+							NOT = { character = PREVPREV }
+						}
+
+						reverse_opinion = {
+							name = opinion_civil_war_supporter
+							who = ROOT
+							years = 5
+						}
+					}
+				}
+
+				any_vassal = {
+					# Mark former liege and loyalists as losers
+					if = {
+						limit = {
+							has_opinion_modifier = {
+								name = pf_loyal_toward
+								who = FROM
+							}
+						}
+
+						reverse_opinion = {
+							who = ROOT
+							name = opinion_civil_war_loser
+							years = 5
+						}
+					}
+
+					# Remember those who chose to be neutral
+					else_if = {
+						limit = {
+							has_opinion_modifier = {
+								name = pf_neutral_toward
+								who = FROM
+							}
+						}
+
+						reverse_opinion = {
+							name = opinion_civil_war_neutral
+							who = ROOT
+							years = 5
+						}
+					}
+				}
+			}
+		}
+
+		# Check whether the primary title should be destroyed due to CA loss
+		if = {
+			limit = { has_title_flag = destroy_title }
+
+			ROOT = {
+				character_event = {
+					id = Plus.1620 # Destroy title
+					days = 4
+				}
+			}
+		}
+
+		# Clean up remaining TOMs
+		pf_civil_war_cleanup_effect = yes
+
+		ROOT = {
+			character_event = { id = PlusFaction.450 } # Post-civil war event to reward allies
+			character_event = { id = PlusFaction.200 days = 1 }  # Change faction moods
+		}
+
+		# Change faction moods
+		FROM = { character_event = { id = PlusFaction.200 days = 1 } }
+	}
+
+	on_fail = {
+		log = "CB(other_claim_on_liege_plot): WHITEPEACE: [This.GetTitledFirstName] of [This.PrimaryTitle.GetBaseName] (ID: [This.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID]), supporting claimant [Root.GetBestName] (ID: [Root.GetID])"
+
+		# Clean up remaining civil war state
+		pf_civil_war_cleanup_effect = yes
+
+		prestige = -100
+
+		if = {
+			limit = { NOT = { has_character_flag = no_whitepeace_prison } }
+			imprison = FROM
+		}
+
+		clr_character_flag = no_whitepeace_prison
+
+		defender = {
+			show_scope_change = no
+			participation_scaled_prestige = 50
+		}
+
+		any_defender = {
+			limit = { NOT = { character = FROM } }
+			hidden_effect = { participation_scaled_prestige = 50 }
+		}
+
+		hidden_effect = {
+			FROM = {
+				remove_opinion = {
+					name = declared_war
+					who = PREV
+				}
+			}
+
+			ROOT = {
+				clr_character_flag = claim_being_pressed
+			}
+		}
+	}
+
+	on_reverse_demand = {
+		log = "CB(other_claim_on_liege_plot): DEFEAT: [This.GetTitledFirstName] of [This.PrimaryTitle.GetBaseName] (ID: [This.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID]), supporting claimant [Root.GetBestName] (ID: [Root.GetID])"
+
+		FROM = {
+			# remove any previously-existing loser TOMs
+			pf_civil_war_clear_old_opinions_effect = yes
+		}
+
+		# Apply immediate effects to the revolters
+		any_attacker = {
+			limit = {
+				has_opinion_modifier = {
+					name = revolting_against
+					who = FROM
+				}
+			}
+
+			imprison = FROM
+
+			hidden_effect = {
+				reverse_opinion = {
+					name = opinion_civil_war_loser
+					who = FROM
+					years = 5
+				}
+
+				opinion = {
+					name = opinion_coerced_into_leaving_faction
+					who = FROM
+					years = 5
+				}
+			}
+		}
+
+		# Mark loyalists and neutrals for the reward event
+		hidden_effect = {
+			FROM = {
+				any_vassal = {
+					if = {
+						limit = {
+							reverse_has_opinion_modifier = {
+								name = pf_loyal_to_me
+								who = PREV
+							}
+						}
+
+						reverse_opinion = {
+							name = opinion_civil_war_supporter
+							who = PREV
+							years = 5
+						}
+					}
+					else_if = {
+						limit = {
+							reverse_has_opinion_modifier = {
+								name = pf_neutral_to_me
+								who = PREV
+							}
+						}
+
+						reverse_opinion = {
+							name = opinion_civil_war_neutral
+							who = PREV
+							years = 5
+						}
+					}
+				}
+			}
+		}
+
+		# clean up remaining TOMs
+		pf_civil_war_cleanup_effect = yes
+
+		prestige = -200
+
+		# Imprison the claimant if they are part of the realm but not a rebel
+		ROOT = {
+			show_scope_change = no
+
+			if = {
+				limit = {
+					any_liege = {
+						character = FROM
+
+						NOT = {
+							has_opinion_modifier = {
+								name = opinion_civil_war_loser
+								who = PREV
+							}
+						}
+					}
+				}
+			}
+
+			imprison = FROM
+
+			hidden_effect = {
+				reverse_opinion = {
+					name = opinion_civil_war_loser
+					who = FROM
+					years = 5
+				}
+			}
+
+			character_event = { id = PlusFaction.200 days = 1 } # Change faction moods
+		}
+
+		defender = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 200
+			character_event = { id = PlusFaction.450 } # Post-civil war event to reward allies
+			character_event = { id = PlusFaction.200 days = 1 } # Change faction moods
+		}
+
+		any_defender = {
+			limit = { NOT = { character = FROM } }
+			hidden_effect = { participation_scaled_prestige = 200 }
+		}
+	}
+
+	on_reverse_demand_title = {
+		if = {
+			limit = {
+				OR = {
+					any_attacker = { character = ROOT }
+					ROOT = { is_vassal_or_below_of = FROM }
+				}
+			}
+
+			remove_claim = ROOT
+		}
+
+		ROOT = {
+			show_scope_change = no
+
+			custom_tooltip = {
+				text = MAY_NOT_BECOME_PRETENDER_AGAIN
+
+				reverse_opinion = {
+					name = failed_to_claim_my_title
+					who = FROM
+					years = 100
+				}
+			}
+		}
+	}
+
+	on_invalidation = {
+		log = "CB(other_claim_on_liege_plot): INVALIDATED: [FromFrom.GetTitledFirstName] of [FromFrom.PrimaryTitle.GetBaseName] (ID: [FromFrom.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID]), supporting claimant [Root.GetBestName] (ID: [Root.GetID])"
+
+		# Clean up remaining civil war state
+		pf_civil_war_cleanup_effect = yes
+
+		ROOT = {
+			clr_character_flag = claim_being_pressed
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# Convert or Revolt
+religious_overthrow_ruler = {
+	name = CB_NAME_OVERTHROWRULER
+	war_name = WAR_NAME_FACTION_DEPOSE
+	sprite = 26
+	truce_days = 3650
+	infamy_modifier = 0
+
+	can_ask_to_join_war = no
+	can_call_allies = no
+	major_revolt = yes
+
+	can_use = {
+		ROOT = {
+			vassal_of = FROM
+
+			has_opinion_modifier = {
+				name = revolting_against
+				who = FROM
+			}
+		}
+	}
+
+	is_valid = {
+		ROOT = {
+			NOT = { religion = FROM }
+
+			OR = {
+				is_parent_religion = FROM
+				is_heresy_of = FROM
+			}
+
+			has_opinion_modifier = {
+				name = revolting_against
+				who = FROM
+			}
+
+			trigger_if = {
+				limit = { independent = no }
+				liege = { is_liege_or_above_of = FROM }
+			}
+		}
+
+		FROM = {
+			any_demesne_title = {
+				NOT = { lower_tier_than = ROOT }
+				temporary = no
+			}
+
+			in_revolt = no
+
+			liege_before_war = {
+				in_revolt = no
+
+				liege_before_war = {
+					in_revolt = no
+				}
+			}
+		}
+	}
+
+	on_add = {
+		log = "CB(cb_faction_overthrow_ruler): START: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+		defender = { pf_log_state_effect = yes }
+		attacker = { pf_log_state_effect = yes }
+
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		log = "[Root.GetBestName] succeeded with their religious_overthrow_ruler CB against [From.GetBestName]"
+
+		# Apply immediate effects to the revolters
+		hidden_effect = {
+			any_attacker = {
+				limit = {
+					has_opinion_modifier = {
+						name = revolting_against
+						who = defender
+					}
+				}
+
+				# The revolters remember who they overthrew
+				opinion = {
+					name = overthrown_ruler
+					who = defender
+				}
+
+				reverse_opinion = {
+					name = overthrew_me
+					who = defender
+				}
+
+				# and also are grateful to each other for their victory
+				defender = {
+					any_opinion_modifier_target = {
+						limit = {
+							reverse_has_opinion_modifier = {
+								name = revolting_against_me
+								who = PREV
+							}
+
+							NOT = { character = PREVPREV }
+						}
+
+						reverse_opinion = {
+							name = opinion_very_grateful
+							who = PREVPREV
+							years = 10
+						}
+					}
+				}
+			}
+		}
+
+		# Apply revolt effects to the defender
+		defender = {
+			show_scope_change = no
+
+			prestige = -500
+			save_event_target_as = current_holder
+
+			# Existing vassals may declare independence
+			if = {
+			 	limit = { independent = yes }
+			 	any_vassal = { character_event = { id = Plus.430 days = 3 } }
+			}
+
+			# Check whether title will be destroyed (CK2Plus only)
+			any_demesne_title = {
+				show_scope_change = no
+
+			 	limit = { can_destroy_title_trigger = yes }
+
+			 	custom_tooltip = {
+					text = TITLE_ENDANGERED
+
+					log = "[This.GetFullName] should be destroyed as a result of the revolt"
+					set_title_flag = destroy_title
+				}
+			}
+
+			# Always lower CA/TO
+			pf_lower_CA_effect = yes # lower Crown Authority
+			pf_lower_TO_effect = yes # lower Tribal Organization
+
+			# Prevent on_new_holder / on_unlanded edge case handlers from tearing-down any civil war state while the CB
+			# completes due to, e.g., liege changes or gained titles.
+			set_global_flag = pf_teardown_lock
+
+			# Save event targets for primary title and current liege
+			primary_title = { save_event_target_as = former_primary_title }
+
+			if = {
+				limit = { independent = no }
+				liege = { save_event_target_as = current_liege }
+			}
+
+			# Abdicate if heir is of attacker's religion
+			if = {
+				limit = { current_heir = { religion = attacker } }
+				abdicate = yes
+			}
+
+			# Then find a proper usurper of the attacker's religion
+			else = {
+				event_target:current_holder = {
+					show_scope_change = no
+
+					# Give primary title to rebel who is a pretender
+					if = {
+						limit = {
+							any_opinion_modifier_target = {
+								religion = attacker
+								pf_part_of_this_revolt_trigger = yes
+								any_pretender_title = { title = event_target:former_primary_title }
+							}
+						}
+
+						random_opinion_modifier_target = {
+							limit = {
+								religion = attacker
+								pf_part_of_this_revolt_trigger = yes
+								any_pretender_title = { title = event_target:former_primary_title }
+							}
+
+							save_event_target_as = new_holder
+						}
+					}
+					# Give primary title to rebel with a strong claim if no rebel pretender exists
+					else_if = {
+						limit = {
+							any_opinion_modifier_target = {
+								religion = attacker
+								pf_part_of_this_revolt_trigger = yes
+								has_strong_claim = event_target:former_primary_title
+							}
+						}
+
+						random_opinion_modifier_target = {
+							limit = {
+								religion = attacker
+								pf_part_of_this_revolt_trigger = yes
+								has_strong_claim = event_target:former_primary_title
+							}
+
+							save_event_target_as = new_holder
+						}
+					}
+					# Give primary title to rebel with weak claim if none with a strong claim or pretender exists
+					else_if = {
+						limit = {
+							any_opinion_modifier_target = {
+								religion = attacker
+								pf_part_of_this_revolt_trigger = yes
+								has_weak_claim = event_target:former_primary_title
+							}
+						}
+
+						random_opinion_modifier_target = {
+							limit = {
+								religion = attacker
+								pf_part_of_this_revolt_trigger = yes
+								has_weak_claim = event_target:former_primary_title
+							}
+
+							save_event_target_as = new_holder
+						}
+					}
+					# Give primary title to realm pretender if no rebels have a claim or are a pretender
+					else_if = {
+						limit = {
+							any_realm_character = {
+								religion = attacker
+								pf_part_of_this_revolt_trigger = no
+
+								OR = {
+									has_strong_claim = event_target:former_primary_title
+									any_pretender_title = { title = event_target:former_primary_title }
+								}
+							}
+						}
+
+						random_realm_character = {
+							limit = {
+								religion = attacker
+								pf_part_of_this_revolt_trigger = no
+								OR = {
+									has_strong_claim = event_target:former_primary_title
+									any_pretender_title = { title = event_target:former_primary_title }
+								}
+							}
+
+							save_event_target_as = new_holder
+						}
+					}
+
+					# Rebel leader usurps if there is no rebel with a claim or a pretender to primary title
+					else = {
+						attacker = { save_event_target_as = new_holder }
+					}
+
+					abdicate_to = event_target:new_holder
+
+					hidden_effect = {
+						event_target:new_holder = {
+							if = {
+								limit = { event_target:current_liege = { always = yes } }
+								set_defacto_liege = event_target:current_liege
+							}
+						}
+					}
+				}
+			}
+		}
+
+		clr_global_flag = pf_teardown_lock
+
+		# Figure out who are the supporters, losers, and neutrals
+		hidden_effect = {
+			event_target:former_primary_title = {
+				holder_scope = {
+					# Clear previous civil war opinions
+					pf_civil_war_clear_old_opinions_effect = yes
+
+					opinion = {
+						name = opinion_civil_war_loser
+						who = event_target:current_holder
+						years = 5
+					}
+
+					# Mark rebels as supporters
+					event_target:current_holder = {
+						any_opinion_modifier_target = {
+							limit = {
+								pf_part_of_this_revolt_trigger = yes
+								NOT = { character = PREVPREV }
+							}
+
+							reverse_opinion = {
+								name = opinion_civil_war_supporter
+								who = PREVPREV
+								years = 5
+							}
+						}
+					}
+
+					# Mark former liege and loyalists as losers
+					any_vassal = {
+						if = {
+							limit = {
+								has_opinion_modifier = {
+									name = pf_loyal_toward
+									who = event_target:current_holder
+								}
+							}
+
+							reverse_opinion = {
+								name = opinion_civil_war_loser
+								who = liege
+								years = 5
+							}
+						}
+
+						# Remember those who chose to be neutral
+						else_if = {
+							limit = {
+								has_opinion_modifier = {
+									name = pf_neutral_toward
+									who = event_target:current_holder
+								}
+							}
+
+							reverse_opinion = {
+								name = opinion_civil_war_neutral
+								who = liege
+								years = 5
+							}
+						}
+					}
+				}
+			}
+		}
+
+		# Check whether the primary title should be destroyed due to CA loss
+		event_target:former_primary_title = {
+			if = {
+				limit = { has_title_flag = destroy_title }
+
+				holder_scope = {
+					character_event = {
+						id = Plus.1620 # Destroy title
+						days = 4
+					}
+				}
+			}
+		}
+
+		# Clean up remaining TOMs
+		pf_civil_war_cleanup_effect = yes
+
+		attacker = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 250
+			character_event = { id = PlusFaction.200 days = 1 } # Change faction moods
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = { participation_scaled_prestige = 250 }
+		}
+
+		# Post-civil war event to reward allies
+		event_target:former_primary_title = {
+			holder_scope = {
+				character_event = { id = PlusFaction.450 }
+			}
+		}
+
+		# Change faction moods
+		defender = {
+			character_event = {
+				id = PlusFaction.200
+				days = 1
+			}
+		}
+	}
+
+	on_fail = {
+		log = "CB(religious_overthrow_ruler): WHITEPEACE: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+
+		# Clean up remaining civil war state
+		pf_civil_war_cleanup_effect = yes
+
+		attacker = {
+			show_scope_change = no
+
+			prestige = -100
+			pf_tradition_minus2_effect = yes
+
+			hidden_effect = {
+				reverse_remove_opinion = {
+					name = declared_war
+					who = defender
+				}
+			}
+		}
+	}
+
+	on_reverse_demand = {
+		log = "CB(religious_overthrow_ruler): DEFEAT: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+
+		defender = {
+			# Remove any previously-existing loser TOMs
+			pf_civil_war_clear_old_opinions_effect = yes
+		}
+
+		# Apply immediate effects to the revolters
+		any_attacker = {
+			limit = {
+				has_opinion_modifier = {
+					name = revolting_against
+					who = defender
+				}
+			}
+
+			imprison = defender
+
+			hidden_effect = {
+				reverse_opinion = {
+					name = opinion_civil_war_loser
+					who = defender
+					years = 5
+				}
+
+				opinion = {
+					name = opinion_coerced_into_leaving_faction
+					who = defender
+					years = 5
+				}
+			}
+		}
+
+		# Mark loyalists and neutrals for the reward event
+		hidden_effect = {
+			defender = {
+				any_vassal = {
+					if = {
+						limit = {
+							reverse_has_opinion_modifier = {
+								name = pf_loyal_to_me
+								who = PREV
+							}
+						}
+
+						reverse_opinion = {
+							name = opinion_civil_war_supporter
+							who = PREV
+							years = 5
+						}
+					}
+					else_if = {
+						limit = {
+							reverse_has_opinion_modifier = {
+								name = pf_neutral_to_me
+								who = PREV
+							}
+						}
+
+						reverse_opinion = {
+							name = opinion_civil_war_neutral
+							who = PREV
+							years = 5
+						}
+					}
+				}
+			}
+		}
+
+		# Clean up remaining civil war state
+		pf_civil_war_cleanup_effect = yes
+
+		attacker = {
+			show_scope_change = no
+
+			prestige = -200
+			pf_tradition_minus4_effect = yes
+		}
+
+		defender = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 100
+			character_event = { id = PlusFaction.450 } # Post-civil war event to reward allies
+			character_event = { id = PlusFaction.200 days = 1 } # Change faction moods
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 100 }
+		}
+	}
+
+	on_invalidation = {
+		log = "CB(religious_overthrow_ruler): INVALIDATED: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+
+		# Clean up remaining civil war state
+		pf_civil_war_cleanup_effect = yes
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# Italian Reconquest
+italian_reconquest = {
+	name = CB_NAME_ITALIAN_RECONQUEST
+	war_name = WAR_ITALIAN_RECONQUEST
+	sprite = 9
+	truce_days = 3650
+	is_permanent = yes
+	hostile_against_others = yes
+	check_de_jure_tier = DUKE # this scans all dejure duchies for the counties which are held by or vassals(or below) of selected character. Only valid if is_permanent = yes
+
+	allowed_to_target_tributaries = no
+
+	can_use_gui = {
+		check_if_crusader_trigger = yes
+
+		ROOT = {
+			can_use_cb_preamble = yes
+		}
+	}
+
+	can_use = {
+		ROOT = {
+			# The attacker is a Christian with the italian_reconquest modifier
+			has_character_modifier = italian_reconquest
+			religion_group = christian
+
+			# The Italian reconquest has begun and not succeeded or failed
+			has_global_flag = italian_reconquest_started
+
+			NOR = {
+				has_global_flag = italian_rec_success
+				has_global_flag = italian_rec_failure
+			}
+		}
+
+		# The target is an independent non-Christian ...
+		FROM = {
+			independent = yes # Don't attack revolters - chances are high the war will invalidate
+			NOT = { religion_group = christian }
+		}
+	}
+
+	can_use_title = {
+		# who owns a duchy in Italy
+		# TODO: Check if list is still complete
+		OR = {
+			title = d_benevento
+			title = d_capua
+			title = d_apulia
+			title = d_salerno
+			title = d_calabria
+			title = d_sicily
+		}
+	}
+
+	is_valid = {
+		ROOT = {
+			has_character_modifier = italian_reconquest
+		}
+
+		NOR = {
+			has_global_flag = italian_rec_success
+			has_global_flag = italian_rec_failure
+		}
+	}
+
+	on_add = {
+		# The Pope will automatically join the war on the attacker's side
+		attacker = {
+			character_event = { id = Plus.507 }
+		}
+
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_attacker_leader_death = {
+		# Give tivoli back to the pope
+		if = {
+			limit = {
+				b_tivoli = {
+					holder = attacker
+				}
+			}
+
+			attacker = {
+				religion_head = {
+					gain_title = b_tivoli
+				}
+			}
+		}
+
+		# Disband army and inform everyone of the reclamation failure
+		disband_event_forces = yes
+		end_war = invalid
+		set_global_flag = italian_rec_failure
+		any_playable_ruler = { narrative_event = { id = Plus.517 } }
+	}
+
+	on_success = {
+		attacker = {
+			show_scope_change = no
+
+			participation_scaled_piety = 50
+			participation_scaled_prestige = 100
+
+			# The first time the CB is successful the attacker gets a claim to Sicily
+			if = {
+				limit = { NOT = { has_global_flag = first_war_success } }
+
+				set_global_flag = first_war_success
+
+				add_character_modifier = {
+					name = holy_truce_timer
+					years = 10
+				}
+
+				add_pressed_claim = k_sicily
+			}
+
+			# So long as the attacker is not a heretic then Christianity gets the holy war RA modifier
+			if = {
+				limit = { is_heretic = no }
+
+				religion_authority = {
+					name = won_holy_war
+					years = 20
+				}
+			}
+
+			# Remove the attacker's adventurer flag if they have it
+			hidden_effect = {
+				if = {
+					limit = { has_character_flag = duchy_adventurer }
+					clr_character_flag = duchy_adventurer
+				}
+			}
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = {
+				participation_scaled_piety = 50
+				participation_scaled_prestige = 100
+			}
+		}
+
+		# So long as the defender is not a heretic then their religion gets the lost holy war RA modifier
+		defender = {
+			show_scope_change = no
+
+			if = {
+				limit = { is_heretic = no }
+
+				religion_authority = {
+					name = lost_holy_war
+					years = 20
+				}
+			}
+		}
+	}
+
+	on_success_title = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their Italian reconquest for the [This.GetFullName] against [From.GetBestName] (ID: [From.GetID])"
+
+		# The attacker gains the duchy and gives b_tivoli to the Pope
+		hidden_effect = {
+			if = {
+				limit = {
+					holder_scope = {
+						OR = {
+							is_vassal_or_below_of = defender
+							character = defender
+						}
+					}
+				}
+
+				set_global_flag = usurp_duchy
+			}
+		}
+
+		destroy_tradeposts_effect = yes
+
+		attacker = {
+			show_scope_change = no
+
+			gain_settlements_under_title = {
+				title = PREV
+				enemy = defender
+				type = invasion
+			}
+
+			if = {
+				limit = { has_landed_title = b_tivoli }
+
+				religion_head = {
+					show_scope_change = no
+					gain_title = b_tivoli
+				}
+			}
+		}
+
+		hidden_effect = {
+			if = {
+				limit = { has_global_flag = usurp_duchy }
+
+				destroy_landed_title = yes
+				usurp_title = attacker
+				clr_global_flag = usurp_duchy
+			}
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+
+			wealth = -500
+			prestige = -100
+
+			if = {
+				limit = { has_landed_title = b_tivoli }
+
+				religion_head = {
+					show_scope_change = no
+					gain_title = b_tivoli
+				}
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			prestige = 100
+
+			hidden_effect = {
+				opinion = {
+					name = opinion_rebel_traitor
+					who = attacker
+					years = 100
+				}
+			}
+		}
+
+		# Narrative notification to the world that the invasion failed
+		if = {
+			limit = { NOT = { has_global_flag = first_war_success } }
+
+			set_global_flag = italian_rec_failure
+			any_playable_ruler = { narrative_event = { id = Plus.517 } }
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -200
+			wealth = -100
+
+			if = {
+				limit = { has_landed_title = b_tivoli }
+
+				religion_head = {
+					show_scope_change = no
+					gain_title = b_tivoli
+				}
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			prestige = 200
+			wealth = 100
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# Carolingian Reconquest
+carolingian_reconquest = {
+	name = CB_NAME_CAROLINGIAN
+	war_name = WAR_NAME_CAROLINGIAN
+	sprite = 17
+	truce_days = 3650
+	infamy_modifier = 0.75
+
+	allowed_to_target_tributaries = no
+	check_de_jure_tier = DUKE # this scans all dejure duchies for the counties which are held by or vassals(or below) of selected character. Only valid if is_permanent = yes
+	# is_holy_war = yes
+	is_permanent = yes
+
+	can_use_gui = {
+		check_if_crusader_trigger = yes
+
+		ROOT = {
+			can_use_cb_preamble = yes
+		}
+	}
+
+	can_use = {
+		ROOT = {
+			higher_real_tier_than = DUKE
+			independent = yes
+			religion_group = FROM
+
+			OR = {
+				religion = catholic
+				religion = chalcedonian
+			}
+
+			rightful_religious_head_scope = {
+				has_landed_title = k_papacy
+
+				NOR = {
+					character = PREV
+					character = FROM
+				}
+			}
+
+			NOR = {
+				is_heresy_of = FROM
+				is_parent_religion = FROM
+				same_realm = FROM
+				is_title_active = e_karling
+				has_character_flag = former_carolingian_emperor
+				has_global_flag = hre_formed
+			}
+		}
+	}
+
+	can_use_title = {
+		de_jure_liege_or_above = e_hre
+
+		# Either the target has the title or their top liege is the target
+		holder_scope = {
+			OR = {
+				is_vassal_or_below_of = FROM
+				character = FROM
+			}
+		}
+	}
+
+	is_valid = {
+		ROOT = {
+			independent = yes
+			NOT = { same_realm = FROM }
+
+			OR = {
+				religion = catholic
+				religion = chalcedonian
+			}
+		}
+	}
+
+	is_valid_title = {
+		# Either the target has the title or their top liege is the target
+		holder_scope = {
+			OR = {
+				is_vassal_or_below_of = FROM
+				character = FROM
+			}
+		}
+	}
+
+	on_add = {
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		attacker = {
+			show_scope_change = no
+			participation_scaled_prestige = 100
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = { participation_scaled_prestige = 100 }
+		}
+	}
+
+	on_success_title = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their Carolingian reconquest for the [This.GetFullName] against [From.GetBestName] (ID: [From.GetID])"
+
+		custom_tooltip = {
+			text = tribal_invasion_succ_tip
+
+			attacker = {
+				vassalize_or_take_under_title = {
+					title = PREV
+					enemy = defender
+					type = invasion
+				}
+			}
+		}
+
+		if = {
+			limit = { holder = defender }
+
+			usurp_title_only = {
+				target = attacker
+				type = invasion
+			}
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+			prestige = -150
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -200
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			participation_scaled_piety = 100
+			participation_scaled_prestige = 200
+
+			dynasty_head = {
+				show_scope_change = no
+
+				if = {
+					limit = { uses_decadence = yes }
+					participation_scaled_decadence = -10
+				}
+			}
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+
+			hidden_effect = {
+				participation_scaled_piety = 100
+				participation_scaled_prestige = 200
+
+				dynasty_head = {
+					if = {
+						limit = { uses_decadence = yes }
+						participation_scaled_decadence = -10
+					}
+				}
+			}
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+
+	ai_will_do = {
+		factor = 1
+
+		trigger = {
+			ROOT = {
+				sufficient_treasury_for_war_trigger = yes
+			}
+
+			# TODO: Revisit this, doesn't appear to make much sense, far too restrictive
+			k_germany = {
+				holder_scope = {
+					NAND = {
+						realm_size >= 75
+						NOT = { character = ROOT }
+					}
+				}
+			}
+		}
+	}
+}
+
+# Byzantine Vassalize
+byzantine_vassalize = {
+	name = CB_NAME_BYZANTINE_CONQUEST
+	war_name = WAR_NAME_BYZANTINE_VASSALIZE
+	sprite = 17
+	truce_days = 3650
+	infamy_modifier = 0.5
+
+	allowed_to_target_tributaries = no
+	can_ask_to_join_war = yes
+	check_all_titles = yes # if permanent, setting this to true will check against all of someones titles, including vassal held titles
+	hostile_against_others = yes
+	# is_holy_war = yes
+	is_permanent = yes
+	press_claim = yes
+
+	can_use_gui = {
+		check_if_crusader_trigger = yes
+		e_roman_empire = { has_holder = no }
+
+		ROOT = {
+			real_tier = EMPEROR
+			is_high_crowned_trigger = yes
+			can_use_cb_preamble = yes
+
+			primary_title = {
+				custom_tooltip = {
+					text = DE_JURE_TOOLTIP1
+
+					OR = {
+						has_law = crown_authority_2
+						has_law = crown_authority_3
+						has_law = crown_authority_4
+					}
+				}
+
+				OR = {
+					custom_tooltip = {
+						text = IS_ERE_SUCCESSOR
+						has_title_flag = eastern_roman_successor
+					}
+
+					custom_tooltip = {
+						text = IS_WRE_SUCCESSOR
+						has_title_flag = western_roman_successor
+					}
+				}
+			}
+		}
+	}
+
+	can_use = {
+		# Attacker is a strong Byzantine emperor
+		ROOT = {
+			independent = yes
+
+			primary_title = {
+				OR = {
+					has_title_flag = eastern_roman_successor
+					has_title_flag = western_roman_successor
+				}
+			}
+		}
+
+		# Target is a neighbor or close
+		FROM = {
+			OR = {
+				shares_realm_border_with = ROOT
+
+				distance_from_realm = {
+					who = FROM
+					value < 75
+				}
+			}
+		}
+	}
+
+	can_use_title = {
+		real_tier = DUKE
+		is_titular = no
+
+		OR = {
+			AND = {
+				capital_scope = {
+					OR = {
+						region = custom_byzantium
+						region = custom_nikaea
+						region = custom_armenia
+						region = custom_bulgaria
+						region = custom_serbia
+						region = custom_croatia
+						region = custom_trebizond
+						region = custom_sicily
+						region = custom_syria
+						region = custom_jerusalem
+					}
+				}
+
+				ROOT = {
+					primary_title = { has_title_flag = eastern_roman_successor }
+				}
+			}
+
+			AND = {
+				capital_scope = {
+					OR = {
+						region = custom_croatia
+						region = custom_sicily
+						region = custom_italy
+						region = custom_slovenia
+						region = custom_burgundy
+						region = custom_aquitaine
+						region = custom_africa
+					}
+				}
+
+				ROOT = {
+					primary_title = { has_title_flag = western_roman_successor }
+				}
+			}
+		}
+
+		# Either the target has the title or their top liege is the target
+		# or the title is not held and de jure counties are
+		trigger_if = {
+			limit = { has_holder = yes }
+
+			holder_scope = {
+				OR = {
+					character = FROM
+					is_vassal_or_below_of = FROM
+				}
+			}
+		}
+		trigger_else = {
+			FROM = {
+				num_of_realm_counties = {
+					value >= 1
+					title = PREV
+				}
+			}
+		}
+
+		# Target is an independent ruler of the same religion group, as is their top liege
+		holder_scope = {
+			religion_group = ROOT
+
+			NOR = {
+				is_heresy_of = ROOT
+				is_parent_religion = ROOT
+			}
+
+			top_liege = {
+				religion_group = ROOT
+
+				NOR = {
+					is_heresy_of = ROOT
+					is_parent_religion = ROOT
+				}
+			}
+		}
+	}
+
+	is_valid_title = {
+		ROOT = {
+			independent = yes
+			is_high_crowned_trigger = yes
+
+			primary_title = {
+				OR = {
+					has_title_flag = eastern_roman_successor
+					has_title_flag = western_roman_successor
+				}
+			}
+		}
+
+		# Either the target has the title or their top liege is the target
+		# or the title is not held and de jure counties are
+		trigger_if = {
+			limit = { has_holder = yes }
+
+			holder_scope = {
+				OR = {
+					character = FROM
+					is_vassal_or_below_of = FROM
+				}
+			}
+		}
+		trigger_else = {
+			FROM = {
+				num_of_realm_counties = {
+					value >= 1
+					title = PREV
+				}
+			}
+		}
+
+		# Target is an independent ruler of the same religion group, as is their top liege
+		holder_scope = {
+			religion_group = ROOT
+
+			NOR = {
+				is_heresy_of = ROOT
+				is_parent_religion = ROOT
+			}
+
+			top_liege = {
+				religion_group = ROOT
+
+				NOR = {
+					is_heresy_of = ROOT
+					is_parent_religion = ROOT
+				}
+			}
+		}
+	}
+
+	on_add = {
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their Byzantine subjugate CB against [From.GetBestName] (ID: [From.GetID])"
+
+		attacker = {
+			show_scope_change = no
+			participation_scaled_prestige = 200
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = { participation_scaled_prestige = 200 }
+		}
+	}
+
+	on_success_title = {
+		if = {
+			# Duke title has a holder
+			limit = { has_holder = yes }
+
+			if = {
+				# Holder is either an emperor or has other duke titles outside the region
+				limit = {
+					holder_scope = {
+						OR = {
+							real_tier = EMPEROR
+
+							any_demesne_title = {
+								real_tier = COUNT
+
+								location = {
+									NOR = {
+										region = custom_byzantium
+										region = custom_nikaea
+										region = custom_armenia
+										region = custom_bulgaria
+										region = custom_serbia
+										region = custom_croatia
+										region = custom_trebizond
+										region = custom_sicily
+										region = custom_syria
+										region = custom_jerusalem
+									}
+								}
+							}
+						}
+					}
+				}
+
+				usurp_title_plus_barony_if_unlanded = {
+					target = attacker
+					type = invasion
+				}
+			}
+
+			else = {
+				# Holder is a king or lower who doesn't hold any other county titles outside the region
+				holder_scope = {
+					show_scope_change = no
+
+					hidden_effect = {
+						opinion = {
+							name = force_vassalized
+							who = attacker
+							years = 20
+						}
+					}
+
+					set_defacto_liege = attacker
+				}
+			}
+		}
+		else = {
+			any_direct_de_jure_vassal_title = {
+				show_scope_change = no
+
+				limit = {
+					holder_scope = {
+						OR = {
+							character = defender
+							is_vassal_or_below_of = defender
+						}
+					}
+				}
+
+				if = {
+					# Usurp any counties held by emperors or dukes+ with titles outside the area
+					limit = {
+						holder_scope = {
+							OR = {
+								real_tier = EMPEROR
+
+								AND = {
+									lower_real_tier_than = attacker
+
+									any_demesne_title = {
+										real_tier = COUNT
+
+										location = {
+											NOR = {
+												region = custom_byzantium
+												region = custom_nikaea
+												region = custom_armenia
+												region = custom_bulgaria
+												region = custom_serbia
+												region = custom_croatia
+												region = custom_trebizond
+												region = custom_sicily
+												region = custom_syria
+												region = custom_jerusalem
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					usurp_title_plus_barony_if_unlanded = {
+						target = attacker
+						type = invasion
+					}
+				}
+				else = {
+					# Vassalize any de jure counts in the duchy who have no counties elsewhere
+					holder_scope = {
+						show_scope_change = no
+
+						hidden_effect = {
+							if = {
+								limit = {
+									NOT = {
+										has_opinion_modifier = {
+											name = force_vassalized
+											who = attacker
+										}
+									}
+								}
+
+								opinion = {
+									name = force_vassalized
+									who = attacker
+									years = 20
+								}
+							}
+						}
+
+						set_defacto_liege = attacker
+					}
+				}
+			}
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+			prestige = -100
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			remove_trait = strong_basileus
+			hidden_effect = { add_trait = weak_basileus }
+			prestige = -200
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+			participation_scaled_prestige = 200
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 200 }
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+
+	ai_will_do = {
+		factor = 0.9
+
+		trigger = {
+			ROOT = {
+				sufficient_treasury_for_war_trigger = yes
+
+				# Most Christian and Jewish AI will not attack their religion head
+				can_attack_religion_head_trigger = yes
+			}
+		}
+	}
+}
+
+# Carolingian Manifest Destiny
+carolingian_manifest_destiny = {
+	name = CB_NAME_INVASION
+	war_name = WAR_NAME_INVASION
+	sprite = 8
+	truce_days = 3650
+	infamy_modifier = 0.75
+
+	allowed_to_target_tributaries = no
+	check_de_jure_tier = KING # this scans all dejure kingdoms for the counties which are held by or vassals(or below) of selected character. Only valid if is_permanent = yes
+	hostile_against_others = yes
+	# is_holy_war = yes
+	is_permanent = yes
+
+	can_use_gui = {
+		check_if_crusader_trigger = yes
+
+		ROOT = {
+			can_use_cb_preamble = yes
+		}
+	}
+
+	can_use = {
+		ROOT = {
+			independent = yes
+			dynasty = 25061 # Karling
+			NOT = { dynasty = FROM }
+			religion = FROM
+			higher_real_tier_than = DUKE
+
+			OR = {
+				religion = catholic
+				religion = chalcedonian
+			}
+
+			NOR = {
+				has_global_flag = hre_formed
+				same_realm = FROM
+				rightful_religious_head = FROM
+			}
+		}
+	}
+
+	can_use_title = {
+		# TODO: Use region check instead?
+		OR = {
+			AND = {
+				NOT = { has_global_flag = carolingian_empire_formed }
+
+				OR = {
+					title = k_france
+					title = k_lotharingia
+					title = k_bavaria
+					title = k_saxony
+					title = k_italy
+					title = k_lombardy
+				}
+			}
+
+			AND = {
+				ROOT = { trait = paragon }
+
+				OR = {
+					title = k_france
+					title = k_lotharingia
+					title = k_bavaria
+					title = k_saxony
+					title = k_germany
+					title = k_italy
+					title = k_lombardy
+					title = k_frisia
+					title = k_burgundy
+					title = k_aquitaine
+				}
+			}
+		}
+
+		# Target must have at least 3 counties within the target kingdom
+		FROM = {
+			num_of_realm_counties = {
+				value >= 3
+				title = PREV
+			}
+		}
+
+		# The attacker needs at least one county in the target kingdom, or a border
+		any_direct_de_jure_vassal_title = { # Duchies
+			any_direct_de_jure_vassal_title = { # Counties
+				OR = {
+					holder_scope = {
+						OR = {
+							character = ROOT
+							is_vassal_or_below_of = ROOT
+						}
+					}
+
+					location = {
+						any_neighbor_province = {
+							owner = {
+								OR = {
+									character = ROOT
+									is_vassal_or_below_of = ROOT
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		ROOT = {
+			dynasty = 25061
+			independent = yes
+
+			OR = {
+				religion = catholic
+				religion = chalcedonian
+			}
+
+			NOT = { same_realm = FROM }
+		}
+	}
+
+	on_add = {
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		attacker = {
+			show_scope_change = no
+			participation_scaled_prestige = 100
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = { participation_scaled_prestige = 100 }
+		}
+
+		defender = {
+			show_scope_change = no
+			prestige = -100
+		}
+	}
+
+	on_success_title = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their Carolingian manifest destiny for the [This.GetFullName] against [From.GetBestName] (ID: [From.GetID])"
+
+		custom_tooltip = {
+			text = tribal_invasion_succ_tip
+
+			attacker = {
+				vassalize_or_take_under_title = {
+					title = PREV
+					enemy = defender
+					same_religion = yes
+					type = invasion
+				}
+			}
+		}
+
+		if = {
+			limit = { holder = defender }
+
+			usurp_title_only = {
+				target = attacker
+				type = invasion
+			}
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+			prestige = -150
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -200
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			participation_scaled_piety = 100
+			participation_scaled_prestige = 200
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = {
+				participation_scaled_piety = 100
+				participation_scaled_prestige = 200
+			}
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# Duchy Holy War
+dejure_duchy_claim_holy = {
+	name = CB_NAME_DEJURECLAIM
+	war_name = WAR_NAME_DEJURECLAIM
+	sprite = 16
+	truce_days = 3650
+	infamy_modifier = 0.5
+
+	allowed_to_target_tributaries = yes
+	can_ask_to_join_war = yes
+	check_all_titles = yes # if permanent, setting this to true will check against all of someones titles, including vassal held titles
+	hostile_against_others = yes
+	is_holy_war = yes
+	is_permanent = yes
+	press_claim = yes
+
+	can_use_gui = {
+		check_if_crusader_trigger = yes
+
+		ROOT = {
+			can_use_cb_preamble = yes
+			religion_group = top_liege
+
+			OR = {
+				is_patrician = no
+				independent = yes
+			}
+		}
+
+		# Attacker holds either the empire or liege title
+		FROMFROM = {
+			OR = {
+				kingdom = {
+					holder = ROOT
+
+					custom_tooltip = {
+						text = DE_JURE_TOOLTIP1
+
+						OR = {
+							has_law = crown_authority_2
+							has_law = crown_authority_3
+							has_law = crown_authority_4
+						}
+					}
+				}
+
+				empire = {
+					holder = ROOT
+
+					custom_tooltip = {
+						text = DE_JURE_TOOLTIP1
+
+						OR = {
+							has_law = crown_authority_2
+							has_law = crown_authority_3
+							has_law = crown_authority_4
+						}
+					}
+				}
+			}
+		}
+	}
+
+	can_use = {
+		# Check to ensure the target is a valid for a holy war
+		ROOT = {
+			can_use_holy_war_cb = yes
+
+			trigger_if = {
+				limit = {
+					has_secret_religion = yes
+					secret_religion_group = FROM
+				}
+
+				OR = {
+					secret_religion_group = muslim
+					secret_religion_group = pagan_group
+					secret_religion = paulician
+				}
+
+				NOT = { secret_religion = FROM }
+			}
+		}
+	}
+
+	can_use_title = {
+		# Target title is Duke level and non-titular
+		real_tier = DUKE
+		is_titular = no
+
+		# A king/emperor is using it to reclaim own de jure duchy
+		OR = {
+			empire = { holder = ROOT }
+			kingdom = { holder = ROOT }
+		}
+
+		holder_scope = {
+			# Either the target has the title or their top liege is the target
+			OR = {
+				character = FROM
+				is_vassal_or_below_of = FROM
+			}
+
+			# Neither the attacker nor their top liege has the title
+			NOR = {
+				character = ROOT
+				is_vassal_or_below_of = ROOT
+			}
+		}
+	}
+
+	is_valid_title = {
+		holder_scope = {
+			OR = {
+				character = FROM
+				is_vassal_or_below_of = FROM
+			}
+		}
+	}
+
+	on_add = {
+		# Lose 500 piety if the target is a holy order of the same religion
+		if = {
+			limit = {
+				defender = {
+					religion = attacker
+					holy_order = yes
+				}
+			}
+
+			attacker = {
+				show_scope_change = no
+				piety = -500
+			}
+		}
+
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		attacker = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 200
+			participation_scaled_piety = 100
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = {
+				participation_scaled_prestige = 200
+				participation_scaled_piety = 100
+			}
+		}
+	}
+
+	on_success_title = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their holy de jure duchy claim for the [This.GetFullName] against [From.GetBestName] (ID: [From.GetID])"
+
+		# Change imperial decadence
+		# TODO: Add missing stuff
+		if = {
+			limit = {
+				empire = {
+					holder = attacker
+					is_primary_holder_title = yes
+				}
+			}
+		}
+
+		attacker = {
+			show_scope_change = no
+
+			vassalize_or_take_under_title = {
+				title = PREV
+				enemy = defender
+				same_religion = yes # Only vassalize rulers of my religion
+				is_religious = yes
+				type = holy_war
+			}
+		}
+
+		usurp_title_plus_barony_if_unlanded = {
+			target = attacker
+			type = claim
+		}
+	}
+
+	on_fail = {
+		prestige = -100
+		piety = -50
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -200
+			piety = -100
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 200
+			participation_scaled_piety = 100
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = {
+				participation_scaled_prestige = 200
+				participation_scaled_piety = 100
+			}
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+
+	ai_will_do = {
+		factor = 1
+
+		trigger = {
+			ROOT = {
+				sufficient_treasury_for_war_trigger = yes
+
+				# Only dishonorable ai will break the a tributary's trust
+				can_attack_tributary_trigger = yes
+			}
+
+			# AI will only use on same religion AI holy orders if they're kings/emperors
+			FROM = {
+				NAND = {
+					holy_order = yes
+					religion = ROOT
+					lower_real_tier_than = KING
+					has_dlc = "Sons of Abraham"
+					ai = yes
+				}
+			}
+
+			# Mongol pagans don't use this against other mongol pagans
+			NAND = {
+				ROOT = {
+					culture = mongol
+					religion_group = pagan_group
+				}
+
+				FROM = {
+					culture = mongol
+					religion_group = pagan_group
+				}
+			}
+		}
+	}
+}
+
+# County Holy War
+dejure_county_claim_holy = {
+	name = CB_NAME_DEJURECLAIM
+	war_name = WAR_NAME_DEJURECLAIM
+	sprite = 16
+	truce_days = 3650
+	infamy_modifier = 0.5
+
+	allowed_to_target_tributaries = yes
+	can_ask_to_join_war = yes
+	check_all_titles = yes # if permanent, setting this to true will check against all of someones titles, including vassal held titles
+	hostile_against_others = yes
+	is_holy_war = yes
+	is_permanent = yes
+	press_claim = yes
+
+	can_use_gui = {
+		check_if_crusader_trigger = yes
+		can_use_cb_preamble = yes
+
+		ROOT = {
+			religion_group = top_liege
+
+			trigger_if = {
+				limit = { is_patrician = no }
+				independent = yes
+			}
+		}
+
+		# Attacker holds either the de jure kingdom, empire or liege title
+		FROMFROM = {
+			OR = {
+				dejure_liege_title = {
+					holder = ROOT
+				}
+
+				kingdom = {
+					holder = ROOT
+
+					custom_tooltip = {
+						text = DE_JURE_TOOLTIP1
+
+						OR = {
+							has_law = crown_authority_2
+							has_law = crown_authority_3
+							has_law = crown_authority_4
+						}
+					}
+				}
+
+				empire = {
+					holder = ROOT
+
+					custom_tooltip = {
+						text = DE_JURE_TOOLTIP1
+
+						OR = {
+							has_law = crown_authority_2
+							has_law = crown_authority_3
+							has_law = crown_authority_4
+						}
+					}
+				}
+			}
+		}
+	}
+
+	can_use = {
+		# Check to ensure the target is a valid for a holy war
+		ROOT = {
+			can_use_holy_war_cb = yes
+
+			trigger_if = {
+				limit = {
+					has_secret_religion = yes
+					secret_religion_group = FROM
+				}
+
+				OR = {
+					secret_religion_group = muslim
+					secret_religion_group = pagan_group
+					secret_religion = paulician
+				}
+
+				NOT = { secret_religion = FROM }
+			}
+		}
+	}
+
+	can_use_title = {
+		real_tier = count
+
+		# A king/emperor is using it to reclaim own de jure duchy
+		OR = {
+			dejure_liege_title = { holder = ROOT }
+			empire = { holder = ROOT }
+			kingdom = { holder = ROOT }
+		}
+
+		holder_scope = {
+			# Either the target has the title or their top liege is the target
+			OR = {
+				character = FROM
+				is_vassal_or_below_of = FROM
+			}
+
+			# Neither the attacker nor their top liege has the title
+			NOR = {
+				character = ROOT
+				is_vassal_or_below_of = ROOT
+			}
+		}
+
+		# Check to ensure the target is not valid for a holy war
+		dejure_liege_title = {
+			ROOT = {
+				NOR = {
+					can_use_cb = {
+						target = FROM
+						casus_belli = holy_war
+						thirdparty_title = PREV
+						only_check_triggers = yes
+					}
+				}
+			}
+		}
+	}
+
+	is_valid_title = {
+		holder_scope = {
+			OR = {
+				character = FROM
+				is_vassal_or_below_of = FROM
+			}
+		}
+	}
+
+	on_add = {
+		if = {
+			limit = {
+				defender = {
+					religion = attacker
+					holy_order = yes
+				}
+			}
+
+			attacker = {
+				show_scope_change = no
+				piety = -500
+			}
+		}
+
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		attacker = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 200
+			participation_scaled_piety = 100
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = {
+				participation_scaled_prestige = 200
+				participation_scaled_piety = 100
+			}
+		}
+	}
+
+	on_success_title = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their holy de jure county claim for the [This.GetFullName] against [From.GetBestName] (ID: [From.GetID])"
+
+		# Change imperial decadence
+		# TODO: Add missing stuff
+		if = {
+			limit = {
+				empire = {
+					holder = attacker
+					is_primary_holder_title = yes
+				}
+			}
+		}
+
+		attacker = {
+			show_scope_change = no
+
+			vassalize_or_take_under_title = {
+				title = PREV
+				enemy = defender
+				same_religion = yes # Only vassalize rulers of my religion
+				is_religious = yes
+				type = holy_war
+			}
+		}
+
+		usurp_title_plus_barony_if_unlanded = {
+			target = attacker
+			type = claim
+		}
+	}
+
+	on_fail = {
+		prestige = -100
+		piety = -50
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -200
+			piety = -100
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 200
+			participation_scaled_piety = 100
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = {
+				participation_scaled_prestige = 200
+				participation_scaled_piety = 100
+			}
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+
+	ai_will_do = {
+		factor = 1
+
+		trigger = {
+			ROOT = {
+				# Only dishonorable ai will break the a tributary's trust
+				can_attack_tributary_trigger = yes
+			}
+
+			FROM = {
+				# AI will only use on same religion AI holy orders if they're kings/emperors
+				NAND = {
+					holy_order = yes
+					religion = ROOT
+					lower_real_tier_than = KING
+					has_dlc = "Sons of Abraham"
+					ai = yes
+				}
+
+				# AIs will not take the last counties off their liege's direct vassals
+				NAND = {
+					same_liege = ROOT
+					num_of_count_titles == 1
+				}
+			}
+
+			# Mongol pagans don't use this against other mongol pagans
+			NAND = {
+				ROOT = {
+					culture = mongol
+					religion_group = pagan_group
+				}
+
+				FROM = {
+					culture = mongol
+					religion_group = pagan_group
+				}
+			}
+		}
+	}
+}
+
+# Barony Holy War
+dejure_barony_claim_holy = {
+	name = CB_NAME_DEJUREBARONYCLAIM
+	war_name = WAR_NAME_DEJUREBARONYCLAIM
+	sprite = 16
+	truce_days = 1825
+	infamy_modifier = 0.5
+
+	allowed_to_target_tributaries = yes
+	can_ask_to_join_war = yes
+	check_de_jure_tier = COUNT
+	hostile_against_others = yes
+	is_holy_war = yes
+	is_permanent = yes
+
+	can_use_gui = {
+		check_if_crusader_trigger = yes
+
+		ROOT = {
+			can_use_cb_preamble = yes
+			religion_group = top_liege
+
+			OR = {
+				is_patrician = no
+				independent = yes
+			}
+		}
+	}
+
+	can_use = {
+		# Check to ensure the target is a valid for a holy war
+		ROOT = {
+			can_use_holy_war_cb = yes
+
+			trigger_if = {
+				limit = {
+					has_secret_religion = yes
+					secret_religion_group = FROM
+				}
+
+				OR = {
+					secret_religion_group = muslim
+					secret_religion_group = pagan_group
+					secret_religion = paulician
+				}
+
+				NOT = { secret_religion = FROM }
+			}
+		}
+	}
+
+	can_use_title = {
+		# De jure liege title belongs to attacker or a vassal
+		holder_scope = {
+			OR = {
+				character = ROOT
+				is_vassal_or_below_of = ROOT
+			}
+		}
+
+		any_direct_de_jure_vassal_title = {
+			holder_scope = {
+				OR = {
+					character = FROM
+					is_vassal_or_below_of = FROM
+				}
+
+				NOR = {
+					character = ROOT
+					is_vassal_or_below_of = ROOT
+				}
+			}
+		}
+	}
+
+	on_add = {
+		if = {
+			limit = {
+				defender = {
+					religion = attacker
+					holy_order = yes
+				}
+			}
+
+			attacker = {
+				show_scope_change = no
+				piety = -500
+			}
+		}
+
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success_title = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their holy de jure barony claim for the [This.GetFullName] against [From.GetBestName] (ID: [From.GetID])"
+
+		holder_scope = {
+			save_event_target_as = target_taker
+		}
+
+		any_direct_de_jure_vassal_title = {
+			show_scope_change = no
+
+			limit = {
+				holder_scope = {
+					OR = {
+						character = defender
+						is_vassal_or_below_of = defender
+					}
+
+					NOR = {
+						character = event_target:target_taker
+						is_vassal_or_below_of = event_target:target_taker
+						is_vassal_or_below_of = attacker
+					}
+				}
+			}
+
+			usurp_title_plus_barony_if_unlanded = {
+				target = event_target:target_taker
+				type = claim
+			}
+		}
+
+		attacker = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 100
+			participation_scaled_piety = 50
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = {
+				participation_scaled_prestige = 100
+				participation_scaled_piety = 50
+			}
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -50
+			piety = -25
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -100
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 100
+			participation_scaled_piety = 50
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = {
+				participation_scaled_prestige = 100
+				participation_scaled_piety = 50
+			}
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+
+	ai_will_do = {
+		factor = 1
+
+		trigger = {
+			# AI will only use on same religion AI holy orders if they're kings/emperors
+			FROM = {
+				NAND = {
+					holy_order = yes
+					religion = ROOT
+					lower_real_tier_than = KING
+					has_dlc = "Sons of Abraham"
+					ai = yes
+				}
+			}
+		}
+	}
+}
+
+# ???
+other_dejure_county_claim_holy = {
+	name = CB_NAME_DEJURECLAIM
+	war_name = WAR_NAME_OTHER_DEJURECLAIM
+	sprite = 16
+	truce_days = 3650
+	infamy_modifier = 0.3
+
+	allowed_to_target_tributaries = yes
+	can_ask_to_join_war = yes
+	hostile_against_others = yes
+	is_holy_war = yes
+	is_permanent = yes
+	other_de_jure_claim = yes # Optimization for de jure claims of vassals
+	press_claim = yes
+
+	can_use_gui = {
+		check_if_crusader_trigger = yes
+		can_use_cb_preamble = yes
+		religion_group = top_liege
+
+		trigger_if = {
+			limit = { is_patrician = yes }
+			independent = yes
+		}
+
+		# Claimant holds either the de jure kingdom, empire or liege title
+		FROMFROM = {
+			any_de_jure_liege_title = {
+				holder = ROOT
+
+				trigger_if = {
+					limit = { has_crown_law_title = yes }
+
+					custom_tooltip = {
+						text = DE_JURE_TOOLTIP1
+
+						OR = {
+							has_law = crown_authority_2
+							has_law = crown_authority_3
+							has_law = crown_authority_4
+						}
+					}
+				}
+			}
+		}
+	}
+
+	can_use = {
+		mercenary = no
+		pacifist = no
+
+		# Check to ensure the target is a valid for a holy war
+		can_use_holy_war_cb = yes
+
+		trigger_if = {
+			limit = {
+				has_secret_religion = yes
+				secret_religion_group = FROM
+			}
+
+			OR = {
+				secret_religion_group = muslim
+				secret_religion_group = pagan_group
+				secret_religion = paulician
+			}
+
+			NOT = { secret_religion = FROM }
+		}
+
+		NOR = {
+			same_realm = FROM
+			character = ROOT
+		}
+
+		# Supported ruler is a vassal
+		is_liege_or_above_of = ROOT
+	}
+
+	can_use_title = {
+		real_tier = COUNT
+
+		# Supporter ruler owns the de jure liege kingdom, empire or title of the county
+		OR = {
+			empire = { holder = ROOT }
+			kingdom = { holder = ROOT }
+			dejure_liege_title = { holder = ROOT }
+		}
+
+		holder_scope = {
+			# Target owns the county or it is owned by their vassal
+			OR = {
+				character = FROM
+				is_vassal_or_below_of = FROM
+			}
+
+			# Supporter ruler does not own the county, and it is not owned by their liege
+			NOR = {
+				character = ROOT
+				is_vassal_or_below_of = ROOT
+			}
+		}
+	}
+
+	is_valid_title = {
+		holder_scope = {
+			OR = {
+				character = FROM
+				is_vassal_or_below_of = FROM
+			}
+		}
+	}
+
+	on_add = {
+		attacker = {
+			show_scope_change = no
+
+			if = {
+				limit = {
+					holy_order = yes
+					religion = defender
+				}
+
+				piety = -500
+			}
+		}
+
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+		ROOT = { set_character_flag = claim_being_pressed }
+	}
+
+	on_success = {
+		log = "[FromFrom.GetBestName] (ID: [FromFrom.GetID]) succeeded with [Root.GetBestName]'s (ID: [Root.GetID]) holy de jure county claim for the [This.GetFullName] against [From.GetBestName] (ID: [From.GetID])"
+		participation_scaled_prestige = 200
+		participation_scaled_piety = 100
+
+		ROOT = {
+			show_scope_change = no
+
+			add_character_modifier = {
+				name = new_land_timer
+				duration = 1
+				hidden = yes
+			}
+
+			opinion = {
+				name = pressed_my_claim
+				who = PREV
+			}
+
+			clr_character_flag = claim_being_pressed
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = PREV } }
+			hidden_effect = {
+				participation_scaled_prestige = 200
+				participation_scaled_piety = 100
+			}
+		}
+	}
+
+	on_success_title = {
+		ROOT = {
+			show_scope_change = no
+
+			vassalize_or_take_under_title = {
+				title = PREV
+				enemy = defender
+				same_religion = yes # Only vassalize rulers of my religion
+				is_religious = yes
+				type = holy_war
+			}
+		}
+
+		usurp_title_plus_barony_if_unlanded = {
+			target = ROOT
+			type = claim
+		}
+	}
+
+	on_fail = {
+		prestige = -100
+		piety = -50
+
+		ROOT = {
+			clr_character_flag = claim_being_pressed
+		}
+	}
+
+	on_invalidation = {
+		ROOT = {
+			clr_character_flag = claim_being_pressed
+		}
+	}
+
+	on_reverse_demand = {
+		prestige = -200
+		piety = -100
+
+		transfer_scaled_wealth = {
+			to = defender
+			value = 4.0
+		}
+
+		ROOT = {
+			show_scope_change = no
+
+			prestige = -200
+			piety = -100
+		}
+
+		defender = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 200
+			participation_scaled_piety = 100
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = {
+				participation_scaled_prestige = 200
+				participation_scaled_piety = 100
+			}
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+
+	ai_will_do = {
+		factor = 1
+
+		trigger = {
+			ROOT = {
+				sufficient_treasury_for_war_trigger = yes
+
+				# Only dishonorable ai will break the a tributary's trust
+				can_attack_tributary_trigger = yes
+			}
+
+			FROM = {
+				# AI will only use on same religion AI holy orders if they're kings/emperors
+				NAND = {
+					holy_order = yes
+					religion = ROOT
+					lower_real_tier_than = KING
+					has_dlc = "Sons of Abraham"
+					ai = yes
+				}
+
+				# AIs will not take the last counties off their liege's direct vassals
+				NAND = {
+					same_liege = ROOT
+					num_of_count_titles == 1
+				}
+			}
+
+			# Mongol pagans don't use this against other mongol pagans
+			NAND = {
+				ROOT = {
+					culture = mongol
+					religion_group = pagan_group
+				}
+
+				FROM = {
+					culture = mongol
+					religion_group = pagan_group
+				}
+			}
+		}
+	}
+}
+
+# Decadence Revolt
+decadence_revolt = {
+	name = CB_NAME_DECADENCE_UPRISING
+	war_name = WAR_NAME_DECADENCE_UPRISING
+	sprite = 11
+	truce_days = 365
+
+	can_ask_to_join_war = no
+	check_all_titles = yes # if permanent, setting this to true will check against all of someones titles, including vassal held titles
+	hostile_against_others = yes
+	is_permanent = yes
+	is_independence = yes
+	press_claim = yes
+
+	can_use = {
+		ROOT = {
+			has_character_flag = decadence_revolter
+			NOT = { has_character_modifier = holy_truce_timer }
+		}
+
+		FROM = {
+			NOT = { has_character_modifier = holy_truce_timer }
+		}
+	}
+
+	can_use_title = {
+		real_tier = count
+	}
+
+	is_valid = {
+		FROM = {
+			religion_group = muslim
+			religion_group = ROOT
+		}
+	}
+
+	is_valid_title = {
+		holder_scope = {
+			OR = {
+				character = FROM
+				is_vassal_or_below_of = FROM
+			}
+		}
+	}
+
+	on_add = {
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success_title = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their decadence revolt against [From.GetBestName] (ID: [From.GetID])"
+
+		usurp_title_plus_barony_if_unlanded = {
+			target = attacker
+			type = revolt
+		}
+
+		attacker = {
+			show_scope_change = no
+
+			prestige = 200
+			piety = 100
+			occupy_minors_of_occupied_settlements = defender
+
+			gain_all_occupied_titles = {
+				who = defender
+				type = revolt
+			}
+
+			set_defacto_liege = attacker
+			clr_character_flag = decadence_revolter
+
+			hidden_effect = {
+				if = {
+					limit = { is_lowborn = no }
+					dynasty = father_bastard
+				}
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			imprison = attacker
+			prestige = -500
+			piety = -500
+			clr_character_flag = has_current_revolt
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			imprison = defender
+			clr_character_flag = decadence_revolter
+
+			hidden_effect = {
+				add_character_modifier = {
+					name = broken_spirit
+					years = 10
+				}
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			prestige = 50
+			clr_character_flag = has_current_revolt
+
+			hidden_effect = {
+				opinion = {
+					name = opinion_rebel_traitor
+					who = attacker
+					years = 100
+				}
+			}
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			imprison = defender
+			clr_character_flag = decadence_revolter
+
+			hidden_effect = {
+				add_character_modifier = {
+					name = broken_spirit
+					years = 10
+				}
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			prestige = 100
+			piety = 100
+			clr_character_flag = has_current_revolt
+
+			hidden_effect = {
+				opinion = {
+					name = opinion_rebel_traitor
+					who = attacker
+					years = 100
+				}
+
+				add_character_modifier = {
+					name = crushed_revolt
+					years = 10
+				}
+			}
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 150
+	}
+}
+
+# Druze Invasion
+druze_invasion = {
+	name = CB_NAME_VIKING_INVASION
+	war_name = WAR_NAME_VIKING_INVASION
+	sprite = 8
+	truce_days = 365
+
+	allowed_to_target_tributaries = no
+	apply_short_occ_mod = no # Do not apply the 'recently_conquered' modifier to Holdings
+	can_ask_to_join_war = yes
+	check_de_jure_tier = KING # this scans all de jure kingdoms for the counties which are held by or vassals(or below) of selected character. Only valid if is_permanent = yes
+	hostile_against_others = no # Vikings share in the spoils...
+	is_holy_war = yes
+	is_permanent = yes
+
+	can_use_gui = {
+		ROOT = {
+			can_use_cb_preamble = yes
+			has_secret_religion = no
+
+			OR = {
+				trait = druze_ajawid
+				piety >= 1000
+
+				AND = {
+					martial >= 12
+					diplomacy >= 12
+				}
+			}
+		}
+	}
+
+	can_use = {
+		ROOT = {
+			religion = druze
+			NOT = { is_vassal_or_below_of = FROM }
+			realm_size < 41
+			mercenary = no
+		}
+
+		FROM = {
+			religion_group = muslim
+		}
+	}
+
+	can_use_title = {
+		is_valid_viking_invasion_target = FROM # Checks that FROM holds the right amount of territory in the kingdom
+	}
+
+	is_valid_title = {
+		FROM = {
+			any_realm_title = {
+				de_jure_liege_or_above = PREVPREV
+			}
+		}
+	}
+
+	on_add = {
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = 500
+			participation_scaled_prestige = 300
+			piety = 250
+			religion_authority = { name = won_viking_invasion }
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker  } }
+			hidden_effect = { participation_scaled_prestige = 300 }
+		}
+
+		defender = {
+			show_scope_change = no
+			prestige = -500
+		}
+	}
+
+	on_success_title = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their druze invasion for the [This.GetFullName] against [From.GetBestName] (ID: [From.GetID])"
+
+		custom_tooltip = {
+			text = tribal_invasion_succ_tip
+
+			# Attacker gains one province belonging to the target for certain
+			if = {
+				limit = {
+					capital_scope = { owned_by = defender }
+				}
+
+				capital_scope = {
+					culture = attacker
+					religion = attacker
+				}
+			}
+			else = {
+				defender = {
+					random_demesne_province = {
+						limit = {
+							county = { de_jure_liege_or_above = PREVPREVPREV }
+							owned_by = PREV
+						}
+
+						culture = attacker
+						religion = attacker
+					}
+				}
+			}
+
+			attacker = {
+				occupy_minors_of_occupied_settlements = defender
+
+				gain_all_occupied_titles = {
+					who = defender
+					type = invasion
+				}
+
+				vassalize_or_take_under_title_destroy_duchies = {
+					title = PREV
+					enemy = defender
+					is_crusade = yes
+					type = invasion
+				}
+
+				# Settle the special invasion forces
+				disband_event_forces = prepared_invasion
+
+				any_demesne_title = {
+					limit = { tier = BARON }
+					remove_holding_modifier = recently_conquered
+					refill_holding_levy = yes
+				}
+			}
+
+			defender = {
+				if = {
+					limit = { is_vassal_or_below_of = attacker }
+					imprison = attacker
+				}
+			}
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -300
+			piety = -100
+			religion_authority = { name = lost_viking_invasion }
+			hidden_effect = { disband_event_forces = prepared_invasion }
+		}
+
+		defender = {
+			show_scope_change = no
+			prestige = 200
+			participation_scaled_prestige = 200
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 200 }
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -500
+			piety = -250
+			religion_authority = { name = lost_viking_invasion }
+			hidden_effect = { disband_event_forces = prepared_invasion }
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 2.0
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			prestige = 300
+			participation_scaled_prestige = 250
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 250 }
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# Reconquista
+# TODO: integrate with 3.0 reconquista mechanics
+reconquista_cb = {
+	name = CB_NAME_RECONQUISTA
+	war_name = WAR_NAME_RECONQUISTA
+	sprite = 9
+	truce_days = 3650
+	infamy_modifier = 0.75
+
+	allowed_to_target_tributaries = no
+	can_ask_to_join_war = yes
+	check_de_jure_tier = DUKE
+	is_holy_war = yes
+	is_permanent = yes
+
+	can_use_gui = {
+		check_if_crusader_trigger = yes
+
+		ROOT = {
+			can_use_cb_preamble = yes
+		}
+	}
+
+	can_use = {
+		ROOT = {
+			capital_scope = { region = world_europe_west_iberia }
+			religion_group = christian
+			independent = yes
+			is_heretic = no
+			num_of_count_titles >= 1
+			is_nomadic = no
+			mercenary = no
+			has_secret_religion = no
+		}
+
+		FROM = {
+			independent = yes
+			religion_group = muslim
+			shares_realm_border_with = ROOT
+			NOT = { has_character_modifier = holy_truce_timer }
+		}
+	}
+
+	can_use_title = {
+		capital_scope = { region = world_europe_west_iberia }
+
+		FROM = {
+			num_of_realm_counties = {
+				value >= 1
+				title = PREV
+			}
+		}
+	}
+
+	is_valid = {
+		ROOT = {
+			religion_group = christian
+			is_heretic = no
+		}
+	}
+
+	is_valid_title = {
+		FROM = {
+			num_of_realm_counties = {
+				value >= 1
+				title = PREV
+			}
+		}
+	}
+
+	on_add = {
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_add_title = {
+		hidden_effect = {
+			attacker = {
+				if = {
+					limit = {
+						has_opinion_modifier = {
+							name = holy_war_sanction
+							who = defender
+						}
+					}
+				}
+
+				remove_opinion = {
+					name = holy_war_sanction
+					who = defender
+				}
+			}
+		}
+	}
+
+	on_success = {
+		attacker = {
+			show_scope_change = no
+
+			participation_scaled_piety = 200
+			participation_scaled_prestige = 200
+
+			religion_authority = {
+				name = won_holy_war
+				years = 20
+			}
+
+			dynasty_head = {
+				show_scope_change = no
+
+				if = {
+					limit = { uses_decadence = yes }
+					participation_scaled_decadence = -10
+				}
+			}
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = {
+				participation_scaled_piety = 200
+				participation_scaled_prestige = 200
+
+				dynasty_head = {
+					if = {
+						limit = { uses_decadence = yes }
+						participation_scaled_decadence = -10
+					}
+				}
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			if = {
+				limit = { is_heretic = no }
+
+				religion_authority = {
+					name = lost_holy_war
+					years = 20
+				}
+			}
+		}
+	}
+
+	on_success_title = {
+		log = "[Root.GetBestName] (ID: [Root.GetID]) succeeded with their reconquista of the [This.GetFullName] against [From.GetBestName] (ID: [From.GetID])"
+
+		if = {
+			limit = {
+				holder_scope = {
+					OR = {
+						character = defender
+						is_vassal_or_below_of = defender
+					}
+				}
+			}
+
+			set_global_flag = usurp_duchy
+		}
+
+		attacker = {
+			show_scope_change = no
+
+			hidden_effect = {
+				add_character_modifier = {
+					name = holy_war_timer
+					years = 5
+				}
+			}
+
+			vassalize_or_take_under_title = {
+				title = PREV
+				enemy = defender
+				same_religion = yes # Only vassalize rulers of my religion
+				is_religious = yes
+				type = holy_war
+			}
+		}
+
+		hidden_effect = {
+			if = {
+				limit = { has_global_flag = usurp_duchy }
+
+				destroy_landed_title = yes
+				usurp_title = attacker
+				clr_global_flag = usurp_duchy
+			}
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+
+			hidden_effect = {
+				add_character_modifier = {
+					name = holy_war_timer
+					years = 5
+				}
+			}
+
+			piety = -100
+			prestige = -100
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			hidden_effect = {
+				add_character_modifier = {
+					name = holy_war_timer
+					years = 5
+				}
+			}
+
+			clr_character_flag = pledged_temple
+			piety = -200
+			prestige = -200
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+
+			religion_authority = {
+				name = lost_holy_war
+				years = 20
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 200
+			participation_scaled_piety = 200
+
+			dynasty_head = {
+				show_scope_change = no
+
+				if = {
+					limit = { uses_decadence = yes }
+					participation_scaled_decadence = -10
+				}
+			}
+
+			if = {
+				limit = { is_heretic = no }
+
+				religion_authority = {
+					name = won_holy_war
+					years = 20
+				}
+			}
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = {
+				participation_scaled_prestige = 200
+				participation_scaled_piety = 200
+
+				dynasty_head = {
+					if = {
+						limit = { uses_decadence = yes }
+						participation_scaled_decadence = -10
+					}
+				}
+			}
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+
+	ai_will_do = {
+		factor = 1
+
+		trigger = {
+			ROOT = {
+				sufficient_treasury_for_war_trigger = yes
+
+				# AI will usually only use the CB once every 5 years
+				trigger_if = {
+					limit = { has_character_modifier = holy_war_timer }
+
+					PREV = {
+						any_de_jure_vassal_title = { is_holy_site = ROOT }
+					}
+				}
+
+				relative_power = {
+					who = FROM
+					power >= 0.67
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.5
+
+			FROM = {
+				independent = yes
+				num_of_count_titles_in_realm < 4
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.5
+
+			any_direct_de_jure_vassal_title = {
+				location = { religion = ROOT }
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.75
+
+			NOT = {
+				any_direct_de_jure_vassal_title = {
+					location = { religion = ROOT }
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.2
+			ROOT = { trait = zealous }
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			ROOT = { trait = cynical }
+		}
+
+		mult_modifier = {
+			factor = 1.2
+			any_de_jure_vassal_title = { is_holy_site = ROOT }
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			FROM = { realm_levy_diff = { who = ROOT value >= 1000 } }
+		}
+
+		mult_modifier = {
+			factor = 1.5
+
+			ROOT = {
+				realm_levy_diff = { who = FROM value >= 2500 }
+				relative_power = { who = FROM power >= 1.5 }
+			}
+		}
+	}
+}
+
+# Aghlabid
+aghlabid_867 = {
+	name = CB_NAME_RELIGIOUS
+	war_name = WAR_NAME_RELIGIOUS
+	sprite = 9
+	truce_days = 3650
+	infamy_modifier = 0
+
+	can_ask_to_join_war = no
+	check_de_jure_tier = DUKE
+	is_holy_war = yes
+
+	can_use_title = {
+		always = no
+	}
+
+	can_use = {
+		always = no
+	}
+
+	is_valid = {
+		always = yes
+	}
+
+	on_add = {
+		ROOT = {
+			add_character_modifier = {
+				name = holy_war_timer
+				years = 10
+			}
+		}
+
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		attacker = {
+			show_scope_change = no
+
+			hidden_effect = {
+				add_character_modifier = {
+					name = holy_war_timer
+					years = 10
+				}
+			}
+
+			participation_scaled_piety = 50
+			participation_scaled_prestige = 100
+			pf_tradition_plus2_effect = yes
+
+			if = {
+				limit = { is_heretic = no }
+
+				religion_authority = {
+					name = won_holy_war
+					years = 20
+				}
+			}
+
+			dynasty_head = {
+				show_scope_change = no
+
+				if = {
+					limit = { uses_decadence = yes }
+					participation_scaled_decadence = -10
+				}
+			}
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = {
+				participation_scaled_piety = 50
+				participation_scaled_prestige = 100
+
+				dynasty_head = {
+					if = {
+						limit = { uses_decadence = yes }
+						participation_scaled_decadence = -10
+					}
+				}
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			pf_tradition_minus2_effect = yes
+
+			if = {
+				limit = { is_heretic = no }
+
+				religion_authority = {
+					name = lost_holy_war
+					years = 20
+				}
+
+				add_weak_pressed_claim = c_lecce
+				add_weak_pressed_claim = c_cosenza
+				add_weak_pressed_claim = c_reggio
+				add_weak_pressed_claim = d_calabria
+			}
+		}
+
+		d_calabria = {
+			show_scope_change = no
+
+			holder_scope = {
+				show_scope_change = no
+				set_defacto_liege = THIS
+			}
+		}
+
+		c_lecce = {
+			show_scope_change = no
+
+			holder_scope = {
+				show_scope_change = no
+				set_defacto_liege = THIS
+			}
+		}
+	}
+
+	on_success_title = {
+		log = "[Root.GetBestName] succeeded with their aghlabid_867 CB for the [This.GetFullName] against [From.GetBestName]"
+
+		if = {
+			limit = {
+				holder_scope = {
+					OR = {
+						character = FROM
+						is_vassal_or_below_of = FROM
+					}
+				}
+			}
+
+			set_global_flag = usurp_duchy
+		}
+
+		attacker = {
+			show_scope_change = no
+
+			gain_settlements_under_title = {
+				title = PREV
+				enemy = defender
+			}
+		}
+
+		hidden_effect = {
+			if = {
+				limit = { has_global_flag = usurp_duchy }
+
+				destroy_landed_title = yes
+				usurp_title = ROOT
+				clr_global_flag = usurp_duchy
+			}
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+
+			piety = -100
+			prestige = -100
+
+			hidden_effect = {
+				add_character_modifier = {
+					name = holy_war_timer
+					years = 10
+				}
+			}
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			piety = -200
+			prestige = -200
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+
+			if = {
+				limit = { is_heretic = no }
+
+				religion_authority = {
+					name = lost_holy_war
+					years = 20
+				}
+
+				hidden_effect = {
+					add_character_modifier = {
+						name = holy_war_timer
+						years = 10
+					}
+				}
+			}
+
+			pf_tradition_minus2_effect = yes
+		}
+
+		defender = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 200
+			participation_scaled_piety = 100
+			pf_tradition_plus2_effect = yes
+
+			if = {
+				limit = { is_heretic = no }
+
+				religion_authority = {
+					name = won_holy_war
+					years = 20
+				}
+			}
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = {
+				participation_scaled_prestige = 200
+				participation_scaled_piety = 100
+			}
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# Invasion with no allies
+invasion_nc = {
+	name = CB_NAME_INVASION_NO_CALLS
+	war_name = WAR_NAME_INVASION_NO_CALLS
+	sprite = 7
+	truce_days = 3650
+
+	hostile_against_others = yes
+	can_call_allies = no
+	can_ask_to_join_war = no
+
+	can_use_title = {
+		always = no
+	}
+
+	can_use = {
+		always = no
+	}
+
+	is_valid_title = {
+		holder_scope = {
+			OR = {
+				character = FROM
+				is_vassal_or_below_of = FROM
+			}
+		}
+	}
+
+	on_add = {
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		attacker = {
+			show_scope_change = no
+
+			give_nickname = nick_the_conqueror
+			participation_scaled_prestige = 200
+
+			hidden_effect = {
+				add_character_modifier = {
+					name = holy_truce_timer
+					years = 5
+				}
+			}
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = ROOT } }
+			hidden_effect = { participation_scaled_prestige = 200 }
+		}
+	}
+
+	on_success_title = {
+		log = "[Root.GetBestName] succeeded with their invasion_nc CB for the [This.GetFullName] against [From.GetBestName]"
+
+		hidden_effect = {
+			any_de_jure_vassal = {
+				any_demesne_title = {
+					limit = {
+						kingdom = { title = PREVPREVPREV }
+						NOT = { real_tier = BARON }
+					}
+
+					add_pressed_claim = attacker
+				}
+			}
+
+			defender = {
+				any_demesne_title = {
+					limit = { kingdom = { title = PREVPREVPREV } }
+
+					usurp_title_plus_barony_if_unlanded = {
+						target = attacker
+						type = invasion
+					}
+				}
+			}
+
+			attacker = {
+				roman_victory_triumph_effect = yes
+
+				if = {
+					limit = {
+						character = c_140
+						has_dlc = "Holy Fury"
+
+						NOT = {
+							any_owned_bloodline = {
+								has_bloodline_flag = william_the_conqueror_bloodline
+								bloodline_is_active_for = PREV
+							}
+						}
+					}
+
+					create_bloodline = {
+						type = william_the_conqueror
+					}
+				}
+			}
+		}
+
+		usurp_title_plus_barony_if_unlanded = {
+			target = ROOT
+			type = invasion
+		}
+
+		hidden_effect = {
+			attacker = {
+				if = {
+					limit = {
+						ai = yes
+						always = no
+					}
+
+					add_character_modifier = {
+						name = holy_truce_timer
+						years = 10
+					}
+				}
+			}
+
+			if = {
+				limit = {
+					higher_real_tier_than = BARON
+					NOT = { culture = attacker }
+				}
+
+				conquest_culture = attacker
+			}
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+			prestige = -100
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -200
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+
+		}
+
+		defender = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 200
+			roman_victory_triumph_effect = yes
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 200 }
+		}
+	}
+
+	on_reverse_demand_title = {
+		remove_claim = attacker
+	}
+
+	on_attacker_leader_death = {
+		any_defender = {
+			letter_event = { id = 251 }
+		}
+
+		end_war = whitepeace
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# Magyar Invasion
+magyar_invasion = {
+	name = CB_NAME_TRIBAL_INVASION
+	war_name = WAR_NAME_TRIBAL_INVASION
+	sprite = 8
+	truce_days = 3650
+	infamy_modifier = 0
+
+	can_ask_to_join_war = no
+	check_de_jure_tier = KING # this scans all de jure kingdoms for the counties which are held by or vassals(or below) of selected character. Only valid if is_permanent = yes
+	hostile_against_others = yes
+	is_permanent = yes
+
+	can_use = {
+		ROOT = {
+			culture = hungarian
+			has_global_flag = magyar_1066_invasion
+
+			NOR = {
+				any_realm_province = { region = custom_carpathia }
+				has_global_flag = avar_khaganate_renamed
+			}
+		}
+	}
+
+	can_use_title = {
+		title = k_carpathia
+	}
+
+	is_valid_title = {
+		title = k_carpathia
+	}
+
+	on_add = {
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		ROOT = {
+			show_scope_change = no
+
+			prestige = 500
+			wealth = 500
+
+			hidden_effect = {
+				disband_event_forces = magyar_forces
+				occupy_minors_of_occupied_settlements = FROM
+
+				gain_all_occupied_titles = {
+					who = FROM
+					type = invasion
+				}
+			}
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = { participation_scaled_prestige = 200 }
+		}
+	}
+
+	on_success_title = {
+		log = "[Root.GetBestName] succeeded with their magyar invasion for the [This.GetFullName] against [From.GetBestName]"
+
+		custom_tooltip = {
+			text = tribal_invasion_succ_tip
+
+			attacker = {
+				vassalize_or_take_under_title_destroy_duchies = {
+					title = PREV
+					enemy = defender
+					is_crusade = yes # Even if the title holder is not participating in the war, gain holdings occupied by all Crusade participants
+					type = invasion
+				}
+
+				if = {
+					limit = { has_nickname = no }
+					give_nickname = nick_the_great
+				}
+
+				if = {
+					limit = {
+						OR = {
+							character = c_159136 # Árpád
+							character = c_159137 # Álmos
+							dynasty = 708 # Árpád
+						}
+
+						has_dlc = "Holy Fury"
+
+						NOT = {
+							any_owned_bloodline = {
+								has_bloodline_flag = arpad_bloodline
+								bloodline_is_active_for = PREV
+							}
+						}
+					}
+
+					create_bloodline = { type = arpad }
+				}
+
+				set_global_flag = avar_khaganate_renamed
+
+				if = {
+					limit = { is_nomadic = no }
+
+					c_pest = {
+						if = {
+							limit = {
+								holder_scope = {
+									OR  = {
+										character = defender
+										is_vassal_or_below_of = defender
+									}
+								}
+							}
+
+							usurp_title_plus_barony_if_unlanded = {
+								target = attacker
+								type = invasion
+							}
+						}
+
+						if = {
+							limit = { holder = attacker }
+
+							location = {
+								culture = hungarian
+								religion = attacker
+								attacker = { capital = PREV }
+							}
+						}
+					}
+
+					# The Hungarian culture in the Ukraine is lost
+					hidden_effect = {
+						any_realm_province = {
+							limit = {
+								culture = hungarian
+								held_under_PREV = yes
+
+								kingdom = {
+									NOR = {
+										title = k_hungary
+										title = k_carpathia
+									}
+								}
+
+								any_neighbor_province = {
+									NOT = { culture = hungarian }
+								}
+							}
+
+							random_neighbor_province = {
+								limit = { NOT = { culture = hungarian } }
+
+								reverse_culture = PREV
+								reverse_religion = PREV
+							}
+						}
+					}
+
+					# Lose control of the Ukraininan lands
+					any_realm_province = {
+						limit = {
+							kingdom = {
+								NOR = {
+									title = k_hungary
+									title = k_carpathia
+								}
+							}
+
+							owner = {
+								# Human vassals get to keep their stuff
+								OR = {
+									ai = yes
+									character = attacker
+								}
+							}
+
+							held_under_PREV = yes
+						}
+
+						custom_tooltip = {
+							text = BREAKS_AWAY
+
+							county = {
+								create_character = {
+									random_traits = yes
+									dynasty = random
+									religion = PREV
+									culture = PREV
+									female = no
+									age = 25
+									add_trait = peasant_leader
+								}
+
+								new_character = {
+									usurp_title_plus_barony_if_unlanded = {
+										target = PREV
+										type = invasion
+									}
+
+									set_defacto_liege = THIS
+								}
+
+								remove_claim = attacker
+							}
+						}
+					}
+
+					k_hungary = {
+						d_pecs = { de_jure_liege = PREV }
+						d_esztergom = { de_jure_liege = PREV }
+						d_nyitra = { de_jure_liege = PREV }
+						d_ungvar = { de_jure_liege = PREV }
+						d_pest = { de_jure_liege = PREV }
+						d_transylvania = { de_jure_liege = PREV }
+						d_temes = { de_jure_liege = PREV }
+					}
+
+					primary_title = {
+						set_title_nomad = {
+							title = THIS
+							status = no
+						}
+					}
+
+					hidden_effect = {
+						destroy_landed_title = k_carpathia
+						reset_coa = k_hungary
+						narrative_event = { id = 62910 }
+
+						any_demesne_title = {
+							limit = { real_tier = BARON }
+							set_title_flag = refill_levy
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -100
+			clr_global_flag = magyar_1066_invasion
+			set_global_flag = magyar_defeat
+			disband_event_forces = magyar_forces
+		}
+
+		defender = {
+			show_scope_change = no
+
+			prestige = 100
+			participation_scaled_prestige = 100
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 100 }
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			clr_global_flag = magyar_1066_invasion
+			set_global_flag = magyar_defeat
+			disband_event_forces = magyar_forces
+			prestige = -200
+			participation_scaled_prestige = 200
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 200 }
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# Almoravid
+almoravid_1066 = {
+	name = CB_NAME_TRIBUTARY
+	war_name = WAR_NAME_TRIBUTARY
+	sprite = 9
+	truce_days = 3650
+	infamy_modifier = 0
+
+	can_ask_to_join_war = no
+	check_de_jure_tier = DUKE
+	is_holy_war = no
+
+	can_use_title = {
+		always = no
+	}
+
+	can_use = {
+		always = no
+	}
+
+	is_valid = {
+		ROOT = {
+			religion_group = muslim
+			NOT = { religion_group = FROM }
+		}
+	}
+
+	on_add = {
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		defender = {
+			show_scope_change = no
+
+			pf_tradition_minus2_effect = yes
+
+			custom_tooltip = {
+				text = REMOVE_PREVIOUS_SUZERAIN
+
+				any_suzerain = {
+					remove_tributary = PREV
+				}
+			}
+		}
+
+		attacker = {
+			show_scope_change = no
+
+			pf_tradition_plus2_effect = yes
+
+			make_tributary = {
+				who = defender
+				tributary_type = forced
+			}
+
+			participation_scaled_prestige = 200
+			participation_scaled_piety = 100
+
+			dynasty_head = {
+				show_scope_change = no
+
+				if = {
+					limit = { uses_decadence = yes }
+					participation_scaled_decadence = -10
+				}
+			}
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+
+			hidden_effect = {
+				participation_scaled_prestige = 100
+				participation_scaled_piety = 50
+
+				dynasty_head = {
+					if = {
+						limit = { uses_decadence = yes }
+						participation_scaled_decadence = -10
+					}
+				}
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+
+			religion = attacker
+
+			hidden_effect = {
+				any_courtier = {
+					religion = attacker
+				}
+
+				any_vassal = {
+					religion = attacker
+
+					any_courtier = {
+						religion = attacker
+					}
+				}
+			}
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+
+			piety = -100
+			prestige = -100
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			piety = -200
+			prestige = -200
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+
+			pf_tradition_minus2_effect = yes
+		}
+
+		defender = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 200
+			participation_scaled_piety = 100
+			pf_tradition_plus2_effect = yes
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = {
+				participation_scaled_prestige = 200
+				participation_scaled_piety = 100
+			}
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# Two Eriks
+two_eriks_cb = {
+	name = CB_NAME_CLAIM
+	war_name = WAR_NAME_CLAIM_LIEGE
+	sprite = 3
+	truce_days = 3650
+	infamy_modifier = 0.85
+
+	allowed_to_target_tributaries = no
+	attacker_can_call_allies = no
+	can_ask_to_join_war = no
+	hostile_against_others = yes
+	major_revolt = yes
+	press_claim = yes
+
+	can_use_title = {
+		holder_scope = {
+			OR = {
+				character = FROM
+				is_vassal_or_below_of = FROM
+			}
+		}
+	}
+
+	is_valid = {
+		ROOT = {
+			OR = {
+				independent = yes
+				same_liege = FROM
+			}
+		}
+
+		FROM = {
+			in_revolt = no
+
+			liege_before_war = {
+				in_revolt = no
+
+				liege_before_war = {
+					in_revolt = no
+				}
+			}
+		}
+	}
+
+	is_valid_title = {
+		holder_scope = {
+			OR = {
+				character = FROM
+				is_vassal_or_below_of = FROM
+			}
+		}
+	}
+
+	on_add = {
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		attacker = {
+			show_scope_change = no
+			participation_scaled_prestige = 100
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = { participation_scaled_prestige = 100 }
+		}
+
+		defender = {
+			show_scope_change = no
+
+			# Existing vassals may declare independence
+			if = {
+			 	limit = { independent = yes }
+
+				any_vassal = {
+					character_event = {
+						id = Plus.430
+						days = 3
+					}
+				}
+			}
+
+			# Reduce CA & TO
+			any_demesne_title = {
+				show_scope_change = no
+
+				title_reduce_CA_effect = yes
+				title_reduce_TO_effect = yes
+			}
+		}
+	}
+
+	on_success_title = {
+		usurp_title_plus_barony_if_unlanded = {
+			target = attacker
+			type = claim
+		}
+
+		# Ruler stays within the realm
+		hidden_effect = {
+			defender = { set_defacto_liege = attacker }
+
+			if = {
+				limit = {
+					higher_real_tier_than = BARON
+					NOT = { culture = attacker }
+				}
+
+				conquest_culture = attacker
+			}
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -100
+			hidden_effect = { set_defacto_liege = defender }
+		}
+
+		defender = {
+			show_scope_change = no
+			participation_scaled_prestige = 50
+
+			hidden_effect = {
+				remove_opinion = {
+					name = declared_war
+					who = attacker
+				}
+			}
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 50 }
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -200
+			hidden_effect = { set_defacto_liege = defender }
+			imprison = defender
+		}
+
+		defender = {
+			show_scope_change = no
+			participation_scaled_prestige = 100
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 100 }
+		}
+	}
+
+	on_reverse_demand_title = {
+		remove_claim = attacker
+
+		attacker = {
+			show_scope_change = no
+
+			custom_tooltip = {
+				text = MAY_NOT_BECOME_PRETENDER_AGAIN
+
+				reverse_opinion = {
+					name = failed_to_claim_my_title
+					who = defender
+					years = 100
+				}
+			}
+		}
+	}
+
+	on_attacker_leader_death = {
+		any_defender = {
+			letter_event = { id = 251 }
+		}
+
+		end_war = invalid
+	}
+
+	on_invalidation = {
+		attacker = { set_defacto_liege = defender }
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# The Anarchy
+the_anarchy_cb = {
+	name = CB_NAME_CLAIM
+	war_name = WAR_NAME_OTHER_CLAIM
+	sprite = 2
+	truce_days = 3650
+	infamy_modifier = 0.5
+
+	allowed_to_target_tributaries = yes
+	can_ask_to_join_war = yes
+	hostile_against_others = yes
+	is_permanent = no
+	press_claim = yes
+
+	can_use = {
+		always = no
+	}
+
+	can_use_title = {
+		always = no
+	}
+
+	is_valid_title = {
+		claimed_by = ROOT
+
+		holder_scope = {
+			OR = {
+				character = FROM
+				is_vassal_or_below_of = FROM
+			}
+		}
+	}
+
+	on_add = {
+		ROOT = { set_character_flag = claim_being_pressed }
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		hidden_effect = {
+			ROOT = {
+				add_character_modifier = {
+					name = new_land_timer
+					duration = 1
+					hidden = yes
+				}
+
+				opinion = {
+					name = pressed_my_claim
+					who = PREV
+					multiplier = 2
+				}
+
+				clr_character_flag = claim_being_pressed
+			}
+		}
+
+		ROOT = {
+			show_scope_change = no
+			participation_scaled_prestige = 200
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = ROOT } }
+			hidden_effect = { participation_scaled_prestige = 200 }
+		}
+
+		defender = {
+			show_scope_change = no
+			prestige = -200
+		}
+	}
+
+	on_fail = {
+		ROOT = {
+			clr_character_flag = claim_being_pressed
+		}
+	}
+
+	on_invalidation = {
+		ROOT = {
+			clr_character_flag = claim_being_pressed
+		}
+
+		any_attacker = {
+			show_scope_change = no
+			limit = { NOT = { culture = scottish } }
+			set_defacto_liege = k_england
+		}
+	}
+
+	on_success_title = {
+		log = "[FromFrom.GetBestName] (ID: [FromFrom.GetID]) succeeded with their war for [Root.GetBestName]'s (ID: [Root.GetID]) claim on the [This.GetFullName] against [From.GetBestName] (ID: [From.GetID])"
+
+		# Decentralize target title
+		title_reduce_CA_effect = yes
+		title_reduce_TO_effect = yes
+
+		hidden_effect = {
+			ROOT = {
+				if = {
+					limit = {
+						has_nickname = no
+						lower_real_tier_than = PREV
+					}
+
+					random = {
+						chance = 50
+						give_nickname = nick_the_usurper
+					}
+				}
+			}
+
+			any_attacker = {
+				limit = { NOT = { culture = scottish } }
+				set_defacto_liege = k_england
+			}
+
+			# Anti-Popes take all the gold of the Vatican
+			if = {
+				limit = {
+					OR = {
+						title = k_papacy
+						title = d_fraticelli
+					}
+				}
+
+				defender = {
+					transfer_scaled_wealth = {
+						to = ROOT
+						value = all
+					}
+				}
+			}
+		}
+
+		if = {
+			# Antipopes
+			limit = {
+				controls_religion = yes
+
+				holder_scope = {
+					OR = {
+						religion = catholic
+						religion = fraticelli
+					}
+				}
+			}
+
+			holder_scope = {
+				show_scope_change = no
+				abdicate_to = ROOT
+			}
+
+			if = {
+				limit = {
+					FROMFROM = { higher_real_tier_than = PREV }
+				}
+
+				ROOT = {
+					show_scope_change = no
+					set_defacto_liege = FROMFROM
+				}
+			}
+		}
+		else = {
+			# Check if we qualify for staying in the realm & inform player of result with a tooltip
+			if = {
+				limit = {
+					OR = {
+						de_jure_liege_or_above = FROMFROM
+
+						ROOT = {
+							any_liege = {
+								character = FROMFROM
+								higher_real_tier_than = PREVPREV
+							}
+
+							OR = {
+								higher_real_tier_than = PREV
+								real_tier = PREV
+								dynasty = FROMFROM
+							}
+						}
+					}
+				}
+
+				# Mark as staying in the realm
+				FROMFROM = { save_event_target_as = new_liege }
+				custom_tooltip = { text = CUSTOMTOOLTIP1 }
+			}
+			else = {
+				custom_tooltip = { text = CUSTOMTOOLTIP2 }
+
+				# Determine who is the liege of loser in the war
+				defender = {
+					if = {
+						limit = { independent = no }
+
+						liege = {
+							save_event_target_as = new_liege
+						}
+					}
+				}
+			}
+
+			usurp_title_plus_barony_if_unlanded = {
+				target = ROOT
+				type = claim
+			}
+
+			# Try to vassalise
+			hidden_effect = {
+				ROOT = {
+					if = {
+						limit = { event_target:new_liege = { always = yes } }
+						set_defacto_liege = event_target:new_liege
+					}
+					else = {
+						set_defacto_liege = THIS
+					}
+				}
+			}
+		}
+
+		hidden_effect = {
+			if = {
+				limit = {
+					higher_real_tier_than = BARON
+					NOT = { culture = ROOT }
+				}
+
+				conquest_culture = ROOT
+			}
+		}
+	}
+
+	on_fail_title = {
+		ROOT = {
+			show_scope_change = no
+			prestige = -100
+		}
+
+		FROMFROM = {
+			show_scope_change = no
+			prestige = -100
+		}
+
+		defender = {
+			show_scope_change = no
+			participation_scaled_prestige = 100
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 100 }
+		}
+	}
+
+	on_reverse_demand = {
+		prestige = -200
+
+		transfer_scaled_wealth = {
+			to = defender
+			value = 4.0
+		}
+
+		ROOT = {
+			show_scope_change = no
+
+			prestige = -200
+			imprison = defender
+		}
+
+		defender = {
+			show_scope_change = no
+			participation_scaled_prestige = 200
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 200 }
+		}
+
+		hidden_effect = {
+			any_attacker = {
+				limit = {
+					NOR = {
+						culture = scottish
+						character = ROOT
+					}
+				}
+
+				set_defacto_liege = FROM
+				imprison = FROM
+			}
+		}
+	}
+
+	on_reverse_demand_title = {
+		remove_claim = ROOT
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+
+	ai_will_do = {
+		factor = 0
+	}
+}
+
+# Overthrow Rules
+cb_faction_overthrow_ruler = {
+	name = CB_NAME_OVERTHROWRULER
+	war_name = WAR_NAME_FACTION_DEPOSE
+	sprite = 12
+	truce_days = 3650
+	infamy_modifier = 0
+
+	attacker_can_call_allies = no
+	can_ask_to_join_war = no
+	defender_can_call_allies = no
+	major_revolt = yes
+
+	can_use = {
+		ROOT = {
+			vassal_of = FROM
+
+			has_opinion_modifier = {
+				name = revolting_against
+				who = FROM
+			}
+		}
+	}
+
+	is_valid = {
+		ROOT = {
+			OR = {
+				independent = yes
+				same_liege = FROM
+			}
+
+			has_opinion_modifier = {
+				name = revolting_against
+				who = FROM
+			}
+		}
+
+		FROM = {
+			in_revolt = no
+
+			liege_before_war = {
+				in_revolt = no
+
+				liege_before_war = {
+					in_revolt = no
+				}
+			}
+		}
+
+		OR = {
+			# Never invalidate the revolt due to demands being impossible to fulfill if still the original liege
+			ROOT = { has_character_flag = original_war_liege }
+
+			# Succession law wars are invalid if the non-original liege doesn't hold the succession title
+			NOT = { FROM = { has_character_flag = faction_succession_war } }
+
+			AND = {
+				ROOT = { has_character_flag = demands_seniority }
+				FROM = {
+					any_demesne_title = {
+						higher_real_tier_than = COUNT
+						has_title_flag = change_seniority
+					}
+				}
+			}
+
+			AND = {
+				ROOT = { has_character_flag = demands_primogeniture }
+				FROM = {
+					any_demesne_title = {
+						higher_real_tier_than = COUNT
+						has_title_flag = change_primogeniture
+					}
+				}
+			}
+
+			AND = {
+				ROOT = { has_character_flag = demands_gavelkind }
+				FROM = {
+					any_demesne_title = {
+						higher_real_tier_than = COUNT
+						has_title_flag = change_gavelkind
+					}
+				}
+			}
+
+			AND = {
+				ROOT = { has_character_flag = demands_feudal_elective }
+				FROM = {
+					any_demesne_title = {
+						higher_real_tier_than = COUNT
+						has_title_flag = change_feudal_elective
+					}
+				}
+			}
+		}
+	}
+
+	on_add = {
+		log = "CB(cb_faction_overthrow_ruler): START: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+		defender = { pf_log_state_effect = yes }
+		attacker = { pf_log_state_effect = yes }
+
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		log = "CB(cb_faction_overthrow_ruler): VICTORY: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+
+		# The defender loses 10 Imperial Decadence ("out with the old, in with the new")
+		defender = {
+			show_scope_change = no
+
+			if = {
+				limit = { uses_imperial_decadence_trigger = yes }
+
+				custom_tooltip = {
+					text = IMPERIAL_DECADENCE_MINUS_10
+
+					primary_title = {
+						change_variable = {
+							which = imperial_decadence
+							value = -10
+						}
+
+						set_title_flag = skip_decadence_gain
+					}
+				}
+			}
+		}
+
+		# Apply immediate effects to the revolters
+		hidden_effect = {
+			any_attacker = {
+				limit = {
+					has_opinion_modifier = {
+						name = revolting_against
+						who = defender
+					}
+				}
+
+				# The revolters remember who they overthrew
+				opinion = { name = overthrown_ruler who = defender }
+				reverse_opinion = { name = overthrew_me who = defender }
+
+				# and also are grateful to each other for their victory
+				defender = {
+					any_opinion_modifier_target = {
+						limit = {
+							reverse_has_opinion_modifier = {
+								name = revolting_against_me
+								who = PREV
+							}
+
+							NOT = { character = PREVPREV }
+						}
+
+						reverse_opinion = {
+							name = opinion_very_grateful
+							who = PREVPREV
+							years = 10
+						}
+					}
+				}
+			}
+		}
+
+		# Apply revolt effects to the defender
+		defender = {
+			show_scope_change = no
+
+			prestige = -500
+			character_event = { id = PlusFaction.200 days = 1 } # Change faction moods
+
+			# Existing vassals may declare independence
+			if = {
+			 	limit = { independent = yes }
+
+				any_vassal = {
+					character_event = {
+						id = Plus.430
+						days = 3
+					}
+				}
+			}
+
+			# Check whether title will be destroyed (CK2Plus only)
+			any_demesne_title = {
+				show_scope_change = no
+
+			 	limit = { can_destroy_title_trigger = yes }
+
+			 	custom_tooltip = {
+					text = TITLE_ENDANGERED
+
+					log = "[This.GetFullName] should be destroyed as a result of the revolt"
+					set_title_flag = destroy_title
+				}
+			}
+
+			# Always lower CA/TO, even if it wasn't a revolt demand
+			pf_lower_CA_effect = yes # lower Crown Authority
+			pf_lower_TO_effect = yes # lower Tribal Organization
+
+			# Enforce any rebel demands that prompted the civil war
+			if = {
+				limit = { attacker = { has_character_flag = demands_revert_succession } }
+				primary_title = { pf_revert_succession_law_effect = yes }
+			}
+			else_if = {
+				limit = { attacker = { has_character_flag = demands_lower_feudal_obligations } }
+				pf_lower_feudal_obligations_effect = yes
+			}
+			else_if = {
+				limit = { attacker = { has_character_flag = demands_lower_tribal_obligations } }
+				pf_lower_tribal_obligations_effect = yes
+			}
+			else_if = {
+				limit = { attacker = { has_character_flag = demands_lower_city_obligations } }
+				pf_lower_city_obligations_effect = yes
+			}
+			else_if = {
+				limit = { attacker = { has_character_flag = demands_lower_temple_obligations } }
+				pf_lower_temple_obligations_effect = yes
+			}
+			else_if = {
+				limit = { attacker = { has_character_flag = demands_council_life_terms } }
+				primary_title = { add_law_w_cooldown = council_privileges_1 }
+			}
+			else_if = {
+				limit = { attacker = { has_character_flag = demands_seniority } }
+
+				random_demesne_title = {
+					limit = { has_title_flag = change_seniority }
+					succession_w_cooldown = seniority
+					clr_title_flag = change_seniority
+				}
+
+				recalc_succession = yes
+			}
+			else_if = {
+				limit = { attacker = { has_character_flag = demands_primogeniture } }
+
+				random_demesne_title = {
+					limit = { has_title_flag = change_primogeniture }
+					succession_w_cooldown = primogeniture
+					clr_title_flag = change_primogeniture
+				}
+
+				recalc_succession = yes
+			}
+			else_if = {
+				limit = { attacker = { has_character_flag = demands_gavelkind } }
+
+				random_demesne_title = {
+					limit = { has_title_flag = change_gavelkind }
+					succession_w_cooldown = gavelkind
+					clr_title_flag = change_gavelkind
+				}
+
+				recalc_succession = yes
+			}
+			else_if = {
+				limit = { attacker = { has_character_flag = demands_feudal_elective } }
+
+				random_demesne_title = {
+					limit = { has_title_flag = change_feudal_elective }
+
+					set_title_flag = non_manual_law_change # No prestige loss
+
+					if = {
+						limit = {
+							OR = {
+								title = e_byzantium
+								title = e_roman_empire
+							}
+						}
+						add_law_w_cooldown = succ_byzantine_elective
+					}
+					else_if = {
+						limit = {
+							OR = {
+								title = e_hre
+								has_title_flag = alternate_hre
+							}
+						}
+						add_law_w_cooldown = succ_hre_elective
+					}
+					else = {
+						add_law_w_cooldown = succ_feudal_elective
+					}
+
+					clr_title_flag = change_feudal_elective
+					clr_title_flag = non_manual_law_change # No prestige loss
+				}
+
+				recalc_succession = yes
+			}
+
+			# Prevent on_new_holder / on_unlanded edge case handlers from tearing-down any civil war state while the CB
+			# completes due to, e.g., liege changes or gained titles.
+			set_global_flag = pf_teardown_lock
+
+			# Surrender any non-capital counties to rebels with (de jure) claims
+			save_event_target_as = current_holder
+
+			any_demesne_title = {
+				show_scope_change = no
+
+				limit = {
+					real_tier = COUNT
+					location = { is_capital = no }
+					can_be_given_away = yes
+				}
+
+				event_target:current_holder = {
+					show_scope_change = no
+
+					random_opinion_modifier_target = {
+						show_scope_change = no
+
+						limit = {
+							pf_part_of_this_revolt_trigger = yes
+							can_inherit_trigger = yes
+
+							OR = {
+								has_claim = PREVPREV
+
+								any_demesne_title = {
+									real_tier = DUKE
+									de_jure_vassal_or_below = PREVPREVPREV
+								}
+							}
+						}
+
+						preferred_limit = { has_strong_pressed_claim = PREVPREV }
+						preferred_limit = { has_strong_claim = PREVPREV }
+						preferred_limit = { has_weak_pressed_claim = PREVPREV }
+						preferred_limit = { has_weak_claim = PREVPREV }
+
+						usurp_title_plus_barony_if_unlanded = {
+							target = PREVPREV
+							type = faction_demand
+						}
+					}
+				}
+			}
+
+			# Transfer vassals to their de jure lieges, giving preference to the
+			# rebels with the lowest-tier held titles that are de jure liege to
+			# each vassal (prefer most specific de jure liege) ...
+
+			any_vassal = {
+				show_scope_change = no
+
+				limit = { pf_part_of_this_revolt_trigger = no }
+
+				capital_holding = {
+					show_scope_change = no
+
+					event_target:current_holder = {
+						show_scope_change = no
+
+						random_opinion_modifier_target = {
+							show_scope_change = no
+
+							limit = {
+								pf_part_of_this_revolt_trigger = yes
+								higher_real_tier_than = PREVPREVPREV
+
+								any_demesne_title = {
+									de_jure_vassal_or_below = PREVPREVPREV
+								}
+							}
+
+							preferred_limit = {
+								any_demesne_title = {
+									real_tier = COUNT
+									de_jure_vassal_or_below = PREVPREVPREV
+								}
+							}
+
+							preferred_limit = {
+								any_demesne_title = {
+									real_tier = DUKE
+									de_jure_vassal_or_below = PREVPREVPREV
+								}
+							}
+
+							preferred_limit = {
+								any_demesne_title = {
+									real_tier = KING
+									de_jure_vassal_or_below = PREVPREVPREV
+								}
+							}
+
+							set_defacto_vassal = PREVPREVPREV
+						}
+					}
+				}
+			}
+
+			# Save event targets for primary title and current liege
+			primary_title = { save_event_target_as = former_primary_title }
+
+			if = {
+				limit = { independent = no }
+				liege = { save_event_target_as = current_liege }
+			}
+
+			# Check whether defender should have titles usurped
+			if = {
+				limit = {
+					# This is not a succession law revolt
+					NOT = { has_character_flag = faction_succession_war }
+					is_merchant_republic = no
+
+					OR = {
+						is_adult = no
+
+						# Or this is the original liege and the current heir is not an adult
+						AND = {
+							attacker = { has_character_flag = original_war_liege }
+							current_heir = { is_adult = no }
+						}
+
+						# Or a rebel has a claim on the primary title or is a pretender/heir
+						any_opinion_modifier_target = {
+							pf_part_of_this_revolt_trigger = yes
+
+							OR = {
+								has_claim = event_target:former_primary_title
+								any_pretender_title = {
+									title = event_target:former_primary_title
+								}
+								any_heir_title = {
+									title = event_target:former_primary_title
+								}
+							}
+						}
+					}
+				}
+
+				# Grant non-primary same-tier titles to rebels with claims
+				any_demesne_title = {
+					show_scope_change = no
+
+					limit = {
+						can_be_given_away = yes
+						is_primary_holder_title_tier = yes
+						is_primary_holder_title = no
+					}
+
+					# Give the title to rebel with a claim or is a pretender/heir
+					event_target:current_holder = {
+						show_scope_change = no
+
+						random_opinion_modifier_target = {
+							show_scope_change = no
+
+							limit = {
+								pf_part_of_this_revolt_trigger = yes
+								can_inherit_trigger = yes
+
+								OR = {
+									has_strong_claim = PREVPREV
+									any_pretender_title = {
+										title = PREVPREVPREV
+									}
+									any_heir_title = {
+										title = PREVPREVPREV
+									}
+								}
+							}
+
+							preferred_limit = {
+								OR = {
+									has_strong_claim = PREVPREV
+									any_pretender_title = {
+										title = PREVPREVPREV
+									}
+									any_heir_title = {
+										title = PREVPREVPREV
+									}
+								}
+							}
+
+							usurp_title_plus_barony_if_unlanded = {
+								target = PREVPREV
+								type = faction_demand
+							}
+						}
+
+						hidden_effect = {
+							if = {
+								limit = { event_target:current_liege = { always = yes } }
+								set_defacto_liege = event_target:current_liege
+							}
+						}
+					}
+				}
+
+				# Give primary title to rebel who is a claimant/pretender/heir
+				if = {
+					limit = {
+						event_target:current_holder = {
+							has_landed_title = event_target:former_primary_title
+
+							any_opinion_modifier_target = {
+								pf_part_of_this_revolt_trigger = yes
+								can_inherit_trigger = yes
+
+								OR = {
+									has_claim = event_target:former_primary_title
+									any_pretender_title = { title = event_target:former_primary_title }
+									any_heir_title = { title = event_target:former_primary_title }
+								}
+							}
+						}
+					}
+
+					event_target:current_holder = {
+						show_scope_change = no
+
+						random_opinion_modifier_target = {
+							show_scope_change = no
+
+							limit = {
+								pf_part_of_this_revolt_trigger = yes
+								can_inherit_trigger = yes
+
+								OR = {
+									has_claim = event_target:former_primary_title
+									any_pretender_title = { title = event_target:former_primary_title }
+									any_heir_title = { title = event_target:former_primary_title }
+								}
+							}
+
+							preferred_limit = {
+								OR = {
+									any_pretender_title = { title = event_target:former_primary_title }
+									any_heir_title = { title = event_target:former_primary_title }
+								}
+							}
+
+							preferred_limit = { has_strong_pressed_claim = event_target:former_primary_title }
+							preferred_limit = { has_strong_claim = event_target:former_primary_title }
+							preferred_limit = { has_weak_pressed_claim = event_target:former_primary_title }
+
+							usurp_title_plus_barony_if_unlanded = {
+								target = event_target:former_primary_title
+								type = faction_demand
+							}
+
+							hidden_effect = {
+								if = {
+									limit = { event_target:current_liege = { always = yes } }
+									set_defacto_liege = event_target:current_liege
+								}
+							}
+						}
+					}
+				}
+
+				# Just abdicate if there is no rebel with a claim or a pretender/heir to primary title
+				else = {
+					abdicate = yes
+				}
+			}
+			else = {
+				abdicate = yes
+			}
+		}
+
+		clr_global_flag = pf_teardown_lock
+
+		# Figure out who are the supporters, losers, and neutrals
+		if = {
+			# Primary title has changed hands
+			limit = {
+				event_target:former_primary_title = {
+					NOT = { holder = defender }
+				}
+			}
+
+			hidden_effect = {
+				event_target:former_primary_title = {
+					holder_scope = {
+						# Clear previous civil war opinions
+						pf_civil_war_clear_old_opinions_effect = yes
+
+						opinion = {
+							name = opinion_civil_war_loser
+							who = event_target:current_holder
+							years = 5
+						}
+
+						# Mark rebels as supporters
+						event_target:current_holder = {
+							any_opinion_modifier_target = {
+								limit = {
+									pf_part_of_this_revolt_trigger = yes
+									NOT = { character = PREVPREV }
+								}
+
+								reverse_opinion = {
+									name = opinion_civil_war_supporter
+									who = PREVPREV
+									years = 5
+								}
+							}
+						}
+
+						# Mark former liege and loyalists as losers
+						any_vassal = {
+							limit = {
+								has_opinion_modifier = {
+									name = pf_loyal_toward
+									who = event_target:current_holder
+								}
+							}
+							reverse_opinion = {
+								name = opinion_civil_war_loser
+								who = liege
+								years = 5
+							}
+						}
+
+						# Remember those who chose to be neutral
+						any_vassal = {
+							limit = {
+								has_opinion_modifier = {
+									name = pf_neutral_toward
+									who = event_target:current_holder
+								}
+							}
+
+							reverse_opinion = {
+								name = opinion_civil_war_neutral
+								who = liege
+								years = 5
+							}
+						}
+					}
+				}
+			}
+		}
+
+		# Check whether the primary title should be destroyed due to CA loss
+
+		event_target:former_primary_title = {
+			if = {
+				limit = { has_title_flag = destroy_title }
+
+				holder_scope = {
+					character_event = {
+						id = Plus.1620 # Destroy title
+						days = 4
+					}
+				}
+			}
+
+			# Post-civil war event to reward allies (if title has changed hands)
+			if = {
+				limit = { NOT = { holder = defender } }
+
+				holder_scope = {
+					character_event = { id = PlusFaction.450 }
+				}
+			}
+		}
+
+		# Clean up remaining civil war state
+		pf_civil_war_cleanup_effect = yes
+
+		attacker = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 250
+			character_event = { id = PlusFaction.200 days = 1 } # Change faction moods
+		}
+
+		any_attacker = {
+			limit = { NOT = { character = attacker } }
+			hidden_effect = { participation_scaled_prestige = 250 }
+		}
+	}
+
+	on_fail = {
+		log = "CB(cb_faction_overthrow_ruler): WHITEPEACE: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+
+		# Clean up remaining civil war state
+		pf_civil_war_cleanup_effect = yes
+
+		attacker = {
+			show_scope_change = no
+
+			prestige = -100
+
+			hidden_effect = {
+				reverse_remove_opinion = {
+					name = declared_war
+					who = defender
+				}
+			}
+		}
+	}
+
+	on_reverse_demand = {
+		log = "CB(cb_faction_overthrow_ruler): DEFEAT: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+
+		defender = {
+			show_scope_change = no
+			pf_civil_war_clear_old_opinions_effect = yes
+		}
+
+		# Apply immediate effects to the revolters
+		any_attacker = {
+			show_scope_change = no
+
+			limit = {
+				has_opinion_modifier = {
+					name = revolting_against
+					who = defender
+				}
+			}
+
+			imprison = defender
+
+			hidden_effect = {
+				reverse_opinion = {
+					name = opinion_civil_war_loser
+					who = defender
+					years = 5
+				}
+
+				opinion = {
+					name = opinion_coerced_into_leaving_faction
+					who = defender
+					years = 5
+				}
+			}
+		}
+
+		# Mark loyalists and neutrals for the reward event
+		hidden_effect = {
+			defender = {
+				any_vassal = {
+					if = {
+						limit = {
+							reverse_has_opinion_modifier = {
+								name = pf_loyal_to_me
+								who = PREV
+							}
+						}
+
+						reverse_opinion = {
+							name = opinion_civil_war_supporter
+							who = PREV
+							years = 5
+						}
+					}
+					else_if = {
+						limit = {
+							reverse_has_opinion_modifier = {
+								name = pf_neutral_to_me
+								who = PREV
+							}
+						}
+
+						reverse_opinion = {
+							name = opinion_civil_war_neutral
+							who = PREV
+							years = 5
+						}
+					}
+				}
+			}
+		}
+
+		# Clean up remaining civil war state
+		pf_civil_war_cleanup_effect = yes
+
+		attacker = {
+			show_scope_change = no
+
+			prestige = -250
+			character_event = { id = PlusFaction.200 days = 1 } # Change faction moods
+		}
+
+		defender = {
+			show_scope_change = no
+
+			participation_scaled_prestige = 100
+			character_event = { id = PlusFaction.450 } # Post-civil war event to reward allies
+			character_event = { id = PlusFaction.200 days = 1 } # Change faction moods
+		}
+
+		any_defender = {
+			limit = { NOT = { character = defender } }
+			hidden_effect = { participation_scaled_prestige = 100 }
+		}
+	}
+
+	on_invalidation = {
+		log = "CB(cb_faction_overthrow_ruler): INVALIDATED: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+
+		# Clean up remaining civil war state
+		pf_civil_war_cleanup_effect = yes
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# Subjugation
+subjugation = {
+	name = CB_NAME_SUBJUGATION
+	war_name = WAR_NAME_SUBJUGATION
+	sprite = 8
+	truce_days = 1825
+
+	allowed_to_target_tributaries = no
+	can_ask_to_join_war = no
+	can_call_allies = no
+	# check_de_jure_tier = COUNT # this scans all dejure duchies for the counties which are held by or vassals(or below) of selected character. Only valid if is_permanent = yes
+	hostile_against_others = yes
+	is_permanent = yes
+
+	can_use_gui = {
+		ROOT = {
+			can_use_cb_preamble = yes
+			is_patrician = no
+		}
+	}
+
+	can_use = {
+		has_game_rule = {
+			name = rapid_conquest_cbs
+			value = yes
+		}
+
+		ROOT = {
+			independent = yes
+			higher_real_tier_than = COUNT
+			primary_title = { is_primary_type_title = no } # EMF: e.g., k_orthodox can't use this
+		}
+
+		FROM = {
+			shares_realm_border_with = ROOT
+
+			OR = {
+				real_tier = COUNT
+				realm_size < 10
+			}
+
+			# EMF: Can't subjugate higher-tier landless characters (k_orthodox, etc.) or revolters
+			primary_title = { is_primary_type_title = no }
+			in_revolt = no
+			is_nomadic = no
+		}
+	}
+
+	on_add = {
+		log = "CB(subjugation): START: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		log = "CB(subjugation): VICTORY: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+
+		attacker = {
+			show_scope_change = no
+			prestige = 100
+		}
+
+		defender = {
+			show_scope_change = no
+
+			prestige = -100
+
+			any_demesne_title = {
+				show_scope_change = no
+
+				limit = { NOT = { lower_real_tier_than = attacker } }
+
+				usurp_title = {
+					target = attacker
+					type = invasion
+				}
+			}
+
+			set_defacto_liege = attacker
+		}
+	}
+
+	on_fail = {
+		log = "CB(subjugation): WHITEPEACE: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+
+		attacker = {
+			show_scope_change = no
+			prestige = -25
+		}
+	}
+
+	on_reverse_demand = {
+		log = "CB(subjugation): DEFEAT: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+
+		attacker = {
+			show_scope_change = no
+
+			prestige = -50
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 2.0
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+			prestige = 50
+		}
+	}
+
+	on_invalidation = {
+		log = "CB(subjugation): INVALIDATED: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# Subjugation Duke
+subjugation_duke = {
+	name = CB_NAME_SUBJUGATION
+	war_name = WAR_NAME_SUBJUGATION
+	sprite = 8
+	truce_days = 1825
+	hostile_against_others = yes
+	is_permanent = yes
+	can_ask_to_join_war = no
+	can_call_allies = no
+	#check_de_jure_tier = COUNT # this scans all dejure duchies for the counties which are held by or vassals(or below) of selected character. Only valid if is_permanent = yes
+
+	allowed_to_target_tributaries = no
+
+	can_use_gui = {
+		ROOT = {
+			can_use_cb_preamble = yes
+			is_patrician = no
+		}
+	}
+
+	can_use = {
+		has_game_rule = {
+			name = rapid_conquest_cbs
+			value = yes
+		}
+
+		ROOT = {
+			independent = yes
+			higher_real_tier_than = DUKE
+		}
+
+		FROM = {
+			real_tier = DUKE
+			shares_realm_border_with = ROOT
+			realm_size < 20
+			in_revolt = no
+			primary_title = { is_primary_type_title = no }
+		}
+	}
+
+	on_add = {
+		log = "CB(subjugation_duke): START: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		log = "CB(subjugation_duke): VICTORY: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+
+		attacker = {
+			show_scope_change = no
+			prestige = 100
+		}
+
+		defender = {
+			show_scope_change = no
+
+			prestige = -100
+			set_defacto_liege = attacker
+		}
+	}
+
+	on_fail = {
+		log = "CB(subjugation_duke): WHITEPEACE: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+
+		attacker = {
+			show_scope_change = no
+			prestige = -25
+		}
+	}
+
+	on_reverse_demand = {
+		log = "CB(subjugation_duke): DEFEAT: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+
+		attacker = {
+			show_scope_change = no
+
+			prestige = -50
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 2.0
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+			prestige = 50
+		}
+	}
+
+	on_invalidation = {
+		log = "CB(subjugation_duke): INVALIDATED: [Root.GetTitledFirstName] of [Root.PrimaryTitle.GetBaseName] (ID: [Root.GetID]) vs. [From.GetTitledFirstName] of [From.PrimaryTitle.GetBaseName] (ID: [From.GetID])"
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# ???
+overpower_imperial_suzerain_cb = {
+	name = CB_NAME_OVERPOWER_SUZERAIN
+	war_name = WAR_NAME_OVERPOWER_SUZERAIN
+	sprite = 25
+	truce_days = 365
+	is_permanent = yes
+	hostile_against_others = yes
+	can_ask_to_join_war = no
+
+	can_use_gui = {
+		ROOT = {
+			can_use_cb_preamble = yes
+		}
+	}
+
+	can_use = {
+		has_dlc = "Horse Lords"
+
+		ROOT = {
+			is_tributary = {
+				type = imperial
+				suzerain = FROM
+			}
+		}
+	}
+
+	is_valid = {
+		ROOT = {
+			is_tributary = {
+				type = imperial
+				suzerain = FROM
+			}
+		}
+	}
+
+	on_add = {
+		fire_haruspicy_event_effect = yes
+		anger_china_effect = yes
+	}
+
+	on_success = {
+		defender = {
+			show_scope_change = no
+			prestige = -200
+		}
+
+		attacker = {
+			show_scope_change = no
+
+			prestige = 200
+
+			if = {
+				limit = {
+					is_tributary = {
+						type = imperial
+						suzerain = defender
+					}
+				}
+
+				remove_tributary = defender
+			}
+
+			make_tributary = {
+				who = defender
+				tributary_type = imperial
+			}
+		}
+	}
+
+	on_fail = {
+		attacker = {
+			show_scope_change = no
+			prestige = -100
+		}
+
+		defender = {
+			show_scope_change = no
+			prestige = 50
+		}
+	}
+
+	on_reverse_demand = {
+		attacker = {
+			show_scope_change = no
+
+			prestige = -200
+
+			transfer_scaled_wealth = {
+				to = defender
+				value = 4.0
+			}
+		}
+
+		defender = {
+			show_scope_change = no
+			prestige = 200
+		}
+	}
+
+	on_attacker_leader_death = {
+		end_war = invalid
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+
+	defender_ai_defeat_worth = {
+		factor = 100
+
+		mult_modifier = {
+			factor = 1.5
+			FROM = { trait = proud }
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			FROM = { trait = brave }
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			FROM = { trait = greedy }
+		}
+
+		mult_modifier = {
+			factor = 2
+			FROM = { real_tier = KING }
+		}
+
+		mult_modifier = {
+			factor = 0.80
+			ROOT = {
+				relative_power = { who = FROM power >= 1.2 }
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.80
+			ROOT = {
+				relative_power = { who = FROM power >= 1.5 }
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			ROOT = {
+				relative_power = { who = FROM power >= 2.0 }
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			ROOT = {
+				relative_power = { who = FROM power >= 2.5 }
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			ROOT = {
+				relative_power = { who = FROM power >= 3 }
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.7
+			ROOT = {
+				relative_power = { who = FROM power >= 4 }
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.7
+			ROOT = {
+				relative_power = { who = FROM power >= 5 }
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.7
+			ROOT = {
+				relative_power = { who = FROM power >= 6 }
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.4
+			ROOT = {
+				relative_power = { who = FROM power >= 8 }
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			ROOT = {
+				relative_power = { who = FROM power >= 10 }
+			}
+		}
+
+		mult_modifier = {
+			factor = 5
+			ROOT = {
+				distance_from_realm = { who = FROM value >= 20 }
+			}
+		}
+
+		mult_modifier = {
+			factor = 5
+			ROOT = {
+				distance_from_realm = { who = FROM value >= 40 }
+			}
+		}
+
+		mult_modifier = {
+			factor = 5
+			ROOT = {
+				distance_from_realm = { who = FROM value >= 80 }
+			}
+		}
+
+		mult_modifier = {
+			factor = 5
+			ROOT = {
+				distance_from_realm = { who = FROM value >= 120 }
+			}
+		}
+	}
+
+	ai_will_do = {
+		factor = 1
+
+		trigger = {
+			ROOT = {
+				sufficient_treasury_for_war_trigger = yes
+			}
+		}
+
+		mult_modifier = {
+			factor = 1.5
+		}
+
+		mult_modifier = {
+			factor = 4
+			ROOT = { trait = greedy }
+		}
+
+		mult_modifier = {
+			factor = 0.1
+			FROM = { dynasty = ROOT }
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			OR = {
+				ROOT = { is_nomadic = yes }
+				FROM = { is_nomadic = no }
+			}
+		}
+	}
+}

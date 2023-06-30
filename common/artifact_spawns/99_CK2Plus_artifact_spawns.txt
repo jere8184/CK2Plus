@@ -1,0 +1,72 @@
+##########
+#Plus Artifacts:
+#
+# achilles_spear - ancient_spartan_sword
+#
+#Total = 2
+##########
+
+#Achilles_Spear
+achilles_spear = {
+	max_amount = 1
+	spawn_date = -1.1.1
+
+	artifacts = {
+		achilles_spear = {
+			value = 1
+		}
+	}
+
+	spawn_chance = {
+		value = 100
+
+		trigger = {
+			has_dlc = "Mystics"
+		}
+	}
+
+	weight = {
+		value = 0
+
+		additive_modifier = {
+			value = 100
+
+			is_landed = yes
+			religion_openly_hellenic_or_reformed_trigger = yes
+		}
+	}
+}
+
+#Spartan Sword
+ancient_spartan_sword = {
+	max_amount = 3
+	spawn_date = -1.1.1
+
+	artifacts = {
+		achilles_spear = {
+			value = 1
+		}
+	}
+
+	spawn_chance = {
+		value = 100
+
+		trigger = {
+			has_dlc = "Mystics"
+		}
+	}
+
+	weight = {
+		value = 0
+
+		additive_modifier = {
+			value = 100
+
+			is_landed = yes
+			OR = {
+				religion_openly_hellenic_or_reformed_trigger = yes
+				culture_group = byzantine
+			}
+		}
+	}
+}

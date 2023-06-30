@@ -1,0 +1,52 @@
+add_cousin_opinion_effect = {
+	any_close_relative = {
+		limit = { is_aunt_uncle_of = ROOT }
+
+		any_child = {
+			limit = {
+				is_cousin_of = ROOT # Redundant for safety
+
+				NOT = {
+					has_opinion_modifier = {
+						name = opinion_cousin
+						who = ROOT
+					}
+				}
+			}
+
+			opinion = {
+				name = opinion_cousin
+				who = ROOT
+				years = 100
+			}
+
+			reverse_opinion = {
+				name = opinion_cousin
+				who = ROOT
+				years = 100
+			}
+		}
+	}
+}
+
+lowborn_marries_duke_effect = {
+	if = {
+		limit = {
+			new_character = {
+				is_lowborn = yes
+			}
+
+			FROM = {
+				higher_tier_than = COUNT
+				ai = yes
+			}
+		}
+
+		new_character = {
+			random_list = {
+			#	25 = { dynasty = random }
+				75 = { dynasty = father_bastard }
+			}
+		}
+	}
+}

@@ -1,0 +1,1539 @@
+decisions = {
+	# Altaic Tribals
+	become_nomad = {
+		ai_check_interval = 12
+
+		only_rulers = yes
+
+		potential = {
+			is_tribal = yes
+
+			OR = {
+				culture_group = altaic
+				culture_group = magyar
+
+				trigger_if = {
+					limit = { ai = no }
+
+					independent = yes
+
+					any_demesne_province = {
+						owned_by = PREV
+
+						any_neighbor_province = {
+							owner = { is_nomadic = yes }
+						}
+					}
+				}
+			}
+
+			pacifist = no
+			is_female = no
+			capital_scope = { num_of_empty_holdings >= 1 }
+
+			OR = {
+				num_of_count_titles >= 3
+				liege = { is_nomadic = yes }
+			}
+
+			OR = {
+				real_tier = DUKE
+				real_tier = KING
+			}
+
+			NOT = { has_landed_title = k_hungary }
+		}
+
+		allow = {
+			prestige >= 1000
+			martial >= 12
+
+			calc_true_if = {
+				amount >= 2
+
+				martial >= 15
+				martial >= 20
+				trait = brave
+				trait = strong
+				trait = brawny
+			}
+
+			war = no
+			is_ill = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_government_type = nomadic_government
+
+			if = {
+				limit = { prestige >= 3000 }
+				population = 2500
+			}
+			else_if = {
+				limit = { population >= 2500 }
+				population = 2000
+			}
+			else_if = {
+				limit = { population >= 2000 }
+				population = 1500
+			}
+			else_if = {
+				limit = { population >= 1500 }
+				population = 1000
+			}
+			else = {
+				population = 500
+			}
+
+			if = {
+				limit = { independent = yes }
+				narrative_event = { id = Plus.564 }
+			}
+		}
+
+		ai_will_do = {
+			factor = 0.5
+
+			trigger = {
+				capital_scope = {
+					region = world_steppe
+					region = world_persia
+				#	region = custom_sahara
+				}
+
+				NOT = {
+					any_realm_title = {
+						tier = COUNT
+						is_feudal = yes
+						count = 4
+					}
+				}
+			}
+		}
+	}
+
+	form_carolingian_empire = {
+		is_high_prio = yes
+		ai_check_interval = 24
+
+		only_independent = yes
+
+		potential = {
+			independent = yes
+			dynasty = 25061 # Karling
+
+			OR = {
+				religion = catholic
+				religion = chalcedonian
+			}
+			is_heretic = no
+
+			trigger_if = {
+				limit = { real_tier = EMPEROR }
+				has_landed_title = e_francia
+			}
+
+			e_francia = {
+				trigger_if = {
+					limit = { has_holder = yes }
+					holder = ROOT
+				}
+			}
+
+			e_roman_empire = { has_holder = no }
+			rightful_religious_head_scope = { has_landed_title = k_papacy }
+
+			NOR = {
+				has_alternate_start_parameter = {
+					key = religion_names
+					value = random
+				}
+
+				has_global_flag = carolingian_empire_formed
+				has_global_flag = hre_formed
+			}
+		}
+
+		allow = {
+			num_of_count_titles_in_realm >= 100
+			piety >= 100
+			war = no
+			has_regent = no
+			is_inaccessible_trigger = no
+
+			custom_tooltip = {
+				text = POPE_WOULD_HEAR_REQUEST
+
+				NOT = { trait = excommunicated }
+
+				trigger_if = {
+					limit = { ai = no }
+
+					rightful_religious_head_scope = {
+						opinion = {
+							who = ROOT
+							value >= 0
+						}
+					}
+				}
+			}
+
+			trigger_if = {
+				limit = { is_alternate_start = no }
+
+				custom_tooltip = {
+					text = CONTROLS_NEUSTRIA
+
+					k_neustria = {
+						holder_scope = {
+							OR = {
+								character = ROOT
+								is_vassal_or_below_of = ROOT
+							}
+						}
+					}
+				}
+
+				custom_tooltip = {
+					text = CONTROLS_LOMBARDY
+
+					OR = {
+						k_italy = {
+							holder_scope = {
+								OR = {
+									character = ROOT
+									is_vassal_or_below_of = ROOT
+								}
+							}
+						}
+
+						k_lombardy = {
+							holder_scope = {
+								OR = {
+									character = ROOT
+									is_vassal_or_below_of = ROOT
+								}
+							}
+						}
+					}
+				}
+
+				custom_tooltip = {
+					text = CONTROLS_AUSTRASIA
+
+					k_austrasia = {
+						holder_scope = {
+							OR = {
+								character = ROOT
+								is_vassal_or_below_of = ROOT
+							}
+						}
+					}
+				}
+
+				OR = {
+					custom_tooltip = {
+						text = CONTROLS_BAVARIA
+
+						k_bavaria = {
+							holder_scope = {
+								OR = {
+									character = ROOT
+									is_vassal_or_below_of = ROOT
+								}
+							}
+						}
+					}
+
+					custom_tooltip = {
+						text = CONTROLS_BAVARIA2
+
+						completely_controls = d_bavaria
+						k_bavaria = { has_holder = no }
+					}
+				}
+
+				OR = {
+					has_landed_title >= e_francia
+					scaled_wealth = 1
+				}
+			}
+		}
+
+		effect = {
+			rightful_religious_head_scope = {
+				save_event_target_as = current_roman_pope
+			}
+
+			set_global_flag = carolingian_empire_formed
+			tooltip = { gain_title = e_karling }
+
+			if = {
+				limit = { lower_real_tier_than = EMPEROR }
+				scaled_wealth = -1
+			}
+
+			prestige = 1000
+			add_trait = crowned_by_pope
+			give_nickname = nick_the_great
+
+			hidden_effect = {
+				activate_title = { title = e_karling status = yes }
+				activate_title = { title = k_germany status = yes }
+				activate_title = { title = k_france status = yes }
+				activate_title = { title = k_lotharingia status = yes }
+
+				any_demesne_title = {
+					limit = { real_tier = KING }
+					de_jure_liege = e_karling
+				}
+
+				e_francia = {
+					any_direct_de_jure_vassal_title = {
+						de_jure_liege = e_karling
+					}
+				}
+
+				primary_title = {
+					e_karling = {
+						set_title_flag = non_manual_law_change # No prestige loss
+						grant_title = ROOT
+						copy_title_laws = PREV
+						add_law = succ_elective_gavelkind
+						clr_title_flag = non_manual_law_change # No prestige loss
+					}
+
+					k_germany = {
+						set_title_flag = non_manual_law_change # No prestige loss
+						set_name = EAST_FRANCIA
+						adjective = EAST_FRANCIA_ADJ
+						grant_title = ROOT
+						copy_title_laws = PREV
+						clr_title_flag = non_manual_law_change # No prestige loss
+					}
+
+					k_france = {
+						set_title_flag = non_manual_law_change # No prestige loss
+						set_name = WEST_FRANCIA
+						adjective = WEST_FRANCIA_ADJ
+						grant_title = ROOT
+						copy_title_laws = PREV
+						insert_title_history = k_neustria
+						clr_title_flag = non_manual_law_change # No prestige loss
+					}
+				}
+			}
+
+			any_demesne_title = {
+				show_scope_change = no
+
+				limit = {
+					real_tier = EMPEROR
+					NOT = { title = e_karling }
+				}
+
+				destroy_landed_title = THIS
+			}
+
+			if = {
+				limit = { has_landed_title = k_saxony }
+				destroy_landed_title = k_saxony
+			}
+
+			if = {
+				limit = { has_landed_title = k_bavaria }
+				destroy_landed_title = k_bavaria
+			}
+
+			if = {
+				limit = {
+					any_vassal = { has_landed_title = k_saxony }
+				}
+
+				random_vassal = {
+					show_scope_change = no
+
+					limit = { has_landed_title = k_saxony }
+
+					any_vassal = {
+						show_scope_change = no
+
+						limit = { real_tier = DUKE }
+
+						set_defacto_liege = ROOT
+						pf_liege_change_effect = yes
+					}
+
+					destroy_landed_title = k_saxony
+					set_defacto_liege = ROOT
+					pf_liege_change_effect = yes
+
+					opinion = {
+						name = opinion_revoked_my_title
+						who = ROOT
+						years = 10
+					}
+				}
+			}
+
+			if = {
+				limit = {
+					any_vassal = { has_landed_title = k_bavaria }
+				}
+
+				random_vassal = {
+					show_scope_change = no
+
+					limit = { has_landed_title = k_bavaria }
+
+					any_vassal = {
+						show_scope_change = no
+
+						limit = { real_tier = DUKE }
+
+						set_defacto_liege = ROOT
+						pf_liege_change_effect = yes
+					}
+
+					destroy_landed_title = k_bavaria
+					set_defacto_liege = ROOT
+					pf_liege_change_effect = yes
+
+					opinion = {
+						name = opinion_revoked_my_title
+						who = ROOT
+						years = 10
+					}
+				}
+			}
+
+			if = {
+				limit = { NOT = { is_friend = event_target:current_roman_pope } }
+				add_friend = event_target:current_roman_pope
+			}
+
+			# Rename/Redistribute kingdoms
+			hidden_effect = {
+				d_normandy = {
+					set_name = ""
+					adjective = ""
+				}
+
+				k_lotharingia = {
+					set_name = MIDDLE_FRANCIA
+					adjective = MIDDLE_FRANCIA_ADJ
+				}
+
+				d_thuringia = { de_jure_liege = k_germany }
+				d_hesse = { de_jure_liege = k_germany }
+				d_franconia = { de_jure_liege = k_germany }
+				d_rhine = { de_jure_liege = k_germany }
+				d_baden = { de_jure_liege = k_germany }
+				d_swabia = { de_jure_liege = k_germany }
+				d_thurgau = { de_jure_liege = k_germany }
+				d_raetia = { de_jure_liege = k_germany }
+
+				if = {
+					limit = { k_saxony = { has_holder = no } }
+
+					if = {
+						limit = { d_saxony = { de_jure_liege = k_saxony } }
+						d_saxony = { de_jure_liege = k_germany }
+					}
+					if = {
+						limit = { d_westphalia = { de_jure_liege = k_saxony } }
+						d_westphalia = { de_jure_liege = k_germany }
+					}
+					if = {
+						limit = { d_angria = { de_jure_liege = k_saxony } }
+						d_angria = { de_jure_liege = k_germany }
+					}
+					if = {
+						limit = { d_holstein = { de_jure_liege = k_saxony } }
+						d_holstein = { de_jure_liege = k_germany }
+					}
+				}
+
+				if = {
+					limit = { d_bavaria = { de_jure_liege = k_bavaria } }
+					d_bavaria = { de_jure_liege = k_germany }
+				}
+				if = {
+					limit = { d_osterreich = { de_jure_liege = k_bavaria } }
+					d_osterreich = { de_jure_liege = k_germany }
+				}
+				if = {
+					limit = { d_tyrol = { de_jure_liege = k_bavaria } }
+					d_tyrol = { de_jure_liege = k_germany }
+				}
+				if = {
+					limit = { d_salzburg = { de_jure_liege = k_bavaria } }
+					d_salzburg = { de_jure_liege = k_germany }
+				}
+				if = {
+					limit = { d_nordgau = { de_jure_liege = k_bavaria } }
+					d_nordgau = { de_jure_liege = k_germany }
+				}
+				if = {
+					limit = { d_styria = { de_jure_liege = k_bavaria } }
+					d_styria = { de_jure_liege = k_germany }
+				}
+				if = {
+					limit = { d_carinthia = { de_jure_liege = k_bavaria } }
+					d_carinthia = { de_jure_liege = k_germany }
+				}
+
+				if = {
+					limit = { d_koln = { de_jure_liege = k_austrasia } }
+					d_koln = { de_jure_liege = k_lotharingia }
+				}
+				if = {
+					limit = { d_trier = { de_jure_liege = k_austrasia } }
+					d_trier = { de_jure_liege = k_lotharingia }
+				}
+				if = {
+					limit = { d_lower_lorraine = { de_jure_liege = k_austrasia } }
+					d_lower_lorraine = { de_jure_liege = k_lotharingia }
+				}
+				if = {
+					limit = { d_upper_lorraine = { de_jure_liege = k_austrasia } }
+					d_upper_lorraine = { de_jure_liege = k_lotharingia }
+				}
+				if = {
+					limit = { d_alsace = { de_jure_liege = k_austrasia } }
+					d_alsace = { de_jure_liege = k_lotharingia }
+				}
+				if = {
+					limit = { d_brabant = { de_jure_liege = k_austrasia } }
+					d_brabant = { de_jure_liege = k_lotharingia }
+				}
+
+				if = {
+					limit = { d_burgundy = { de_jure_liege = k_burgundy } }
+					d_burgundy = { de_jure_liege = k_france }
+				}
+
+				d_flanders = { de_jure_liege = k_france }
+				d_picardie = { de_jure_liege = k_france }
+				d_champagne = { de_jure_liege = k_france }
+				d_paris = { de_jure_liege = k_france }
+				d_blois = { de_jure_liege = k_france }
+				d_anjou = { de_jure_liege = k_france }
+				d_normandy = { de_jure_liege = k_france }
+				d_berry = { de_jure_liege = k_france }
+
+				k_germany = { de_jure_liege = e_karling }
+				k_france = { de_jure_liege = e_karling }
+				k_lotharingia = { de_jure_liege = e_karling }
+
+				activate_title = {
+					title = k_austrasia
+					status = no
+				}
+
+				activate_title = {
+					title = k_neustria
+					status = no
+				}
+
+				destroy_landed_title = k_austrasia
+				destroy_landed_title = k_neustria
+			}
+
+			# Give lands/vassals to the Pope
+			any_realm_lord = {
+				limit = {
+					OR = {
+						has_landed_title = c_roma
+						has_landed_title = c_ravenna
+						has_landed_title = c_ferrara
+						has_landed_title = c_urbino
+						has_landed_title = c_spoleto
+						has_landed_title = c_orvieto
+					}
+				}
+
+				character_event = { id = Plus.1164 }
+			}
+
+			any_demesne_title = {
+				show_scope_change = no
+
+				limit = {
+					location = { is_capital = no }
+
+					OR = {
+						title = c_roma
+						title = c_ravenna
+						title = c_ferrara
+						title = c_urbino
+						title = c_spoleto
+						title = c_orvieto
+					}
+				}
+
+				grant_title = event_target:pope
+				hidden_effect = { remove_claim = ROOT }
+			}
+
+			# Give Aachen to emperor
+			c_julich = {
+				show_scope_change = no
+
+				if = {
+					limit = {
+						holder_scope = {
+							ai = yes
+							same_realm = ROOT
+						}
+					}
+
+					grant_title_no_opinion = ROOT
+
+					hidden_effect = {
+						ROOT = {
+							if = {
+								limit = { ai = yes }
+								capital = PREV
+							}
+						}
+					}
+				}
+			}
+
+			hidden_effect = {
+				# Byzantine Emperor and Ecumenical Patriarch will be very upset
+				if = {
+					limit = {
+						e_byzantium = { has_holder = yes }
+
+						NOR = {
+							has_global_flag = schism_happened
+							has_global_flag = schism_prevented
+						}
+					}
+
+					change_variable = {
+						which = global_schism_tracker
+						value = 1
+					}
+
+					rightful_religious_head_scope = {
+						e_byzantium = {
+							holder_scope = {
+								save_event_target_as = current_byzantine_emperor
+
+								opinion = {
+									name = opinion_unhappy
+									who = ROOT
+									years = 100
+								}
+
+								opinion = {
+									name = opinion_unhappy
+									who = event_target:current_roman_pope
+									years = 100
+									multiplier = 2
+								}
+
+								rightful_religious_head_scope = {
+									opinion = {
+										name = opinion_unhappy
+										who = ROOT
+										years = 100
+									}
+
+									opinion = {
+										name = opinion_unhappy
+										who = event_target:current_roman_pope
+										years = 100
+										multiplier = 2
+									}
+								}
+							}
+						}
+					}
+
+					narrative_event = {
+						id = PlusGreatSchism.071
+						days = 3
+					}
+				}
+
+				if = {
+					limit = { trait = exalted4 }
+
+					any_vassal = {
+						opinion = {
+							name = opinion_exalted
+							who = ROOT
+							multiplier = 2
+							years = 10
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { trait = exalted4 } }
+					add_trait = exalted4
+				}
+
+				if = {
+					limit = { ai = yes }
+					add_trait = zealous
+				}
+			}
+
+			if = {
+				limit = { ai = no }
+
+				chronicle = {
+					entry = CHRONICLE_FOUNDED_CAROLINGIAN
+					picture = GFX_evt_coronation
+				}
+			}
+
+			if = {
+				limit = {
+					has_character_flag = is_charlemagne
+					NOT = { has_character_flag = charlemagne_coronation }
+				}
+
+				narrative_event = { id = CM.1500 } # Charlemagne coronation
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				OR = {
+					has_landed_title = k_saxony
+					any_vassal = { has_landed_title = k_saxony }
+					k_saxony = { has_holder = no }
+
+					trigger_if = {
+						limit = { has_global_flag = saxon_wars }
+
+						NOR = {
+							religion = k_saxony
+							has_strong_claim = k_saxony
+						}
+					}
+				}
+			}
+		}
+	}
+
+	convert_to_republic_vassal = {
+		is_high_prio = yes
+
+		only_rulers = yes
+
+		potential = {
+			is_tribal = yes
+			independent = no
+
+			any_demesne_title = {
+				real_tier = BARON
+				holding_type = tribal
+			}
+
+			trigger_if = {
+				limit = { ai = no }
+				has_dlc = "The Republic"
+			}
+		}
+
+		allow = {
+			higher_real_tier_than = COUNT
+			is_female = no
+			war = no
+
+			capital_scope = { is_coastal = yes }
+
+			capital_holding = {
+				OR = {
+					holding_type = city
+					AND = {
+						holding_type = tribal
+						has_building = tb_basic_keep_5
+					}
+				}
+			}
+
+			liege = {
+				OR = {
+					is_feudal = yes
+					is_theocracy = yes
+				}
+			}
+		}
+
+		effect = {
+			# Notify of holdings that will not upgrade or cause issues
+			any_demesne_province = {
+				show_scope_change = no
+
+				limit = {
+					owned_by = PREV
+
+					any_province_holding = {
+						holding_type = tribal
+						NOT = { has_building = tb_basic_keep_5 }
+					}
+				}
+
+				if = {
+					limit = { culture = ROOT }
+
+					random_province_holding = {
+						show_scope_change = no
+
+						limit = { holding_type = tribal }
+
+						custom_tooltip = { text = TRIBAL_NOT_UPGRADE }
+					}
+				}
+				else = {
+					random_province_holding = {
+						show_scope_change = no
+
+						limit = { holding_type = tribal }
+
+						custom_tooltip = { text = TRIBAL_PROVINCE_NOT_CULTURE_WARNING }
+					}
+				}
+			}
+
+			# Notify of vassals who will cause an issue
+			any_vassal = {
+				limit = {
+					higher_tier_than = BARON
+					is_tribal = yes
+					NOT = { culture = ROOT }
+				}
+
+				custom_tooltip = { text = TRIBAL_VASSAL_NOT_CULTURE_WARNING }
+			}
+
+			hidden_effect = {
+				create_family_palace = yes
+
+				if = {
+					limit = {
+						num_of_government_vassals = {
+							government = merchant_republic_government
+							value < 1
+						}
+					}
+
+					# Gives random vassals a family palace
+					any_unique_dynasty_vassal = {
+						count = 4
+
+						limit = {
+							OR = {
+								is_republic = yes
+								is_tribal = yes
+							}
+
+							is_adult = yes
+							is_female = no
+							is_patrician = no
+							prisoner = no
+							is_incapable = no
+							is_lowborn = no
+						}
+
+						if = {
+							limit = { is_tribal = yes }
+
+							capital_holding = {
+								if = {
+									limit = { holding_type = tribal }
+
+									set_title_flag = refill_levy
+									convert_to = city
+									refill_holding_levy = yes
+
+									location = {
+										add_province_modifier = {
+											name = new_buildings_timer
+											years = 100
+											hidden = yes
+										}
+									}
+								}
+							}
+
+							any_demesne_province = {
+								limit = {
+									owned_by = PREV
+
+									any_province_holding = {
+										holding_type = tribal
+										has_building = tb_basic_keep_5
+									}
+								}
+
+								# Clear Tribal Great Pillars
+								clr_province_flag = flag_great_pillar_norse
+								clr_province_flag = flag_great_pillar_tengri
+								clr_province_flag = flag_great_pillar_slavic
+								clr_province_flag = flag_great_pillar_baltic
+								clr_province_flag = flag_great_pillar_finnish
+								clr_province_flag = flag_great_pillar_west_african
+								clr_province_flag = flag_great_pillar_aztec
+								clr_province_flag = flag_great_pillar_bon
+								clr_province_flag = flag_great_pillar_zun
+								clr_province_flag = flag_great_pillar_hellenic
+
+								any_province_holding = {
+									limit = {
+										holding_type = tribal
+										has_building = tb_basic_keep_5
+									}
+									set_title_flag = refill_levy
+									convert_to = city
+									refill_holding_levy = yes
+								}
+
+								add_province_modifier = {
+									name = new_buildings_timer
+									years = 100
+									hidden = yes
+								}
+							}
+						}
+
+						create_family_palace = yes
+					}
+				}
+			}
+
+			# Upgrade tribal holdings which have full market towns
+			any_demesne_province = {
+				limit = {
+					owned_by = PREV
+
+					any_province_holding = {
+						holding_type = tribal
+						has_building = tb_basic_keep_5
+					}
+				}
+
+				# Clear Tribal Great Pillars
+				clr_province_flag = flag_great_pillar_norse
+				clr_province_flag = flag_great_pillar_tengri
+				clr_province_flag = flag_great_pillar_slavic
+				clr_province_flag = flag_great_pillar_baltic
+				clr_province_flag = flag_great_pillar_finnish
+				clr_province_flag = flag_great_pillar_west_african
+				clr_province_flag = flag_great_pillar_aztec
+				clr_province_flag = flag_great_pillar_bon
+				clr_province_flag = flag_great_pillar_zun
+				clr_province_flag = flag_great_pillar_hellenic
+
+				any_province_holding = {
+					limit = {
+						holding_type = tribal
+						has_building = tb_basic_keep_5
+					}
+
+					set_title_flag = refill_levy
+					convert_to = city
+
+					hidden_effect = {
+						refill_holding_levy = yes
+					}
+				}
+
+				add_province_modifier = {
+					name = new_buildings_timer
+					years = 100
+					hidden = yes
+				}
+			}
+
+			if = {
+				limit = { ai = no }
+
+				chronicle = {
+					entry = CHRONICLE_FOUNDED_MERCHANT_REPUBLIC
+					picture = GFX_evt_busy_trading_dock_republic
+				}
+			}
+
+			set_government_type = merchant_republic_government
+
+			hidden_effect = {
+				any_demesne_title = {
+					if = {
+						limit = { is_crown_law_title = yes }
+						set_title_flag = do_not_destroy
+					}
+				}
+
+				liege = {
+					character_event = { id = 55100 } # Notify Liege
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 0.5
+
+			trigger = {
+				trigger_if = {
+					limit = { independent = no }
+
+					OR = {
+						liege = { is_republic = yes }
+						in_faction = faction_prosperity
+						trait = fortune_builder
+						trait = midas_touched
+					}
+
+					liege = {
+						trigger_if = {
+							limit = { is_feudal = yes }
+
+							# Feudal liege has at least 5 feudal vassals
+							any_vassal = {
+								is_feudal = yes
+								higher_real_tier_than = BARON
+								count = 5
+							}
+
+							# Feudal liege has fewer than republic vassals
+							NOT = {
+								any_vassal = {
+									is_republic = yes
+									higher_tier_than = BARON
+									count = 4
+								}
+							}
+
+							# Feudal liege has no more than 10% republic vassals
+							realm_character_percent = {
+								target >= 0.90
+
+								trigger_if = {
+									limit = { higher_real_tier_than = BARON }
+									is_republic = no
+								}
+							}
+						}
+					}
+				}
+
+				NOR = {
+					# AI wants to convert all tribes at once
+					any_demesne_title = {
+						tier = baron
+						holding_type = tribal
+						NOT = { has_building = tb_basic_keep_5 }
+						location = { NOT = { culture = ROOT } }
+					}
+
+					# Avoid having too many powerful different culture tribal vassals
+					any_vassal = {
+						higher_real_tier_than = BARON
+						is_tribal = yes
+						NOT = { culture = ROOT }
+						relative_power = { who = ROOT power >= 0.75 }
+					}
+
+					any_vassal = {
+						count = 2
+						higher_real_tier_than = BARON
+						is_tribal = yes
+						NOT = { culture = ROOT }
+						relative_power = { who = ROOT power >= 0.5 }
+					}
+
+					any_vassal = {
+						count = 3
+						higher_real_tier_than = BARON
+						is_tribal = yes
+						NOT = { culture = ROOT }
+						relative_power = { who = ROOT power >= 0.25 }
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.001
+
+				liege = {
+					trigger_if = {
+						limit = { religion_group = ROOT }
+
+						religion_group = pagan_group
+						NOT = { religion = ROOT }
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.01
+				NOT = { culture_group = liege }
+			}
+
+			mult_modifier = {
+				factor = 0.01
+
+				liege = {
+					religion_group = ROOT
+
+					NOR = {
+						religion_group = pagan_group
+						religion = ROOT
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				culture_group = liege
+				NOT = { culture = liege }
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				trigger_if = {
+					limit = { independent = no }
+
+					liege = {
+						OR = {
+							is_feudal = yes
+							is_theocracy = yes
+						}
+					}
+				}
+
+				has_education_stewardship_trigger = no
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				liege = { is_republic = yes }
+				has_education_stewardship_trigger = no
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = thrifty_clerk
+			}
+
+			mult_modifier = {
+				factor = 2.5
+				trait = fortune_builder
+			}
+
+			mult_modifier = {
+				factor = 5
+				trait = midas_touched
+			}
+		}
+	}
+
+	convert_to_city_vassal = {
+		is_high_prio = yes
+
+		only_rulers = yes
+
+		potential = {
+			is_tribal = yes
+			independent = no
+			ai = yes
+
+			any_demesne_title = {
+				real_tier = BARON
+				holding_type = tribal
+			}
+		}
+
+		allow = {
+			war = no
+			is_female = no
+
+			OR = {
+				lower_real_tier_than = DUKE
+				capital_scope = { is_coastal = no }
+				liege = { is_republic = yes }
+			}
+
+			liege = {
+				OR = {
+					is_feudal = yes
+					is_republic = yes
+					is_theocracy = yes
+				}
+			}
+
+			capital_holding = {
+				OR = {
+					holding_type = city
+					AND = {
+						holding_type = tribal
+						has_building = tb_basic_keep_5
+					}
+				}
+			}
+		}
+
+		effect = {
+			# Upgrade tribal holdings which have full market towns
+			any_demesne_province = {
+				limit = {
+					owned_by = PREV
+
+					any_province_holding = {
+						holding_type = tribal
+						has_building = tb_basic_keep_5
+					}
+				}
+
+				# Clear Tribal Great Pillars
+				clr_province_flag = flag_great_pillar_norse
+				clr_province_flag = flag_great_pillar_tengri
+				clr_province_flag = flag_great_pillar_slavic
+				clr_province_flag = flag_great_pillar_baltic
+				clr_province_flag = flag_great_pillar_finnish
+				clr_province_flag = flag_great_pillar_west_african
+				clr_province_flag = flag_great_pillar_aztec
+				clr_province_flag = flag_great_pillar_bon
+				clr_province_flag = flag_great_pillar_zun
+				clr_province_flag = flag_great_pillar_hellenic
+
+				any_province_holding = {
+					limit = {
+						holding_type = tribal
+						has_building = tb_basic_keep_5
+					}
+
+					set_title_flag = refill_levy
+					convert_to = city
+					refill_holding_levy = yes
+				}
+
+				add_province_modifier = {
+					name = new_buildings_timer
+					years = 100
+					hidden = yes
+				}
+			}
+
+			set_government_type = republic_government
+
+			any_demesne_title = {
+				if = {
+					limit = { is_crown_law_title = yes }
+					set_title_flag = do_not_destroy
+				}
+			}
+
+			liege = {
+				character_event = { id = 55100 } # Notify Liege
+			}
+		}
+
+		ai_will_do = {
+			factor = 0.5
+
+			trigger = {
+				trigger_if = {
+					limit = { independent = no }
+
+					OR = {
+						liege = { is_republic = yes }
+						in_faction = faction_prosperity
+						trait = fortune_builder
+						trait = midas_touched
+					}
+
+					liege = {
+						trigger_if = {
+							limit = { is_feudal = yes }
+
+							# Feudal liege has at least 5 feudal vassals
+							any_vassal = {
+								is_feudal = yes
+								higher_real_tier_than = BARON
+								count = 5
+							}
+
+							# Feudal liege has fewer than republic vassals
+							NOT = {
+								any_vassal = {
+									is_republic = yes
+									higher_tier_than = BARON
+									count = 4
+								}
+							}
+
+							# Feudal liege has no more than 10% republic vassals
+							realm_character_percent = {
+								target >= 0.90
+
+								trigger_if = {
+									limit = { higher_real_tier_than = BARON }
+									is_republic = no
+								}
+							}
+						}
+					}
+				}
+
+				NOR = {
+					# AI wants to convert all tribes at once
+					any_demesne_title = {
+						tier = baron
+						holding_type = tribal
+						NOT = { has_building = tb_basic_keep_5 }
+						location = { NOT = { culture = ROOT } }
+					}
+
+					# Avoid having too many powerful different culture tribal vassals
+					any_vassal = {
+						higher_real_tier_than = BARON
+						is_tribal = yes
+						NOT = { culture = ROOT }
+						relative_power = { who = ROOT power >= 0.75 }
+					}
+
+					any_vassal = {
+						count = 2
+						higher_real_tier_than = BARON
+						is_tribal = yes
+						NOT = { culture = ROOT }
+						relative_power = { who = ROOT power >= 0.5 }
+					}
+
+					any_vassal = {
+						count = 3
+						higher_real_tier_than = BARON
+						is_tribal = yes
+						NOT = { culture = ROOT }
+						relative_power = { who = ROOT power >= 0.25 }
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.001
+
+				liege = {
+					trigger_if = {
+						limit = { religion_group = ROOT }
+
+						religion_group = pagan_group
+						NOT = { religion = ROOT }
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.01
+				NOT = { culture_group = liege }
+			}
+
+			mult_modifier = {
+				factor = 0.01
+
+				liege = {
+					religion_group = ROOT
+
+					NOR = {
+						religion_group = pagan_group
+						religion = ROOT
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				culture_group = liege
+				NOT = { culture = liege }
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				trigger_if = {
+					limit = { independent = no }
+
+					liege = {
+						OR = {
+							is_feudal = yes
+							is_theocracy = yes
+						}
+					}
+				}
+
+				has_education_stewardship_trigger = no
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				liege = { is_republic = yes }
+				has_education_stewardship_trigger = no
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = thrifty_clerk
+			}
+
+			mult_modifier = {
+				factor = 2.5
+				trait = fortune_builder
+			}
+
+			mult_modifier = {
+				factor = 5
+				trait = midas_touched
+			}
+		}
+	}
+
+	become_merchant_republic = {
+		is_high_prio = yes
+
+		only_rulers = yes
+
+		potential = {
+			real_tier = COUNT
+			is_republic = yes
+			has_dlc = "Charlemagne"
+
+			trigger_if = {
+				limit = { ai = no }
+				has_dlc = "The Republic"
+			}
+
+			trigger_if = {
+				limit = { independent = no }
+
+				liege = {
+					higher_real_tier_than = DUKE
+					war = no
+					NOT = { any_demesne_title = { temporary = yes } }
+				}
+			}
+
+			is_merchant_republic = no
+			is_patrician = no
+
+			NOT = {
+				any_demesne_title = { temporary = yes }
+			}
+		}
+
+		allow = {
+			capital_scope = {
+				is_coastal = yes
+				TECH_TRADE_PRACTICES >= 1
+
+				OR = {
+					custom_tooltip = {
+						text = TT_NOT_UNREFORMED_PAGAN
+						ROOT = { is_not_unreformed_pagan_trigger = yes }
+					}
+
+					TECH_TRADE_PRACTICES >= 3
+				}
+			}
+
+			wealth >= 250
+			prestige >= 250
+			piety >= 0
+			war = no
+			is_inaccessible_trigger = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			wealth = -250
+			prestige = -250
+
+			if = {
+				limit = { independent = no }
+				liege = { save_event_target_as = current_liege }
+			}
+
+			if = {
+				limit = { is_lowborn = yes }
+				dynasty = father_bastard
+			}
+
+			any_demesne_title = {
+				set_title_flag = non_manual_law_change # No prestige loss
+
+				if = {
+					limit = { NOT = { has_law = succ_seniority } }
+					add_law = succ_seniority
+				}
+				if = {
+					limit = { NOT = { has_law = agnatic_succession } }
+					add_law = agnatic_succession
+				}
+
+				clr_title_flag = non_manual_law_change # No prestige loss
+			}
+
+			primary_title = {
+				show_scope_change = no
+
+				create_title = {
+					tier = DUKE
+					landless = no
+					temporary = no
+					custom_created = yes
+					culture = ROOT
+					holder = ROOT
+					base_title = THIS
+					copy_title_laws = yes
+				}
+			}
+
+			if = {
+				limit = { event_target:current_liege = { is_alive = yes } }
+
+				set_defacto_liege = event_target:current_liege
+				pf_liege_change_effect = yes
+			}
+
+			primary_title = { set_title_flag = custom_created_title }
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				stewardship >= 8
+
+				OR = {
+					trait = ambitious
+					trait = proud
+					trait = midas_touched
+				}
+
+				is_dumb_trigger = no
+
+				NOR = {
+					trait = content
+					trait = humble
+					trait = inbred
+				}
+			}
+		}
+	}
+}

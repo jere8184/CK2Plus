@@ -1,0 +1,472 @@
+spriteTypes = {
+	spriteType = {
+		name = "GFX_evt_albania"
+		textureFile = "gfx\\new_events\event_picture_albania.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_anubis"
+		textureFile = "gfx\\new_events\anubis.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_blood_eagle"
+		textureFile = "gfx\\new_events\blood_eagle.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_byzantine_throne"
+		textureFile = "gfx\\new_events\throneroom_byzantine.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_coronation"
+		textureFile = "gfx\\new_events\royal_coronation.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_coronation_muslim"
+		textureFile = "gfx\\new_events\royal_coronation_muslim.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_coronation_orthodox"
+		textureFile = "gfx\\new_events\royal_coronation_orthodox.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_coronation_byzantine"
+		textureFile = "gfx\\new_events\royal_coronation_byzantine.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_coronation_pagan_group"
+		textureFile = "gfx\\new_events\royal_coronation_pagan.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_coronation_tengri_pagan"
+		textureFile = "gfx\\event_pictures\tengri_throneroom_oldgods.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_coronation_tengri_pagan_reformed"
+		textureFile = "gfx\\event_pictures\tengri_throneroom_oldgods.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_courtly_love"
+		textureFile = "gfx\\new_events\courtly_love.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_crusaders_indian_group"
+		textureFile = "gfx\\event_pictures\roi_elephants_battle.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_crusaders_jewish_group"
+		textureFile = "gfx\\event_pictures\\Battle_Cataphracts_Saracen.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_crusaders_muslim"
+		textureFile = "gfx\\event_pictures\\Moorish_riders.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_crusaders_pagan_group"
+		textureFile = "gfx\\event_pictures\viking_battle_oldgods.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_crusaders_zoroastrian_group"
+		textureFile = "gfx\\event_pictures\\battle_scene.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_cult_initiation"
+		textureFile = "gfx\\new_events\cult_initiation.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_diwan_poetry"
+		textureFile = "gfx\\new_events\diwan_poetry.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_duel0"
+		textureFile = "gfx\\new_events\duel0.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_duel1"
+		textureFile = "gfx\\new_events\duel0.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_duel2"
+		textureFile = "gfx\\new_events\duel0.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_duel3"
+		textureFile = "gfx\\new_events\duel0.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_duel4"
+		textureFile = "gfx\\new_events\duel0.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_duel5"
+		textureFile = "gfx\\new_events\duel0.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_ecumenical_council"
+		textureFile = "gfx\\new_events\ecumenical_council.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_egyptian_marriage"
+		textureFile = "gfx\\new_events\egyptian_marriage.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_escape_siege"
+		textureFile = "gfx\\new_events\escape_siege.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_feast_christian"
+		textureFile = "gfx\\new_events\\Banquet_hall_Feast_christian.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_feast_jewish_group"
+		textureFile = "gfx\\new_events\\Banquet_hall_Feast_christian.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_girl_with_sword"
+		textureFile = "gfx\\new_events\girl_with_sword.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_grazia"
+		textureFile = "gfx\\new_events\ladies.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_headhunter"
+		textureFile = "gfx\\new_events\headhunter.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_headhunter"
+		textureFile = "gfx\\new_events\headhunter.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_heresy_defeated"
+		textureFile = "gfx\\new_events\heresy_defeated.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_heretic_pride"
+		textureFile = "gfx\\new_events\heretic_pride_event.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_horus"
+		textureFile = "gfx\\new_events\horus.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_imperial_court"
+		textureFile = "gfx\\new_events\imperial_court.dds"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_imperial_court_muslim"
+		textureFile = "gfx\\new_events\imperial_court_muslim.dds"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_lollard_heresy"
+		textureFile = "gfx\\new_events\lollard_heresy.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_martyr"
+		textureFile = "gfx\\new_events\martyr.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_messalian_sin"
+		textureFile = "gfx\\new_events\messalian_sin.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_nerthus"
+		textureFile = "gfx\\new_events\nerthus.dds"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_noblewoman"
+		textureFile = "gfx\\new_events\noblewoman.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_persepolis_built"
+		textureFile = "gfx\\new_events\\persepolis_built.tga"
+		clickSound = generic_click_04
+	}
+	spriteType = {
+		name = "GFX_persepolis_ruin"
+		textureFile = "gfx\\new_events\\persepolis_ruin.tga"
+		clickSound = generic_click_04
+	}
+	spriteType = {
+		name = "GFX_evt_pyramid"
+		textureFile = "gfx\\new_events\pyramid.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_sacrifice"
+		textureFile = "gfx\\new_events\sacrifice.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_sainthood"
+		textureFile = "gfx\\new_events\sainthood.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple"
+		textureFile = "gfx\\event_pictures\stone_church_soa.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_aten_pagan"
+		textureFile = "gfx\\new_events\pyramid.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_baltic_pagan"
+		textureFile = "gfx\\new_events\norse_temple.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_baltic_pagan_reformed"
+		textureFile = "gfx\\new_events\norse_temple.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_celtic_pagan"
+		textureFile = "gfx\\event_pictures\tribal_shrine_cm.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_celtic_pagan_reformed"
+		textureFile = "gfx\\event_pictures\tribal_shrine_cm.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_egyptian_pagan"
+		textureFile = "gfx\\new_events\pyramid.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_finnish_pagan"
+		textureFile = "gfx\\new_events\norse_temple.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_finnish_pagan_reformed"
+		textureFile = "gfx\\new_events\norse_temple.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_german_pagan"
+		textureFile = "gfx\\new_events\norse_temple.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_german_pagan_reformed"
+		textureFile = "gfx\\new_events\norse_temple.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_hellenic_pagan"
+		textureFile = "gfx\\new_events\roman_great_temple.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_indian_group"
+		textureFile = "gfx\\event_pictures\roi_large_temple.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_jewish_group"
+		textureFile = "gfx\\event_pictures\synagogue_soa.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_mesoamerican_group"
+		textureFile = "gfx\\new_events\aztec_temple.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_muslim"
+		textureFile = "gfx\\event_pictures\Hagia_sofia_muslim.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_norse_pagan"
+		textureFile = "gfx\\new_events\norse_temple.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_norse_pagan_reformed"
+		textureFile = "gfx\\new_events\norse_temple.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_orthodox"
+		textureFile = "gfx\\event_pictures\Orthodox_icon.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_pagan"
+		textureFile = "gfx\\event_pictures\tribal_shrine_cm.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_slavic_pagan"
+		textureFile = "gfx\\new_events\norse_temple.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_slavic_pagan_reformed"
+		textureFile = "gfx\\new_events\norse_temple.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_tengri_pagan"
+		textureFile = "gfx\\event_pictures\tribal_shrine_cm.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_tengri_pagan_reformed"
+		textureFile = "gfx\\event_pictures\tribal_shrine_cm.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_west_african_pagan"
+		textureFile = "gfx\\event_pictures\tribal_shrine_cm.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_west_african_reformed"
+		textureFile = "gfx\\event_pictures\tribal_shrine_cm.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_zun_pagan"
+		textureFile = "gfx\\event_pictures\sun_temple_cm.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_temple_zun_pagan_reformed"
+		textureFile = "gfx\\event_pictures\sun_temple_cm.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_tournament_gallery"
+		textureFile = "gfx\\new_events\jousting_gallery.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_yazidi"
+		textureFile = "gfx\\new_events\yazidi_pilgrimage.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_zhayedan"
+		textureFile = "gfx\\new_events\zhayedan.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_zoroaster"
+		textureFile = "gfx\\new_events\zoroaster.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_market_kilim"
+		textureFile = "gfx\\event_pictures\market_kilim.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_berber_pagan_gambling"
+		textureFile = "gfx\\event_pictures\berber_pagan_gambling.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_berber_pagan_child"
+		textureFile = "gfx\\event_pictures\berber_pagan_child.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_settle_iceland"
+		textureFile = "gfx\\new_events\settle_iceland.dds"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_law_rock"
+		textureFile = "gfx\\new_events\law_rock.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_iceland_discovered"
+		textureFile = "gfx\\new_events\iceland_discovered.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_failed_crusade"
+		textureFile = "gfx\\event_pictures\failed_crusade.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_ancient_religions_revival"
+		textureFile = "gfx\\new_events\ancient_religions_revival.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_christian_trade"
+		textureFile = "gfx\\new_events\christian_trade.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_give_money"
+		textureFile = "gfx\\new_events\money_purse.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_game_over"
+		textureFile = "gfx\\new_events\game_over.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_imperial_german_edict"
+		textureFile = "gfx\\new_events\imperial_german_edict.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_avesta"
+		textureFile = "gfx\\new_events\avesta_book.tga"
+		alwaysTransparent = yes
+	}
+}

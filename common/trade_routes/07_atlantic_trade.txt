@@ -1,0 +1,229 @@
+atlantic_trade = {
+	wealth = 6			# Total base wealth of Atlantic Trade
+
+	modifier = {			# How the trade route modifies the provinces it passes
+		castle_tax_modifier = 0.025
+		city_tax_modifier = 0.05
+		temple_tax_modifier = 0.025
+		trade_route_value = 0.5
+		tech_growth_modifier = 0.10
+		icon = 97
+	}
+
+	start = { # Start provinces of trade route
+		37 # Gloucester
+		57 # Chester
+		402 # Cadiz
+		1668 # Tangier
+		1669 # Infa
+	}
+
+	path = {
+		57 # Chester
+		1946 # Irish Sea
+	}
+	path = {
+		1669 # Infa
+		1931 # Coast of Morocco
+	}
+	path = {
+		1668 # Tangier
+		1931 # Coast of Morocco
+	}
+	path = {
+		1931 # Coast of Morocco
+		1933 # Golfo de Cadiz
+	}
+	path = {
+		402 # Cadiz
+		1933 # Golfo de Cadiz
+	}
+	path = {
+		1933 # Golfo de Cadiz
+		1934 # Portugal Coast
+	}
+	path = {
+		1934 # Portugal Coast
+		1935 # Cabo de Finisterrre
+		1937 # Coast of Asturias
+	}
+	path = {
+		1937 # Coast of Asturias
+		1938 # Cantabrian Sea
+		1939 # Coast of Aquitaine
+	}
+	path = {
+		1939 # Coast of Aquitaine
+		317 # Bordeaux
+	}
+	path = {
+		1939 # Coast of Aquitaine
+		1940 # Armorican Coast
+	}
+	path = {
+		1940 # Armorican Coast
+		308 # Nantes
+	}
+	path = {
+		1934 # Portugal Coast
+		387 # Santiago
+	}
+	path = {
+		1937 # Coast of Asturias
+		384 # Asturias de Oviedo
+	}
+	path = {
+		1940 # Armorican Coast
+		1941 # Bretagne Coast
+		1949 # Îles de la Manche
+	}
+	path = {
+		1949 # Îles de la Manche
+		1951 # The Solent
+		41 # Winchester
+	}
+	path = {
+		1949 # Îles de la Manche
+		1950 # Baie de la Seine
+	}
+	path = {
+		1950 # Baie de la Seine
+		1952 # Strait of Dover
+		# 1631  # Thames Estuary
+	}
+	path = {
+		1952 # Strait of Dover
+		# 1631 # Thames Estuary
+		50 # Suffolk
+	}
+	path = {
+		1952 # Strait of Dover
+		# 1631 # Thames Estuary
+		270 # Guines
+	}
+	path = {
+		1952 # Strait of Dover
+		# 1631 # Thames Estuary
+		44 # Kent
+		46 # Middlesex
+	}
+	path = {
+		1950 # Baie de la Seine
+		299 # Caen
+	}
+	path = {
+		1952 # Strait of Dover
+		# 1631 # Thames Estuary
+		268 # Brugge
+	}
+	path = {
+		37 # Gloucester
+		1947 # St. George's Channel
+	}
+	path = {
+		1947 # St. George's Channel
+		16 # Ormond
+	}
+	path = {
+		1947 # St. George's Channel
+		19 # Leinster
+	}
+	path = {
+		1947 # St. George's Channel
+		15 # Desmond
+	}
+	path = {
+		1947 # St. George's Channel
+		1946 # Irish Sea
+	}
+	path = {
+		1946 # Irish Sea
+		23 # Gwynedd
+	}
+	path = {
+		1946 # Irish Sea
+		1945 # The Minch
+	}
+	path = {
+		1945 # The Minch
+		1956 # Moray Firth
+	}
+	path = {
+		1946 # Irish Sea
+		72 # Galloway
+	}
+	path = {
+		1945 # The Minch
+		73 # Carrick
+	}
+	path = {
+		1945 # The Minch
+		74 # Clydesdale
+	}
+	path = {
+		1956 # Moray Firth
+		1955 # Firth of Forth
+	}
+	path = {
+		1946 # Irish Sea
+		6 # Dublin
+	}
+	path = {
+		1955 # Firth of Forth
+		82 # Buchan
+	}
+	path = {
+		1955 # Firth of Forth
+		80 # Gowrie
+	}
+	path = {
+		1955 # Firth of Forth
+		69 # Lothian
+	}
+	path = {
+		1955 # Firth of Forth
+		68 # Dunbar
+	}
+	path = {
+		1953 # The Wash
+		51 # Norfolk
+	}
+	path = {
+		1956 # Moray Firth
+		1962 # Sea of Shetland
+	}
+	path = {
+		1962 # Sea of Shetland
+		1957 # Faroya
+	}
+	path = {
+		1957 # Faroya
+		1958 # Southern Coast of Iceland
+		89 # Suðurland
+	}
+	path = {
+		1962 # Sea of Shetland
+		1963 # North Sea
+	}
+	path = {
+		1963 # North Sea
+		1976 # North Sea
+		99 # Bergenhus
+	}
+	path = {
+		1955 # Firth of Forth
+		1954 # Dogger Bank
+	}
+	path = {
+		1954 # Dogger Bank
+		1953 # The Wash
+	}
+	path = {
+		1953 # The Wash
+		268 # Brugge
+	}
+	path = {
+		1954 # Dogger Bank
+		61 # York
+	}
+}

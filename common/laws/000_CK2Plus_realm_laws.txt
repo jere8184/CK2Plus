@@ -1,0 +1,1328 @@
+######
+#Plus Laws:
+#
+#Total = 8
+######
+
+#Law Groups
+law_groups = {
+	# Plus laws
+	culture_conversion_group = {
+		# law_type = realm
+	}
+	council_privileges_group = {
+		# law_type = realm
+		allowed_for_councillors = yes
+	}
+	bureaucratic_infighting = {
+		# law_type = realm
+	}
+	taifa_law_group = {
+		# law_type = realm
+		allowed_for_councillors = yes
+	}
+	waldensian_charity_law = {
+		# law_type = realm
+		allowed_for_councillors = yes
+	}
+	frat_priesthood = {
+		# law_type = realm
+		allowed_for_councillors = yes
+	}
+	maz_wealth_group = { # wealth sharing
+		# law_type = realm
+		allowed_for_councillors = yes
+	}
+	bogomilist_church_group = { # organized church
+		# law_type = realm
+		allowed_for_councillors = yes
+	}
+}
+
+#Laws
+#####
+laws = {
+	culture_conversion_0 = {
+		group = culture_conversion_group
+
+		global_revolt_risk = -0.01
+
+		potential = {
+			holder_scope = {
+				higher_real_tier_than = DUKE
+				independent = yes
+				is_feudal = yes
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			has_law = culture_conversion_1
+
+			holder_scope = {
+				show_scope_change = no
+				NOT = { trait = uncrowned }
+			}
+		}
+
+		pass_effect = {
+			# log = "culture_conversion_0 pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "culture_conversion_0 ([This.GetFullBaseName])"
+			revoke_law = culture_conversion_1
+			revoke_law = culture_conversion_2
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	culture_conversion_1 = {
+		group = culture_conversion_group
+		default = yes
+
+		potential = {
+			is_law_potential = culture_conversion_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			trigger_if = {
+				limit = {
+					OR = {
+						has_law = culture_conversion_0
+						has_law = culture_conversion_1
+						has_law = culture_conversion_2
+					}
+				}
+
+				OR = {
+					has_law = culture_conversion_0
+					has_law = culture_conversion_2
+				}
+			}
+
+			holder_scope = {
+				show_scope_change = no
+				NOT = { trait = uncrowned }
+			}
+		}
+
+		pass_effect = {
+			# log = "culture_conversion_1 pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "culture_conversion_1 ([This.GetFullBaseName])"
+			revoke_law = culture_conversion_0
+			revoke_law = culture_conversion_2
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	culture_conversion_2 = {
+		group = culture_conversion_group
+
+		global_revolt_risk = 0.01
+
+		potential = {
+			is_law_potential = culture_conversion_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			has_law = culture_conversion_1
+
+			OR = {
+				has_law = crown_authority_2
+				has_law = crown_authority_3
+				has_law = crown_authority_4
+			}
+
+			holder_scope = {
+				show_scope_change = no
+				NOT = { trait = uncrowned }
+			}
+		}
+
+		pass_effect = {
+			# log = "culture_conversion_2 pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "culture_conversion_2 ([This.GetFullBaseName])"
+			revoke_law = culture_conversion_0
+			revoke_law = culture_conversion_1
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	#################################
+	#
+	#	Council privilege laws
+	#
+	#################################
+
+	council_privileges_0 = {
+		group = council_privileges_group
+		default = yes
+
+		potential = {
+			higher_real_tier_than = COUNT
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			trigger_if = {
+				limit = { has_law = council_privileges_1 }
+
+				holder_scope = {
+					show_scope_change = no
+					NOT = { trait = uncrowned }
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "council_privileges_0 pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "council_privileges_0 ([This.GetFullBaseName])"
+			revoke_law = council_privileges_1
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				has_law = council_privileges_1
+
+				holder_scope = {
+					ruled_years >= 10
+					diplomacy >= 12
+
+					OR = {
+						trait = ambitious
+						trait = proud
+					}
+				}
+			}
+		}
+	}
+
+	council_privileges_1 = {
+		group = council_privileges_group
+
+		potential = {
+			is_law_potential = council_privileges_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			has_law = council_privileges_0
+
+			holder_scope = {
+				show_scope_change = no
+				NOT = { trait = uncrowned }
+			}
+		}
+
+		pass_effect = {
+			# log = "council_privileges_1 pass ([This.GetFullBaseName])"
+
+			holder_scope = {
+				any_voter = {
+					opinion = {
+						who = PREV
+						name = grateful_council_term
+						years = 1
+					}
+				}
+			}
+		}
+
+		effect = {
+			# log = "council_privileges_1 ([This.GetFullBaseName])"
+			revoke_law = council_privileges_0
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	#################################
+	#
+	#	Bureaucratic infighting laws
+	#
+	#################################
+
+	infighting_0 = {
+		group = bureaucratic_infighting
+		default = yes
+
+		vassal_limit = -20
+
+		potential = {
+			holder_scope = { trait = court_anarchy }
+		}
+
+		allow = {
+		}
+
+		pass_effect = {
+			# log = "infighting_0 pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "infighting_0 ([This.GetFullBaseName])"
+			revoke_law = infighting_1
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	infighting_1 = {
+		group = bureaucratic_infighting
+
+		potential = {
+			holder_scope = { trait = court_anarchy }
+		}
+
+		allow = {
+			holder_scope = {
+				show_scope_change = no
+				NOT = { trait = court_anarchy }
+			}
+		}
+
+		pass_effect = {
+			# log = "infighting_1 pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "infighting_1 ([This.GetFullBaseName])"
+			revoke_law = infighting_0
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#################################
+	#
+	#	Taifa laws
+	#
+	#################################
+
+	taifa_law_0 = {
+		group = taifa_law_group
+		default = yes
+
+		feudal_opinion = -20
+		vassal_limit = -10
+		castle_vassal_max_levy = -0.1
+		castle_vassal_min_levy = -0.1
+
+		potential = {
+			higher_real_tier_than = DUKE
+
+			holder_scope = {
+				independent = yes
+				religion_group = muslim
+				capital_scope = { region = world_europe_west_iberia }
+			}
+		}
+
+		allow = {
+		}
+
+		pass_effect = {
+			# log = "taifa_law_0 pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "taifa_law_0 ([This.GetFullBaseName])"
+			revoke_law = taifa_law_1
+			revoke_law = taifa_law_2
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	taifa_law_1 = {
+		group = taifa_law_group
+
+		feudal_opinion = -10
+		vassal_limit = -5
+		castle_vassal_max_levy = -0.05
+		castle_vassal_min_levy = -0.05
+
+		potential = {
+			is_law_potential = taifa_law_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			has_law = taifa_law_0
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+
+					plus_law_prestige_trigger_2 = yes
+					plus_law_piety_trigger_2 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "taifa_law_1 pass ([This.GetFullBaseName])"
+			plus_law_change_prestige_effect_2 = yes
+			plus_law_change_piety_effect_2 = yes
+		}
+
+		effect = {
+			# log = "taifa_law_1 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_prestige_effect_2 = yes
+				plus_law_change_piety_effect_2 = yes
+			}
+
+			revoke_law = taifa_law_0
+			revoke_law = taifa_law_2
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	taifa_law_2 = {
+		group = taifa_law_group
+
+		feudal_opinion = 5
+
+		potential = {
+			is_law_potential = taifa_law_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			has_law = taifa_law_1
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+
+					plus_law_prestige_trigger_2 = yes
+					plus_law_piety_trigger_2 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "taifa_law_2 pass ([This.GetFullBaseName])"
+			plus_law_change_prestige_effect_2 = yes
+			plus_law_change_piety_effect_2 = yes
+		}
+
+		effect = {
+			# log = "taifa_law_2 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_prestige_effect_2 = yes
+				plus_law_change_piety_effect_2 = yes
+			}
+
+			revoke_law = taifa_law_0
+			revoke_law = taifa_law_1
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#################################
+	#
+	#	Waldensian Charity laws
+	#
+	#################################
+
+	wald_charity_0 = {
+		group = waldensian_charity_law
+
+		feudal_opinion = 10
+		temple_opinion = -10
+		castle_vassal_max_levy = -0.2
+		castle_vassal_min_levy = -0.2
+
+		potential = {
+			holder_scope = {
+				is_playable = yes
+				religion = waldensian
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_piety_trigger_4 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "wald_charity_0 pass ([This.GetFullBaseName])"
+			plus_law_change_piety_effect_4 = yes
+		}
+
+		effect = {
+			# log = "wald_charity_0 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_piety_effect_4 = yes
+			}
+
+			revoke_law = wald_charity_1
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				holder_scope = {
+					OR = {
+						trait = greedy
+						trait = cynical
+					}
+
+					NOT = { trait = charitable }
+				}
+			}
+		}
+	}
+
+	wald_charity_1 = {
+		group = waldensian_charity_law
+		default = yes
+
+		temple_opinion = 10
+		castle_vassal_max_levy = 0.2
+		castle_vassal_min_levy = 0.2
+		feudal_opinion = -10
+		castle_vassal_tax_modifier = -0.2
+		city_vassal_tax_modifier = -0.2
+		temple_vassal_tax_modifier = -0.2
+
+		potential = {
+			is_law_potential = wald_charity_0
+		}
+
+		allow = { }
+
+		pass_effect = {
+			# log = "wald_charity_1 pass ([This.GetFullBaseName])"
+
+			if = {
+				limit = {
+					has_game_started = yes
+					temporary = no
+					NOT = { has_title_flag = non_manual_law_change } # No prestige loss
+				}
+
+				holder_scope = {
+					piety = 250
+				}
+			}
+		}
+
+		effect = {
+			# log = "wald_charity_1 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				holder_scope = {
+					show_scope_change = no
+					piety = 250
+				}
+			}
+
+			revoke_law = wald_charity_0
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				holder_scope = {
+					piety >= 500
+
+					NOR = {
+						trait = greedy
+						trait = cynical
+					}
+				}
+			}
+		}
+	}
+
+	#################################
+	#
+	#	Fraticelli Priesthood laws
+	#
+	#################################
+
+	frat_priest_0 = {
+		group = frat_priesthood
+		default = yes
+
+		temple_opinion = 30
+		castle_vassal_tax_modifier = -0.1
+		city_vassal_tax_modifier = -0.1
+		temple_vassal_tax_modifier = -0.1
+
+		potential = {
+			holder_scope = {
+				independent = yes
+				religion = fraticelli
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_piety_trigger_4 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "frat_priest_0 pass ([This.GetFullBaseName])"
+			plus_law_change_piety_effect_4 = yes
+		}
+
+		effect = {
+			# log = "frat_priest_0 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_piety_effect_4 = yes
+			}
+
+			revoke_law = frat_priest_1
+			revoke_law = frat_priest_2
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	frat_priest_1 = {
+		group = frat_priesthood
+
+		feudal_opinion = -10
+		castle_vassal_min_levy = 0.1
+		global_revolt_risk = -0.01
+
+		potential = {
+			is_law_potential = frat_priest_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			holder_scope = {
+				show_scope_change = no
+				piety >= 250
+			}
+		}
+
+		pass_effect = {
+			# log = "frat_priest_1 pass ([This.GetFullBaseName])"
+			plus_law_change_piety_effect_4 = yes
+		}
+
+		effect = {
+			# log = "frat_priest_1 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_piety_effect_4 = yes
+			}
+
+			revoke_law = frat_priest_0
+			revoke_law = frat_priest_2
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	frat_priest_2 = {
+		group = frat_priesthood
+
+		temple_opinion = -10
+		vassal_limit = 10
+
+		potential = {
+			is_law_potential = frat_priest_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			holder_scope = {
+				show_scope_change = no
+				piety >= 250
+			}
+		}
+
+		pass_effect = {
+			# log = "frat_priest_2 pass ([This.GetFullBaseName])"
+			plus_law_change_piety_effect_4 = yes
+		}
+
+		effect = {
+			# log = "frat_priest_2 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_piety_effect_4 = yes
+			}
+
+			revoke_law = frat_priest_0
+			revoke_law = frat_priest_1
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#################################
+	#
+	#	Mazdaki Wealth laws
+	#
+	#################################
+
+	mazdaki_wealth_0 = {
+		group = maz_wealth_group
+		default = yes
+
+		temple_opinion = -10
+
+		potential = {
+			holder_scope = {
+				is_playable = yes
+				religion = mazdaki
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			has_law = mazdaki_wealth_1
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_piety_trigger_1 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "mazdaki_wealth_0 pass ([This.GetFullBaseName])"
+			plus_law_change_piety_effect_1 = yes
+		}
+
+		effect = {
+			# log = "mazdaki_wealth_0 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_piety_effect_1 = yes
+			}
+
+			revoke_law = mazdaki_wealth_1
+			revoke_law = mazdaki_wealth_2
+			revoke_law = mazdaki_wealth_3
+			revoke_law = mazdaki_wealth_4
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				holder_scope = {
+					OR = {
+						trait = greedy
+						trait = cynical
+					}
+				}
+			}
+		}
+	}
+
+	mazdaki_wealth_1 = {
+		group = maz_wealth_group
+
+		global_revolt_risk = -0.01
+		feudal_opinion = -5
+		castle_vassal_tax_modifier = -0.05
+		city_vassal_tax_modifier = -0.05
+		temple_vassal_tax_modifier = -0.05
+
+		potential = {
+			is_law_potential = mazdaki_wealth_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			OR = {
+				has_law = mazdaki_wealth_0
+				has_law = mazdaki_wealth_2
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_piety_trigger_1 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "mazdaki_wealth_1 pass ([This.GetFullBaseName])"
+			plus_law_change_piety_effect_1 = yes
+		}
+
+		effect = {
+			# log = "mazdaki_wealth_1 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_piety_effect_1 = yes
+			}
+
+			revoke_law = mazdaki_wealth_0
+			revoke_law = mazdaki_wealth_2
+			revoke_law = mazdaki_wealth_3
+			revoke_law = mazdaki_wealth_4
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				holder_scope = {
+					trigger_if = {
+						limit = { has_law = mazdaki_wealth_0 }
+
+						NOR = {
+							trait = greedy
+							trait = cynical
+						}
+					}
+					trigger_else = {
+						OR = {
+							trait = greedy
+							trait = cynical
+						}
+					}
+				}
+			}
+		}
+	}
+
+	mazdaki_wealth_2 = {
+		group = maz_wealth_group
+
+		global_revolt_risk = -0.02
+		feudal_opinion = -10
+		city_opinion = 5
+		temple_opinion = 5
+		castle_vassal_tax_modifier = -0.1
+		city_vassal_tax_modifier = -0.1
+		temple_vassal_tax_modifier = -0.1
+		vassal_limit = -3
+
+		potential = {
+			is_law_potential = mazdaki_wealth_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			OR = {
+				has_law = mazdaki_wealth_1
+				has_law = mazdaki_wealth_3
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_piety_trigger_2 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "mazdaki_wealth_2 pass ([This.GetFullBaseName])"
+			plus_law_change_piety_effect_2 = yes
+		}
+
+		effect = {
+			# log = "mazdaki_wealth_2 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_piety_effect_2 = yes
+			}
+
+			revoke_law = mazdaki_wealth_0
+			revoke_law = mazdaki_wealth_1
+			revoke_law = mazdaki_wealth_3
+			revoke_law = mazdaki_wealth_4
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				holder_scope = {
+					trigger_if = {
+						limit = { has_law = mazdaki_wealth_1 }
+
+						NOR = {
+							trait = greedy
+							trait = cynical
+						}
+					}
+					trigger_else = {
+						OR = {
+							trait = greedy
+							trait = cynical
+						}
+					}
+				}
+			}
+		}
+	}
+
+	mazdaki_wealth_3 = {
+		group = maz_wealth_group
+
+		global_revolt_risk = -0.03
+		feudal_opinion = -20
+		city_opinion = 10
+		temple_opinion = 10
+		castle_vassal_tax_modifier = -0.2
+		city_vassal_tax_modifier = -0.2
+		temple_vassal_tax_modifier = -0.2
+		demesne_size = 1
+		vassal_limit = -5
+
+		potential = {
+			is_law_potential = mazdaki_wealth_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			OR = {
+				has_law = mazdaki_wealth_2
+				has_law = mazdaki_wealth_4
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_piety_trigger_3 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "mazdaki_wealth_2 pass ([This.GetFullBaseName])"
+			plus_law_change_piety_effect_3 = yes
+		}
+
+		effect = {
+			# log = "mazdaki_wealth_2 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_piety_effect_3 = yes
+			}
+
+			revoke_law = mazdaki_wealth_0
+			revoke_law = mazdaki_wealth_1
+			revoke_law = mazdaki_wealth_2
+			revoke_law = mazdaki_wealth_4
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				holder_scope = {
+					trigger_if = {
+						limit = { has_law = mazdaki_wealth_2 }
+
+						NOR = {
+							trait = greedy
+							trait = cynical
+						}
+					}
+					trigger_else = {
+						OR = {
+							trait = greedy
+							trait = cynical
+						}
+					}
+				}
+			}
+		}
+	}
+
+	mazdaki_wealth_4 = {
+		group = maz_wealth_group
+
+		global_revolt_risk = -0.04
+		feudal_opinion = -30
+		city_opinion = 20
+		temple_opinion = 20
+		castle_vassal_tax_modifier = -0.3
+		city_vassal_tax_modifier = -0.3
+		temple_vassal_tax_modifier = -0.3
+		demesne_size = 2
+		vassal_limit = -10
+
+		potential = {
+			is_law_potential = mazdaki_wealth_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			has_law = mazdaki_wealth_1
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_piety_trigger_4 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "mazdaki_wealth_2 pass ([This.GetFullBaseName])"
+			plus_law_change_piety_effect_4 = yes
+		}
+
+		effect = {
+			# log = "mazdaki_wealth_2 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_piety_effect_4 = yes
+			}
+
+			revoke_law = mazdaki_wealth_0
+			revoke_law = mazdaki_wealth_1
+			revoke_law = mazdaki_wealth_2
+			revoke_law = mazdaki_wealth_3
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				holder_scope = {
+					OR = {
+						trait = greedy
+						trait = cynical
+					}
+				}
+			}
+		}
+	}
+
+	#################################
+	#
+	#	Bogomilist Church laws
+	#
+	#################################
+
+	bogomilist_church_0 = {
+		group = bogomilist_church_group
+		default = yes
+
+		feudal_opinion = -5
+		castle_vassal_max_levy = -0.1
+		castle_vassal_min_levy = -0.1
+		city_vassal_min_levy = -0.1
+		city_vassal_max_levy = -0.1
+		temple_vassal_min_levy = -0.1
+		temple_vassal_max_levy = -0.1
+		castle_vassal_tax_modifier = -0.1
+		temple_vassal_tax_modifier = -0.1
+		city_vassal_tax_modifier = -0.1
+
+		potential = {
+			holder_scope = {
+				is_playable = yes
+				religion = bogomilist
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			NOR = {
+				has_law = bogomilist_church_0
+				has_law = bogomilist_church_1
+				has_law = bogomilist_church_2
+				has_law = bogomilist_church_3
+				has_law = bogomilist_church_4
+			}
+		}
+
+		pass_effect = {
+			# log = "bogomilist_church_0 pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "bogomilist_church_0 ([This.GetFullBaseName])"
+			revoke_law = bogomilist_church_1
+			revoke_law = bogomilist_church_2
+			revoke_law = bogomilist_church_3
+			revoke_law = bogomilist_church_4
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	bogomilist_church_1 = {
+		group = bogomilist_church_group
+
+		castle_vassal_tax_modifier = -0.1
+		temple_vassal_tax_modifier = -0.1
+		city_vassal_tax_modifier = -0.1
+
+		potential = {
+			is_law_potential = bogomilist_church_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			has_law = bogomilist_church_0
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { has_game_started = yes }
+					plus_law_piety_trigger_2 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "bogomilist_church_1 pass ([This.GetFullBaseName])"
+			plus_law_change_piety_effect_2 = yes
+		}
+
+		effect = {
+			# log = "bogomilist_church_1 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_piety_effect_2 = yes
+			}
+
+			revoke_law = bogomilist_church_0
+			revoke_law = bogomilist_church_2
+			revoke_law = bogomilist_church_3
+			revoke_law = bogomilist_church_4
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	bogomilist_church_2 = { # Organised
+		group = bogomilist_church_group
+
+		feudal_opinion = 5
+		castle_vassal_max_levy = 0.05
+		castle_vassal_min_levy = 0.05
+
+		potential = {
+			is_law_potential = bogomilist_church_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			has_law = bogomilist_church_1
+
+			custom_tooltip = {
+				text = BY_DECISION
+				always = no
+			}
+		}
+
+		pass_effect = {
+			# log = "bogomilist_church_2 pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "bogomilist_church_2 ([This.GetFullBaseName])"
+			revoke_law = bogomilist_church_0
+			revoke_law = bogomilist_church_1
+			revoke_law = bogomilist_church_3
+			revoke_law = bogomilist_church_4
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	bogomilist_church_3 = { # Formalised
+		group = bogomilist_church_group
+
+		feudal_opinion = 10
+		temple_opinion = 10
+		castle_vassal_max_levy = 0.1
+		castle_vassal_min_levy = 0.1
+		temple_vassal_min_levy = 0.1
+		temple_vassal_max_levy = 0.1
+		castle_vassal_tax_modifier = 0.05
+		temple_vassal_tax_modifier = 0.05
+		city_vassal_tax_modifier = 0.05
+
+		potential = {
+			is_law_potential = bogomilist_church_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			has_law = bogomilist_church_2
+
+			custom_tooltip = {
+				text = BY_DECISION
+				always = no
+			}
+		}
+
+		pass_effect = {
+			# log = "bogomilist_church_3 pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "bogomilist_church_3 ([This.GetFullBaseName])"
+			revoke_law = bogomilist_church_0
+			revoke_law = bogomilist_church_1
+			revoke_law = bogomilist_church_2
+			revoke_law = bogomilist_church_4
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	bogomilist_church_4 = { # Church
+		group = bogomilist_church_group
+
+		vassal_limit = 5
+		feudal_opinion = 10
+		temple_opinion = 20
+		temple_vassal_max_levy = 0.25
+		temple_vassal_min_levy = 0.25
+		castle_vassal_tax_modifier = 0.1
+		temple_vassal_tax_modifier = 0.1
+		city_vassal_tax_modifier = 0.1
+
+		potential = {
+			is_law_potential = bogomilist_church_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			has_law = bogomilist_church_3
+
+			custom_tooltip = {
+				text = BY_DECISION
+				always = no
+			}
+		}
+
+		pass_effect = {
+			# log = "bogomilist_church_4 pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "bogomilist_church_4 ([This.GetFullBaseName])"
+			revoke_law = bogomilist_church_0
+			revoke_law = bogomilist_church_1
+			revoke_law = bogomilist_church_2
+			revoke_law = bogomilist_church_3
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+}

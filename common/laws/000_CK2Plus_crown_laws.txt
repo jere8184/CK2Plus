@@ -1,0 +1,197 @@
+###########################
+#
+#	Plus crown laws
+#
+###########################
+
+###########################
+#
+#	Law groups
+#
+###########################
+
+law_groups = {
+	kingdom_lockout_group = {} #Kingdom Lockout - Plus
+}
+
+de_jure_laws = {
+	# Kingdom Lockout Laws
+	kingdom_lockout_0 = { # None
+		group = kingdom_lockout_group
+
+		potential = {
+			real_tier = EMPEROR
+
+			holder_scope = {
+				is_nomadic = no
+				is_tribal = no
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			trigger_if = {
+				limit = {
+					OR = {
+						has_law = kingdom_lockout_0
+						has_law = kingdom_lockout_1
+						has_law = kingdom_lockout_2
+					}
+				}
+
+				has_law = kingdom_lockout_1
+			}
+		}
+
+		pass_effect = {
+			# log = "kingdom_lockout_0 pass ([This.GetFullBaseName])"
+		}
+
+		effect = {
+			# log = "kingdom_lockout_0 ([This.GetFullBaseName])"
+			revoke_law = kingdom_lockout_1
+			revoke_law = kingdom_lockout_2
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	kingdom_lockout_1 = { # Anyone
+		group = kingdom_lockout_group
+
+		potential = {
+			is_law_potential = kingdom_lockout_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			OR = {
+				has_law = kingdom_lockout_0
+				has_law = kingdom_lockout_2
+			}
+
+			trigger_if = {
+				limit = { has_dlc = "Conclave" }
+
+				show_only_failed_conditions = yes
+
+				OR = {
+					has_law = ze_administration_laws_1
+					has_law = ze_administration_laws_2
+				}
+			}
+			trigger_else = {
+				show_only_failed_conditions = yes
+				has_law = imperial_administration
+			}
+
+			OR = {
+				has_law = crown_authority_3
+				has_law = crown_authority_4
+			}
+
+			holder_scope = {
+				show_scope_change = no
+
+				trigger_if = {
+					limit = { NOT = { has_law = kingdom_lockout_2 } }
+					plus_law_prestige_trigger_1 = yes
+				}
+			}
+		}
+
+		pass_effect = {
+			# log = "kingdom_lockout_1 pass ([This.GetFullBaseName])"
+
+			if = {
+				limit = { NOT = { has_law = kingdom_lockout_2 } }
+				plus_law_change_prestige_effect_1 = yes
+			}
+		}
+
+		effect = {
+			# log = "kingdom_lockout_1 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				if = {
+					limit = { NOT = { has_law = kingdom_lockout_2 } }
+					plus_law_change_prestige_effect_1 = yes
+				}
+			}
+
+			revoke_law = kingdom_lockout_0
+			revoke_law = kingdom_lockout_2
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				has_law = kingdom_lockout_0
+			}
+		}
+	}
+
+	kingdom_lockout_2 = { # Liege
+		group = kingdom_lockout_group
+
+		vassal_opinion = -5
+
+		potential = {
+			is_law_potential = kingdom_lockout_0
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			has_law = kingdom_lockout_1
+			has_law = crown_authority_4
+
+			holder_scope = {
+				show_scope_change = no
+
+				OR = {
+					trigger_if = {
+						limit = { has_dlc = "Conclave" }
+						has_law = ze_administration_laws_2
+					}
+					trigger_else = {
+						has_law = imperial_administration
+					}
+
+					government = theocratic_feudal_government
+					government = chinese_imperial_government
+				}
+			}
+
+			holder_scope = {
+				show_scope_change = no
+				plus_law_prestige_trigger_2 = yes
+			}
+		}
+
+		pass_effect = {
+			# log = "kingdom_lockout_2 pass ([This.GetFullBaseName])"
+			plus_law_change_prestige_effect_2 = yes
+		}
+
+		effect = {
+			# log = "kingdom_lockout_2 ([This.GetFullBaseName])"
+
+			tooltip = { # pass_effect doesn't generate tooltips
+				plus_law_change_prestige_effect_2 = yes
+			}
+
+			revoke_law = kingdom_lockout_0
+			revoke_law = kingdom_lockout_1
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+}

@@ -1,0 +1,605 @@
+namespace = Plus
+#reserved: Plus.2351 to Plus.2399
+
+#######################################
+# GERMANIC EVENTS
+#######################################
+
+### JOURNEY OF NERTHUS EVENTS
+
+# Journey of Nerthus begins
+narrative_event = {
+	id = Plus.2351
+	title = EVTNAME_Plus_2351
+	desc = EVTDESC_Plus_2351
+	picture = GFX_evt_nerthus
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	religion_group = pagan_group
+	has_character_flag = planning_journey_of_nerthus
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		month >= 3
+		month < 5
+		religion_openly_german_or_reformed_trigger = yes
+		is_inaccessible_trigger = no
+
+		top_liege = {
+			war = no
+			NOT = { any_realm_lord = { war = yes } }
+		}
+	}
+
+	major_trigger = {
+		same_realm = ROOT
+	}
+
+	fail_trigger_effect = {
+		# Try again in a month
+		if = {
+			limit = { has_character_flag = planning_journey_of_nerthus }
+
+			repeat_event = {
+				id = Plus.2351
+				months = 1
+			}
+		}
+	}
+
+	immediate = {
+		clr_character_flag = planning_journey_of_nerthus
+
+		top_liege = {
+			save_event_target_as = nerthus_top_liege
+			primary_title = { set_title_flag = recent_journey_of_nerthus }
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2351 # Hold the feast!
+
+		trigger = {
+			character = event_target:nerthus_top_liege
+			scaled_wealth >= 0.5
+			NOT = { has_character_flag = planning_feast }
+		}
+
+		ai_chance = {
+			factor = 75
+
+			trigger = {
+				NOT = { has_character_modifier = ai_austerity }
+			}
+
+			mult_modifier = {
+				factor = 0.25
+
+				piety = 50
+
+				OR = {
+					trait = shy
+					trait = greedy
+					trait = paranoid
+					trait = cynical
+				}
+			}
+		}
+
+		piety = 100
+		add_character_modifier = {
+			name = holding_large_feast
+			duration = -1
+		}
+
+		set_character_flag = nerthus_feast
+		set_character_flag = held_recent_feast
+		clr_character_flag = sent_invitations
+		clr_character_flag = host_feast_started
+		clr_character_flag = feast_jongleur
+		clr_character_flag = feast_musicians
+		clr_character_flag = dealt_with_robber_band
+		clr_character_flag = guest_daughter_event
+		clr_character_flag = guest_claim_event
+		clr_character_flag = feast_minstrel
+		clr_character_flag = feast_fireeaters
+		clr_character_flag = feast_conjurer
+		clr_character_flag = lavishly_food
+		clr_character_flag = medium_food
+		clr_character_flag = low_food
+		clr_character_flag = castle_problems
+		clr_character_flag = feast_jester
+		clr_character_flag = feast_drunkard_guest
+		clr_character_flag = feast_duel
+		clr_character_flag = feast_boar_hunt
+
+		character_event = { id = 72003 days = 25 random = 10 } # food preparations
+		character_event = { id = 72997 days = 7 random = 5 } # first pre-feast event trigger
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 85
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2351 # I was already planning a feast!
+
+		trigger = {
+			character = event_target:nerthus_top_liege
+			has_character_flag = planning_feast
+		}
+
+		piety = 100
+		set_character_flag = nerthus_feast
+		set_character_flag = held_recent_feast
+		clr_character_flag = planning_feast
+		clr_character_flag = sent_invitations
+		clr_character_flag = host_feast_started
+		clr_character_flag = feast_jongleur
+		clr_character_flag = feast_musicians
+		clr_character_flag = dealt_with_robber_band
+		clr_character_flag = guest_daughter_event
+		clr_character_flag = guest_claim_event
+		clr_character_flag = feast_minstrel
+		clr_character_flag = feast_fireeaters
+		clr_character_flag = feast_conjurer
+		clr_character_flag = lavishly_food
+		clr_character_flag = medium_food
+		clr_character_flag = low_food
+		clr_character_flag = castle_problems
+		clr_character_flag = feast_jester
+		clr_character_flag = feast_drunkard_guest
+		clr_character_flag = feast_duel
+		clr_character_flag = feast_boar_hunt
+
+		character_event = { id = 72003 days = 25 random = 10 } # food preparations
+		character_event = { id = 72997 days = 7 random = 5 } # first pre-feast event trigger
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 85
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_2351 # Do not hold the feast
+
+		trigger = {
+			character = event_target:nerthus_top_liege
+			scaled_wealth >= 0.5
+			NOT = { has_character_flag = planning_feast }
+		}
+
+		ai_chance = {
+			factor = 25
+
+			mult_modifier = {
+				factor = 3
+
+				OR = {
+					trait = stressed
+					trait = depressed
+					is_ill = yes
+				}
+			}
+		}
+
+		piety = -50
+		prestige = -50
+	}
+
+	option = {
+		name = EVTOPTD_Plus_2351 # Alas, I cannot afford it
+
+		trigger = {
+			character = event_target:nerthus_top_liege
+
+			NOR = {
+				has_character_flag = planning_feast
+				scaled_wealth >= 0.5
+			}
+		}
+
+		prestige = -100
+	}
+
+	option = {
+		name = EVTOPTE_Plus_2351 # This shall be a joyous time
+
+		trigger = {
+			religion_group = pagan_group
+			NOT = { character = event_target:nerthus_top_liege }
+		}
+	}
+
+	option = {
+		name = EVTOPTF_Plus_2351 # Paying homage to a pagan goddess?
+
+		trigger = {
+			NOR = {
+				religion_group = pagan_group
+				character = event_target:nerthus_top_liege
+			}
+		}
+	}
+
+	after = {
+		hidden_effect = {
+			if = {
+				limit = {
+					is_female = yes
+					is_adult = yes
+					practical_age < 45
+					prisoner = no
+					is_incapable = no
+
+					trigger_if = {
+						limit = { trait = zealous }
+						religion_openly_german_or_reformed_trigger = yes
+					}
+
+					OR = {
+						is_married = yes
+						is_consort = yes
+					}
+
+					has_children = no
+					is_inaccessible_trigger = no
+
+					NOR = {
+						trait = celibate
+						has_character_flag = nerthus_fertility
+					}
+				}
+
+				random = {
+					chance = 20
+
+					mult_modifier = {
+						factor = 10
+						has_character_flag = knows_barren
+					}
+
+					mult_modifier = {
+						factor = 2
+
+						OR = {
+							trait = infertile
+							has_character_modifier = barren
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						practical_age < 20
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						practical_age < 25
+					}
+
+					mult_modifier = {
+						factor = 2
+						practical_age >= 30
+					}
+
+					mult_modifier = {
+						factor = 2
+						is_lover = spouse
+					}
+
+					mult_modifier = {
+						factor = 2
+						is_smart_trigger = yes
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						is_dumb_trigger = yes
+					}
+
+					# Childless woman hears of Nerthus's Journey
+					character_event = {
+						id = Plus.2354
+						days = 10
+						random = 10
+					}
+				}
+			}
+		}
+	}
+}
+
+# Journey of Nerthus ends
+narrative_event = {
+	id = Plus.2352
+	title = EVTNAME_Plus_2351
+	desc = EVTDESC_Plus_2352
+	picture = GFX_evt_nerthus
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	religion_group = pagan_group
+
+	trigger = {
+		religion_openly_german_or_reformed_trigger = yes
+	}
+
+	major_trigger = {
+		same_realm = ROOT
+	}
+
+	immediate = {
+		if = {
+			limit = { has_landed_title = d_german_pagan_reformed }
+			character_event = { id = Plus.2353 days = 1 }
+		}
+		else = {
+			random_realm_character = {
+				limit = {
+					OR = {
+						has_landed_title = d_german_pagan_reformed
+
+						trigger_if = {
+							limit = { has_job_title = job_spiritual }
+							vassal_of = ROOT
+						}
+					}
+				}
+
+				preferred_limit = {
+					has_landed_title = d_german_pagan_reformed
+				}
+
+				character_event = {
+					id = Plus.2353
+					days = 1
+				}
+			}
+		}
+	}
+
+	option = {
+		name = {
+			text = EVTOPTA_Plus_2352
+			trigger = { religion_openly_german_or_reformed_trigger = yes }
+		}
+		name = {
+			text = EVTOPTB_Plus_2352
+			trigger = { religion_openly_german_or_reformed_trigger = no }
+		}
+	}
+}
+
+# Nerthus cart purified
+character_event = {
+	id = Plus.2353
+	title = EVTNAME_Plus_2351
+	desc = EVTDESC_Plus_2353
+	picture = GFX_evt_nerthus
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	religion_group = pagan_group
+
+	trigger = {
+		religion_openly_german_or_reformed_trigger = yes
+
+		OR = {
+			has_job_title = job_spiritual
+			has_landed_title = d_german_pagan_reformed
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2353
+	}
+}
+
+# Childless woman hears of Nerthus's Journey
+character_event = {
+	id = Plus.2354
+	desc = EVTDESC_Plus_2354
+	picture = GFX_evt_nerthus
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	min_age = 16
+	max_age = 45
+	only_women = yes
+	prisoner = no
+	only_capable = yes
+
+	trigger = {
+		trigger_if = {
+			limit = { trait = zealous }
+			religion_openly_german_or_reformed_trigger = yes
+		}
+
+		top_liege = { has_character_flag = nerthus_feast }
+
+		OR = {
+			is_married = yes
+			is_consort = yes
+		}
+
+		has_children = no
+		is_inaccessible_trigger = no
+
+		NOR = {
+			trait = celibate
+			has_character_flag = nerthus_fertility
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2354 # Maybe Nerthus can help with my...problem
+
+		set_character_flag = nerthus_fertility
+
+		if = {
+			limit = { religion_openly_german_or_reformed_trigger = no }
+			piety = -25
+		}
+
+		if = {
+			limit = {
+				NOR = {
+					religion_group = pagan_group
+					trait = sympathy_pagans
+				}
+			}
+
+			add_trait = sympathy_pagans
+		}
+
+		random_list = {
+			40 = { }
+
+			10 = {
+				trigger = {
+					OR = {
+						has_character_modifier = barren
+						trait = infertile
+					}
+				}
+
+				mult_modifier = {
+					factor = 3
+					has_character_modifier = infertile
+				}
+
+				custom_tooltip = {
+					text = REMOVE_BARREN_SUCCESS
+
+					remove_trait = infertile
+					clr_character_flag = is_barren
+					remove_character_modifier = barren
+				}
+			}
+
+			40 = {
+				trigger = { has_character_modifier = barren }
+
+				custom_tooltip = {
+					text = REMOVE_BARREN_BUT_INFERTILE
+
+					clr_character_flag = is_barren
+					remove_character_modifier = barren
+					add_trait = infertile
+				}
+			}
+
+			40 = {
+				trigger = {
+					NOR = {
+						has_character_modifier = barren
+						trait = infertile
+					}
+				}
+
+				add_character_modifier = {
+					name = precious_item
+					years = 2
+				}
+			}
+
+			13 = {
+				trigger = {
+					is_maimed_trigger = no
+					NOT = { trait = wounded }
+				}
+
+				add_trait_wounded_effect = yes
+			}
+
+			5 = {
+				trigger = {
+					is_maimed_trigger = no
+					NOT = { trait = wounded }
+				}
+
+				add_maimed_trait_effect = yes
+
+				character_event = {
+					id = 38281
+					days = 1
+				}
+			}
+
+			2 = {
+				death = { death_reason = death_accident }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2354 # There is nothing wrong with me!
+
+		set_character_flag = nerthus_fertility
+	}
+}
+
+### REBUILDING IRMINSUL
+
+# Irminsul Reborn
+narrative_event = {
+	id = Plus.2356
+	title = EVTNAME_Plus_2356
+	desc = EVTDESC_Plus_2356
+	picture = GFX_evt_irminsul_shrine
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse
+
+	only_independent = yes
+	has_global_flag = irminsul
+
+	trigger = {
+		c_braunschweig = {
+			location = {
+				owner = {
+					OR = {
+						character = ROOT
+						is_liege_or_above_of = ROOT
+					}
+				}
+
+				any_province_holding = { has_building = tp_holy_site_irminsul }
+			}
+		}
+
+		OR = {
+			religion_openly_german_or_reformed_trigger = yes
+			religion_openly_norse_or_reformed_trigger = yes
+		}
+
+		NOT = { has_global_flag = irminsul_reborn }
+	}
+
+	immediate = {
+		set_global_flag = irminsul_reborn
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2356
+
+		religion_authority = {
+			name = irminsul_reborn
+		}
+	}
+}

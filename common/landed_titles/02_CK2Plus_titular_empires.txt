@@ -1,0 +1,1695 @@
+##################################
+##
+## EMPIRES
+##
+##################################
+
+# Special
+
+
+
+e_karling = {
+	color = { 250 250 250 }
+	color2 = { 0 0 0 }
+	culture = french
+	dynasty_title_names = no
+	creation_requires_capital = no
+	short_name = yes
+	capital = 252 # Julich
+
+	allow = {
+		e_roman_empire = { has_holder = no }
+		can_create_empire = yes
+		custom_tooltip = {
+			text = catholic_group_christian
+			hidden_tooltip = {
+				OR = {
+					religion = chalcedonian
+					is_catholic_branch = yes
+				}
+			}
+		}
+		has_titular_requirements = yes
+	}
+}
+
+e_greater_israel = {
+	color = { 0 38 255 }
+	color2 = { 0 0 0 }
+	short_name = yes
+	dynasty_title_names = no
+	capital = 1514 # Jerusalem
+	culture = israeli
+	creation_requires_capital = yes
+
+	israeli = "Eretz Yisrael Hashlemah"
+	ashkenazi = "Eretz Yisrael Hashlemah"
+	sephardi = "Eretz Yisrael Hashlemah"
+	mizrahim = "Eretz Yisrael Hashlemah"
+
+	allow = {
+		has_global_flag = greater_israel_founded
+		can_create_empire = yes
+		has_titular_requirements = yes
+		ROOT = {
+			OR = {
+				religion_group = jewish_group
+				culture_group = israelite
+			}
+		}
+	}
+}
+
+# Non-special
+e_alan = {
+	color = { 135 128 128 }
+	color2 = { 255 255 255 }
+	capital = 610 # Alania
+	creation_requires_capital = no
+	culture = alan
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = alan
+			}
+		}
+	}
+}
+
+e_andalusia = {
+	color = { 201  191  122 }
+	capital = 416 # Cordoba
+	culture = andalusian_arabic
+	dynasty_title_names = no
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = andalusian_arabic
+			}
+		}
+	}
+}
+
+e_armenia = {
+	color = { 135 35 201 }
+	color2 = { 255 255 255 }
+	capital = 592 # Ani
+	creation_requires_capital = no
+	culture = armenian
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = armenian
+			}
+		}
+	}
+}
+
+e_assyria = {
+	color = { 40 95 75 }
+	color2 = { 0 204 210 }
+	capital = 1483 # Mosul
+	creation_requires_capital = yes
+	culture = assyrian
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = assyrian
+			}
+		}
+	}
+}
+
+e_austria = {
+	color = { 178 21 26 }
+	capital = 213 # Wien
+	culture = german
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				german_cultures_trigger = yes
+			}
+		}
+	}
+}
+
+e_avaria = {
+	color = { 250 120 90  }
+	color2 = { 255 255 255 }
+	capital	= 707 # Esztergom
+	culture = avar
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = avar
+			}
+		}
+	}
+}
+
+e_berber = {
+	color = { 255 229 19 }
+	capital = 1670 # Fes
+	culture = atlasian
+	dynasty_title_names = yes
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture = atlasian
+					culture = garamante
+					culture = tuareg
+					culture = bafour
+					culture = zenati
+				}
+			}
+		}
+	}
+}
+
+e_bohemia = {
+	color = { 185 125 45 }
+	color2 = { 255 255 255 }
+	capital = 718 # Praha
+	creation_requires_capital = no
+	culture = bohemian
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = bohemian
+			}
+		}
+	}
+}
+
+e_breton = {
+	color = { 155 55 205 }
+	color2 = { 255 255 255 }
+	capital = 308 # Nantes
+	creation_requires_capital = no
+	culture = breton
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = breton
+			}
+		}
+	}
+}
+
+e_great_britain = {
+	color = { 255 30 93 }
+	color2 = { 255 255 255 }
+	capital = 46 # Middlesex
+	culture = english
+	title = "TITLE_KING"
+	title_female = "TITLE_QUEEN"
+	title_prefix = "kingdom_of"
+	#don't use name tier, that will frak itself up because of imperial government type
+
+	allow = {
+		e_britannia = { has_holder = no }
+		custom_tooltip = {
+			text = gb_formed
+			has_global_flag = gb_formed
+		}
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture = norse
+					culture = english_norse
+					culture_group = west_germanic
+					culture_group = celtic
+				}
+			}
+		}
+		has_landed_title = k_england
+		has_landed_title = k_scotland
+		has_landed_title = k_wales
+	}
+}
+
+e_bulgar = {
+	color = { 223 208 23 }
+	color2 = { 255 255 255 }
+	capital = 886 # Bolghar
+	creation_requires_capital = no
+	culture = bolghar
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = bolghar
+			}
+		}
+	}
+}
+
+e_carthage = {
+	color = { 35 177 77 }
+	capital = 1643 # Tunis
+	culture = maghreb_arabic
+	dynasty_title_names = no
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture = maghreb_arabic
+					culture = vandalic
+					culture = atlasian
+					culture = zenati
+				}
+			}
+		}
+	}
+}
+
+e_celtic = {
+	color = { 0 153 0 }
+	capital = 6 # Dublin
+	creation_requires_capital = no
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture_group = celtic
+			}
+		}
+	}
+}
+
+e_common = { # Polish–Lithuanian Commonwealth
+	color = { 176 81 111 }
+	capital = 756 # Plock
+	creation_requires_capital = no
+	culture = polish
+	short_name = yes
+	title = "king"
+	title_female = "king_female"
+	#don't use name tier, that will frak itself up because of imperial government type
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				has_landed_title = k_poland
+				has_landed_title = k_lithuania
+			}
+		}
+	}
+}
+
+e_cornwall = {
+	color = { 195 65 15 }
+	color2 = { 185 48 15 }
+	capital = 33 # Cornwall
+	creation_requires_capital = no
+	culture = cornish
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = cornish
+			}
+		}
+	}
+}
+
+e_corsica = {
+	color = { 90 65 128 }
+	color2 = { 255 255 255 }
+	capital = 434 # Corsica
+	creation_requires_capital = no
+	culture = corsican
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = corsican
+			}
+		}
+	}
+}
+
+e_crimea = {
+	color = { 224 90 20 }
+	color2 = { 20 177 255 }
+	capital = 647 # Cherson
+	culture = old_gothic
+	creation_requires_capital = yes
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture_group = byzantine
+					culture_group = latin
+					culture_group = east_germanic
+				}
+			}
+		}
+	}
+}
+
+e_croatia = {
+	color = { 205 185 205 }
+	color2 = { 200 0 0 }
+	capital = 679 # Zachlumia
+	creation_requires_capital = no
+	culture = croatian
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = croatian
+			}
+		}
+	}
+}
+
+e_cuman = {
+	color = { 250 184 31 }
+	color2 = { 255 255 20 }
+	capital = 622 # Saray
+	creation_requires_capital = no
+	culture = cuman
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = cuman
+			}
+		}
+	}
+}
+
+e_dalmatian = {
+	color = { 60 114 186 }
+	color2 = { 255 255 255 }
+	capital = 681 # Zadar
+	creation_requires_capital = no
+	culture = dalmatian
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture = dalmatian
+					AND = {
+						OR = {
+							culture = croatian
+							culture = yugoslavian
+							culture = italian
+						}
+						completely_controls_region = custom_dalmatian_region
+					}
+				}
+			}
+		}
+	}
+}
+
+e_danubia = {
+	color = { 213 0 39 }
+	color2 = { 255 255 255 }
+	capital	= 530 # Tyrnovo
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+			}
+		}
+	}
+}
+
+e_denmark = {
+	color = { 247 77 54 }
+	color2 = { 156 117 23 }
+	capital = 167 # Sjælland
+	creation_requires_capital = no
+	culture = danish
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = danish
+			}
+		}
+	}
+}
+
+e_dutch = {
+	color = { 190 155 155 }
+	color2 = { 255 255 255 }
+	capital = 261 # Holland
+	creation_requires_capital = no
+	culture = dutch
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture = dutch
+					culture = flemish
+					culture = frisian
+				}
+				OR = {
+					completely_controls = d_holland
+					completely_controls = d_brabant
+					completely_controls = d_gelre
+				}
+			}
+		}
+	}
+}
+
+e_egypt = {
+	color = { 45 245 200 }
+	color2 = { 255 255 255 }
+	capital	= 1609 # Cairo
+	creation_requires_capital = no
+	culture = egyptian_arabic
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture = egyptian_arabic
+					culture = coptic
+				}
+			}
+		}
+	}
+}
+
+e_egypt_old = {
+	color = { 45 245 200 }
+	color2 = { 255 255 255 }
+	capital	= 1609 # Cairo
+	creation_requires_capital = yes
+	culture = coptic
+	short_name = no
+
+	title = "PHARAOH"
+	title_female = "PHARAOH"
+
+	allow = {
+		can_create_empire = yes
+		religion_openly_egyptian_or_reformed_trigger = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture = egyptian_arabic
+					culture = coptic
+				}
+			}
+		}
+	}
+}
+
+e_emilian = {
+	color = { 144 214 141 }
+	color2 = { 255 255 255 }
+	capital = 451 # Ferrara
+	creation_requires_capital = no
+	culture = emilian
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture = emilian
+					AND = {
+						culture = italian
+						completely_controls_region = custom_emilian_cultural_area
+					}
+				}
+			}
+		}
+	}
+}
+
+e_england = {
+	color = { 142 36 36 }
+	color2 = { 255 255 255 }
+	capital = 46 # Middlesex
+	creation_requires_capital = no
+	culture = english
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture = anglo-saxon
+					culture = english
+				}
+			}
+		}
+	}
+}
+
+e_finland = {
+	color = { 180 95 95 }
+	capital = 135 # Uusimaa
+	creation_requires_capital = no
+	culture = finnish
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture_group = finno_ugric
+			}
+		}
+	}
+}
+
+e_frisian = {
+	color = { 160 15 155 }
+	color2 = { 255 255 255 }
+	capital = 259 # Friesland
+	creation_requires_capital = no
+	culture = frisian
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = frisian
+				completely_controls = c_friesland
+				completely_controls = c_ostfriesland
+				completely_controls = c_westfriesland
+			}
+		}
+	}
+}
+
+
+e_gaul = {
+	color = { 255 128 0 }
+	capital = 253 # Köln
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				culture_group = celtic
+				has_empire_size_trigger = yes
+			}
+		}
+	}
+}
+
+e_georgia = {
+	color = { 102 10 108 }
+	color2 = { 255 255 255 }
+	capital = 603 # Tiflis
+	creation_requires_capital = no
+	culture = georgian
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = georgian
+			}
+		}
+	}
+}
+
+e_ghana = {
+	color = { 189 103 43 }
+	color2 = { 255 255 255 }
+	capital = 1698 # Wagadu
+	creation_requires_capital = no
+	culture = mande
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = mande
+			}
+		}
+	}
+}
+
+e_gothia = {
+	color = { 174 204 55 }
+	color2 = { 255 255 255 }
+	capital = 647 #	Cherson
+	creation_requires_capital = no
+	culture = old_gothic
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture_group = east_germanic
+			}
+		}
+	}
+}
+
+e_hausa = {
+	color = { 121 155 87 }
+	color2 = { 255 255 255 }
+	capital = 1721 # Kano
+	creation_requires_capital = no
+	culture = hausa
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = hausa
+			}
+		}
+	}
+}
+
+e_hungary = {
+	color = { 187 70 70 }
+	color2 = { 255 255 255 }
+	capital	= 707 # Esztergom
+	creation_requires_capital = no
+	culture = hungarian
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = hungarian
+			}
+		}
+	}
+}
+
+e_iceland = {
+	color = { 225 225 225 }
+	color2 = { 220 220 220 }
+	capital = 90 # Vestisland
+	creation_requires_capital = no
+	culture = icelandic
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = icelandic
+			}
+		}
+	}
+}
+
+e_ireland = {
+	color = { 16 107 2 }
+	color2 = { 185 48 15 }
+	capital = 6 # Dublin
+	creation_requires_capital = no
+	culture = irish
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = irish
+			}
+		}
+	}
+}
+
+e_jewish = {
+	color = { 180 53 220 }
+	capital = 1514 # Jerusalem
+	creation_requires_capital = no
+	culture = ashkenazi
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					religion_group = jewish_group
+					culture_group = israelite
+				}
+			}
+		}
+	}
+}
+
+e_jolof = {
+	color = { 221 183 38 }
+	color2 = { 185 48 15 }
+	capital = 1538 # Hajr
+	creation_requires_capital = no
+	culture = jolof
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = jolof
+			}
+		}
+	}
+}
+
+e_kanuri = {
+	color = { 171 103 98 }
+	color2 = { 185 48 15 }
+	capital = 1735 # Djimi
+	creation_requires_capital = no
+	culture = kanuri
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = kanuri
+			}
+		}
+	}
+}
+
+e_khazaria = {
+	color = { 22 102 225 }
+	color2 = { 255 255 255 }
+	capital = 623 #	Itil
+	culture = khazar
+	short_name = yes
+	creation_requires_capital = no
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = khazar
+			}
+		}
+	}
+}
+
+e_kurdish = {
+	color = { 100 100 228 }
+	color2 = { 255 255 255 }
+	capital = 1483 # Mosul
+	creation_requires_capital = no
+	culture = kurdish
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = kurdish
+			}
+		}
+	}
+}
+
+e_ligurian = {
+	color = { 247 149 12 }
+	color2 = { 255 255 255 }
+	capital = 435 # Genoa
+	creation_requires_capital = no
+	culture = ligurian
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture = ligurian
+					AND = {
+						culture = italian
+						completely_controls_region = custom_ligurian_cultural_area
+					}
+				}
+			}
+		}
+	}
+}
+
+e_lithuania = {
+	color = { 125 175 6 }
+	color2 = { 185 48 15 }
+	capital = 768 # Vilnius
+	creation_requires_capital = no
+	culture = lithuanian
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture = lithuanian
+					culture = latgalian
+				}
+			}
+		}
+	}
+}
+
+e_lombard = {
+	color = { 183 50 207 }
+	color2 = { 255 255 255 }
+	capital = 442 # Milano
+	creation_requires_capital = no
+	culture = lombard
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture = lombard
+					AND = {
+						culture = italian
+						completely_controls_region = custom_lombard_cultural_area
+					}
+				}
+			}
+		}
+	}
+}
+
+e_neapolitan = {
+	color = { 43 34 214 }
+	color2 = { 255 255 255 }
+	capital = 473 #	Napoli
+	creation_requires_capital = no
+	culture = neapolitan
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					AND = {
+						culture = italian
+						completely_controls_region = custom_neapolitan_cultural_area
+					}
+					culture = neapolitan
+				}
+			}
+		}
+	}
+}
+
+e_norman = {
+	color = { 145 74 226 }
+	color2 = { 255 255 255 }
+	capital = 300 # Mortain
+	culture = norman
+	short_name = yes
+
+	creation_requires_capital = no
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = norman
+			}
+		}
+	}
+}
+
+e_norse = {
+	color = {102 102 102 }
+	color2 = {255 255 255}
+	capital = 99 # Bergenhus
+	creation_requires_capital = no
+	culture = norse
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					religion = norse_pagan
+					religion = norse_pagan_reformed
+					culture_group = north_germanic
+				}
+			}
+		}
+	}
+}
+
+e_north_sea = {
+	color = { 35 75 233 }
+	capital = 46 # Middlesex
+	culture = norwegian
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture_group = north_germanic
+					culture = english_norse
+				}
+			}
+		}
+	}
+}
+
+e_norway = {
+	color = { 150 150 170 }
+	color2 = { 220 220 220 }
+	capital = 99 # Bergenhus
+	culture = norwegian
+	short_name = yes
+	creation_requires_capital = no
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = norwegian
+			}
+		}
+	}
+}
+
+e_nubia = {
+	color = { 172 161 56 }
+	color2 = { 255 255 255 }
+	capital = 1594 # Makuria
+	culture = nubian
+	short_name = yes
+	creation_requires_capital = no
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = nubian
+			}
+		}
+	}
+}
+
+e_occitan = {
+	color = { 74 50 246 }
+	color2 = { 255 255 20 }
+	capital = 317 # Bordeaux
+	short_name = yes
+	creation_requires_capital = no
+	culture = occitan
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = occitan
+			}
+		}
+	}
+}
+
+e_ottoman = {
+	color = { 247 145 30 }
+	culture = turkish
+	capital = 541 # Constantinople
+	short_name = yes
+	creation_requires_capital = no
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = turkish
+			}
+		}
+	}
+}
+
+
+
+e_pecheneg = {
+	color = { 173 150 43 }
+	color2 = { 0 128 128 }
+	capital = 659 # Suceava
+	culture = pecheneg
+
+	creation_requires_capital = no
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = pecheneg
+			}
+		}
+	}
+}
+
+e_poland = {
+	color = { 120 53 53 }
+	color2 = { 200 0 0 }
+
+	capital = 747 # Krakow
+	culture = polish
+	creation_requires_capital = no
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = polish
+			}
+		}
+	}
+}
+
+e_prussia = {
+	color = { 131 176 209 }
+	color2 = { 255 255 255 }
+	capital = 762 # Marienburg
+	culture = prussian
+
+	creation_requires_capital = no
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture = prussian
+					culture = teutonic
+				}
+			}
+		}
+	}
+}
+
+e_romania = {
+	color = { 209 209 60 }
+	color2 = { 255 255 255 }
+	capital = 661 # Belgorod
+	culture = vlach
+	creation_requires_capital = no
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = vlach
+			}
+		}
+	}
+}
+
+e_sardinian = {
+	color = { 210 41 69 }
+	color2 = { 255 255 255 }
+	capital = 428 # Cagliari
+	creation_requires_capital = no
+	culture = sardinian
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = sardinian
+			}
+		}
+	}
+}
+
+e_scotland = {
+	color = { 179 195 12 }
+	color2 = { 255 255 255 }
+	capital = 80 # Gowrie
+	culture = scottish
+	creation_requires_capital = no
+	short_name = yes
+
+	pictish = "Pictland"
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture = scottish
+					culture = pictish
+					culture = scots
+				}
+			}
+		}
+	}
+}
+
+e_serbia = {
+	color = { 126 98 98 }
+	color2 = { 255 255 255 }
+	capital = 521 # Rashka
+	culture = serbian
+	short_name = yes
+
+	creation_requires_capital = no
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = serbian
+			}
+		}
+	}
+}
+
+e_sicily = {
+	color = { 205 250 50 }
+	color2 = { 255 255 255 }
+	capital = 486 # Palermo
+	culture = sicilian
+	short_name = yes
+
+	creation_requires_capital = no
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture = sicilian
+					culture = sicilian_greek
+					culture = sicilian_arabic
+					culture = neapolitan
+				}
+			}
+		}
+	}
+}
+
+e_songhai = {
+	color = { 120 153 20 }
+	capital = 1711 # Gao
+	culture = songhay
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = songhay
+			}
+		}
+	}
+}
+
+e_steppe_wolfe = {
+	color = { 118 118 118 }
+	color2 = { 255 255 255 }
+	capital = 650 #Tmutarakan (historical capital Phanagoria, 4th Rome)
+	culture = bolghar
+	short_name = yes
+
+	creation_requires_capital = no
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					culture = bolghar
+					culture = bulgarian
+				}
+			}
+		}
+		c_bolghar = {
+			holder_scope = {
+				OR = {
+					character = ROOT
+					same_realm = ROOT
+				}
+			}
+		}
+		c_tyrnovo = {
+			holder_scope = {
+				OR = {
+					character = ROOT
+					same_realm = ROOT
+				}
+			}
+		}
+	}
+}
+
+e_sweden = {
+	color = { 62 142 209 }
+	color2 = { 255 255 0 }
+	capital = 145 # Uppland
+	culture = swedish
+
+	creation_requires_capital = no
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = swedish
+			}
+		}
+	}
+}
+
+e_syria = {
+	color = { 204 51 51  }
+	color2 = { 255 255 255 }
+	capital	= 1505 # Damascus
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture_group = arabic
+			}
+		}
+	}
+}
+
+e_tuscan = {
+	color = { 230 217 48 }
+	color2 = { 255 255 255 }
+	capital = 457 # Firenze
+	creation_requires_capital = no
+	culture = tuscan
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					AND = {
+						culture = italian
+						completely_controls_region = custom_tuscan_cultural_area
+					}
+					culture = tuscan
+				}
+			}
+		}
+	}
+}
+
+e_umbrian = {
+	color = { 166 28 18 }
+	color2 = { 255 255 255 }
+	capital = 464 # Roma
+	creation_requires_capital = no
+	culture = umbrian
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR = {
+					AND = {
+						culture = italian
+						completely_controls_region = custom_umbrian_cultural_area
+					}
+					culture = umbrian
+				}
+			}
+		}
+	}
+}
+
+e_veneto = {
+	color = { 50 227 194 }
+	color2 = { 255 255 255 }
+	capital = 450 # Venezia
+	creation_requires_capital = no
+	culture = veneto
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				OR ={
+					AND = {
+						culture = italian
+						completely_controls_region = custom_veneto_cultural_area
+					}
+					culture = veneto
+				}
+			}
+		}
+	}
+}
+
+e_wales = {
+	color = { 155 25 3 }
+	color2 = { 255 255 255 }
+	capital = 23 # Gwynedd
+
+	culture = welsh
+	short_name = yes
+	creation_requires_capital = no
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = welsh
+			}
+		}
+	}
+}
+
+e_wend = {
+	color = { 160 160 80 }
+	color2 = { 255 255 255 }
+	capital = 729 # Mecklenburg
+	culture = pomeranian
+	short_name = yes
+
+	creation_requires_capital = no
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture = pomeranian
+			}
+		}
+	}
+}
+
+e_yugoslavia = {
+	color = { 221 0 0 }
+	culture = serbian
+	capital = 523 # Belgrade
+	title = "king"
+	title_female = "king_female"
+	title_prefix = "kingdom_of"
+	#don't use name tier, that will frak itself up because of imperial government type
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				culture_group = south_slavic
+			}
+		}
+	}
+}

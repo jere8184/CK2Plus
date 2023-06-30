@@ -1,0 +1,502 @@
+#####
+#CK2Plus Score Values:
+#
+#Total = 2
+#####
+
+#chance of advancing Plus Personal Combat traits for the ambition
+personal_combat_trait_advancement_score = {
+	mult_modifier = {
+		factor = 4.0
+
+		OR = {
+			has_ambition = obj_cta_0
+			has_ambition = obj_cta_1
+			has_ambition = obj_cta_2
+			has_ambition = obj_cta_3
+		}
+	}
+
+	# Give the AI a flat 33% higher random weight bonus with a CTA ambition selected.
+	#
+	# a) I don't want the AI stuck on the ambitions for too long. It can't reason about
+	#    when is a reasonable time to cancel the ambition.
+	# b) Mild AI handicaps => good (lacking an actual interface to AI scripting).
+
+	mult_modifier = {
+		factor = 1.333
+
+		ai = yes
+
+		OR = {
+			has_ambition = obj_cta_0
+			has_ambition = obj_cta_1
+			has_ambition = obj_cta_2
+			has_ambition = obj_cta_3
+		}
+	}
+
+	# It is increasingly less likely to earn a combat impulse with higher tiers of combat traits
+	mult_modifier = {
+		factor = 0.8
+		trait = poor_warrior
+	}
+	mult_modifier = {
+		factor = 0.7
+		trait = trained_warrior
+	}
+	mult_modifier = {
+		factor = 0.65
+		trait = skilled_warrior
+	}
+
+	# Age matters a lot, although it may seem a little difficult to link the dependency for the [abstracted] player
+	mult_modifier = {
+		factor = 1.25
+		practical_age < 30
+	}
+	mult_modifier = {
+		factor = 1.25
+		practical_age < 25
+	}
+	mult_modifier = {
+		factor = 1.25
+		practical_age < 20
+	}
+	mult_modifier = {
+		factor = 0.75
+		practical_age >= 40
+	}
+	mult_modifier = {
+		factor = 0.75
+		practical_age >= 45
+	}
+	mult_modifier = {
+		factor = 0.1
+		practical_age >= 50
+	}
+
+	# Direct trait influence is minimized in the random weight multiplier. If character is a player,
+	# this probably means more flexible advancement for any given set of traits. If character is AI,
+	# traits are heavily covered in CTA ambition selection chance and so are redundant here beyond
+	# these basics:
+
+	mult_modifier = {
+		factor = 1.25
+		trait = diligent
+	}
+	mult_modifier = {
+		factor = 0.75
+		trait = slothful
+	}
+	mult_modifier = {
+		factor = 1.25
+		trait = brave
+	}
+	mult_modifier = {
+		factor = 0.75
+		trait = craven
+	}
+
+	# Higher martial skill should equate to more ease in understanding
+	# the art of personal combat, whether it's a lot of a base skill
+	# level or predominantly from various traits (further amplifying
+	# the effects of traits with any martial bonus or malus, e.g., agile,
+	# crusader, martial educations, hunchback, or weak). While combat
+	# traits are "personal combat" and not "military theory," in practice
+	# the martial attribute encodes both.
+
+	mult_modifier = {
+		factor = 1.08
+		martial >= 10
+	}
+	mult_modifier = {
+		factor = 1.07
+		martial >= 11
+	}
+	mult_modifier = {
+		factor = 1.07
+		martial >= 12
+	}
+	mult_modifier = {
+		factor = 1.06
+		martial >= 13
+	}
+	mult_modifier = {
+		factor = 1.06
+		martial >= 14
+	}
+	mult_modifier = {
+		factor = 1.05
+		martial >= 15
+	}
+	mult_modifier = {
+		factor = 1.05
+		martial >= 16
+	}
+	mult_modifier = {
+		factor = 1.05
+		martial >= 17
+	}
+	mult_modifier = {
+		factor = 1.05
+		martial >= 18
+	}
+	mult_modifier = {
+		factor = 1.04
+		martial >= 19
+	}
+	mult_modifier = {
+		factor = 1.04
+		martial >= 20
+	}
+}
+
+plus_councillor_job_events_opinion_score = {
+	mult_modifier = {
+		factor = 1.1
+		opinion = { who = liege value <= -100 }
+	}
+	mult_modifier = {
+		factor = 1.1
+		opinion = { who = liege value < -75 }
+	}
+	mult_modifier = {
+		factor = 1.1
+		opinion = { who = liege value < -50 }
+	}
+	mult_modifier = {
+		factor = 1.1
+		opinion = { who = liege value < -25 }
+	}
+	mult_modifier = {
+		factor = 0.95
+		opinion = { who = liege value >= 25 }
+	}
+	mult_modifier = {
+		factor = 0.95
+		opinion = { who = liege value >= 50 }
+	}
+	mult_modifier = {
+		factor = 0.95
+		opinion = { who = liege value >= 75 }
+	}
+	mult_modifier = {
+		factor = 0.95
+		opinion = { who = liege value >= 100 }
+	}
+}
+
+plus_councillor_job_events_opinion_inverted_score = {
+	mult_modifier = {
+		factor = 0.9
+		opinion = { who = liege value <= -100 }
+	}
+	mult_modifier = {
+		factor = 0.9
+		opinion = { who = liege value < -75 }
+	}
+	mult_modifier = {
+		factor = 0.9
+		opinion = { who = liege value < -50 }
+	}
+	mult_modifier = {
+		factor = 0.9
+		opinion = { who = liege value < -25 }
+	}
+	mult_modifier = {
+		factor = 1.05
+		opinion = { who = liege value >= 25 }
+	}
+	mult_modifier = {
+		factor = 1.05
+		opinion = { who = liege value >= 50 }
+	}
+	mult_modifier = {
+		factor = 1.05
+		opinion = { who = liege value >= 75 }
+	}
+	mult_modifier = {
+		factor = 1.05
+		opinion = { who = liege value >= 100 }
+	}
+}
+
+# For Good events
+plus_job_events_liege_diplomacy_score = {
+	mult_modifier = { factor = 1.05 liege = { diplomacy < 1 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy < 2 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy < 3 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy < 4 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy < 5 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy < 6 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy < 7 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy < 8 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy < 9 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy >= 11 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy >= 12 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy >= 13 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy >= 14 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy >= 15 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy >= 16 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy >= 17 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy >= 18 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy >= 19 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy >= 20 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy >= 21 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy >= 22 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy >= 23 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy >= 24 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy >= 25 } }
+}
+
+# For bad avents
+plus_job_events_liege_diplomacy_inverted_score = {
+	mult_modifier = { factor = 0.95 liege = { diplomacy < 1 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy < 2 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy < 3 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy < 4 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy < 5 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy < 6 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy < 7 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy < 8 } }
+	mult_modifier = { factor = 0.95 liege = { diplomacy < 9 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy >= 11 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy >= 12 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy >= 13 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy >= 14 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy >= 15 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy >= 16 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy >= 17 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy >= 18 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy >= 19 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy >= 20 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy >= 21 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy >= 22 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy >= 23 } }
+	mult_modifier = { factor = 1.05 liege = { diplomacy >= 24 } }
+}
+
+# For Good events
+plus_job_events_liege_martial_score = {
+	mult_modifier = { factor = 1.05 liege = { martial < 1 } }
+	mult_modifier = { factor = 1.05 liege = { martial < 2 } }
+	mult_modifier = { factor = 1.05 liege = { martial < 3 } }
+	mult_modifier = { factor = 1.05 liege = { martial < 4 } }
+	mult_modifier = { factor = 1.05 liege = { martial < 5 } }
+	mult_modifier = { factor = 1.05 liege = { martial < 6 } }
+	mult_modifier = { factor = 1.05 liege = { martial < 7 } }
+	mult_modifier = { factor = 1.05 liege = { martial < 8 } }
+	mult_modifier = { factor = 0.95 liege = { martial < 9 } }
+	mult_modifier = { factor = 0.95 liege = { martial >= 11 } }
+	mult_modifier = { factor = 0.95 liege = { martial >= 12 } }
+	mult_modifier = { factor = 0.95 liege = { martial >= 13 } }
+	mult_modifier = { factor = 0.95 liege = { martial >= 14 } }
+	mult_modifier = { factor = 0.95 liege = { martial >= 15 } }
+	mult_modifier = { factor = 0.95 liege = { martial >= 16 } }
+	mult_modifier = { factor = 0.95 liege = { martial >= 17 } }
+	mult_modifier = { factor = 0.95 liege = { martial >= 18 } }
+	mult_modifier = { factor = 0.95 liege = { martial >= 19 } }
+	mult_modifier = { factor = 0.95 liege = { martial >= 20 } }
+	mult_modifier = { factor = 0.95 liege = { martial >= 21 } }
+	mult_modifier = { factor = 0.95 liege = { martial >= 22 } }
+	mult_modifier = { factor = 0.95 liege = { martial >= 23 } }
+	mult_modifier = { factor = 0.95 liege = { martial >= 24 } }
+	mult_modifier = { factor = 0.95 liege = { martial >= 25 } }
+}
+
+# For bad avents
+plus_job_events_liege_martial_inverted_score = {
+	mult_modifier = { factor = 0.95 liege = { martial < 1 } }
+	mult_modifier = { factor = 0.95 liege = { martial < 2 } }
+	mult_modifier = { factor = 0.95 liege = { martial < 3 } }
+	mult_modifier = { factor = 0.95 liege = { martial < 4 } }
+	mult_modifier = { factor = 0.95 liege = { martial < 5 } }
+	mult_modifier = { factor = 0.95 liege = { martial < 6 } }
+	mult_modifier = { factor = 0.95 liege = { martial < 7 } }
+	mult_modifier = { factor = 0.95 liege = { martial < 8 } }
+	mult_modifier = { factor = 0.95 liege = { martial < 9 } }
+	mult_modifier = { factor = 1.05 liege = { martial >= 11 } }
+	mult_modifier = { factor = 1.05 liege = { martial >= 12 } }
+	mult_modifier = { factor = 1.05 liege = { martial >= 13 } }
+	mult_modifier = { factor = 1.05 liege = { martial >= 14 } }
+	mult_modifier = { factor = 1.05 liege = { martial >= 15 } }
+	mult_modifier = { factor = 1.05 liege = { martial >= 16 } }
+	mult_modifier = { factor = 1.05 liege = { martial >= 17 } }
+	mult_modifier = { factor = 1.05 liege = { martial >= 18 } }
+	mult_modifier = { factor = 1.05 liege = { martial >= 19 } }
+	mult_modifier = { factor = 1.05 liege = { martial >= 20 } }
+	mult_modifier = { factor = 1.05 liege = { martial >= 21 } }
+	mult_modifier = { factor = 1.05 liege = { martial >= 22 } }
+	mult_modifier = { factor = 1.05 liege = { martial >= 23 } }
+	mult_modifier = { factor = 1.05 liege = { martial >= 24 } }
+	mult_modifier = { factor = 1.05 liege = { martial >= 25 } }
+}
+
+# For Good events
+plus_job_events_liege_stewardship_score = {
+	mult_modifier = { factor = 1.05 liege = { stewardship < 1 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship < 2 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship < 3 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship < 4 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship < 5 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship < 6 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship < 7 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship < 8 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship < 9 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship >= 11 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship >= 12 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship >= 13 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship >= 14 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship >= 15 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship >= 16 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship >= 17 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship >= 18 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship >= 19 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship >= 20 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship >= 21 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship >= 22 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship >= 23 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship >= 24 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship >= 25 } }
+}
+
+# For bad avents
+plus_job_events_liege_stewardship_inverted_score = {
+	mult_modifier = { factor = 0.95 liege = { stewardship < 1 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship < 2 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship < 3 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship < 4 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship < 5 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship < 6 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship < 7 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship < 8 } }
+	mult_modifier = { factor = 0.95 liege = { stewardship < 9 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship >= 11 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship >= 12 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship >= 13 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship >= 14 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship >= 15 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship >= 16 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship >= 17 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship >= 18 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship >= 19 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship >= 20 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship >= 21 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship >= 22 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship >= 23 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship >= 24 } }
+	mult_modifier = { factor = 1.05 liege = { stewardship >= 25 } }
+}
+
+# For Good events
+plus_job_events_liege_intrigue_score = {
+	mult_modifier = { factor = 1.05 liege = { intrigue < 1 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue < 2 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue < 3 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue < 4 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue < 5 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue < 6 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue < 7 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue < 8 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue < 9 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue >= 11 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue >= 12 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue >= 13 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue >= 14 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue >= 15 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue >= 16 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue >= 17 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue >= 18 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue >= 19 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue >= 20 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue >= 21 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue >= 22 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue >= 23 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue >= 24 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue >= 25 } }
+}
+
+# For bad avents
+plus_job_events_liege_intrigue_inverted_score = {
+	mult_modifier = { factor = 0.95 liege = { intrigue < 1 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue < 2 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue < 3 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue < 4 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue < 5 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue < 6 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue < 7 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue < 8 } }
+	mult_modifier = { factor = 0.95 liege = { intrigue < 9 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue >= 11 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue >= 12 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue >= 13 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue >= 14 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue >= 15 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue >= 16 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue >= 17 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue >= 18 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue >= 19 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue >= 20 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue >= 21 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue >= 22 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue >= 23 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue >= 24 } }
+	mult_modifier = { factor = 1.05 liege = { intrigue >= 25 } }
+}
+
+# For Good events
+plus_job_events_liege_learning_score = {
+	mult_modifier = { factor = 1.05 liege = { learning < 1 } }
+	mult_modifier = { factor = 1.05 liege = { learning < 2 } }
+	mult_modifier = { factor = 1.05 liege = { learning < 3 } }
+	mult_modifier = { factor = 1.05 liege = { learning < 4 } }
+	mult_modifier = { factor = 1.05 liege = { learning < 5 } }
+	mult_modifier = { factor = 1.05 liege = { learning < 6 } }
+	mult_modifier = { factor = 1.05 liege = { learning < 7 } }
+	mult_modifier = { factor = 1.05 liege = { learning < 8 } }
+	mult_modifier = { factor = 0.95 liege = { learning < 9 } }
+	mult_modifier = { factor = 0.95 liege = { learning >= 11 } }
+	mult_modifier = { factor = 0.95 liege = { learning >= 12 } }
+	mult_modifier = { factor = 0.95 liege = { learning >= 13 } }
+	mult_modifier = { factor = 0.95 liege = { learning >= 14 } }
+	mult_modifier = { factor = 0.95 liege = { learning >= 15 } }
+	mult_modifier = { factor = 0.95 liege = { learning >= 16 } }
+	mult_modifier = { factor = 0.95 liege = { learning >= 17 } }
+	mult_modifier = { factor = 0.95 liege = { learning >= 18 } }
+	mult_modifier = { factor = 0.95 liege = { learning >= 19 } }
+	mult_modifier = { factor = 0.95 liege = { learning >= 20 } }
+	mult_modifier = { factor = 0.95 liege = { learning >= 21 } }
+	mult_modifier = { factor = 0.95 liege = { learning >= 22 } }
+	mult_modifier = { factor = 0.95 liege = { learning >= 23 } }
+	mult_modifier = { factor = 0.95 liege = { learning >= 24 } }
+	mult_modifier = { factor = 0.95 liege = { learning >= 25 } }
+}
+
+# For bad avents
+plus_job_events_liege_learning_inverted_score = {
+	mult_modifier = { factor = 0.95 liege = { learning < 1 } }
+	mult_modifier = { factor = 0.95 liege = { learning < 2 } }
+	mult_modifier = { factor = 0.95 liege = { learning < 3 } }
+	mult_modifier = { factor = 0.95 liege = { learning < 4 } }
+	mult_modifier = { factor = 0.95 liege = { learning < 5 } }
+	mult_modifier = { factor = 0.95 liege = { learning < 6 } }
+	mult_modifier = { factor = 0.95 liege = { learning < 7 } }
+	mult_modifier = { factor = 0.95 liege = { learning < 8 } }
+	mult_modifier = { factor = 0.95 liege = { learning < 9 } }
+	mult_modifier = { factor = 1.05 liege = { learning >= 11 } }
+	mult_modifier = { factor = 1.05 liege = { learning >= 12 } }
+	mult_modifier = { factor = 1.05 liege = { learning >= 13 } }
+	mult_modifier = { factor = 1.05 liege = { learning >= 14 } }
+	mult_modifier = { factor = 1.05 liege = { learning >= 15 } }
+	mult_modifier = { factor = 1.05 liege = { learning >= 16 } }
+	mult_modifier = { factor = 1.05 liege = { learning >= 17 } }
+	mult_modifier = { factor = 1.05 liege = { learning >= 18 } }
+	mult_modifier = { factor = 1.05 liege = { learning >= 19 } }
+	mult_modifier = { factor = 1.05 liege = { learning >= 20 } }
+	mult_modifier = { factor = 1.05 liege = { learning >= 21 } }
+	mult_modifier = { factor = 1.05 liege = { learning >= 22 } }
+	mult_modifier = { factor = 1.05 liege = { learning >= 23 } }
+	mult_modifier = { factor = 1.05 liege = { learning >= 24 } }
+	mult_modifier = { factor = 1.05 liege = { learning >= 25 } }
+}

@@ -1,0 +1,523 @@
+namespace = Plus
+
+#reserved: Plus.730 to Plus.749
+
+# Add tyranny
+character_event = {
+	id = Plus.43300
+
+	is_triggered_only = yes # on_tyranny_gained_tyrant_only
+	hide_window = yes
+
+	has_dlc = "Conclave"
+
+	immediate = {
+		tyrant_plus_1_effect = yes
+	}
+}
+
+#######################################
+# DISHONORABLE EVENTS
+#######################################
+
+# Known murderer is excommunicated
+character_event = {
+	id = Plus.730 # formerly 1000182391
+	desc = EVTDESC_Plus_730
+	picture = GFX_evt_lunatic
+
+	is_triggered_only = yes # on_yearly_pulse (random_events)
+
+	only_playable = yes
+	religion_group = christian
+	has_character_flag = filthy_murderer
+
+	trigger = {
+		OR = {
+			religion = catholic
+			religion = orthodox
+		}
+
+		had_character_flag = {
+			flag = filthy_murderer
+			years < 5
+		}
+
+		NOT = {
+			trait = excommunicated
+
+			rightful_religious_head_scope = {
+				opinion = {
+					who = ROOT
+					value >= 0
+				}
+			}
+		}
+	}
+
+	weight_multiplier = {
+		days = 1
+
+		mult_modifier = {
+			factor = 1.25
+			rightful_religious_head_scope = { opinion = { who = ROOT value < -25 } }
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			rightful_religious_head_scope = { opinion = { who = ROOT value < -50 } }
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			rightful_religious_head_scope = { opinion = { who = ROOT value < -75 } }
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			rightful_religious_head_scope = { opinion = { who = ROOT value <= -100 } }
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			piety >= 200
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			piety >= 100
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			piety < 0
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			piety < -100
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			piety < -200
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = dishonorable2
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = dishonorable3
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = dishonorable4
+		}
+
+		mult_modifier = {
+			factor = 1.75
+			trait = dishonorable5
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = dishonorable6
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			trait = dishonorable7
+		}
+
+		mult_modifier = {
+			factor = 3.0
+			trait = dishonorable8
+		}
+
+		mult_modifier = {
+			factor = 5.0
+			trait = dishonorable9
+		}
+
+		mult_modifier = {
+			factor = 10.0
+			trait = dishonorable10
+		}
+	}
+
+	option = {
+		name = CURSES
+
+		piety = -50
+		add_trait = excommunicated
+		clr_character_flag = filthy_murderer
+	}
+}
+
+# Known murderer goes nuts
+character_event = {
+	id = Plus.731 # formerly 1000182392
+	desc = EVTDESC_Plus_731
+	picture = GFX_evt_lunatic
+
+	is_triggered_only = yes # on_yearly_pulse (random_events)
+
+	has_character_flag = filthy_murderer
+	prisoner = no
+
+	trigger = {
+		had_character_flag = {
+			flag = filthy_murderer
+			years < 5
+		}
+
+		NOR = {
+			trait = lunatic
+			trait = cruel
+			trait = impaler
+			trait = possessed
+			trait = depressed
+			trait = paranoid
+			trait = incapable
+		}
+	}
+
+	weight_multiplier = {
+		days = 1
+
+		mult_modifier = {
+			factor = 0.5
+			trait = arbitrary
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = deceitful
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = wroth
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = kind
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = charitable
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = just
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = honest
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = dishonorable2
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = dishonorable3
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = dishonorable4
+		}
+
+		mult_modifier = {
+			factor = 1.75
+			trait = dishonorable5
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = dishonorable6
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			trait = dishonorable7
+		}
+
+		mult_modifier = {
+			factor = 3.0
+			trait = dishonorable8
+		}
+
+		mult_modifier = {
+			factor = 5.0
+			trait = dishonorable9
+		}
+
+		mult_modifier = {
+			factor = 10.0
+			trait = dishonorable10
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_731 # The guilt weighs heavily on me
+
+		trigger = {
+			trait = stressed
+
+			calc_true_if = {
+				amount == 1
+
+				trait = kind
+				trait = charitable
+				trait = just
+				trait = honest
+			}
+		}
+
+		remove_trait = stressed
+		add_trait = depressed
+	}
+
+	option = {
+		name = EVTOPTB_Plus_731 # I'm handling it just fine
+
+		trigger = {
+			calc_true_if = {
+				amount >= 2
+
+				trait = kind
+				trait = charitable
+				trait = just
+				trait = honest
+			}
+		}
+
+		if = {
+			limit = { trait = stressed }
+			remove_trait = stressed
+		}
+
+		add_trait = lunatic
+	}
+
+	option = {
+		name = EVTOPTA_Plus_731 # The guilt weighs heavily on me
+
+		trigger = {
+			NOT = { trait = stressed }
+
+			calc_true_if = {
+				amount == 1
+
+				trait = kind
+				trait = charitable
+				trait = just
+				trait = honest
+			}
+		}
+
+		add_trait = stressed
+	}
+
+	option = {
+		name = EVTOPTD_Plus_731 # I have no regrets
+
+		trigger = {
+			NOR = {
+				trait = kind
+				trait = charitable
+				trait = just
+				trait = honest
+			}
+		}
+
+		add_trait = cruel
+
+		random = {
+			chance = 50
+			add_trait_fully_arbitrary_effect = yes
+		}
+	}
+}
+
+# Paranoid murderer kills a courtier
+character_event = {
+	id = Plus.732 # formerly 1000182393
+	desc = EVTDESC_Plus_732
+	picture = GFX_evt_lunatic
+
+	is_triggered_only = yes # on_yearly_pulse (random_events)
+
+	has_character_flag = filthy_murderer
+
+	trigger = {
+		trait = paranoid
+
+		NOR = {
+			trait = lunatic
+			trait = possessed
+			trait = incapable
+		}
+
+		any_courtier = {
+			is_adult = yes
+			at_location = ROOT
+			prisoner = no
+			is_incapable = no
+
+			NOR = {
+				has_job_title = job_spymaster
+				is_close_relative = ROOT
+			}
+		}
+
+		had_character_flag = {
+			flag = filthy_murderer
+			years < 5
+		}
+	}
+
+	weight_multiplier = {
+		days = 1
+
+		mult_modifier = {
+			factor = 0.5
+			trait = arbitrary
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = deceitful
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = envious
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = wroth
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = stressed
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = kind
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = charitable
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = just
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = honest
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = dishonorable2
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = dishonorable3
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			trait = dishonorable4
+		}
+
+		mult_modifier = {
+			factor = 1.75
+			trait = dishonorable5
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			trait = dishonorable6
+		}
+
+		mult_modifier = {
+			factor = 2.5
+			trait = dishonorable7
+		}
+
+		mult_modifier = {
+			factor = 3.0
+			trait = dishonorable8
+		}
+
+		mult_modifier = {
+			factor = 5.0
+			trait = dishonorable9
+		}
+
+		mult_modifier = {
+			factor = 10.0
+			trait = dishonorable10
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_733
+		tooltip_info = paranoid
+
+		random_courtier = {
+			show_scope_change = no
+
+			limit = {
+				is_adult = yes
+				at_location = ROOT
+				prisoner = no
+				is_incapable = no
+
+				NOR = {
+					has_job_title = job_spymaster
+					is_close_relative = ROOT
+				}
+			}
+
+			death = {
+				death_reason = death_murder_unknown
+				killer = ROOT
+			}
+		}
+
+		add_trait = lunatic
+	}
+}

@@ -1,0 +1,23 @@
+on_yearly_pulse = {
+	events = {
+		# MTTH events that were consuming too much time
+		PerformancePlus.900 # Councillor tries to befriend liege
+		# PlusAmbitions.910 # Duelist tries to befriend liege
+
+		Plus.925 # Character receives event to try to remove nickname
+	}
+
+	random_events = {
+		befriend_courtier = {
+			4 = 0
+
+			1 = Plus.905 # Ruler tries to befriend a courtier
+		}
+
+		courtier_friendship = {
+			9 = 0
+
+			1 = Plus.915 # Friendship between two courtiers
+		}
+	}
+}

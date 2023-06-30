@@ -1,0 +1,3823 @@
+namespace = FemRule
+
+#reserved: FemRule.300 to FemRule.399
+
+#######################################
+# JURE UXORIS EVENTS
+# Original events by richvh
+# Revisions by Rylock
+#######################################
+
+# Usurping husband dies without any sons by usurped wife
+character_event = {
+	id = FemRule.300
+	desc = EVTDESC_FemRule_300
+	picture = GFX_evt_death
+
+	is_triggered_only = yes # on_death
+
+	has_character_flag = usurped_my_wife
+
+	trigger = {
+		# Wife still has a strong claim on husband's titles with dynastic succession
+		any_demesne_title = {
+			any_claimant = {
+				is_married = ROOT
+				has_strong_claim = PREV
+				has_character_flag = usurped_by_husband@ROOT
+
+				# Wife doesn't have any (male) children with dying husband who could inherit
+				NOT = {
+					any_child = {
+						is_child_of = ROOT
+						has_inheritance_blocker = no
+						is_female = no
+						is_alive = yes
+					}
+				}
+			}
+
+			OR = {
+				has_law = succ_gavelkind
+				has_law = succ_seniority
+				has_law = succ_primogeniture
+				has_law = succ_ultimogeniture
+			}
+		}
+	}
+
+	immediate = {
+		# Notify various characters
+		any_vassal = {
+			limit = {
+				NOR = {
+					is_primary_heir = ROOT
+					is_married = ROOT
+				}
+			}
+
+			character_event = { id = FemRule.302 }
+		}
+
+		player_heir = {
+			character_event = { id = FemRule.302 }
+		}
+
+		any_spouse = {
+			limit = { has_character_flag = usurped_by_husband@ROOT }
+
+			clr_character_flag = usurped_by_husband
+			clr_character_flag = usurped_by_husband@ROOT
+			save_event_target_as = usurped_wife
+			character_event = { id = FemRule.301 }
+
+			any_dynasty_member = {
+				limit = {
+					NOR = {
+						is_primary_heir = ROOT
+						vassal_of = ROOT
+					}
+				}
+
+				character_event = { id = FemRule.302 }
+			}
+
+			if = {
+				limit = { is_ruler = no }
+				move_character = ROOT
+			}
+		}
+
+		# Return titles
+		any_demesne_title = {
+			limit = {
+				any_claimant = {
+					is_married = ROOT
+					has_strong_claim = PREV
+					character = event_target:usurped_wife
+				}
+
+				OR = {
+					has_law = succ_gavelkind
+					has_law = succ_seniority
+					has_law = succ_primogeniture
+					has_law = succ_ultimogeniture
+				}
+			}
+
+			gain_title_plus_barony_if_unlanded = event_target:usurped_wife
+			add_weak_pressed_claim = ROOT
+		}
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_300
+	}
+}
+
+# Wife notified that her titles have been returned
+character_event = {
+	id = FemRule.301
+	desc = EVTDESC_FemRule_301
+	picture = GFX_evt_death
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_FemRule_301
+	}
+}
+
+# Vassals/dynasty members notified that wife's titles have been returned
+character_event = {
+	id = FemRule.302
+	desc = EVTDESC_FemRule_302
+	picture = GFX_evt_death
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_FemRule_302
+	}
+}
+
+# Usurped wife dies with no living sons by usurping husband
+character_event = {
+	id = FemRule.303
+	desc = EVTDESC_FemRule_303
+	picture = GFX_evt_death
+
+	is_triggered_only = yes # on_death
+
+	has_character_flag = usurped_by_husband
+
+	trigger = {
+		# Wife still has a strong claim on husband's titles with dynastic succession
+		any_claim = {
+			ROOT = { has_strong_claim = PREV }
+
+			OR = {
+				has_law = succ_gavelkind
+				has_law = succ_seniority
+				has_law = succ_primogeniture
+				has_law = succ_ultimogeniture
+			}
+
+			holder_scope = {
+				is_married = ROOT
+				has_character_flag = usurped_my_wife@ROOT
+
+				# Husband doesn't have any (male) children with dying wife who could inherit
+				NOT = {
+					any_child = {
+						is_child_of = ROOT
+						has_inheritance_blocker = no
+						is_female = no
+						is_alive = yes
+					}
+				}
+			}
+		}
+	}
+
+	immediate = {
+		# Notify various characters
+		any_spouse = {
+			limit = { has_character_flag = usurped_my_wife@ROOT }
+
+			clr_character_flag = usurped_my_wife
+			clr_character_flag = usurped_my_wife@ROOT
+			save_event_target_as = usurping_spouse
+			character_event = { id = FemRule.304 }
+
+			any_vassal = {
+				limit = {
+					NOR = {
+						is_primary_heir = PREV
+						is_married = ROOT
+					}
+				}
+
+				character_event = { id = FemRule.305 }
+			}
+
+			player_heir  = {
+				character_event = { id = FemRule.305 }
+			}
+		}
+
+		# Return titles
+		any_claim = {
+			limit = {
+				holder = event_target:usurping_spouse
+				ROOT = { has_strong_claim = PREV }
+
+				OR = {
+					has_law = succ_gavelkind
+					has_law = succ_seniority
+					has_law = succ_primogeniture
+					has_law = succ_ultimogeniture
+				}
+			}
+
+			gain_title_plus_barony_if_unlanded = ROOT
+			add_weak_pressed_claim = event_target:usurping_spouse
+		}
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_303
+	}
+}
+
+# Husband notified that wife's titles have been returned and will fall to her heir instead
+character_event = {
+	id = FemRule.304
+	desc = EVTDESC_FemRule_304
+	picture = GFX_evt_death
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = CURSES
+	}
+}
+
+# Vassals/dynasty members notified that wife's titles have been returned
+character_event = {
+	id = FemRule.305
+	desc = EVTDESC_FemRule_305
+	picture = GFX_evt_death
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_FemRule_305
+	}
+}
+
+# Wife regains usurped titles on divorce
+character_event = {
+	id = FemRule.310
+	desc = EVTDESC_FemRule_310
+	picture = GFX_evt_noblewoman
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_310
+
+		hidden_effect = {
+			# Notify various characters
+			any_vassal = {
+				limit = {
+					NOR = {
+						is_primary_heir = ROOT
+						character = FROM
+					}
+				}
+
+				character_event = { id = FemRule.311 }
+			}
+
+			player_heir = {
+				character_event = { id = FemRule.311 }
+			}
+		}
+
+		# Return titles
+		FROM = {
+			show_scope_change = no
+
+			if = {
+				limit = { is_ruler = no }
+				move_character = ROOT
+			}
+
+			any_claim = {
+				show_scope_change = no
+
+				limit = {
+					holder = ROOT
+					ROOT_FROM = { has_strong_claim = PREV }
+				}
+
+				usurp_title_plus_barony_if_unlanded = FROM
+
+				hidden_effect = {
+					remove_claim = ROOT
+					add_weak_pressed_claim = ROOT
+				}
+			}
+		}
+	}
+}
+
+# Vassals/dynasty members notified that wife's titles have been returned
+character_event = {
+	id = FemRule.311
+	desc = EVTDESC_FemRule_311
+	picture = GFX_evt_death
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_FemRule_305
+	}
+}
+
+# Husband notified that wife regains usurped title upon him giving it away
+letter_event = {
+	id = FemRule.312
+	desc = EVTDESC_FemRule_312
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_FemRule_310
+	}
+}
+
+### USURP WIFE'S TITLES (Plot, activated by decision)
+
+# Husband attempts to usurp wife (triggered from plot decision)
+character_event = {
+	id = FemRule.360
+	desc = EVTDESC_FemRule_360
+	picture = GFX_evt_noblewoman
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	immediate = {
+		FROM = {
+			character_event = {
+				id = FemRule.398
+				days = 1
+			}
+		}
+
+		remove_do_not_disturb_effect = yes
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 7
+			hidden = yes
+		}
+
+		## Find people to turn to
+
+		# A lover
+		random_lover = {
+			limit = {
+				is_female = no
+				is_priest = no
+				prisoner = no
+				is_incapable = no
+				is_dumb_trigger = no
+				health_traits < 1
+
+				NOR = {
+					character = FROM
+					trait = slothful
+					trait = content
+					trait = craven
+				}
+			}
+
+			save_event_target_as = helpful_lover
+		}
+
+		# A close relative
+		random_close_relative = {
+			limit = {
+				same_realm = ROOT
+				is_adult = yes
+				prisoner = no
+				is_incapable = no
+				health_traits < 1
+				is_dumb_trigger = no
+
+				opinion = {
+					who = ROOT
+					value >= 25
+				}
+
+				NOR = {
+					is_lover = ROOT
+					character = FROM
+					trait = slothful
+					trait = content
+					trait = craven
+				}
+			}
+
+			# First look for a family member of rank
+			preferred_limit = {
+				higher_real_tier_than = COUNT
+			}
+
+			# Then look for a family member of substance
+			preferred_limit = {
+				OR = {
+					is_female = no
+					trait = ambitious
+					trait = brilliant_strategist
+					trait = elusive_shadow
+					trait = grey_eminence
+					is_smart_trigger = yes
+					is_strong_trigger = yes
+
+					AND = {
+						martial >= 8
+						intrigue >= 8
+					}
+				}
+			}
+
+			save_event_target_as = helpful_relative
+		}
+
+		# A faithful councillor
+		random_courtier = {
+			limit = {
+				is_councillor = yes
+
+				trigger_if = {
+					limit = { is_ruler = yes }
+					lower_real_tier_than = COUNT
+				}
+
+				is_female = no
+				is_priest = no
+				prisoner = no
+				is_incapable = no
+				health_traits < 1
+				is_dumb_trigger = no
+
+				opinion = {
+					who = ROOT
+					value = 50
+				}
+
+				NOR = {
+					is_close_relative = ROOT
+					is_lover = ROOT
+					character = FROM
+					trait = slothful
+					trait = content
+					trait = craven
+				}
+			}
+
+			save_event_target_as = helpful_councillor
+
+			character_event = {
+				id = FemRule.369
+				tooltip = TURN_TO_FOR_HELP
+			}
+		}
+
+		# A friend
+		random_friend = {
+			limit = {
+				is_female = no
+				is_priest = no
+				prisoner = no
+				is_incapable = no
+				health_traits < 1
+				is_dumb_trigger = yes
+
+				opinion = {
+					who = ROOT
+					value >= 50
+				}
+
+				NAND = {
+					is_close_relative = ROOT
+					same_realm = ROOT
+				}
+
+				trigger_if = {
+					limit = { is_councillor = yes }
+					NOT = { vassal_of = ROOT }
+				}
+
+				NOR = {
+					is_lover = ROOT
+					character = FROM
+					trait = slothful
+					trait = content
+					trait = craven
+				}
+			}
+
+			save_event_target_as = helpful_friend
+		}
+
+		# Usurping husband's rival
+		FROM = {
+			random_rival = {
+				limit = {
+					is_female = no
+					is_priest = no
+					prisoner = no
+					is_incapable = no
+					health_traits < 1
+					is_dumb_trigger = yes
+
+					opinion = {
+						who = ROOT
+						value >= 0
+					}
+
+					NAND = {
+						is_close_relative = ROOT
+						same_realm = ROOT
+					}
+
+					trigger_if = {
+						limit = { is_councillor = yes }
+						NOT = { vassal_of = ROOT }
+					}
+
+					NOR = {
+						is_friend = ROOT
+						is_lover = ROOT
+						character = FROM
+						trait = slothful
+						trait = content
+						trait = craven
+					}
+				}
+
+				save_event_target_as = helpful_rival
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_360 # I will turn to my lover
+
+		trigger = {
+			event_target:helpful_lover = { always = yes }
+			is_incapable = no
+
+			trigger_if = {
+				limit = { prisoner = yes }
+				host = { NOT = { character = FROM } }
+			}
+		}
+
+		event_target:helpful_lover = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.361
+				tooltip = TURN_TO_FOR_HELP
+			}
+		}
+
+		ai_chance = { factor = 100 }
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_360 # I will turn to a member of the family
+
+		trigger = {
+			event_target:helpful_relative = { always = yes }
+			is_incapable = no
+
+			trigger_if = {
+				limit = { prisoner = yes }
+				host = { NOT = { character = FROM } }
+			}
+		}
+
+		event_target:helpful_relative = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.370
+				tooltip = TURN_TO_FOR_HELP
+			}
+		}
+
+		ai_chance = { factor = 50 }
+	}
+
+	option = {
+		name = EVTOPTC_FemRule_360 # I will turn to my faithful councillor
+
+		trigger = {
+			event_target:helpful_councillor = { always = yes }
+			is_incapable = no
+
+			trigger_if = {
+				limit = { ai = no }
+				NOT = { event_target:helpful_lover = { always = yes } }
+			}
+
+			trigger_if = {
+				limit = { prisoner = yes }
+				host = { NOT = { character = FROM } }
+			}
+		}
+
+		event_target:helpful_councillor = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.369
+				tooltip = TURN_TO_FOR_HELP
+			}
+		}
+
+		ai_chance = { factor = 25 }
+	}
+
+	option = {
+		name = EVTOPTD_FemRule_360 # I will turn to my friend
+
+		trigger = {
+			event_target:helpful_friend = { always = yes }
+			is_incapable = no
+
+			trigger_if = {
+				limit = { prisoner = yes }
+				host = { NOT = { character = FROM } }
+			}
+		}
+
+		event_target:helpful_friend = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.371
+				tooltip = TURN_TO_FOR_HELP
+			}
+		}
+
+		ai_chance = { factor = 25 }
+	}
+
+	option = {
+		name = EVTOPTE_FemRule_360 # I will turn to my husband's rival
+
+		trigger = {
+			event_target:helpful_rival = { always = yes }
+			is_incapable = no
+
+			trigger_if = {
+				limit = { ai = yes }
+				NOT = { event_target:helpful_friend = { always = yes } }
+			}
+
+			trigger_if = {
+				limit = { prisoner = yes }
+				host = { NOT = { character = FROM } }
+			}
+		}
+
+		event_target:helpful_rival = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.372
+				tooltip = TURN_TO_FOR_HELP
+			}
+		}
+
+		ai_chance = { factor = 25 }
+	}
+
+	option = {
+		name = EVTOPTF_FemRule_360 # There is nothing I can do
+
+		set_character_flag = usurped_by_husband
+		set_character_flag = usurped_by_husband@FROM
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.396
+				days = 7
+				tooltip = USURPS_TITLES
+			}
+		}
+
+		hidden_effect = {
+			any_dynasty_member = {
+				limit = { NOT = { character = FROM } }
+
+				character_event = {
+					id = FemRule.397
+					days = 7
+				}
+			}
+
+			any_vassal = {
+				limit = {
+					NOR = {
+						dynasty = ROOT
+						character = FROM
+					}
+				}
+
+				character_event = {
+					id = FemRule.397
+					days = 7
+				}
+			}
+		}
+
+		ai_chance = { factor = 1 }
+	}
+}
+
+# Wife's lover is appealed to for help
+character_event = {
+	id = FemRule.361
+	desc = EVTDESC_FemRule_361
+	picture = GFX_evt_courtly_love
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_370 # I shall go to her with a large retinue
+
+		trigger = {
+			is_ruler = yes
+			wealth >= 25
+
+			NOR = {
+				trait = lunatic
+				trait = possessed
+			}
+		}
+
+		wealth = -25
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.374
+				days = 7
+				tooltip = GO_ASSIST_HER_WITH_TROOPS
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 0.5
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				wealth < 50
+			}
+
+			mult_modifier = {
+				factor = 2
+				wealth >= 100
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				real_tier = BARON
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				has_character_modifier = ai_austerity
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_361 # I am at her disposal
+
+		trigger = {
+			NOR = {
+				trait = lunatic
+				trait = possessed
+			}
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.385
+				days = 7
+				tooltip = GO_ASSIST_HER
+			}
+		}
+
+		ai_chance = { factor = 50 }
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_361 # I will deal with him myself
+
+		trigger = {
+			OR = {
+				martial >= 15
+				trait = lunatic
+				trait = possessed
+				trait = wroth
+				trait = impaler
+				trait = duelist
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 0.1
+
+				OR = {
+					trait = craven
+					trait = kind
+					trait = content
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				OR = {
+					trait = impaler
+					trait = cruel
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.4
+
+				NOR = {
+					trait = lunatic
+					trait = possessed
+					trait = wroth
+					trait = impaler
+				}
+			}
+		}
+
+		random = {
+			chance = 50
+			remove_trait_craven_effect = yes
+		}
+
+		random = {
+			chance = 50
+			add_trait_fully_wroth_effect = yes
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			custom_tooltip = { text = DO_SOMETHING_RASH }
+		}
+
+		FROMFROM = {
+			show_scope_change = no
+
+			random_list = {
+				50 = {
+					additive_modifier = {
+						value = 10 # 80%
+						attribute_diff = { character = ROOT attribute = martial value <= -9 }
+					}
+
+					additive_modifier = {
+						value = 10 # 70%
+						attribute_diff = { character = ROOT attribute = martial value <= -6 }
+					}
+
+					additive_modifier = {
+						value = 10 # 60%
+						attribute_diff = { character = ROOT attribute = martial value <= -3 }
+					}
+
+					additive_modifier = {
+						value = -10 # 40%
+						attribute_diff = { character = ROOT attribute = martial value >= 3 }
+					}
+
+					additive_modifier = {
+						value = -10 # 30%
+						attribute_diff = { character = ROOT attribute = martial value >= 6 }
+					}
+
+					additive_modifier = {
+						value = -10 # 20%
+						attribute_diff = { character = ROOT attribute = martial value >= 9 }
+					}
+
+
+					character_event = {
+						id = FemRule.363
+						days = 7
+						tooltip = AMBUSH_SUCCEEDS
+					}
+				}
+
+				50 = {
+					character_event = {
+						id = FemRule.364
+						days = 7
+						tooltip = AMBUSH_FAILS
+					}
+
+					additive_modifier = {
+						value = 10 # 80%
+						attribute_diff = { character = ROOT attribute = martial value >= 9 }
+					}
+
+					additive_modifier = {
+						value = 10 # 70%
+						attribute_diff = { character = ROOT attribute = martial value >= 6 }
+					}
+
+					additive_modifier = {
+						value = 10 # 60%
+						attribute_diff = { character = ROOT attribute = martial value >= 3 }
+					}
+
+					additive_modifier = {
+						value = -10 # 40%
+						attribute_diff = { character = ROOT attribute = martial value <= -3 }
+					}
+
+					additive_modifier = {
+						value = -10 # 30%
+						attribute_diff = { character = ROOT attribute = martial value <= -6 }
+					}
+
+					additive_modifier = {
+						value = -10 # 20%
+						attribute_diff = { character = ROOT attribute = martial value <= -9 }
+					}
+				}
+			}
+		}
+
+		hidden_effect = {
+			FROM = {
+				character_event = {
+					id = FemRule.362
+					days = 4
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_FemRule_361 # I cannot, alas
+
+		trigger = {
+			NOR = {
+				trait = lunatic
+				trait = possessed
+			}
+		}
+
+		tooltip = {
+			remove_lover = FROM
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.373
+				days = 7
+				tooltip = DO_NOT_INTERVENE
+			}
+		}
+
+		ai_chance = {
+			factor = 5
+
+			trigger = {
+				OR = {
+					is_close_relative = FROMFROM
+
+					opinion = {
+						who = FROMFROM
+						value >= 0
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				OR = {
+					is_child_of = FROMFROM
+					is_parent_of = FROMFROM
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+				is_friend = FROMFROM
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				opinion = {
+					who = FROMFROM
+					value >= 25
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				likes_better_than = {
+					who = FROMFROM
+					than = FROM
+				}
+			}
+		}
+	}
+}
+
+# Lover is going to do something rash
+character_event = {
+	id = FemRule.362
+	desc = EVTDESC_FemRule_362
+	picture = GFX_evt_courtly_love
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_FemRule_362
+	}
+}
+
+# Ambush succeeds and the husband is killed
+character_event = {
+	id = FemRule.363
+	desc = EVTDESC_FemRule_363
+	picture = GFX_evt_bandits
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+
+		tooltip = {
+			death = {
+				death_reason = death_murder
+				killer = FROM
+			}
+		}
+
+		hidden_effect = {
+			FROM = { character_event = { id = FemRule.365 } }
+			FROMFROM = { character_event = { id = FemRule.366 } }
+		}
+	}
+}
+
+# Ambush failed, lover is possibly captured
+character_event = {
+	id = FemRule.364
+	desc = EVTDESC_FemRule_364
+	picture = GFX_evt_bandits
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	immediate = {
+		remove_do_not_disturb_effect = yes
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 7
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_364
+
+		random = {
+			chance = 30
+			add_trait = wounded
+		}
+
+		tooltip = {
+			if = {
+				limit = { is_ruler = yes }
+
+				FROM = {
+					show_scope_change = no
+
+					random_list = {
+						40 = { add_trait_wounded_effect = yes }
+						30 = { add_maimed_trait_effect = yes }
+						30 = {
+							add_trait_wounded_effect = yes
+							imprison = ROOT
+						}
+					}
+				}
+			}
+			else = {
+				FROM = {
+					show_scope_change = no
+
+					random_list = {
+						70 = { add_trait_wounded_effect = yes }
+						30 = { add_maimed_trait_effect = yes }
+					}
+				}
+			}
+		}
+
+		hidden_effect = {
+			FROM = { character_event = { id = FemRule.367 } }
+			FROMFROM = { character_event = { id = FemRule.368 } }
+		}
+	}
+}
+
+# Lover notified that his ambush was successful
+character_event = {
+	id = FemRule.365
+	desc = EVTDESC_FemRule_365
+	picture = GFX_evt_bandits
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_365
+
+		clr_character_flag = filthy_murderer
+		set_character_flag = filthy_murderer
+		dishonorable_plus_1_effect = yes
+		FROM = { save_event_target_as = kinslayer_target }
+		add_kinslayer_trait_effect = yes
+
+		FROM = {
+			show_scope_change = no
+
+			any_close_relative = {
+				show_scope_change = no
+
+				limit = {
+					OR = {
+						is_parent_of = PREV
+						is_child_of = PREV
+						sibling = PREV
+					}
+				}
+
+				opinion = {
+					name = opinion_killed_close_kin
+					who = ROOT
+					years = 10
+				}
+			}
+
+			liege = {
+				show_scope_change = no
+
+				if = {
+					limit = {
+						NOR = {
+							character = FROMFROMFROM
+
+							has_opinion_modifier = {
+								name = opinion_killed_close_kin
+								who = ROOT
+							}
+
+							has_opinion_modifier = {
+								name = opinion_spouse_slayer
+								who = ROOT
+							}
+						}
+					}
+
+					opinion = {
+						name = killed_vassal
+						who = ROOT
+						years = 5
+					}
+				}
+			}
+		}
+
+		hidden_effect = {
+			FROM = {
+				death = {
+					death_reason = death_murder
+					killer = FROM
+				}
+			}
+		}
+	}
+}
+
+# Wife notified that lover's ambush was successful
+character_event = {
+	id = FemRule.366
+	desc = EVTDESC_FemRule_366
+	picture = GFX_evt_bandits
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_366
+
+		dishonorable_plus_1_effect = yes
+
+		FROM = {
+			show_scope_change = no
+
+			any_dynasty_member = {
+				show_scope_change = no
+
+				limit = {
+					NOR = {
+						character = ROOT
+						character = FROMFROM
+
+						has_opinion_modifier = {
+							name = opinion_killed_close_kin
+							who = ROOT
+						}
+					}
+				}
+
+				opinion = {
+					name = opinion_spouse_slayer
+					who = ROOT
+					years = 10
+				}
+			}
+		}
+	}
+}
+
+# Lover notified that his ambush failed
+character_event = {
+	id = FemRule.367
+	desc = EVTDESC_FemRule_367
+	picture = GFX_evt_bandits
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+
+		if = {
+			limit = { FROM = { is_ruler = yes } }
+
+			random_list = {
+				40 = { add_trait_wounded_effect = yes }
+				30 = { add_maimed_trait_effect = yes }
+				30 = {
+					add_trait_wounded_effect = yes
+					imprison = ROOT
+				}
+			}
+		}
+		else = {
+			random_list = {
+				70 = { add_trait_wounded_effect = yes }
+				30 = { add_maimed_trait_effect = yes }
+			}
+		}
+
+		clr_character_flag = filthy_murderer
+		set_character_flag = filthy_murderer
+		dishonorable_plus_1_effect = yes
+
+		FROM = {
+			show_scope_change = no
+
+			opinion = {
+				name = opinion_murder_attempt
+				who = ROOT
+				years = 10
+			}
+
+			any_close_relative = {
+				show_scope_change = no
+
+				limit = {
+					OR = {
+						is_parent_of = PREV
+						is_child_of = PREV
+						sibling = PREV
+					}
+				}
+
+				opinion = {
+					name = attempted_murder_of_close_kin
+					who = ROOT
+					years = 10
+				}
+			}
+
+			liege = {
+				show_scope_change = no
+
+				if = {
+					limit = {
+						NOR = {
+							character = FROMFROMFROM
+
+							has_opinion_modifier = {
+								name = attempted_murder_of_close_kin
+								who = ROOT
+							}
+
+							has_opinion_modifier = {
+								name = attempted_murder_of_spouse
+								who = ROOT
+							}
+						}
+					}
+
+					opinion = {
+						name = attempted_murder_of_vassal
+						who = ROOT
+						years = 5
+					}
+				}
+			}
+		}
+	}
+}
+
+# Wife notified that lover's ambush failed
+character_event = {
+	id = FemRule.368
+	desc = EVTDESC_FemRule_368
+	picture = GFX_evt_bandits
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	immediate = {
+		remove_do_not_disturb_effect = yes
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 7
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_366
+
+		set_character_flag = usurped_by_husband@FROM
+		prestige = -25
+
+		hidden_effect = {
+			any_dynasty_member = {
+				limit = { NOT = { character = FROM } }
+
+				character_event = {
+					id = FemRule.397
+					days = 7
+				}
+			}
+
+			any_vassal = {
+				limit = {
+					NOR = {
+						dynasty = ROOT
+						character = FROM
+					}
+				}
+
+				character_event = {
+					id = FemRule.397
+					days = 7
+				}
+			}
+		}
+
+		opinion = {
+			name = husband_usurped_me
+			who = FROM
+			years = 20
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.396
+				days = 7
+				tooltip = USURPS_TITLES
+			}
+		}
+	}
+}
+
+# Wife's councillor is appealed to for help
+character_event = {
+	id = FemRule.369
+	desc = EVTDESC_FemRule_369
+	picture = GFX_evt_noblewoman
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_370 # I shall go to her with a large retinue
+
+		trigger = {
+			higher_real_tier_than = BARON
+			wealth >= 25
+		}
+
+		wealth = -25
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.374
+				days = 7
+				tooltip = GO_ASSIST_HER_WITH_TROOPS
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 0.5
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				wealth < 50
+			}
+
+			mult_modifier = {
+				factor = 2
+				wealth >= 100
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				has_character_modifier = ai_austerity
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_369 # Of course I will help
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.385
+				days = 7
+				tooltip = GO_ASSIST_HER
+			}
+		}
+
+		ai_chance = { factor = 100 }
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_369 # She is on her own
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.373
+				days = 7
+				tooltip = DO_NOT_INTERVENE
+			}
+		}
+
+		ai_chance = {
+			factor = 5
+
+			trigger = {
+				OR = {
+					is_close_relative = FROMFROM
+
+					opinion = {
+						who = FROMFROM
+						value >= 0
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				OR = {
+					is_child_of = FROMFROM
+					is_parent_of = FROMFROM
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+				is_friend = FROMFROM
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				opinion = {
+					who = FROMFROM
+					value >= 25
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				likes_better_than = {
+					who = FROMFROM
+					than = FROM
+				}
+			}
+		}
+	}
+}
+
+# Wife's family is appealed to for help
+character_event = {
+	id = FemRule.370
+	desc = EVTDESC_FemRule_370
+	picture = GFX_evt_noblewoman
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_370 # I shall go to her with a large retinue
+
+		trigger = {
+			higher_real_tier_than = BARON
+			wealth >= 25
+		}
+
+		wealth = -25
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.374
+				days = 7
+				tooltip = GO_ASSIST_HER_WITH_TROOPS
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 0.5
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				NOT = { wealth = 50 }
+			}
+
+			mult_modifier = {
+				factor = 2
+				wealth = 100
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				has_character_modifier = ai_austerity
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_370 # I shall go to her personally
+
+		FROM = {
+			character_event = {
+				id = FemRule.385
+				days = 7
+				tooltip = GO_ASSIST_HER
+			}
+		}
+
+		ai_chance = { factor = 50 }
+	}
+
+	option = {
+		name = EVTOPTC_FemRule_370 # She is one her own
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.373
+				days = 7
+				tooltip = DO_NOT_INTERVENE
+			}
+		}
+
+		ai_chance = {
+			factor = 5
+
+			trigger = {
+				OR = {
+					is_close_relative = FROMFROM
+
+					opinion = {
+						who = FROMFROM
+						value >= 0
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				OR = {
+					is_child_of = FROMFROM
+					is_parent_of = FROMFROM
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+				is_friend = FROMFROM
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				opinion = {
+					who = FROMFROM
+					value >= 25
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				likes_better_than = {
+					who = FROMFROM
+					than = FROM
+				}
+			}
+		}
+	}
+}
+
+# Wife's friend is appealed to for help
+character_event = {
+	id = FemRule.371
+	desc = EVTDESC_FemRule_371
+	picture = GFX_evt_noblewoman
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_370 # I shall go to her with a large retinue
+
+		trigger = {
+			higher_real_tier_than = BARON
+			wealth >= 25
+		}
+
+		wealth = -25
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.374
+				days = 7
+				tooltip = GO_ASSIST_HER_WITH_TROOPS
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 0.5
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				wealth < 50
+			}
+
+			mult_modifier = {
+				factor = 2
+				wealth >= 100
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				has_character_modifier = ai_austerity
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_369 # Of course I will help
+
+		FROM = {
+			character_event = {
+				id = FemRule.385
+				days = 7
+				tooltip = GO_ASSIST_HER
+			}
+		}
+
+		ai_chance = { factor = 100 }
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_369 # She is on her own
+
+		tooltip = {
+			remove_friend = FROM
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.373
+				days = 7
+				tooltip = DO_NOT_INTERVENE
+			}
+		}
+
+		ai_chance = {
+			factor = 5
+
+			trigger = {
+				OR = {
+					is_close_relative = FROMFROM
+
+					opinion = {
+						who = FROMFROM
+						value >= 0
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				OR = {
+					is_child_of = FROMFROM
+					is_parent_of = FROMFROM
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+				is_friend = FROMFROM
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				opinion = {
+					who = FROMFROM
+					value >= 25
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				likes_better_than = {
+					who = FROMFROM
+					than = FROM
+				}
+			}
+		}
+	}
+}
+
+# Husband's rival is appealed to for help
+character_event = {
+	id = FemRule.372
+	desc = EVTDESC_FemRule_372
+	picture = GFX_evt_noblewoman
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_370 # I shall go to her with a large retinue
+
+		trigger = {
+			higher_real_tier_than = BARON
+			wealth >= 25
+		}
+
+		wealth = -25
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.374
+				days = 7
+				tooltip = GO_ASSIST_HER_WITH_TROOPS
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 0.5
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				wealth < 50
+			}
+
+			mult_modifier = {
+				factor = 2
+				wealth >= 100
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				has_character_modifier = ai_austerity
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_369 # Of course I will help
+
+		FROM = {
+			character_event = {
+				id = FemRule.385
+				days = 7
+				tooltip = GO_ASSIST_HER
+			}
+		}
+
+		ai_chance = { factor = 100 }
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_369 # She is on her own
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.373
+				days = 7
+				tooltip = DO_NOT_INTERVENE
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				opinion = { who = FROM value < 50 }
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				opinion = { who = FROM value >= 25 }
+			}
+		}
+	}
+}
+
+# Wife is notified that whoever she appealed to has decided not to help
+character_event = {
+	id = FemRule.373
+	desc = EVTDESC_FemRule_373
+	picture = GFX_evt_bad_news
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_373
+
+		if = {
+			limit = { is_lover = FROM }
+			remove_lover = FROM
+		}
+
+		if = {
+			limit = { is_friend = FROM }
+			remove_friend = FROM
+		}
+
+		opinion = {
+			name = opinion_very_disappointed
+			who = FROM
+			years = 5
+		}
+
+		random_list = {
+			30 = {
+				trigger = {
+					NOT = { trait = depressed }
+				}
+
+				add_trait_depressed_effect = yes
+			}
+
+			30 = {
+				trigger = {
+					NOR = {
+						trait = stressed
+						trait = depressed
+					}
+				}
+
+				add_trait_stressed_effect = yes
+			}
+
+			40 = { }
+		}
+
+		set_character_flag = usurped_by_husband@FROM
+
+		hidden_effect = {
+			any_dynasty_member = {
+				limit = { NOT = { character = FROM } }
+				character_event = { id = FemRule.397 }
+			}
+
+			any_vassal = {
+				limit = {
+					NOR = {
+						dynasty = ROOT
+						character = FROM
+					}
+				}
+
+				character_event = { id = FemRule.397 }
+			}
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.396
+				tooltip = USURPS_TITLES
+			}
+		}
+	}
+}
+
+# Whoever she appealed to arrives to help, bringing a retinue to assist her
+character_event = {
+	id = FemRule.374
+	desc = EVTDESC_FemRule_374
+	picture = GFX_evt_noblewoman
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	immediate = {
+		remove_do_not_disturb_effect = yes
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 14
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_374
+
+		tooltip = {
+			opinion = {
+				name = opinion_very_grateful
+				who = FROM
+				years = 5
+			}
+		}
+
+		hidden_effect = {
+			FROM = { character_event = { id = FemRule.375 } }
+			FROMFROMFROM = { character_event = { id = FemRule.376 } }
+		}
+	}
+}
+
+# Whoever helped is notified of retainers left behind
+character_event = {
+	id = FemRule.375
+	desc = EVTDESC_FemRule_375
+	picture = GFX_evt_noblewoman
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_375
+
+		reverse_opinion = {
+			name = opinion_very_grateful
+			who = FROM
+			years = 5
+		}
+
+		prestige = 25
+
+		random = {
+			chance = 33
+			add_trait_partially_proud_effect = yes
+		}
+	}
+}
+
+# Husband is notified of retainers left behind, stymying his efforts
+character_event = {
+	id = FemRule.376
+	desc = EVTDESC_FemRule_376
+	picture = GFX_evt_shadowy_cabal
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	immediate = {
+		opinion = {
+			name = opinion_angry
+			who = FROMFROM
+			years = 5
+		}
+
+		remove_do_not_disturb_effect = yes
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 14
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_376 # Give up
+
+		ai_chance = {
+			factor = 1
+
+			mult_modifier = {
+				factor = 5
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 5
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				OR = {
+					trait = slow
+					trait = dull
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = temperate
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = humble
+			}
+		}
+
+		custom_tooltip = {
+			text = ABANDONS_USURP_EFFORT
+
+			clr_character_flag = plot_usurp_wife_decision_taken
+
+			add_character_modifier = {
+				name = failed_to_usurp_wife
+				years = 5
+			}
+
+			FROM = {
+				character_event = {
+					id = FemRule.377
+					days = 7
+				}
+			}
+
+			any_plot_backer = {
+				opinion = {
+					name = opinion_irritated
+					who = ROOT
+					years = 5
+				}
+			}
+
+			cancel_plot = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_376 # Deal with them directly
+
+		trigger = {
+			OR = {
+				martial >= 12
+				has_education_martial_trigger = yes
+				is_strong_trigger = yes
+				trait = arbitrary
+				trait = brave
+				trait = ambitious
+				trait = cruel
+				trait = wroth
+				trait = impaler
+				trait = lunatic
+				trait = possessed
+			}
+
+			NOR = {
+				trait = content
+				trait = humble
+				trait = craven
+				trait = kind
+			}
+		}
+
+		prestige = -50
+
+		random = {
+			chance = 50
+			add_trait_partially_wroth_effect = yes
+		}
+
+		random_list = {
+			50 = {
+				additive_modifier = {
+					value = -25 # 25%
+					martial < 8
+				}
+
+				additive_modifier = {
+					value = -10 # 40%
+					martial >= 8
+					martial < 12
+				}
+
+				additive_modifier = {
+					value = 10 # 60%
+					martial >= 12
+					martial < 16
+				}
+
+				additive_modifier = {
+					value = 25 # 75%
+					martial >= 16
+				}
+
+				character_event = {
+					id = FemRule.378
+					days = 7
+					tooltip = AMBUSH_RETAINERS_SUCCESSFUL
+				}
+			}
+
+			50 = {
+				additive_modifier = {
+					value = 25 # 75%
+					martial < 8
+				}
+
+				additive_modifier = {
+					value = 10 # 60%
+					martial >= 8
+					martial < 12
+				}
+
+				additive_modifier = {
+					value = -10 # 40%
+					martial >= 12
+					martial < 16
+				}
+
+				additive_modifier = {
+					value = -25 # 25%
+					martial >= 16
+				}
+
+				character_event = {
+					id = FemRule.379
+					days = 7
+					tooltip = AMBUSH_RETAINERS_FAILED
+				}
+
+				hidden_effect = {
+					FROM = {
+						character_event = {
+							id = FemRule.377
+							days = 7
+						}
+					}
+				}
+			}
+		}
+
+		ai_chance = { factor = 10 }
+	}
+
+	option = {
+		name = EVTOPTC_FemRule_376 # Subvert them
+
+		trigger = {
+			wealth >= 25
+
+			OR = {
+				intrigue >= 12
+				is_smart_trigger = yes
+				trait = ambitious
+				trait = deceitful
+				trait = cynical
+				trait = intricate_webweaver
+				trait = flamboyant_schemer
+				trait = elusive_shadow
+				trait = fortune_builder
+				trait = midas_touched
+			}
+
+			NOR = {
+				trait = honest
+				trait = brave
+			}
+		}
+
+		wealth = -25
+
+		random = {
+			chance = 50
+			add_trait_fully_deceitful_effect = yes
+		}
+
+		random_list = {
+			50 = {
+				additive_modifier = {
+					value = -25 # 25%
+					intrigue < 8
+				}
+
+				additive_modifier = {
+					value = -10 # 40%
+					intrigue >= 8
+					intrigue < 12
+				}
+
+				additive_modifier = {
+					value = 10 # 60%
+					intrigue >= 12
+					intrigue < 16
+				}
+
+				additive_modifier = {
+					value = 25 # 75%
+					intrigue >= 16
+				}
+
+				character_event = {
+					id = FemRule.380
+					days = 7
+					tooltip = SUBVERT_RETAINERS_SUCCESSFUL
+				}
+			}
+
+			50 = {
+				additive_modifier = {
+					value = 25 # 75%
+					intrigue < 8
+				}
+
+				additive_modifier = {
+					value = 10 # 60%
+					intrigue >= 8
+					intrigue < 12
+				}
+
+				additive_modifier = {
+					value = -10 # 40%
+					intrigue >= 12
+					intrigue < 16
+				}
+
+				additive_modifier = {
+					value = -25 # 25%
+					intrigue >= 16
+				}
+
+				character_event = {
+					id = FemRule.381
+					days = 7
+					tooltip = SUBVERT_RETAINERS_FAILED
+				}
+
+				hidden_effect = {
+					FROM = {
+						character_event = {
+							id = FemRule.377
+							days = 7
+						}
+					}
+				}
+			}
+		}
+
+		ai_chance = { factor = 10 }
+	}
+
+	option = {
+		name = EVTOPTD_FemRule_376 # Win them over
+
+		trigger = {
+			OR = {
+				diplomacy >= 12
+				is_strong_trigger = yes
+				trait = attractive
+				trait = crusader
+				trait = poet
+				trait = hedonist
+				trait = gregarious
+				trait = underhanded_rogue
+				trait = charismatic_negotiator
+				trait = grey_eminence
+			}
+
+			NOR = {
+				trait = shy
+				trait = paranoid
+				trait = excommunicated
+				trait = ugly
+			}
+
+			is_kinslayer_trigger = no
+		}
+
+		random_list = {
+			20 = { add_trait = drunkard }
+			20 = { add_trait = gluttonous }
+			20 = { add_trait = lustful }
+			10 = { add_trait = gregarious }
+			30 = { }
+		}
+
+		random_list = {
+			50 = {
+				additive_modifier = {
+					value = -25 # 25%
+					diplomacy < 8
+				}
+
+				additive_modifier = {
+					value = -10 # 40%
+					diplomacy >= 8
+					diplomacy < 12
+				}
+
+				additive_modifier = {
+					value = 10 # 60%
+					diplomacy >= 12
+					diplomacy < 16
+				}
+
+				additive_modifier = {
+					value = 25 # 75%
+					diplomacy >= 16
+				}
+
+				character_event = {
+					id = FemRule.382
+					days = 7
+					tooltip = CHARM_RETAINERS_SUCCESSFUL
+				}
+			}
+
+			50 = {
+				additive_modifier = {
+					value = 25 # 75%
+					diplomacy < 8
+				}
+
+				additive_modifier = {
+					value = 10 # 60%
+					diplomacy >= 8
+					diplomacy < 12
+				}
+
+				additive_modifier = {
+					value = -10 # 40%
+					diplomacy >= 12
+					diplomacy < 16
+				}
+
+				additive_modifier = {
+					value = -25 # 25%
+					diplomacy >= 16
+				}
+
+				character_event = {
+					id = FemRule.383
+					days = 7
+					tooltip = CHARM_RETAINERS_FAILED
+				}
+
+				hidden_effect = {
+					FROM = {
+						character_event = {
+							id = FemRule.377
+							days = 7
+						}
+					}
+				}
+			}
+		}
+
+		ai_chance = { factor = 10 }
+	}
+}
+
+# Wife notified that retainers were successful
+character_event = {
+	id = FemRule.377
+	desc = EVTDESC_FemRule_377
+	picture = GFX_evt_quarrel
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_377
+
+		prestige = 25
+
+		hidden_effect = {
+			FROM = { clr_character_flag = plot_usurp_wife_decision_taken }
+		}
+	}
+}
+
+# Ambush of retainers was successful
+character_event = {
+	id = FemRule.378
+	desc = EVTDESC_FemRule_378
+	picture = GFX_evt_melee
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		prestige = 25
+
+		hidden_effect = {
+			FROMFROM = {
+				character_event = {
+					id = FemRule.384
+					days = 7
+				}
+			}
+		}
+	}
+}
+
+# Ambush of retainers failed
+character_event = {
+	id = FemRule.379
+	desc = EVTDESC_FemRule_379
+	picture = GFX_evt_melee
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+
+		prestige = -50
+
+		random_list = {
+			20 = { add_maimed_trait_effect = yes }
+			40 = { add_trait_wounded_effect = yes }
+			40 = { }
+		}
+
+		custom_tooltip = {
+			text = ABANDONS_USURP_EFFORT
+
+			hidden_effect = {
+				FROMFROM = {
+					character_event = {
+						id = FemRule.377
+						days = 7
+					}
+				}
+
+				any_plot_backer = {
+					opinion = {
+						name = opinion_irritated
+						who = ROOT
+						years = 5
+					}
+				}
+
+				add_character_modifier = {
+					name = failed_to_usurp_wife
+					years = 5
+				}
+
+				cancel_plot = yes
+			}
+		}
+	}
+}
+
+# Subversion of retainers was successful
+character_event = {
+	id = FemRule.380
+	desc = EVTDESC_FemRule_380
+	picture = GFX_evt_shadowy_cabal
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		prestige = 25
+
+		hidden_effect = {
+			FROMFROM = {
+				character_event = {
+					id = FemRule.384
+					days = 7
+				}
+			}
+		}
+	}
+}
+
+# Subversion of retainers failed
+character_event = {
+	id = FemRule.381
+	desc = EVTDESC_FemRule_381
+	picture = GFX_evt_shadowy_cabal
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+
+		prestige = -50
+
+		random = {
+			chance = 50
+			change_intrigue = -1
+		}
+
+		custom_tooltip = {
+			text = ABANDONS_USURP_EFFORT
+
+			hidden_effect = {
+				FROMFROM = {
+					character_event = {
+						id = FemRule.377
+						days = 7
+					}
+				}
+
+				any_plot_backer = {
+					opinion = {
+						name = opinion_irritated
+						who = ROOT
+						years = 5
+					}
+				}
+
+				add_character_modifier = {
+					name = failed_to_usurp_wife
+					years = 5
+				}
+
+				cancel_plot = yes
+			}
+		}
+	}
+}
+
+# Charming of retainers was successful
+character_event = {
+	id = FemRule.382
+	desc = EVTDESC_FemRule_382
+	picture = GFX_evt_brothel
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		prestige = 25
+
+		hidden_effect = {
+			FROMFROM = {
+				character_event = {
+					id = FemRule.384
+					days = 7
+				}
+			}
+		}
+	}
+}
+
+# Charming of retainers failed
+character_event = {
+	id = FemRule.383
+	desc = EVTDESC_FemRule_383
+	picture = GFX_evt_brothel
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+
+		prestige = -50
+
+		random = {
+			chance = 50
+			add_trait_partially_shy_effect = yes
+		}
+
+		custom_tooltip = {
+			text = ABANDONS_USURP_EFFORT
+
+			hidden_effect = {
+				FROMFROM = {
+					character_event = {
+						id = FemRule.377
+						days = 7
+					}
+				}
+
+				any_plot_backer = {
+					opinion = {
+						name = opinion_irritated
+						who = ROOT
+						years = 5
+					}
+				}
+
+				add_character_modifier = {
+					name = failed_to_usurp_wife
+					years = 5
+				}
+
+				cancel_plot = yes
+			}
+		}
+	}
+}
+
+# Wife is notified that retainers were nullified
+character_event = {
+	id = FemRule.384
+	desc = EVTDESC_FemRule_384
+	picture = GFX_evt_quarrel
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_384
+
+		set_character_flag = usurped_by_husband@FROM
+		prestige = -25
+
+		hidden_effect = {
+			any_dynasty_member = {
+				limit = { NOT = { character = FROM } }
+
+				character_event = {
+					id = FemRule.397
+				}
+			}
+
+			any_vassal = {
+				limit = {
+					NOR = {
+						dynasty = ROOT
+						character = FROM
+					}
+				}
+
+				character_event = { id = FemRule.397 }
+			}
+		}
+
+		opinion = {
+			name = husband_usurped_me
+			who = FROM
+			years = 20
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.396
+				tooltip = USURPS_TITLES
+			}
+		}
+	}
+}
+
+# Whoever she appealed to arrives to help personally
+character_event = {
+	id = FemRule.385
+	desc = EVTDESC_FemRule_385
+	picture = GFX_evt_shadowy_cabal
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	immediate = {
+		opinion = {
+			name = opinion_very_grateful
+			who = FROM
+			years = 5
+		}
+
+		remove_do_not_disturb_effect = yes
+
+		add_character_modifier = {
+			name = do_not_disturb
+			days = 14
+			hidden = yes
+		}
+
+		FROMFROMFROM = {
+			remove_do_not_disturb_effect = yes
+
+			add_character_modifier = {
+				name = do_not_disturb
+				days = 14
+				hidden = yes
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_385 # Use force
+
+		trigger = {
+			FROM = {
+				OR = {
+					martial >= 12
+					has_education_martial_trigger = yes
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+
+			trigger = {
+				# TODO: What's the logic behind this?
+				NAND = {
+					FROM = {
+						martial < 12
+
+						OR = {
+							intrigue >= 17
+							diplomacy >= 17
+							stewardship >= 17
+							learning >= 17
+						}
+					}
+
+					FROMFROMFROM = {
+						martial >= 4
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 100
+
+				FROM = { martial >= 17 }
+				FROMFROMFROM = { martial < 8 }
+			}
+		}
+
+		FROMFROMFROM = {
+			show_scope_change = no
+
+			random_list = {
+				50 = {
+					additive_modifier = {
+						value = -25 # 25%
+						ROOT_FROM = { martial < 8 }
+					}
+
+					additive_modifier = {
+						value = -10 # 40%
+
+						ROOT_FROM = {
+							martial >= 8
+							martial < 12
+						}
+					}
+
+					additive_modifier = {
+						value = 10 # 60%
+
+						ROOT_FROM = {
+							martial >= 12
+							martial < 16
+						}
+					}
+
+					additive_modifier = {
+						value = 25 # 75%
+						ROOT_FROM = { martial >= 16 }
+					}
+
+					character_event = {
+						id = FemRule.386
+						days = 7
+						tooltip = HUSBAND_INTIMIDATION_SUCCESSFUL
+					}
+				}
+
+				50 = {
+					additive_modifier = {
+						value = 25 # 75%
+						ROOT_FROM = { martial < 8 }
+					}
+
+					additive_modifier = {
+						value = 10 # 60%
+
+						ROOT_FROM = {
+							martial >= 8
+							martial < 12
+						}
+					}
+
+					additive_modifier = {
+						value = -10 # 40%
+
+						ROOT_FROM = {
+							martial >= 12
+							martial < 16
+						}
+					}
+
+					additive_modifier = {
+						value = -25 # 25%
+						ROOT_FROM = { martial >= 16 }
+					}
+
+					character_event = {
+						id = FemRule.387
+						days = 7
+						tooltip = HUSBAND_INTIMIDATION_UNSUCCESSFUL
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_385 # Use bribery
+
+		trigger = {
+			FROM = {
+				OR = {
+					trait = amateurish_plotter
+					trait = flamboyant_schemer
+					trait = intricate_webweaver
+					trait = elusive_shadow
+					trait = indulgent_wastrel
+					trait = thrifty_clerk
+					trait = fortune_builder
+					trait = midas_touched
+					intrigue >= 12
+					stewardship >= 12
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+
+			mult_modifier = {
+				factor = 100
+
+				FROM = {
+					OR = {
+						intrigue >= 17
+						stewardship >= 17
+					}
+				}
+
+				FROMFROMFROM = {
+					intrigue >= 8
+					stewardship >= 8
+				}
+			}
+
+			trigger = {
+				# TODO: What's the logic behind this?
+				NAND = {
+					FROM = {
+						intrigue < 12
+						stewardship < 12
+
+						OR = {
+							martial >= 17
+							diplomacy >= 17
+							learning >= 17
+						}
+					}
+
+					FROMFROMFROM = {
+						OR = {
+							intrigue >= 4
+							stewardship >= 4
+						}
+					}
+				}
+			}
+		}
+
+		FROMFROMFROM = {
+			show_scope_change = no
+
+			random_list = {
+				50 = {
+					additive_modifier = {
+						value = -25 # 25%
+
+						ROOT_FROM = {
+							stewardship < 8
+							intrigue < 8
+						}
+					}
+
+					additive_modifier = {
+						value = -10 # 40%
+
+						ROOT_FROM = {
+							OR = {
+								stewardship >= 8
+								intrigue >= 8
+							}
+
+							stewardship < 12
+							intrigue < 12
+						}
+					}
+
+					additive_modifier = {
+						value = 10 # 60%
+
+						ROOT_FROM = {
+							OR = {
+								stewardship >= 12
+								intrigue >= 12
+							}
+
+							stewardship < 16
+							intrigue < 16
+						}
+					}
+
+					additive_modifier = {
+						value = 25 # 75%
+
+						ROOT_FROM = {
+							OR = {
+								stewardship >= 16
+								intrigue >= 16
+							}
+						}
+					}
+
+					character_event = {
+						id = FemRule.388
+						days = 7
+						tooltip = HUSBAND_BRIBERY_SUCCESSFUL
+					}
+				}
+
+				50 = {
+					additive_modifier = {
+						value = 25 # 75%
+
+						ROOT_FROM = {
+							stewardship < 8
+							intrigue < 8
+						}
+					}
+
+					additive_modifier = {
+						value = 10 # 60%
+
+						ROOT_FROM = {
+							OR = {
+								stewardship >= 8
+								intrigue >= 8
+							}
+
+							stewardship < 12
+							intrigue < 12
+						}
+					}
+
+					additive_modifier = {
+						value = -10 # 40%
+
+						ROOT_FROM = {
+							OR = {
+								stewardship >= 12
+								intrigue >= 12
+							}
+
+							stewardship < 16
+							intrigue < 16
+						}
+					}
+
+					additive_modifier = {
+						value = -25 # 25%
+
+						ROOT_FROM = {
+							OR = {
+								stewardship >= 16
+								intrigue >= 16
+							}
+						}
+					}
+
+					character_event = {
+						id = FemRule.389
+						days = 7
+						tooltip = HUSBAND_BRIBERY_UNSUCCESSFUL
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_FemRule_385 # Gather support on her behalf
+
+		trigger = {
+			FROM = {
+				OR = {
+					trait = naive_appeaser
+					trait = underhanded_rogue
+					trait = charismatic_negotiator
+					trait = grey_eminence
+					trait = detached_priest
+					trait = dutiful_cleric
+					trait = scholarly_theologian
+					trait = mastermind_theologian
+					diplomacy >= 12
+					learning >= 12
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+
+			trigger  = {
+				NAND = {
+					FROM = {
+						diplomacy < 12
+						learning < 12
+
+						OR = {
+							martial >= 17
+							intrigue >= 17
+							stewardship >= 17
+						}
+					}
+
+					FROMFROMFROM = {
+						diplomacy >= 4
+						learning >= 4
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 100
+
+				FROM = {
+					OR = {
+						diplomacy >= 17
+						learning >= 17
+					}
+
+					FROMFROMFROM = {
+						diplomacy < 8
+						learning < 8
+					}
+				}
+			}
+		}
+
+		FROMFROMFROM = {
+			show_scope_change = no
+
+			random_list = {
+				50 = {
+					additive_modifier = {
+						value = -25 # 25%
+						ROOT_FROM = { diplomacy < 8 }
+					}
+
+					additive_modifier = {
+						value = -10 # 40%
+
+						ROOT_FROM = {
+							diplomacy >= 8
+							diplomacy < 12
+						}
+					}
+
+					additive_modifier = {
+						value = 10 # 60%
+
+						ROOT_FROM = {
+							diplomacy >= 12
+							diplomacy < 16
+						}
+					}
+
+					additive_modifier = {
+						value = 25 # 75%
+						ROOT_FROM = { diplomacy >= 16 }
+					}
+
+					character_event = {
+						id = FemRule.390
+						days = 7
+						tooltip = HUSBAND_CAMPAIGN_SUCCESSFUL
+					}
+				}
+
+				50 = {
+					additive_modifier = {
+						value = 25 # 75%
+						ROOT_FROM = { diplomacy < 8 }
+					}
+
+					additive_modifier = {
+						value = 10 # 60%
+
+						ROOT_FROM = {
+							diplomacy >= 8
+							diplomacy < 12
+						}
+					}
+
+					additive_modifier = {
+						value = -10 # 40%
+
+						ROOT_FROM = {
+							diplomacy >= 12
+							diplomacy < 16
+						}
+					}
+
+					additive_modifier = {
+						value = -25 # 25%
+						ROOT_FROM = { diplomacy >= 16 }
+					}
+
+					character_event = {
+						id = FemRule.391
+						days = 7
+						tooltip = HUSBAND_CAMPAIGN_UNSUCCESSFUL
+					}
+				}
+			}
+		}
+	}
+}
+
+# Husband notified that campaign of intimidation is successful
+character_event = {
+	id = FemRule.386
+	desc = EVTDESC_FemRule_386
+	picture = GFX_evt_shadowy_cabal
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+
+		prestige = -50
+
+		opinion = {
+			name = opinion_angry
+			who = FROMFROM
+			years = 5
+		}
+
+		custom_tooltip = {
+			text = ABANDONS_USURP_EFFORT
+
+			hidden_tooltip = {
+				remove_do_not_disturb_effect = yes
+
+				FROM = { character_event = { id = FemRule.392 } }
+				FROMFROM = { character_event = { id = FemRule.393 } }
+
+				any_plot_backer = {
+					opinion = {
+						name = opinion_irritated
+						who = ROOT
+						years = 5
+					}
+				}
+
+				add_character_modifier = {
+					name = failed_to_usurp_wife
+					years = 5
+				}
+
+				cancel_plot = yes
+			}
+		}
+	}
+}
+
+# Husband notified that campaign of intimidation is unsuccessful
+character_event = {
+	id = FemRule.387
+	desc = EVTDESC_FemRule_387
+	picture = GFX_evt_shadowy_cabal
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		prestige = 25
+
+		opinion = {
+			name = opinion_angry
+			who = FROMFROM
+			years = 5
+		}
+
+		hidden_effect = {
+			FROM = { character_event = { id = FemRule.394 days = 7 } }
+			FROMFROM = { character_event = { id = FemRule.395 days = 7 } }
+		}
+	}
+}
+
+# Husband notified that campaign of bribery is successful
+character_event = {
+	id = FemRule.388
+	desc = EVTDESC_FemRule_388
+	picture = GFX_evt_shadowy_cabal
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+
+		prestige = -50
+
+		opinion = {
+			name = opinion_angry
+			who = FROMFROM
+			years = 5
+		}
+
+		custom_tooltip = {
+			text = ABANDONS_USURP_EFFORT
+
+			hidden_tooltip = {
+				remove_do_not_disturb_effect = yes
+				FROM = { character_event = { id = FemRule.392 } }
+				FROMFROM = { character_event = { id = FemRule.393 } }
+
+				any_plot_backer = {
+					opinion = {
+						name = opinion_irritated
+						who = ROOT
+						years = 5
+					}
+				}
+
+				add_character_modifier = {
+					name = failed_to_usurp_wife
+					years = 5
+				}
+
+				cancel_plot = yes
+			}
+		}
+	}
+}
+
+# Husband notified that campaign of bribery is unsuccessful
+character_event = {
+	id = FemRule.389
+	desc = EVTDESC_FemRule_389
+	picture = GFX_evt_shadowy_cabal
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		prestige = 25
+
+		opinion = {
+			name = opinion_angry
+			who = FROMFROM
+			years = 5
+		}
+
+		hidden_effect = {
+			FROM = { character_event = { id = FemRule.394 days = 7 } }
+			FROMFROM = { character_event = { id = FemRule.395 days = 7 } }
+		}
+	}
+}
+
+# Husband notified that campaign of support is successful
+character_event = {
+	id = FemRule.390
+	desc = EVTDESC_FemRule_390
+	picture = GFX_evt_shadowy_cabal
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+
+		prestige = -50
+
+		opinion = {
+			name = opinion_angry
+			who = FROMFROM
+			years = 5
+		}
+
+		custom_tooltip = {
+			text = ABANDONS_USURP_EFFORT
+
+			hidden_effect = {
+				remove_do_not_disturb_effect = yes
+				FROM = { character_event = { id = FemRule.392 } }
+				FROMFROM = { character_event = { id = FemRule.393 } }
+
+				any_plot_backer = {
+					opinion = {
+						name = opinion_irritated
+						who = ROOT
+						years = 5
+					}
+				}
+
+				add_character_modifier = {
+					name = failed_to_usurp_wife
+					years = 5
+				}
+
+				cancel_plot = yes
+			}
+		}
+	}
+}
+
+# Husband notified that campaign of support is unsuccessful
+character_event = {
+	id = FemRule.391
+	desc = EVTDESC_FemRule_391
+	picture = GFX_evt_shadowy_cabal
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		prestige = 25
+
+		opinion = {
+			name = opinion_angry
+			who = FROMFROM
+			years = 5
+		}
+
+		hidden_effect = {
+			FROM = { character_event = { id = FemRule.394 days = 7 } }
+			FROMFROM = { character_event = { id = FemRule.395 days = 7 } }
+		}
+	}
+}
+
+# Wife notified that plan was successful
+character_event = {
+	id = FemRule.392
+	desc = EVTDESC_FemRule_392
+	picture = GFX_evt_quarrel
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_392
+
+		prestige = 25
+
+		hidden_effect = {
+			remove_do_not_disturb_effect = yes
+			FROM = { clr_character_flag = plot_usurp_wife_decision_taken }
+		}
+	}
+}
+
+# Whoever helped her notified that plan was successful
+character_event = {
+	id = FemRule.393
+	desc = EVTDESC_FemRule_393
+	picture = GFX_evt_quarrel
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		prestige = 25
+	}
+}
+
+# Wife notified that plan failed
+character_event = {
+	id = FemRule.394
+	desc = EVTDESC_FemRule_394
+	picture = GFX_evt_quarrel
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_392
+
+		set_character_flag = usurped_by_husband@FROM
+		prestige = -25
+
+		hidden_effect = {
+			any_dynasty_member = {
+				limit = { NOT = { character = FROM } }
+				character_event = { id = FemRule.397 }
+			}
+
+			any_vassal = {
+				limit = {
+					NOR = {
+						dynasty = ROOT
+						character = FROM
+					}
+				}
+
+				character_event = { id = FemRule.397 }
+			}
+		}
+
+		opinion = {
+			name = husband_usurped_me
+			who = FROM
+			years = 20
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = FemRule.396
+				days = 7
+				tooltip = USURPS_TITLES
+			}
+		}
+	}
+}
+
+# Whoever helped her notified that plan failed
+character_event = {
+	id = FemRule.395
+	desc = EVTDESC_FemRule_395
+	picture = GFX_evt_quarrel
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_395
+
+		prestige = -25
+	}
+}
+
+# Husband successfully usurps wife's titles
+character_event = {
+	id = FemRule.396
+	desc = EVTDESC_FemRule_396
+	picture = GFX_evt_quarrel
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_396
+
+		set_character_flag = usurped_my_wife@FROM
+		plot_succeeds = yes
+		remove_do_not_disturb_effect = yes
+
+		FROM = {
+			show_scope_change = no
+
+			any_demesne_title = {
+				show_scope_change = no
+
+				limit = {
+					NOR = {
+						has_law = enatic_cognatic_succession
+						has_law = enatic_succession
+					}
+				}
+
+				usurp_title_plus_barony_if_unlanded = ROOT
+			}
+		}
+
+		clr_character_flag = plot_usurp_wife_decision_taken
+	}
+}
+
+# Family member/realm lord is notified that wife's titles have been usurped
+character_event = {
+	id = FemRule.397
+	desc = EVTDESC_FemRule_397
+	picture = GFX_evt_quarrel
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_397 # This is an outrage!
+
+		opinion = {
+			name = sympathetic_to_cause
+			who = FROM
+			years = 10
+		}
+
+		opinion = {
+			name = outraged_usurpation
+			who = FROMFROM
+			years = 10
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				FROMFROM = {
+					NOT = {
+						any_plot_backer = { character = ROOT }
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				is_female = no
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				is_close_relative = FROMFROM
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				dynasty = FROM
+				NOT = { dynasty = FROMFROM }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value >= 25 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 2
+				opinion = { who = FROM value >= 75 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROMFROM value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROMFROM value < -25 }
+			}
+
+			mult_modifier = {
+				factor = 2
+				opinion = { who = FROMFROM value < -50 }
+			}
+
+			mult_modifier = {
+				factor = 2
+				opinion = { who = FROMFROM value < -75 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_397 # So be it
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 1.5
+				is_female = no
+			}
+
+			mult_modifier = {
+				factor = 2
+				dynasty = FROMFROM
+				NOT = { dynasty = FROM }
+			}
+
+			mult_modifier = {
+				factor = 2
+				NOT = { same_realm = FROM }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value < -25 }
+			}
+
+			mult_modifier = {
+				factor = 2
+				opinion = { who = FROM value < -50 }
+			}
+
+			mult_modifier = {
+				factor = 2
+				opinion = { who = FROM value < -75 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROMFROM value >= 25 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROMFROM value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 2
+				opinion = { who = FROMFROM value >= 75 }
+			}
+		}
+	}
+}
+
+# First event to the husband to kick off the chain
+character_event = {
+	id = FemRule.398
+	desc = EVTDESC_FemRule_398
+	picture = GFX_evt_quarrel
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_FemRule_398
+	}
+}

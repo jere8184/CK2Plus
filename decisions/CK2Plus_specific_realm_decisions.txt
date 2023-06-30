@@ -1,0 +1,2140 @@
+decisions = {
+
+	### ENGLAND
+
+	abolish_witan_william = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_independent = yes
+
+		potential = {
+			has_landed_title = k_england
+			has_character_flag = william_the_conqueror
+
+			NOR = {
+				has_global_flag = witan_abolished_norwegian
+				has_global_flag = witan_abolished
+			}
+		}
+
+		allow = {
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_global_flag = witan_abolished
+			character_event = { id = Plus.500 }
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	abolish_witan_hardrada = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_independent = yes
+
+		potential = {
+			has_landed_title = k_england
+			has_character_flag = harald_hardrada
+
+			NOR = {
+				has_global_flag = witan_abolished_norwegian
+				has_global_flag = witan_abolished
+			}
+		}
+
+		allow = {
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_global_flag = witan_abolished_norwegian
+			character_event = { id = Plus.501 }
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	invade_england_sveinn = {
+		is_high_prio = yes
+		ai_check_interval = 3
+
+		only_independent = yes
+
+		potential = {
+			has_character_flag = sveinn_forkbeard
+			has_landed_title = k_denmark
+			independent = yes
+			k_england = { has_holder = yes }
+
+			NOR = {
+				has_landed_title = k_england
+				has_character_flag = millenium_england_invasion
+				religion_group = muslim
+				religion_group = pagan_group
+			}
+		}
+
+		allow = {
+			prestige >= 800
+			piety >= 0
+			wealth >= 0
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_character_flag = millenium_england_invasion
+			prestige = 50
+
+			k_england = {
+				holder_scope = {
+					character_event = {
+						id = Plus.544
+						days = 1
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	ai_form_england = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			capital_scope = {
+				region = custom_england
+			}
+
+			culture_group = west_germanic
+			ai = yes
+
+			primary_title = {
+				trigger_if = {
+					limit = { real_tier = KING }
+					is_titular = yes
+				}
+				trigger_else = {
+					real_tier = DUKE
+				}
+			}
+
+			OR = {
+				independent = yes
+
+				liege = {
+					real_tier = EMPEROR
+					NOT = { has_law = kingdom_lockout_0 }
+				}
+			}
+
+			k_england = { has_holder = no }
+
+			NOR = {
+				has_global_flag = witan_abolished
+				has_global_flag = witan_abolished_norwegian
+			}
+		}
+
+		allow = {
+			num_of_duke_titles >= 2
+			piety >= 0
+			wealth >= 50
+
+			any_realm_title = {
+				real_tier = COUNT
+				region = custom_england
+				count >= 17
+			}
+
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			grant_title = k_england
+			prestige = 300
+			wealth = -50
+
+			any_demesne_title = {
+				limit = {
+					real_tier = KING
+					is_titular = yes
+				}
+				destroy_landed_title = THIS
+			}
+
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				NOR = {
+					trait = content
+					trait = humble
+				}
+			}
+		}
+	}
+
+	form_great_britain = {
+		ai_check_interval = 12
+
+		only_independent = yes
+
+		potential = {
+			OR = {
+				has_landed_title = k_england
+				has_landed_title = k_scotland
+				has_landed_title = k_wales
+			}
+
+			independent = yes
+
+			NOR = {
+				is_title_active = e_great_britain
+				has_global_flag = gb_formed
+				e_britannia = { has_holder = yes }
+			}
+		}
+
+		allow = {
+			has_landed_title = k_england
+			has_landed_title = k_scotland
+			has_landed_title = k_wales
+			has_empire_size_trigger = yes
+			prestige >= 1000
+			wealth >= 500
+			piety >= 0
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			wealth = -500
+			prestige = -1000
+			set_global_flag = gb_formed
+
+			activate_title = {
+				title = e_great_britain
+				status = yes
+			}
+
+			primary_title = {
+				show_scope_change = no
+
+				e_great_britain = {
+					show_scope_change = no
+
+					set_title_flag = non_manual_law_change # No prestige loss
+					gain_title = ROOT
+					copy_title_laws = PREV
+					clr_title_flag = non_manual_law_change # No prestige loss
+					k_england = { show_scope_change = no de_jure_liege = PREV }
+					k_scotland = { show_scope_change = no de_jure_liege = PREV }
+					k_wales = { show_scope_change = no de_jure_liege = PREV }
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	### IRELAND
+
+	claim_high_king = {
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			culture = irish
+			is_tribal = yes
+			capital_scope = { region = world_europe_west_ireland }
+
+			k_ireland = {
+				has_holder = yes
+
+				holder_scope = {
+					is_tribal = yes
+
+					NOR = {
+						reverse_has_truce = ROOT
+						has_non_aggression_pact_with = ROOT
+					}
+				}
+			}
+
+			NOR = {
+				has_landed_title = k_ireland
+				has_strong_claim = k_ireland
+				any_heir_title = { title = k_ireland }
+			}
+		}
+
+		allow = {
+			real_tier = DUKE
+			trait = ambitious
+			prestige >= 250
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_character_flag = justified_claimant
+			prestige = -250
+			add_claim = k_ireland
+
+			k_ireland = {
+				holder_scope = {
+					character_event = { id = Plus.563 }
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				NOR = {
+					any_liege = { war = yes }
+					trait = humble
+				}
+
+				k_ireland = {
+					holder_scope = {
+						reverse_opinion = {
+							who = ROOT
+							value < 25
+						}
+					}
+				}
+			}
+		}
+	}
+
+	ai_form_ireland = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			culture_group = celtic
+			ai = yes
+
+			capital_scope = {
+				region = world_europe_west_ireland
+			}
+
+			primary_title = {
+				trigger_if = {
+					limit = { real_tier = KING }
+					is_titular = yes
+				}
+				trigger_else = {
+					real_tier = DUKE
+				}
+			}
+
+			OR = {
+				independent = yes
+
+				liege = {
+					real_tier = EMPEROR
+					NOT = { has_law = kingdom_lockout_0 }
+				}
+			}
+
+			k_ireland = { has_holder = no }
+		}
+
+		allow = {
+			num_of_duke_titles >= 2
+			wealth >= 50
+			piety >= 0
+
+			any_realm_title = {
+				real_tier = COUNT
+				region = world_europe_west_ireland
+				count >= 10
+			}
+
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			grant_title = k_ireland
+			prestige = 200
+			wealth = -50
+
+			any_demesne_title = {
+				limit = {
+					real_tier = KING
+					is_titular = yes
+				}
+
+				destroy_landed_title = THIS
+			}
+
+		}
+
+		ai_will_do = {
+			factor = 1
+			trigger = {
+				NOR = {
+					trait = content
+					trait = humble
+				}
+			}
+		}
+	}
+
+	### ITALY / SICILY
+
+	sicily_falls = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			has_global_flag = schism_happened
+			has_landed_title = k_papacy # He always exists
+
+			NOR = {
+				has_global_flag = emf_nwo
+				has_global_flag = sicily_falls
+				has_global_flag = italian_rec_success
+				has_global_flag = italian_rec_failure
+				has_global_flag = christian_crusades_unlocked # This event unlocks them
+			}
+		}
+
+		allow = { # Don't fire if independent Christians still inhabit k_sicily
+			# TODO: Add custom tooltip?, see decision below
+			regional_percentage = {
+				region = custom_sicily
+				percentage == 0
+
+				top_liege = {
+					religion_group = christian
+				}
+			}
+		}
+
+		effect = {
+			set_global_flag = sicily_falls
+			set_global_flag = italian_reconquest_planning
+
+			k_papacy = {
+				holder_scope = {
+					add_character_modifier = {
+						name = italian_reconquest_pope
+						duration = -1
+						inherit = yes
+						hidden = yes
+					}
+				}
+			}
+
+			any_playable_ruler = {
+				narrative_event = { id = Plus.504 }
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	sicily_regained = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			has_character_modifier = italian_reconquest
+			has_global_flag = italian_reconquest_started
+
+			OR = {
+				has_landed_title = d_benevento
+				has_landed_title = d_capua
+				has_landed_title = d_apulia
+				has_landed_title = d_salerno
+				has_landed_title = d_calabria
+				has_landed_title = d_sicily
+			}
+
+			NOR = {
+				has_global_flag = italian_rec_success
+				has_global_flag = italian_rec_failure
+			}
+		}
+
+		allow = {
+			custom_tooltip = {
+				text = italian_reconq_ctt
+
+				regional_percentage = {
+					region = custom_sicily
+					percentage == 1
+
+					top_liege = {
+						religion_group = christian
+					}
+				}
+			}
+
+			war = no
+		}
+
+		effect = {
+			set_global_flag = italian_rec_success
+			set_global_flag = christian_crusades_unlocked
+			gain_title = k_sicily
+			prestige = 500
+
+			hidden_effect = {
+				remove_character_modifier = italian_reconquest
+				narrative_event = { id = Plus.516 }
+
+				any_playable_ruler = {
+					limit = { NOT = { character = ROOT } }
+					narrative_event = { id = Plus.510 }
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	### ALBANIA
+
+	create_kingdomofalbania = {
+		ai_check_interval = 12
+
+		only_playable  = yes
+
+		potential = {
+			completely_controls = c_dyrrachion
+			completely_controls = c_avlonas
+			NOT = { has_global_flag = kingdom_of_albania_formed }
+			c_dyrrachion = { location = { culture = arberian } }
+			k_albania = { is_titular = yes }
+
+			OR = {
+				real_tier = KING
+				real_tier = EMPEROR
+
+				trigger_if = {
+					limit = { num_of_duke_titles >= 2 }
+
+					OR = {
+						culture_group = south_slavic
+						culture = arberian
+					}
+				}
+			}
+
+			NOR = {
+				has_landed_title = e_roman_empire
+				has_landed_title = e_byzantium
+			}
+		}
+
+		allow = {
+			OR = {
+				independent = yes
+				real_tier = KING
+			}
+
+			wealth >= 300
+
+			OR = {
+				piety >= 500
+				prestige >= 500
+			}
+		}
+
+		effect = {
+			set_global_flag = kingdom_of_albania_formed
+			treasury = -300
+			narrative_event = { id = Plus.522 }
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				culture_group = south_slavic
+				wealth >= 500
+				NOT = { has_character_modifier = ai_austerity }
+
+				trigger_if = {
+					limit = { higher_real_tier_than = DUKE }
+					realm_size >= 75
+				}
+			}
+		}
+	}
+
+	### POLAND
+
+	extend_claims_boleslaw = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_independent = yes
+
+		potential = {
+			has_character_flag = boleslaw_the_brave
+			independent = yes
+			has_landed_title = d_moravia
+			d_bohemia = { has_holder = yes }
+
+			NOR = {
+				has_character_flag = extend_claim_boleslaw
+				has_landed_title = d_bohemia
+			}
+		}
+
+		allow = {
+			prestige >= 500
+			piety >= 0
+			wealth >= 0
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_character_flag = extend_claim_boleslaw
+			prestige = 50
+			add_claim = c_lausitz
+			add_claim = d_bohemia
+
+			d_bohemia = {
+				holder_scope = {
+					character_event = { id = Plus.524 }
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	become_king_of_poland_boleslaw = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			has_character_flag = boleslaw_the_brave
+			has_character_flag = extend_claim_boleslaw
+			has_landed_title = d_silesia
+			has_landed_title = d_greater_poland
+			has_landed_title = d_lesser_poland
+			NOT = { has_character_flag = k_poland_boleslaw }
+			k_poland = { has_holder = no }
+		}
+
+		allow = {
+			independent = yes
+			has_landed_title = d_moravia
+			prestige >= 1000
+			piety >= 0
+			wealth >= 0
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_character_flag = k_poland_boleslaw
+			prestige = 200
+			grant_title = k_poland
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	### HRE
+
+	papal_coronation  = {
+		is_high_prio = yes
+
+		only_independent = yes
+
+		potential = {
+			OR = {
+				has_landed_title = e_hre
+				has_landed_title = e_karling
+			}
+
+			independent = yes
+			is_feudal = yes
+			is_heretic = no
+
+			OR = {
+				religion = catholic
+				religion = chalcedonian
+			}
+
+			NOR = {
+				has_character_flag = wants_coronation
+				trait = crowned_by_pope
+			}
+		}
+
+		allow = {
+			prestige >= 1000
+			scaled_wealth = 1.0
+			piety >= 200
+
+			custom_tooltip = {
+				text = POPE_WOULD_HEAR_REQUEST
+
+				NOT = { trait = excommunicated }
+
+				rightful_religious_head_scope = {
+					NOT = {
+						has_opinion_modifier = {
+							name = coronation_rejected
+							who = ROOT
+						}
+					}
+				}
+			}
+
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_character_flag = wants_coronation
+			scaled_wealth = -1.0
+			character_event = { id = Plus.1175 }
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	# Available if the Carolingian Empire was formed and has fallen
+	# Also see 'form_hre_early', realm_decisions
+	first_coronation = {
+		is_high_prio = yes
+
+		only_independent = yes
+
+		potential = {
+			higher_real_tier_than = DUKE
+			has_global_flag = carolingian_empire_fallen
+			is_heretic = no
+
+			OR = {
+				religion = catholic
+
+				trigger_if = {
+					limit = { religion = chalcedonian }
+					trait = latin_rites
+				}
+			}
+
+			rightful_religious_head_scope = {
+				has_landed_title = k_papacy
+
+				NOR = {
+					has_character_flag = approached_for_coronation
+					character = ROOT
+				}
+			}
+
+			NOR = {
+				is_title_active = e_karling
+				has_global_flag = hre_formed
+				has_global_flag = rome_restored
+				has_global_flag = hre_removed
+			}
+		}
+
+		allow = {
+			independent = yes
+			has_landed_title = k_germany
+			prestige >= 1000
+			piety >= 100
+			realm_size >= 150
+
+			custom_tooltip = {
+				text = NOT_DEPOSED_EMPEROR
+				NOT = { has_character_flag = former_carolingian_emperor }
+			}
+
+			custom_tooltip = {
+				text = CONTROLS_6_GERMAN_DUCHIES
+
+				any_realm_title = {
+					count = 6
+					real_tier = DUKE
+					capital_scope = { region = custom_germany }
+					ROOT = { completely_controls = PREV }
+				}
+			}
+
+			custom_tooltip = {
+				text = POPE_WOULD_HEAR_REQUEST
+
+				NOT = { trait = excommunicated }
+
+				rightful_religious_head_scope = {
+					NOT = {
+						has_opinion_modifier = {
+							name = coronation_rejected
+							who = ROOT
+						}
+					}
+				}
+			}
+
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			rightful_religious_head_scope = {
+				show_scope_change = no
+
+				set_character_flag = approached_for_coronation
+
+				letter_event = {
+					id = Plus.1155
+					tooltip = ask_for_coronation
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	form_brandenburg = {
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			higher_real_tier_than = COUNT
+			NOT = { is_title_active = k_brandenburg }
+
+			OR = {
+				has_landed_title = e_hre
+				top_liege = { has_landed_title = e_hre }
+			}
+
+			trigger_if = {
+				limit = { independent = no }
+				liege = { real_tier = EMPEROR }
+			}
+
+			capital_scope = {
+				OR = {
+					empire = { title = e_hre }
+					duchy = { title = d_brandenburg }
+				}
+			}
+		}
+
+		allow = {
+			completely_controls = d_brandenburg
+			prestige >= 1000
+			wealth >= 500
+			piety >= 0
+
+			OR = {
+				completely_controls = d_meissen
+				any_liege = { completely_controls = d_meissen }
+			}
+
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			wealth = -500
+			prestige = -1000
+
+			if = {
+				limit = { independent = no }
+				liege = { save_event_target_as = current_liege }
+			}
+
+			k_brandenburg = {
+				show_scope_change = no
+
+				activate_title = {
+					title = THIS
+					status = yes
+				}
+
+				d_brandenburg = { show_scope_change = no de_jure_liege = PREV }
+				d_meissen = { show_scope_change = no de_jure_liege = PREV }
+
+				gain_title = ROOT
+				de_jure_liege = e_hre
+			}
+
+			hidden_effect = {
+				if = {
+					limit = { event_target:current_liege = { always = yes } }
+
+					set_defacto_liege = event_target:current_liege
+					pf_liege_change_effect = yes
+				}
+			}
+
+			any_realm_province = {
+				show_scope_change = no
+
+				limit = {
+					duchy = {
+						OR = {
+							title = d_brandenburg
+							title = d_meissen
+						}
+					}
+
+					NOT = { religion = ROOT }
+					held_under_PREV = yes
+				}
+
+				random = {
+					chance = 50
+					religion = ROOT
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	### NORSE
+
+	organise_braedralag = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			higher_real_tier_than = COUNT
+			religion_openly_norse_or_reformed_trigger = yes
+			NOT = { has_global_flag = braedralag_founded }
+		}
+
+		allow = {
+			real_tier = EMPEROR
+			prestige >= 300
+			wealth >= 300
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_global_flag = braedralag_founded
+			prestige = -300
+			wealth = -300
+
+			activate_title = {
+				title = d_braedralag
+				status = yes
+			}
+
+			hidden_effect = {
+				d_braedralag = {
+					religion = ROOT
+
+					ROOT = {
+						religion_scope = { save_event_target_as = braedralag_religion }
+					}
+
+					save_persistent_event_target = {
+						name = holy_order_religion
+						scope = event_target:braedralag_religion
+					}
+				}
+
+				create_character = {
+					random_traits = yes
+					religion = ROOT
+					culture = ROOT
+					dynasty = none
+					female = no
+					age = 34
+					add_trait = skilled_tactician
+					add_trait = berserker
+					add_trait = viking
+					add_trait = zealous
+				}
+
+				new_character = {
+					grant_title = d_braedralag
+				}
+
+				narrative_event = { id = Plus.553 }
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				prestige >= 500
+				wealth >= 500
+			}
+		}
+	}
+
+	become_braedralag = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_independent = yes
+
+		potential = {
+			real_tier = COUNT
+			religion = norse_pagan_reformed
+			ai = yes
+			NOT = { has_global_flag = braedralag_founded }
+			is_not_in_regency_trigger = yes
+		}
+
+		allow = {
+			piety >= 300
+			trait = zealous
+
+			OR = {
+				trait = viking
+				trait = berserker
+				trait = holy_warrior
+			}
+		}
+
+		effect = {
+			set_global_flag = braedralag_founded
+			narrative_event = { id = Plus.553 }
+
+			d_braedralag = {
+				activate_title = {
+					title = THIS
+					status = yes
+				}
+
+				grant_title = ROOT
+				religion = ROOT
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	organise_jomsvikings = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			higher_real_tier_than = COUNT
+			religion_openly_norse_or_reformed_trigger = yes
+			NOT = { has_global_flag = jomsvikings_founded }
+		}
+
+		allow = {
+			higher_real_tier_than = DUKE
+			prestige >= 300
+			wealth >= 300
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_global_flag = jomsvikings_founded
+			prestige = -300
+			wealth = -300
+
+			activate_title = {
+				title = d_jomsvikings
+				status = yes
+			}
+
+			hidden_effect = {
+				d_jomsvikings = {
+					religion = ROOT
+
+					ROOT = {
+						religion_scope = { save_event_target_as = jomsvikings_religion }
+					}
+
+					save_persistent_event_target = {
+						name = holy_order_religion
+						scope = event_target:jomsvikings_religion
+					}
+				}
+
+				narrative_event = { id = Plus.555 }
+
+				create_character = {
+					random_traits = yes
+					religion = ROOT
+					culture = ROOT
+					dynasty = none
+					female = no
+					age = 34
+					add_trait = skilled_tactician
+					add_trait = berserker
+					add_trait = viking
+					add_trait = zealous
+				}
+
+				new_character = {
+					grant_title = d_jomsvikings
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				prestige >= 500
+				wealth >= 500
+				total_years_played >= 5
+			}
+		}
+	}
+
+	claim_sami = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			has_landed_title = k_sweden
+			d_lappland = { de_jure_liege = k_sapmi }
+
+			OR = {
+				k_sapmi = { has_holder = no }
+				completely_controls = d_lappland
+
+				d_lappland = {
+					holder_scope = {
+						OR = {
+							character = ROOT
+							is_vassal_or_below_of = ROOT
+						}
+					}
+				}
+			}
+
+			NOR = {
+				has_global_flag = sami_claimed
+				culture = sami
+			}
+		}
+
+		allow = {
+			ruled_years >= 5
+			prestige >= 100
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_global_flag = sami_claimed
+			prestige = 50
+
+			hidden_effect = {
+				d_lappland = {
+					any_de_jure_vassal = {
+						limit = { NOT = { is_vassal_or_below_of = ROOT } }
+
+						if = {
+							limit = { culture = ROOT }
+
+							opinion = {
+								name = opinion_outraged
+								who = ROOT
+								years = 10
+							}
+						}
+						else = {
+							opinion = {
+								name = opinion_furious
+								who = ROOT
+								years = 10
+							}
+						}
+					}
+
+					if = {
+						limit = { has_holder = yes }
+
+						holder_scope = {
+							opinion = {
+								who = ROOT
+								name = opinion_outraged
+								years = 20
+							}
+						}
+					}
+				}
+			}
+
+			d_lappland = {
+				show_scope_change = no
+
+				de_jure_liege = k_sweden
+				set_name = ""
+				adjective = ""
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	claim_finnmark = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			has_landed_title = k_norway
+			d_finnmark = { de_jure_liege = k_sapmi }
+
+			OR = {
+				k_sapmi = { has_holder = no }
+				completely_controls = d_finnmark
+
+				d_finnmark = {
+					holder_scope = {
+						OR = {
+							character = ROOT
+							is_vassal_or_below_of = ROOT
+						}
+					}
+				}
+			}
+
+			NOR = {
+				culture = sami
+				has_global_flag = finnmark_claimed
+			}
+		}
+
+		allow = {
+			ruled_years >= 5
+			prestige >= 100
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_global_flag = finnmark_claimed
+			prestige = 50
+
+			hidden_effect = {
+				d_finnmark = {
+					any_de_jure_vassal = {
+						limit = { NOT = { is_vassal_or_below_of = ROOT } }
+
+						if = {
+							limit = { culture = ROOT }
+
+							opinion = {
+								name = opinion_outraged
+								who = ROOT
+								years = 10
+							}
+						}
+						else = {
+							opinion = {
+								name = opinion_furious
+								who = ROOT
+								years = 10
+							}
+						}
+					}
+
+					if = {
+						limit = { has_holder = yes }
+
+						holder_scope = {
+							opinion = {
+								who = ROOT
+								name = opinion_outraged
+								years = 20
+							}
+						}
+					}
+				}
+			}
+
+			d_finnmark = {
+				show_scope_change = no
+
+				de_jure_liege = k_norway
+				set_name = ""
+				adjective = ""
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	claim_kola = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			OR = {
+				has_landed_title = k_finland
+
+				AND = {
+					has_landed_title = d_finland
+					has_global_flag = finnmark_claimed
+					has_global_flag = sami_claimed
+				}
+			}
+
+			d_osterbotten = { de_jure_liege = k_sapmi }
+			d_kola = { de_jure_liege = k_sapmi }
+
+			OR = {
+				k_sapmi = { has_holder = no }
+				completely_controls = d_osterbotten
+
+				d_osterbotten = {
+					holder_scope = {
+						OR = {
+							character = ROOT
+							is_vassal_or_below_of = ROOT
+						}
+					}
+				}
+			}
+
+			NOR = {
+				culture = sami
+				has_global_flag = kola_claimed
+			}
+		}
+
+		allow = {
+			ruled_years >= 5
+			prestige >= 100
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_global_flag = kola_claimed
+			prestige = 50
+
+			hidden_effect = {
+				d_osterbotten = {
+					any_de_jure_vassal = {
+						limit = { NOT = { is_vassal_or_below_of = ROOT } }
+
+						if = {
+							limit = { culture = ROOT }
+
+							opinion = {
+								name = opinion_outraged
+								who = ROOT
+								years = 10
+							}
+						}
+						else = {
+							opinion = {
+								name = opinion_furious
+								who = ROOT
+								years = 10
+							}
+						}
+					}
+
+					if = {
+						limit = { has_holder = yes }
+
+						holder_scope = {
+							opinion = {
+								who = ROOT
+								name = opinion_outraged
+								years = 20
+							}
+						}
+					}
+				}
+
+				d_kola = {
+					any_de_jure_vassal = {
+						limit = { NOT = { is_vassal_or_below_of = ROOT } }
+
+						if = {
+							limit = { culture = ROOT }
+
+							opinion = {
+								name = opinion_outraged
+								who = ROOT
+								years = 10
+							}
+						}
+						else = {
+							opinion = {
+								name = opinion_furious
+								who = ROOT
+								years = 10
+							}
+						}
+					}
+
+					if = {
+						limit = { has_holder = yes }
+
+						holder_scope = {
+							opinion = {
+								who = ROOT
+								name = opinion_outraged
+								years = 20
+							}
+						}
+					}
+				}
+			}
+
+			d_osterbotten = {
+				show_scope_change = no
+
+				de_jure_liege = k_finland
+				set_name = ""
+				adjective = ""
+			}
+
+			d_kola = {
+				show_scope_change = no
+
+				de_jure_liege = k_finland
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	ai_form_sweden = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			culture_group = north_germanic
+			capital_scope = { region = custom_sweden }
+
+			primary_title = {
+				trigger_if = {
+					limit = { real_tier = KING }
+					is_titular = yes
+				}
+				trigger_else = {
+					real_tier = DUKE
+				}
+			}
+
+			OR = {
+				independent = yes
+
+				liege = {
+					real_tier = EMPEROR
+					NOT = { has_law = kingdom_lockout_0 }
+				}
+			}
+
+			k_sweden = { has_holder = no }
+			ai = yes
+		}
+
+		allow = {
+			num_of_duke_titles >= 2
+			wealth >= 50
+			piety >= 0
+
+			any_realm_title = {
+				real_tier = COUNT
+				region = custom_sweden
+				count >= 13
+			}
+
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			grant_title = k_sweden
+			prestige = 200
+			wealth = -50
+
+			any_demesne_title = {
+				limit = {
+					real_tier = KING
+					is_titular = yes
+				}
+
+				destroy_landed_title = THIS
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				NOR = {
+					trait = content
+					trait = humble
+				}
+			}
+		}
+	}
+
+	ai_form_norway = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			culture_group = north_germanic
+			capital_scope = { region = custom_norway }
+
+			primary_title = {
+				trigger_if = {
+					limit = { real_tier = KING }
+					is_titular = yes
+				}
+				trigger_else = {
+					real_tier = DUKE
+				}
+			}
+
+			OR = {
+				independent = yes
+
+				liege = {
+					real_tier = EMPEROR
+					NOT = { has_law = kingdom_lockout_0 }
+				}
+			}
+
+			k_norway = { has_holder = no }
+			ai = yes
+		}
+
+		allow = {
+			num_of_duke_titles >= 2
+			wealth >= 50
+			piety >= 0
+
+			any_realm_title = {
+				real_tier = COUNT
+				region = custom_norway
+				count >= 14
+			}
+
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			grant_title = k_norway
+
+			any_demesne_title = {
+				limit = {
+					real_tier = KING
+					is_titular = yes
+				}
+
+				destroy_landed_title = THIS
+			}
+
+			prestige = 200
+			wealth = -50
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				NOR = {
+					trait = content
+					trait = humble
+				}
+			}
+		}
+	}
+
+	ai_form_denmark = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			culture_group = north_germanic
+			capital_scope = { region = custom_denmark }
+
+			primary_title = {
+				trigger_if = {
+					limit = { real_tier = KING }
+					is_titular = yes
+				}
+				trigger_else = {
+					real_tier = DUKE
+				}
+			}
+
+			OR = {
+				independent = yes
+
+				liege = {
+					real_tier = EMPEROR
+					NOT = { has_law = kingdom_lockout_0 }
+				}
+			}
+
+			k_denmark = { has_holder = no }
+			ai = yes
+		}
+
+		allow = {
+			num_of_duke_titles >= 2
+			wealth >= 50
+			piety >= 0
+
+			any_realm_title = {
+				real_tier = COUNT
+				region = custom_denmark
+				count >= 7
+			}
+
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			grant_title = k_denmark
+			prestige = 200
+			wealth = -50
+
+			any_demesne_title = {
+				limit = {
+					real_tier = KING
+					is_titular = yes
+				}
+
+				destroy_landed_title = THIS
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				NOR = {
+					trait = content
+					trait = humble
+				}
+			}
+		}
+	}
+
+	# Saxon
+
+	organise_harii = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			higher_real_tier_than = COUNT
+			religion_openly_norse_or_reformed_trigger = yes
+			NOT = { has_global_flag = harii_founded }
+		}
+
+		allow = {
+			higher_real_tier_than = DUKE
+			prestige >= 300
+			wealth >= 300
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_global_flag = harii_founded
+			prestige = -300
+			wealth = -300
+
+			activate_title = {
+				title = d_harii
+				status = yes
+			}
+
+			hidden_effect = {
+				d_harii = {
+					religion = ROOT
+
+					ROOT = {
+						religion_scope = { save_event_target_as = harii_religion }
+					}
+
+					save_persistent_event_target = {
+						name = holy_order_religion
+						scope = event_target:harii_religion
+					}
+				}
+
+				narrative_event = { id = Plus.560 }
+
+				create_character = {
+					random_traits = yes
+					religion = ROOT
+					culture = ROOT
+					dynasty = none
+					female = no
+					age = 34
+					add_trait = skilled_tactician
+					add_trait = zealous
+				}
+
+				new_character = {
+					grant_title = d_harii
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				prestige >= 500
+				wealth >= 500
+			}
+		}
+	}
+
+	# Hungary/Magyars
+	take_carpathia = {
+		is_high_prio = yes
+		ai_check_interval = 6
+
+		only_independent = yes
+
+		potential = {
+			OR = {
+				has_landed_title = k_magyar
+				is_nomadic = yes
+			}
+
+			culture = hungarian
+			is_unreformed_pagan_trigger = yes
+			independent = yes
+
+			any_neighbor_independent_ruler = {
+				any_realm_title = { de_jure_liege = k_carpathia }
+				any_realm_title = { title = c_pest }
+				is_nomadic = no
+
+				NOR = {
+					religion = ROOT
+					reverse_has_truce = ROOT
+					is_allied_with = ROOT
+					has_non_aggression_pact_with = ROOT
+					pays_tribute_to = ROOT
+					ROOT = { pays_tribute_to = PREV }
+				}
+			}
+
+			is_inaccessible_trigger = no
+
+			NOR = {
+				any_realm_province = {
+					region = custom_carpathia
+					held_under_PREV = yes
+				}
+				has_global_flag = magyar_1066_invasion
+				has_global_flag = avar_khaganate_renamed
+				has_global_flag = magyar_defeat
+			}
+		}
+
+		allow = {
+			prestige >= 200
+			realm_size >= 6
+			realm_size < 20
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_global_flag = magyar_1066_invasion
+			prestige = -200
+
+			spawn_unit = {
+				province = capital_scope
+				home = capital_scope
+				owner = ROOT
+				attrition = 0.25
+				maintenance_multiplier = 0
+				earmark = king_magyar_forces
+
+				troops = {
+					light_infantry = { 1625 1625 }
+					heavy_infantry = { 75 75 }
+					archers = { 325 325 }
+				}
+			}
+
+			spawn_unit = {
+				province = capital_scope
+				home = capital_scope
+				owner = ROOT
+				attrition = 0.25
+				maintenance_multiplier = 0
+				earmark = king_magyar_forces
+
+				troops = {
+					light_infantry = { 1625 1625 }
+					heavy_infantry = { 75 75 }
+					archers = { 325 325 }
+				}
+			}
+
+			if = {
+				limit = { ai = yes }
+
+				while = {
+					count = 4
+
+					spawn_unit = {
+						province = capital_scope
+						home = capital_scope
+						owner = ROOT
+						attrition = 0.25
+						maintenance_multiplier = 0
+						earmark = magyar_forces
+
+						troops = {
+							light_infantry = { 1625 1625 }
+							heavy_infantry = { 75 75 }
+							archers = { 325 325 }
+						}
+					}
+
+					create_character = {
+						random_traits = yes
+						dynasty = random
+						religion = ROOT
+						culture = ROOT
+						female = no
+						age = 23
+						add_trait = skilled_tactician
+
+						attributes = {
+							martial = 6
+						}
+					}
+
+					new_character = {
+						random_list = {
+							1 = { }
+							1 = { add_age = 1 }
+							1 = { add_age = 2 }
+							1 = { add_age = 3 }
+							1 = { add_age = 4 }
+						}
+					}
+				}
+			}
+
+			c_pest = {
+				kingdom = {
+					save_event_target_as = target_kingdom
+				}
+			}
+
+			war = {
+				casus_belli = magyar_invasion
+				target = c_pest
+				thirdparty_title = event_target:target_kingdom
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				year >= 865
+				prestige >= 600
+
+				OR = {
+					trait = ambitious
+					prestige >= 1000
+					martial >= 15
+				}
+			}
+		}
+	}
+
+	# Valencian
+	declare_valencian_kingdom = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			culture = catalan
+			religion_group = christian
+			lower_real_tier_than = king
+
+			OR = {
+				independent = yes
+
+				liege = {
+					real_tier = EMPEROR
+					NOT = { has_law = kingdom_lockout_0 }
+				}
+			}
+
+			k_valencia = { has_holder = no }
+			holy_order = no
+			primary_title = { is_primary_type_title = no }
+		}
+
+		allow = {
+			completely_controls = d_valencia
+			wealth >= 500
+			prestige >= 1000
+
+			custom_tooltip = {
+				text = HAS_TWO_DUKE_TITLES
+
+				any_demesne_title = {
+					tier = DUKE
+					is_titular = no
+					count = 2
+				}
+			}
+
+			capital_scope = { TECH_MAJESTY >= 1 }
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			k_valencia = {
+				show_scope_change = no
+
+				activate_title = {
+					title = THIS
+					status = yes
+				}
+
+				d_valencia = { show_scope_change = no de_jure_liege = PREV }
+				gain_title = ROOT
+			}
+
+			wealth = -500
+			prestige = -1000
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				wealth >= 600
+				NOT = { has_character_modifier = ai_austerity }
+			}
+		}
+	}
+
+	# Revive Alexander's Macedonia
+	create_macedon_kingdom = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			OR = {
+				culture = greek
+				culture = bulgarian
+				culture = arberian
+			}
+
+			OR = {
+				religion_group = christian
+				religion_group = pagan_group
+			}
+
+			lower_real_tier_than = KING
+
+			OR = {
+				independent = yes
+
+				liege = {
+					real_tier = EMPEROR
+					NOT = { has_law = kingdom_lockout_0 }
+				}
+			}
+
+			k_macedon = { has_holder = no }
+			holy_order = no
+			primary_title = { is_primary_type_title = no }
+		}
+
+		allow = {
+			has_landed_title = c_chalkidike
+			has_landed_title = c_ohrid
+			has_landed_title = c_strymon
+			has_landed_title = c_thessalonike
+			wealth >= 500
+			prestige >= 1000
+
+			custom_tooltip = {
+				text = HAS_TWO_DUKE_TITLES
+
+				any_demesne_title = {
+					real_tier = DUKE
+					is_titular = no
+					count = 2
+				}
+			}
+
+			capital_scope = { TECH_MAJESTY >= 1 }
+			war = no
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			activate_title = {
+				title = k_macedon
+				status = yes
+			}
+
+			gain_title = k_macedon
+
+			if = {
+				limit = { has_nickname = no }
+
+				wealth = -500
+				prestige = -1000
+				give_nickname = nick_the_diadochos
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				wealth >= 600
+				NOT = { has_character_modifier = ai_austerity }
+			}
+		}
+	}
+
+	call_aztec_reinforcements = {
+		is_high_prio = yes
+
+		ai = no
+
+		potential = {
+			has_landed_title = e_aztec_empire
+			has_global_flag = player_aztec
+			# had_global_flag = {
+			#	flag = aztec_arrival
+			#	years >= 2
+			# }
+		}
+
+		allow = {
+			capital_scope = {
+				is_coastal = yes
+			}
+
+			prestige >= 1000
+			war = no
+		}
+
+		effect = {
+			prestige = -1000
+
+			custom_tooltip = {
+				text = REINFORCEMENTS_CALLED
+
+				capital_scope = {
+					save_event_target_as = aztec_second_wave
+				}
+
+				narrative_event = {
+					id = SSI.6
+					days = 60
+					random = 15
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+}

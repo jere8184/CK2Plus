@@ -1,0 +1,4524 @@
+targeted_decisions = {
+	abdicate_rule = {
+		filter = self
+		ai_target_filter = self
+		ai_check_interval = 12
+
+		only_rulers = yes
+
+		potential = {
+			is_not_unreformed_pagan_trigger = yes
+			has_regent = no
+			controls_religion = no
+			is_nomadic = no
+			NOT = { has_character_flag = considering_abdication }
+
+			player_heir = {
+				religion = ROOT
+				culture = ROOT
+				war = no
+				is_adult = yes
+				is_incapable = no
+
+				NOR = {
+					trait = lunatic
+					trait = possessed
+				}
+			}
+
+			age >= 50
+			ruled_years >= 10
+
+			trigger_if = {
+				limit = { health >= 3.1 }
+
+				OR = {
+					trait = depressed
+					trait = stressed
+					trait = infirm
+				}
+			}
+		}
+
+		allow = {
+			war = no
+
+			NOR = {
+				trait = ambitious
+				trait = proud
+				trait = lunatic
+				trait = possessed
+				trait = paranoid
+				trait = envious
+				trait = greedy
+			}
+
+			is_inaccessible_trigger = no
+		}
+
+		effect = {
+			set_character_flag = considering_abdication
+
+			character_event = {
+				id = Plus.120
+				tooltip = consider_abdication
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				age >= 60
+				ruled_years >= 15
+
+				OR = {
+					trait = content
+					trait = humble
+				}
+
+				opinion = {
+					who = player_heir
+					value >= 25
+				}
+			}
+		}
+	}
+
+	disinherit_child = {
+		filter = dynasty
+		ai_target_filter = dynasty
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		from_potential = {
+			has_living_children = yes
+			has_regent = no
+			is_nomadic = no
+			NOT = { has_character_flag = disinherited_child }
+		}
+
+		potential = {
+			is_child_of = FROM
+			dynasty = FROM
+
+			any_heir_title = {
+				is_primary_holder_title = yes
+				holder = FROM
+			}
+		}
+
+		allow = {
+			FROM = {
+				war = no
+
+				trigger_if = {
+					limit = { real_tier = BARON } # Patricians
+					prestige >= 250
+				}
+				trigger_if = {
+					limit = { real_tier = COUNT }
+					prestige >= 500
+				}
+				trigger_else_if = {
+					limit = { real_tier = DUKE }
+					prestige >= 1000
+				}
+				trigger_else_if = {
+					limit = { real_tier = KING }
+					prestige >= 1500
+				}
+				trigger_else = {
+					prestige >= 2000
+				}
+
+				custom_tooltip = {
+					text = HAS_ANOTHER_ELIGIBLE_HEIR
+
+					any_close_relative = {
+						OR = {
+							is_child_of = FROM
+							is_grandchild_of = FROM
+						}
+
+						dynasty = FROM
+						religion = FROM
+						culture = FROM
+
+						trigger_if = {
+							limit = { is_female = no }
+
+							FROM = {
+								NOR = {
+									has_law = enatic_succession
+									has_law = enatic_cognatic_succession
+								}
+							}
+						}
+						trigger_else = {
+							FROM = {
+								NOR = {
+									has_law = agnatic_succession
+									has_law = cognatic_succession
+								}
+							}
+						}
+
+						is_adult = yes
+						is_incapable = no
+						has_inheritance_blocker = no
+
+						NOR = {
+							character = ROOT
+							trait = lunatic
+							trait = possessed
+							trait = eunuch
+							trait = blinded
+						}
+					}
+				}
+			}
+		}
+
+		effect = {
+			FROM = {
+				set_character_flag = disinherited_child
+
+				if = {
+					limit = { real_tier = BARON }
+					prestige = -250
+				}
+				else_if = {
+					limit = { real_tier = COUNT }
+					prestige = -500
+				}
+				else_if = {
+					limit = { real_tier = DUKE }
+					prestige = -1000
+				}
+				else_if = {
+					limit = { real_tier = KING }
+					prestige = -1500
+				}
+				else_if = {
+					limit = { real_tier = EMPEROR }
+					prestige = -2000
+				}
+
+				character_event = {
+					id = Plus.1100
+					tooltip = consider_disinheritance
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				# AI reasons to disinherit
+				OR = {
+					NOT = { dynasty = FROM }
+					NOT = { religion = FROM }
+
+					is_incapable = yes
+					trait = lunatic
+					trait = possessed
+
+					reverse_opinion = {
+						who = FROM
+						value < -75
+					}
+
+					AND = {
+						num_of_children < 1
+						fertility < 0.05
+					}
+				}
+
+				FROM = {
+					NOR = {
+						trait = slothful
+						trait = content
+						trait = just
+					}
+
+					trigger_if = {
+						limit = {
+							opinion = {
+								who = ROOT
+								value >= 25
+							}
+						}
+
+						OR = {
+							trait = cruel
+							trait = ambitious
+							trait = diligent
+						}
+					}
+
+					any_close_relative = {
+						any_pretender_title = {
+							is_primary_holder_title = yes
+							holder = FROM
+						}
+
+						OR = {
+							is_child_of = FROM
+							is_grandchild_of = FROM
+						}
+
+						religion = FROM
+						culture = FROM
+						dynasty = FROM
+						is_adult = yes
+						is_incapable = no
+						has_inheritance_blocker = no
+
+						trigger_if = {
+							limit = { is_ruler = yes }
+
+							OR = {
+								same_realm = FROM
+								lower_real_tier_than = FROM
+							}
+						}
+
+						OR = {
+							num_of_children >= 1
+							fertility >= 0.05
+						}
+
+						reverse_opinion = {
+							who = FROM
+							value >= 0
+						}
+
+						NOR = {
+							character = ROOT
+							trait = bastard
+							trait = lunatic
+							trait = possessed
+						}
+					}
+				}
+			}
+		}
+	}
+
+	reconcile_child = {
+		filter = close_relative
+		ai_target_filter = close_relatives
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		from_potential = {
+			had_character_flag = {
+				flag = disinherited_child
+				years >= 1
+			}
+
+			has_regent = no
+		}
+
+		potential = {
+			trait = disinherited
+			is_child_of = FROM
+			dynasty = FROM
+			religion = FROM
+			same_realm = FROM
+			prisoner = no
+			is_incapable = no
+
+			reverse_opinion = {
+				who = FROM
+				value >= 0
+			}
+
+			OR = {
+				num_of_children >= 1
+				fertility >= 0.05
+			}
+
+			NOR = {
+				trait = lunatic
+				trait = possessed
+			}
+		}
+
+		allow = {
+			ROOT = {
+				trait = disinherited
+			}
+
+			FROM = {
+				war = no
+
+				trigger_if = {
+					limit = { real_tier = BARON } # Patricians
+					prestige >= 125
+				}
+				trigger_if = {
+					limit = { real_tier = COUNT }
+					prestige >= 250
+				}
+				trigger_else_if = {
+					limit = { real_tier = DUKE }
+					prestige >= 500
+				}
+				trigger_else_if = {
+					limit = { real_tier = KING }
+					prestige >= 750
+				}
+				trigger_else = {
+					prestige >= 1000
+				}
+			}
+		}
+
+		effect = {
+			FROM = {
+				show_scope_change = no
+
+				if = {
+					limit = { real_tier = BARON }
+					prestige = -125
+				}
+				else_if = {
+					limit = { real_tier = COUNT }
+					prestige = -125
+				}
+				else_if = {
+					limit = { real_tier = DUKE }
+					prestige = -250
+				}
+				else_if = {
+					limit = { real_tier = KING }
+					prestige = -375
+				}
+				else_if = {
+					limit = { real_tier = EMPEROR }
+					prestige = -500
+				}
+
+				character_event = {
+					id = Plus.1120
+					tooltip = consider_reconciliation
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				FROM = {
+					player_heir = {
+						dynasty = FROM
+
+						reverse_opinion = {
+							who = FROM
+							value >= 50
+						}
+					}
+				}
+			}
+		}
+	}
+
+	grant_estate = {
+		filter = sub_realm
+
+		ai = no
+
+		from_potential = {
+			wealth >= 50
+			is_tribal = no
+			is_nomadic = no
+		}
+
+		potential = {
+			is_adult = yes
+			is_ruler = no
+			NOT = { has_character_modifier = estates_1 }
+		}
+
+		allow = {
+			ROOT = {
+				prisoner = no
+				is_incapable = no
+			}
+
+			FROM = {
+				war = no
+			}
+		}
+
+		effect = {
+			FROM = {
+				show_scope_change = no
+
+				character_event = {
+					id = Plus.105
+					tooltip = CONSIDER_MINOR_ESTATE
+				}
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	pardon = {
+		filter = sub_realm
+
+		ai = no
+
+		potential = {
+			crime_against_FROM_trigger = yes
+		}
+
+		allow = {
+			ROOT = {
+				prisoner = no
+			}
+		}
+
+		effect = {
+			pardon_effect = yes
+
+			opinion = {
+				who = FROM
+				name = opinion_relieved
+				years = 5
+			}
+
+			FROM = {
+				random = {
+					chance = 25
+					add_trait_partially_arbitrary_effect = yes
+				}
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	swear_to_heir = {
+		filter = vassals
+		ai_target_filter = vassals
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		from_potential = {
+			is_feudal = yes
+			has_regent = no
+
+			primary_title = {
+				higher_real_tier_than = DUKE
+
+				OR = {
+					has_law = crown_authority_3
+					has_law = crown_authority_4
+				}
+			}
+
+			player_heir = { always = yes }
+		}
+
+		potential = {
+			ai = yes
+			vassal_of = FROM
+			higher_real_tier_than = BARON
+
+			FROM = {
+				current_heir = {
+					NOT = {
+						reverse_has_opinion_modifier = {
+							name = sworn_to_support_heir
+							who = ROOT
+						}
+					}
+				}
+			}
+
+			NOR = {
+				is_primary_heir = FROM
+
+				has_opinion_modifier = {
+					name = asked_to_support_heir
+					who = FROM
+				}
+
+				reverse_has_opinion_modifier = {
+					name = refused_to_support_heir
+					who = FROM
+				}
+			}
+		}
+
+		allow = {
+			ROOT = {
+				opinion = {
+					who = FROM
+					value >= 50
+				}
+
+				war = no
+				has_regent = no
+			}
+
+			FROM = {
+				ruled_years >= 10
+				prestige >= 500
+				war = no
+			}
+		}
+
+		effect = {
+			if = {
+				limit = { real_tier = COUNT }
+				FROM = { show_scope_change = no prestige = -100 }
+			}
+			else_if = {
+				limit = { real_tier = DUKE }
+				FROM = { show_scope_change = no prestige = -250 }
+			}
+			else_if = {
+				limit = { real_tier = KING }
+				FROM = { show_scope_change = no prestige = -500 }
+			}
+
+			character_event = {
+				id = Plus.1600
+				tooltip = ASKED_TO_SUPPORT_HEIR
+			}
+		}
+
+		ai_will_do = {
+			factor = 0.5
+
+			trigger = {
+				FROM = {
+					age >= 50
+					prestige > 1000
+					player_heir = { is_close_relative = PREV }
+
+					# Doesn't already have multiple eligible gavelkind heirs
+					NOT = {
+						any_demesne_title = {
+							OR = {
+								is_primary_holder_title_tier = yes
+								higher_real_tier_than = DUKE
+							}
+
+							OR = {
+								has_law = succ_gavelkind
+								has_law = succ_elective_gavelkind
+							}
+
+							trigger_if = {
+								limit = {
+									OR = {
+										has_law = agnatic_succession
+										has_law = cognatic_succession
+									}
+								}
+
+								FROM = {
+									any_child = {
+										is_female = no
+										has_inheritance_blocker = no
+										count = 2
+									}
+								}
+							}
+							trigger_else_if = {
+								limit = {
+									OR = {
+										has_law = enatic_succession
+										has_law = enatic_cognatic_succession
+									}
+								}
+
+								FROM = {
+									any_child = {
+										is_female = yes
+										has_inheritance_blocker = no
+										count = 2
+									}
+								}
+							}
+							trigger_else = {
+								FROM = {
+									any_child = {
+										has_inheritance_blocker = no
+										count = 2
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+				real_tier = KING
+			}
+
+			mult_modifier = {
+				factor = 2
+				real_tier = DUKE
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				real_tier = COUNT
+				FROM = { higher_real_tier_than = DUKE }
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				opinion = {
+					who = FROM
+					value >= 75
+				}
+			}
+		}
+	}
+
+	request_holy_war = {
+		filter = independent_rulers
+
+		ai = no
+
+		from_potential = {
+			religion_group = top_liege
+			is_not_unreformed_pagan_trigger = yes
+
+			OR = {
+				is_patrician = no
+				independent = yes
+			}
+
+			rightful_religious_head_scope = {
+				NOT = { character = FROM }
+			}
+
+			is_nomadic = no
+			controls_religion = no
+			pacifist = no
+
+			NOR = {
+				trait = excommunicated
+				has_character_modifier = holy_truce_timer
+			}
+		}
+
+		potential = {
+			any_realm_province = {
+				held_under_PREV = yes
+
+				duchy = {
+					FROM = {
+						can_use_cb = {
+							target = ROOT
+							casus_belli = holy_war
+							thirdparty_title = PREV
+							only_check_triggers = yes
+						}
+					}
+				}
+			}
+
+			NOR = {
+				same_realm = FROM
+				has_character_modifier = holy_truce_timer
+				has_landed_title = e_china_west_governor
+			}
+		}
+
+		allow = {
+			FROM = {
+				war = no
+				has_called_crusade = no
+				piety >= 0
+				NOT = { has_any_opinion_modifier = holy_war_sanction }
+
+				rightful_religious_head_scope = {
+					NOT = {
+						has_opinion_modifier = {
+							name = asked_holy_sanction
+							who = PREV
+						}
+					}
+				}
+			}
+		}
+
+		effect = {
+			save_event_target_as = sanction_target
+
+			FROM = {
+				show_scope_change = no
+
+				save_event_target_as = sanction_requester
+
+				rightful_religious_head_scope = {
+					show_scope_change = no
+
+					letter_event = {
+						id = Plus.1650
+						tooltip = ASK_FOR_SANCTION
+					}
+				}
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	demand_conversion_courtier = {
+		filter = court
+		ai_target_filter = court
+		ai_check_interval = 12
+
+		only_rulers = yes
+
+		from_potential = {
+			has_regent = no
+			has_secret_religion = no
+			NOT = { government = chinese_imperial_government }
+		}
+
+		potential = {
+			vassal_of = FROM
+			is_adult = yes
+			can_change_religion = yes
+			is_ruler = no
+			is_incapable = no
+
+			trigger_if = {
+				limit = { prisoner = yes }
+				host = { character = FROM }
+			}
+			trigger_else = {
+				NOR = {
+					has_opinion_modifier = { who = FROM name = tried_to_convert_me }
+					has_opinion_modifier = { who = FROM name = opinion_mutual_respect }
+					has_opinion_modifier = { who = FROM name = opinion_demanded_conversion }
+					has_character_modifier = planning_claimant_adventure
+					any_spouse = { has_character_modifier = planning_claimant_adventure }
+					father = { has_character_modifier = planning_claimant_adventure }
+					mother = { has_character_modifier = planning_claimant_adventure }
+				}
+			}
+
+			NOR = {
+				has_character_flag = considering_conversion
+
+				any_liege = {
+					OR = {
+						holy_order = yes
+						mercenary = yes
+					}
+				}
+			}
+
+			trigger_if = {
+				limit = { religion = FROM }
+
+				religion = chalcedonian
+
+				trigger_if = {
+					limit = { trait = latin_rites }
+					FROM = { NOT = { trait = latin_rites } }
+				}
+				trigger_else_if = {
+					limit = { trait = greek_rites }
+					FROM = { NOT = { trait = greek_rites } }
+				}
+				trigger_else = {
+					FROM = { NOT = { trait = iconoclast_rites } }
+				}
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			ROOT = {
+				NOT = { trait = zealous }
+				NOT = { trait = possessed }
+				NOT = { trait = lunatic }
+				NOT = { trait = shiite_claimant }
+				war = no
+				in_command_trigger = no
+				is_inaccessible_trigger = no
+			}
+
+			FROM = {
+				piety >= 10
+				war = no
+				NOT = { trait = excommunicated }
+				in_command_trigger = no
+				is_inaccessible_trigger = no
+			}
+		}
+
+		effect = {
+			FROM = {
+				show_scope_change = no
+
+				piety = -10
+
+				if = {
+					limit = { is_unreformed_pagan_trigger = yes }
+					prestige = -20
+				}
+			}
+
+			ROOT = {
+				set_character_flag = considering_conversion
+
+				if = {
+					limit = { prisoner = yes }
+					custom_tooltip = { text = WILL_BE_RELEASED_ON_CONVERT }
+				}
+				else = {
+					custom_tooltip = { text = CONVERSION_DIPLOMACY_POSSIBLE }
+
+					if = {
+						limit = { FROM = { learning >= 8 } }
+						custom_tooltip = { text = CONVERSION_DEBATE_POSSIBLE }
+					}
+					else = {
+						custom_tooltip = { text = CONVERSION_DEBATE_NOT_POSSIBLE }
+					}
+
+					if = {
+						limit = {
+							FROM = {
+								trigger_if = {
+									limit = { is_tribal = yes }
+
+									OR = {
+										has_law = tribal_organization_2
+										has_law = tribal_organization_3
+										has_law = tribal_organization_4
+									}
+								}
+								trigger_else = {
+									crownlaw_title = {
+										OR = {
+											has_law = crown_authority_2
+											has_law = crown_authority_3
+											has_law = crown_authority_4
+										}
+									}
+								}
+							}
+						}
+
+						custom_tooltip = { text = CONVERSION_THREAT_POSSIBLE }
+					}
+					else = {
+						custom_tooltip = { text = CONVERSION_THREAT_NOT_POSSIBLE }
+					}
+				}
+			}
+
+			FROM = {
+				character_event = { id = GoPagan.130 }
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				FROM = {
+					piety >= 100
+					NOT = { trait = cynical }
+
+					trigger_if = {
+						limit = { is_unreformed_pagan_trigger = yes }
+
+						trait = zealous
+						prestige >= 50
+					}
+				}
+
+				trigger_if = {
+					limit = {
+						prisoner = no
+
+						reverse_opinion = {
+							who = FROM
+							value < 25
+						}
+					}
+
+					FROM = {
+						NOR = {
+							trait = cruel
+							trait = wroth
+							trait = zealous
+							trait = impaler
+						}
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+				FROM = { trait = zealous }
+			}
+
+			mult_modifier = {
+				factor = 5
+				prisoner = yes
+			}
+		}
+	}
+
+	demand_conversion_vassal = {
+		filter = vassals
+		ai_target_filter = vassals
+		ai_check_interval = 12
+
+		only_rulers = yes
+
+		from_potential = {
+			has_regent = no
+			NOT = { government = chinese_imperial_government }
+		}
+
+		potential = {
+			vassal_of = FROM
+			is_adult = yes
+			is_ruler = yes
+			can_change_religion = yes
+			holy_order = no
+			mercenary = no
+			is_theocracy = no
+			is_incapable = no
+			NOT = { has_character_flag = considering_conversion }
+
+			trigger_if = {
+				limit = { prisoner = yes }
+				host = { character = FROM }
+			}
+			trigger_else = {
+				NOR = {
+					has_opinion_modifier = { who = FROM name = tried_to_convert_me }
+					has_opinion_modifier = { who = FROM name = opinion_mutual_respect }
+					has_opinion_modifier = { who = FROM name = opinion_demanded_conversion }
+				}
+			}
+
+			trigger_if = {
+				limit = { religion = FROM }
+
+				religion = chalcedonian
+
+				trigger_if = {
+					limit = { trait = latin_rites }
+					FROM = { NOT = { trait = latin_rites } }
+				}
+				trigger_else_if = {
+					limit = { trait = greek_rites }
+					FROM = { NOT = { trait = greek_rites } }
+				}
+				trigger_else = {
+					FROM = { NOT = { trait = iconoclast_rites } }
+				}
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			ROOT = {
+				NOT = { trait = zealous }
+				NOT = { trait = possessed }
+				NOT = { trait = lunatic }
+				NOT = { trait = shiite_claimant }
+				war = no
+				in_command_trigger = no
+				is_inaccessible_trigger = no
+			}
+
+			FROM = {
+				piety >= 50
+				NOT = { trait = excommunicated }
+				war = no
+				in_command_trigger = no
+				is_inaccessible_trigger = no
+			}
+		}
+
+		effect = {
+			FROM = {
+				show_scope_change = no
+
+				piety = -50
+
+				if = {
+					limit = { is_unreformed_pagan_trigger = yes }
+
+					if = {
+						limit = { ROOT = { lower_real_tier_than = DUKE } }
+						prestige = -50
+					}
+					else = {
+						prestige = -100
+					}
+				}
+			}
+
+			ROOT = {
+				show_scope_change = no
+
+				set_character_flag = considering_conversion
+
+				if = {
+					limit = { prisoner = yes }
+					custom_tooltip = { text = WILL_BE_RELEASED_ON_CONVERT }
+				}
+				else = {
+					custom_tooltip = { text = CONVERSION_DIPLOMACY_POSSIBLE }
+
+					if = {
+						limit = { FROM = { learning >= 8 } }
+						custom_tooltip = { text = CONVERSION_DEBATE_POSSIBLE }
+					}
+					else = {
+						custom_tooltip = { text = CONVERSION_DEBATE_NOT_POSSIBLE }
+					}
+
+					if = {
+						limit = {
+							FROM = {
+								trigger_if = {
+									limit = { is_tribal = yes }
+
+									OR = {
+										has_law = tribal_organization_2
+										has_law = tribal_organization_3
+										has_law = tribal_organization_4
+									}
+								}
+								trigger_else = {
+									crownlaw_title = {
+										OR = {
+											has_law = crown_authority_2
+											has_law = crown_authority_3
+											has_law = crown_authority_4
+										}
+									}
+								}
+							}
+						}
+
+						custom_tooltip = { text = CONVERSION_THREAT_POSSIBLE }
+					}
+					else = {
+						custom_tooltip = { text = CONVERSION_THREAT_NOT_POSSIBLE }
+					}
+				}
+			}
+
+			FROM = {
+				character_event = { id = GoPagan.130 }
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				FROM = {
+					piety >= 100
+					NOT = { trait = cynical }
+
+					trigger_if = {
+						limit = { is_unreformed_pagan_trigger = yes }
+
+						trait = zealous
+						prestige >= 200
+					}
+				}
+
+				trigger_if = {
+					limit = {
+						prisoner = no
+
+						reverse_opinion = {
+							who = FROM
+							value < 25
+						}
+					}
+
+					FROM = {
+						NOR = {
+							trait = cruel
+							trait = wroth
+							trait = zealous
+							trait = impaler
+						}
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+				FROM = { trait = zealous }
+			}
+
+			mult_modifier = {
+				factor = 5
+				prisoner = yes
+			}
+		}
+	}
+
+	demand_conversion_prisoner = {
+		filter = court
+		ai_target_filter = court
+
+		only_rulers = yes
+
+		from_potential = {
+			has_regent = no
+			NOT = { government = chinese_imperial_government }
+		}
+
+		potential = {
+			prisoner = yes
+			host = { character = FROM }
+			is_ruler = yes
+			is_adult = yes
+			can_change_religion = yes
+			holy_order = no
+			mercenary = no
+			is_theocracy = no
+			is_incapable = no
+
+			NOR = {
+				vassal_of = FROM
+				has_character_flag = considering_conversion
+			}
+
+			trigger_if = {
+				limit = { religion = FROM }
+
+				religion = chalcedonian
+
+				trigger_if = {
+					limit = { trait = latin_rites }
+					FROM = { NOT = { trait = latin_rites } }
+				}
+				trigger_else_if = {
+					limit = { trait = greek_rites }
+					FROM = { NOT = { trait = greek_rites } }
+				}
+				trigger_else = {
+					FROM = { NOT = { trait = iconoclast_rites } }
+				}
+			}
+		}
+
+		allow = {
+			show_only_failed_conditions = yes
+
+			ROOT = {
+				NOT = { trait = zealous }
+				NOT = { trait = possessed }
+				NOT = { trait = lunatic }
+				NOT = { trait = shiite_claimant }
+				war = no
+				in_command_trigger = no
+				is_inaccessible_trigger = no
+			}
+
+			FROM = {
+				piety >= 50
+				NOT = { trait = excommunicated }
+				war = no
+				in_command_trigger = no
+				is_inaccessible_trigger = no
+			}
+		}
+
+		effect = {
+			FROM = {
+				show_scope_change = no
+
+				piety = -50
+
+				if = {
+					limit = { is_unreformed_pagan_trigger = yes }
+
+					if = {
+						limit = { ROOT = { lower_real_tier_than = DUKE } }
+						prestige = -50
+					}
+					else = {
+						prestige = -100
+					}
+				}
+			}
+
+			ROOT = {
+				show_scope_change = no
+
+				set_character_flag = considering_conversion
+				custom_tooltip = { text = WILL_BE_RELEASED_ON_CONVERT }
+			}
+
+			FROM = {
+				character_event = { id = GoPagan.130 }
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	ai_divorce = {
+		filter = spouse
+		ai_target_filter = spouse
+		ai_check_interval = 60
+
+		only_rulers = yes
+
+		from_potential = {
+			is_married = yes
+
+			trigger_if = {
+				limit = { is_female = yes }
+				is_married_matrilineally = yes
+			}
+
+			is_incapable = no
+			practical_age < 60
+			ai = yes
+
+			trigger_if = {
+				limit = {
+					religion_head_divorce_trigger = yes
+					rightful_religious_head_scope = { always = yes }
+				}
+
+				piety >= 100
+
+				OR = {
+					controls_religion = yes
+					rightful_religious_head = THIS
+
+					rightful_religious_head_scope = {
+						opinion = {
+							who = PREV
+							value >= 25
+						}
+					}
+				}
+			}
+			trigger_else = {
+				scaled_wealth >= 1.0
+			}
+
+			NOR = {
+				has_character_flag = usurped_by_husband
+				has_character_flag = usurped_my_wife
+				trait = zealous
+			}
+		}
+
+		potential = {
+			is_married = FROM
+			is_ruler = no
+
+			NOR = {
+				is_lover = FROM
+				is_friend = FROM
+
+				any_child = {
+					is_child_of = FROM
+					is_alive = yes
+					is_female = no
+					has_inheritance_blocker = no
+				}
+			}
+		}
+
+		allow = {
+			OR = {
+				has_character_modifier = failed_to_usurp_wife
+				reverse_has_opinion_modifier = { who = FROM name = opinion_hate }
+				reverse_has_opinion_modifier = { who = FROM name = opinion_traitor }
+				reverse_has_opinion_modifier = { who = FROM name = opinion_rebel_traitor }
+				reverse_has_opinion_modifier = { who = FROM name = attempted_murder }
+				reverse_has_opinion_modifier = { who = FROM name = attempted_murder_of_child }
+				reverse_has_opinion_modifier = { who = FROM name = opinion_murder_attempt }
+				reverse_has_opinion_modifier = { who = FROM name = opinion_killed_close_kin }
+				reverse_has_opinion_modifier = { who = FROM name = opinion_witch }
+				reverse_has_opinion_modifier = { who = FROM name = attempted_murder_of_close_kin }
+				reverse_has_opinion_modifier = { who = FROM name = opinion_civil_war_loser }
+				reverse_has_opinion_modifier = { who = FROM name = mad_heretic }
+
+				AND = {
+					is_rival = FROM
+
+					reverse_opinion = {
+						who = FROM
+						value < -50
+					}
+				}
+
+				AND = {
+					# Can no longer have children
+					OR = {
+						is_incapable = yes
+						trait = leper
+						trait = celibate
+						trait = eunuch
+
+						reverse_has_opinion_modifier = {
+							name = knows_barren
+							who = FROM
+						}
+
+						trigger_if = {
+							limit = { is_female = yes }
+							practical_age >= 45
+						}
+						trigger_else = {
+							practical_age >= 60
+						}
+					}
+
+					# I can still have children
+					FROM = {
+						fertility >= 0.05
+
+						trigger_if = {
+							limit = { is_female = yes }
+							practical_age <= 45
+						}
+						trigger_else = {
+							practical_age < 60
+						}
+					}
+				}
+			}
+		}
+
+		effect = {
+			FROM = {
+				show_scope_change = no
+
+				prestige = -100
+
+				if = {
+					limit = {
+						religion_head_divorce_trigger = yes
+						rightful_religious_head_scope = { always = yes }
+					}
+
+					piety = -100
+				}
+				else = {
+					scaled_wealth = -1.0
+				}
+
+				tooltip = { remove_spouse = ROOT }
+			}
+
+			character_event = { id = Plus.140 }
+		}
+
+		ai_will_do = {
+			factor = 0.5
+
+			trigger = {
+				# If you haven't wronged me...
+				trigger_if = {
+					limit = {
+						NOR = {
+							has_character_modifier = failed_to_usurp_wife
+							reverse_has_opinion_modifier = { who = FROM name = opinion_hate }
+							reverse_has_opinion_modifier = { who = FROM name = opinion_traitor }
+							reverse_has_opinion_modifier = { who = FROM name = opinion_rebel_traitor }
+							reverse_has_opinion_modifier = { who = FROM name = attempted_murder }
+							reverse_has_opinion_modifier = { who = FROM name = attempted_murder_of_child }
+							reverse_has_opinion_modifier = { who = FROM name = opinion_murder_attempt }
+							reverse_has_opinion_modifier = { who = FROM name = opinion_killed_close_kin }
+							reverse_has_opinion_modifier = { who = FROM name = opinion_witch }
+							reverse_has_opinion_modifier = { who = FROM name = attempted_murder_of_close_kin }
+							reverse_has_opinion_modifier = { who = FROM name = opinion_civil_war_loser }
+							reverse_has_opinion_modifier = { who = FROM name = mad_heretic }
+						}
+					}
+
+					# I must be an asshole!
+					FROM = {
+						OR = {
+							trait = diligent
+							trait = ambitious
+						}
+
+						NOR = {
+							trait = kind
+							trait = humble
+							trait = craven
+							trait = content
+						}
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 100
+
+				OR = {
+					has_character_modifier = failed_to_usurp_wife
+					reverse_has_opinion_modifier = { who = FROM name = opinion_hate }
+					reverse_has_opinion_modifier = { who = FROM name = opinion_traitor }
+					reverse_has_opinion_modifier = { who = FROM name = opinion_rebel_traitor }
+					reverse_has_opinion_modifier = { who = FROM name = attempted_murder }
+					reverse_has_opinion_modifier = { who = FROM name = attempted_murder_of_child }
+					reverse_has_opinion_modifier = { who = FROM name = opinion_murder_attempt }
+					reverse_has_opinion_modifier = { who = FROM name = opinion_killed_close_kin }
+					reverse_has_opinion_modifier = { who = FROM name = opinion_witch }
+					reverse_has_opinion_modifier = { who = FROM name = attempted_murder_of_close_kin }
+					reverse_has_opinion_modifier = { who = FROM name = opinion_civil_war_loser }
+					reverse_has_opinion_modifier = { who = FROM name = mad_heretic }
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				reverse_opinion = {
+					who = FROM
+					value >= 0
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				FROM = { trait = slothful }
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				FROM = { trait = trusting }
+			}
+
+			mult_modifier = {
+				factor = 10
+				FROM = { trait = diligent }
+			}
+
+			mult_modifier = {
+				factor = 10
+				FROM = { trait = ambitious }
+			}
+
+			mult_modifier = {
+				factor = 10
+
+				FROM = {
+					OR = {
+						trait = cruel
+						trait = greedy
+						trait = cynical
+						trait = paranoid
+					}
+				}
+			}
+		}
+	}
+
+	theocracy_banish_heretic = {
+		filter = court
+		ai_target_filter = court
+		ai_check_interval = 12
+
+		only_rulers = yes
+
+		from_potential = {
+			is_theocracy = yes
+			is_heretic = no
+
+			NOR = {
+				trait = cynical
+				trait = bad_priest_christian
+				trait = bad_priest_muslim
+				trait = bad_priest_norse
+				trait = bad_priest_tengri
+				trait = bad_priest_zoroastrian
+				trait = bad_priest_aztec
+			}
+		}
+
+		potential = {
+			is_heresy_of = FROM
+			employer = { character = FROM }
+			is_adult = yes
+			is_ruler = no
+			prisoner = no
+			is_incapable = no
+
+			reverse_opinion = {
+				who = FROM
+				value < 25
+			}
+		}
+
+		effect = {
+			banish = yes
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			mult_modifier = {
+				factor = 4
+				FROM = { trait = zealous }
+			}
+
+			mult_modifier = {
+				factor = 2
+				FROM = { trait = wroth }
+			}
+
+			mult_modifier = {
+				factor = 2
+				FROM = { trait = cruel }
+			}
+
+			mult_modifier = {
+				factor = 2
+				FROM = { trait = diligent }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				FROM = { trait = content }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				FROM = { trait = slothful }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				FROM = { trait = patient }
+			}
+
+			mult_modifier = {
+				factor = 0.25
+				FROM = { trait = kind }
+			}
+		}
+	}
+
+	ruler_designer_customize = {
+		filter = all
+		ai_target_filter = self
+
+		ai = no
+
+		from_potential = {
+			trait = customize_ruler
+			total_years_played < 1
+			NOT = { has_character_flag = customizing_ruler }
+		}
+
+		potential = {
+			is_lowborn = no
+			NOT = { dynasty = FROM }
+		}
+
+		allow = {
+			OR = {
+				culture = FROM
+				FROM = { trait = bastard }
+
+				AND = {
+					culture_group = FROM
+					FROM = { trait = legit_bastard }
+				}
+			}
+		}
+
+		effect = {
+			FROM = {
+				show_scope_change = no
+
+				set_character_flag = customizing_ruler
+
+				if = {
+					limit = { trait = bastard }
+					character_event = { id = Plus.991 tooltip = CUSTOMIZE_RULER_BASTARD }
+				}
+				else = {
+					character_event = { id = Plus.991 tooltip = CUSTOMIZE_RULER_CHECK }
+				}
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	seek_protection = {
+		filter = independent_rulers
+
+		ai = no
+		only_independent = yes
+
+		from_potential = {
+			independent = yes
+			NOT = { has_character_flag = seeking_protection }
+			war = no
+		}
+
+		potential = {
+			independent = yes
+
+			# The "attacker" needs a border, or be at most one sea zone away from one of the target's counties
+			any_realm_province = {
+				held_under_PREV = yes
+
+				any_neighbor_province = {
+					OR = {
+						owner = { same_realm = FROM }
+
+						AND = {
+							is_land = no
+							any_neighbor_province = {
+								owner = { same_realm = FROM }
+							}
+						}
+					}
+				}
+			}
+
+			trigger_if = {
+				limit = { has_character_flag = sought_protection_by_@FROM }
+
+				had_character_flag = {
+					flag = sought_protection_by_@FROM
+					years >= 5
+				}
+			}
+
+			war = no
+
+			NOR = {
+				character = FROM
+				has_landed_title = e_china_west_governor
+			}
+		}
+
+		allow = {
+			FROM = {
+				has_dlc = "Horse Lords"
+				higher_real_tier_than = BARON
+				is_tributary = no
+				NOT = { higher_real_tier_than = ROOT }
+			}
+
+			ROOT = {
+				relative_power = { who = FROM power = 3 }
+				is_tributary = no
+			}
+		}
+
+		effect = {
+			hidden_effect = {
+				set_character_flag = sought_protection_by_@FROM
+
+				FROM = {
+					set_character_flag = seeking_protection
+
+					character_event = {
+						id = Plus.4040
+						days = 3
+					}
+				}
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	demand_tribute = {
+		# filter = independent_rulers # Non-functional for players
+		ai_target_filter = independent_rulers
+
+		ai = no
+		only_independent = yes
+
+		from_potential = {
+			independent = yes
+			has_dlc = "Horse Lords"
+			is_tributary = no
+			mercenary = no
+			NOT = { has_character_flag = trying_to_gain_tributary }
+		}
+
+		potential = {
+			independent = yes
+
+			# The attacker needs a border, or be at most one sea zone away from one of the target's counties
+			any_realm_province = {
+				held_under_PREV = yes
+
+				any_neighbor_province = {
+					trigger_if = {
+						limit = { has_owner = yes }
+						owner = { same_realm = FROM }
+					}
+					trigger_else = {
+						is_land = no
+
+						any_neighbor_province = {
+							owner = { same_realm = FROM }
+						}
+					}
+				}
+			}
+
+			# The defender is not in any tributary war
+			war = no
+
+			# Target is not a tributary already in some way
+			is_tributary = no
+
+			NOR = {
+				higher_real_tier_than = FROM
+				pays_tribute_to = FROM
+				any_liege = { pays_tribute_to = FROM }
+				has_landed_title = e_china_west_governor
+				FROM = { rightful_religious_head = ROOT }
+				character = FROM
+			}
+		}
+
+		allow = {
+			FROM = {
+				higher_real_tier_than = COUNT
+				NOT = { has_character_modifier = holy_truce_timer }
+				NOT = { has_character_modifier = tributary_timer }
+				NOT = { has_truce = FROM }
+
+				NAND = {
+					holy_order = yes
+					religion = ROOT
+				}
+			}
+
+			ROOT = {
+				NOR = { # Can't demand tribute of allies nor those with a NAP
+					has_non_aggression_pact_with = FROM
+					is_allied_with = FROM
+				}
+
+				relative_power = {
+					who = FROM
+					power < 0.9
+				}
+
+				NAND = {
+					holy_order = yes
+					religion = FROM
+				}
+			}
+		}
+
+		effect = {
+			FROM = {
+				set_character_flag = trying_to_gain_tributary
+
+				character_event = {
+					id = Plus.4000
+					days = 3
+				}
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	vassalize_tributary = {
+		filter = independent_rulers
+		ai_target_filter = independent_rulers
+
+		ai = no
+		only_independent = yes
+
+		from_potential = {
+			independent = yes
+			higher_real_tier_than = COUNT
+			is_feudal = yes
+			mercenary = no
+			is_tributary = no
+			has_dlc = "Horse Lords"
+			NOT = { has_character_flag = trying_to_vassalize_tributary }
+
+			NAND = {
+				holy_order = yes
+				religion = ROOT
+			}
+		}
+
+		potential = {
+			pays_tribute_to = FROM
+
+			OR = {
+				is_tributary = { type = forced }
+				is_tributary = { type = voluntary }
+			}
+
+			war = no
+
+			FROM = {
+				NOT = { rightful_religious_head = PREV }
+			}
+		}
+
+		allow = {
+			FROM = {
+				higher_real_tier_than = ROOT
+
+				trigger_if = {
+					limit = { real_tier = DUKE }
+					prestige >= 500
+				}
+				trigger_else_if = {
+					limit = { real_tier = KING }
+
+					trigger_if = {
+						limit = { ROOT = { real_tier = COUNT } }
+						prestige >= 600
+					}
+					trigger_else_if = {
+						limit = { ROOT = { real_tier = DUKE } }
+						prestige >= 1200
+					}
+				}
+				trigger_else_if = {
+					limit = { real_tier = EMPEROR }
+
+					trigger_if = {
+						limit = { ROOT = { real_tier = COUNT } }
+						prestige >= 500
+					}
+					trigger_else_if = {
+						limit = { ROOT = { real_tier = DUKE } }
+						prestige >= 1000
+					}
+					trigger_else_if = {
+						limit = { ROOT = { real_tier = KING } }
+						prestige >= 2000
+					}
+				}
+
+				NOR = {
+					has_character_modifier = tributary_timer
+					has_character_modifier = holy_truce_timer
+				}
+			}
+
+			war = no
+
+			custom_tooltip = {
+				text = TRIBUTARY_FOR_30_YEARS
+
+				primary_title = {
+					check_variable = {
+						which = tributary_years
+						value >= 30
+					}
+				}
+			}
+		}
+
+		effect = {
+			FROM = {
+				show_scope_change = no
+
+				set_character_flag = trying_to_vassalize_tributary
+
+				if = {
+					limit = { real_tier = DUKE }
+					prestige = -500
+				}
+				else_if = {
+					limit = { real_tier = KING }
+
+					if = {
+						limit = { ROOT = { real_tier = COUNT } }
+						prestige = -600
+					}
+					else_if = {
+						limit = { ROOT = { real_tier = DUKE } }
+						prestige = -1200
+					}
+				}
+				else_if = {
+					limit = { real_tier = EMPEROR }
+
+					if = {
+						limit = { ROOT = { real_tier = COUNT } }
+						prestige = -500
+					}
+					else_if = {
+						limit = { ROOT = { real_tier = DUKE } }
+						prestige = -1000
+					}
+					else_if = {
+						limit = { ROOT = { real_tier = KING } }
+						prestige = -2000
+					}
+				}
+
+				character_event = {
+					id = Plus.4020
+					days = 3
+				}
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	release_as_protectorate = {
+		filter = vassals # Doesn't exclude decision taker!
+		ai_target_filter = vassals
+
+		ai = no
+
+		from_potential = {
+			real_tier = EMPEROR
+			has_imperial_government_trigger = yes
+			primary_title = { is_titular = no }
+
+			NOR = {
+				has_character_modifier = holy_truce_timer
+				has_character_modifier = tributary_timer
+			}
+		}
+
+		potential = {
+			higher_real_tier_than = COUNT
+			has_imperial_government_trigger = yes
+			NOT = { character = FROM } # See filters above
+
+			primary_title = { # Trigger doesn't work properly in character scope
+				NOT = { de_jure_liege_or_above = FROM }
+			}
+		}
+
+		allow = {
+			war = no
+			FROM = { war = no }
+		}
+
+        effect = {
+			FROM = {
+				show_scope_change = no
+
+				if = {
+					limit = { real_tier = COUNT }
+					prestige = -200
+				}
+				else_if = {
+					limit = { real_tier = DUKE }
+					prestige = -500
+				}
+				else_if = {
+					limit = { real_tier = KING }
+					prestige = -1200
+				}
+				else_if = {
+					limit = { real_tier = EMPEROR }
+					prestige = -2000
+				}
+
+				character_event = {
+					id = Plus.4551
+					days = 3
+				}
+			}
+        }
+
+		ai_will_do = { factor = 0 }
+	}
+
+	prune_family_tree = {
+		filter = dynasty_including_me
+		ai_target_filter = self
+
+		ai = no
+
+		from_potential = {
+			is_lowborn = no
+		}
+
+		potential = {
+			dynasty = FROM
+			num_of_children >= 1
+
+			any_child_even_if_dead = {
+				is_alive = no
+				has_children = no
+				is_ruler = no
+			}
+		}
+
+		effect = {
+			any_child_even_if_dead = {
+				show_scope_change = no
+
+				limit = {
+					is_alive = no
+					has_children = no
+					is_ruler = no
+				}
+
+				set_father = 0
+				set_mother = 0
+				dynasty = none
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	grant_imperial_title = {
+		filter = vassals
+		ai_target_filter = self
+
+		ai = no
+
+		from_potential = {
+			has_character_flag = must_grant_empire_flag
+
+			any_demesne_title = {
+				real_tier = EMPEROR
+				is_titular = no
+				count = 2
+			}
+		}
+
+		allow = {
+			higher_real_tier_than = COUNT
+			war = no
+			mercenary = no
+		}
+
+		effect = {
+			FROM = {
+				character_event = { id = Plus.1871 }
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	reeducate_self = {
+		filter = self
+		ai_target_filter = self
+
+		ai = no
+
+		potential = {
+			age >= 20
+			has_dlc = "Way of Life"
+			is_dumb_trigger = no
+
+			NOR = {
+				has_character_modifier = being_reeducated
+				has_character_flag = was_reeducated
+			}
+		}
+
+		allow = {
+			has_focus = focus_scholarship
+			wealth >= 50
+			war = no
+			prisoner = no
+			has_regent = no
+			is_incapable = no
+			is_inaccessible_trigger = no
+
+			NOR = {
+				trait = humble
+				trait = content
+				trait = infirm
+			}
+
+			OR = {
+				custom_tooltip = {
+					text = NO_COURT_EDUCATOR
+					has_court_educator_trigger = no
+				}
+
+				custom_tooltip = {
+					text = COURT_EDUCATOR_HAS_DIFFERENT_EDUCATION_FOCUS
+
+					any_courtier_or_vassal = {
+						is_court_educator_trigger = yes
+						has_prev_education_trigger = no
+					}
+				}
+
+				custom_tooltip = {
+					text = COURT_EDUCATOR_HAS_BETTER_EDUCATION
+
+					any_courtier_or_vassal = {
+						is_court_educator_trigger = yes
+						has_prev_education_trigger = yes
+
+						OR = {
+							has_top_tier_education_trait_trigger = yes
+							ROOT = { has_top_tier_education_trait_trigger = no }
+						}
+
+						OR = {
+							has_tier_3_education_trigger = yes
+
+							ROOT = {
+								has_top_tier_education_trait_trigger = no
+								has_tier_3_education_trigger = no
+							}
+						}
+
+						OR = {
+							has_tier_2_education_trigger = yes
+
+							ROOT = {
+								has_top_tier_education_trait_trigger = no
+								has_tier_3_education_trigger = no
+								has_tier_2_education_trigger = no
+							}
+						}
+					}
+				}
+			}
+		}
+
+		effect = {
+			hidden_effect = {
+				add_character_modifier = {
+					name = being_reeducated
+					duration = -1
+				}
+
+				character_event = { id = Plus.1763 }
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	rename_character_self = {
+		filter = self
+		ai_target_filter = self
+
+		ai = no
+
+		potential = {
+			higher_real_tier_than = COUNT
+
+			NOR = {
+				has_character_flag = changed_name_once
+				has_character_flag = renaming_character
+			}
+		}
+
+		allow = {
+			war = no
+			prisoner = no
+			has_regent = no
+			is_inaccessible_trigger = no
+		}
+
+		effect = {
+			set_character_flag = renaming_character
+			narrative_event = { id = Plus.1800 }
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	transfer_vassal_to_tributary = {
+		filter = independent_rulers # We could really use a "tributary" filter here.
+		ai_target_filter = independent_rulers
+		third_party_filter = vassals
+
+		ai = no
+		only_independent = no
+
+		from_potential = {
+			independent = yes
+			any_tributary = { always = yes }
+		}
+
+		potential = {
+			independent = yes
+			pays_tribute_to = FROM
+		}
+
+		third_party_potential = {
+			FROMFROM = {
+				lower_real_tier_than = ROOT
+				higher_real_tier_than = BARON
+				NOT = { de_jure_liege_or_above = ROOT }
+			}
+		}
+
+		allow = {
+			war = no
+			FROM = { war = no }
+		}
+
+		third_party_allow = {
+			FROMFROM = { war = no }
+		}
+
+		third_party_score = {
+			factor = 1
+
+			mult_modifier = {
+				factor = 2
+				FROMFROM = { real_tier = DUKE }
+			}
+
+			mult_modifier = {
+				factor = 3
+
+				FROMFROM = {
+					real_tier = DUKE
+					num_of_duke_titles = 2
+				}
+			}
+
+			mult_modifier = {
+				factor = 4
+				FROMFROM = { real_tier = KING }
+			}
+		}
+
+		effect = {
+			set_defacto_vassal = FROMFROM
+
+			opinion = {
+				name = opinion_vassal_transfer
+				who = FROM
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	switch_council_job = {
+		filter = court
+		third_party = FROM
+		third_party_filter = home_court
+
+		ai = no
+
+		from_potential = {
+			has_dlc = "Conclave"
+
+			NOR = {
+				has_character_flag = is_moving_councillor
+				has_law = council_privileges_1 # Lifetime Appointment
+			}
+		}
+
+		potential = {
+			is_voter = yes
+
+			# Decision shouldn't show up if there's no one to switch with
+			any_host_courtier = {
+				is_voter = yes
+				NOT = { character = ROOT }
+
+				trigger_if = {
+					limit = {
+						has_job_title = job_spiritual
+						ROOT_FROM = { religion_group = muslim }
+					}
+
+					NOT = { religion = ROOT_FROM }
+				}
+
+				trigger_if = {
+					limit = {
+						is_councillor = yes
+						ROOT = { is_councillor = yes }
+					}
+
+					can_swap_job_title = ROOT
+				}
+				trigger_else = {
+					# Switching two advisors around makes no difference
+					calc_true_if = {
+						amount == 1
+
+						OR = {
+							has_minor_title = title_councilmember_king
+							has_minor_title = title_councilmember_emperor
+						}
+
+						ROOT = {
+							OR = {
+								has_minor_title = title_councilmember_king
+								has_minor_title = title_councilmember_emperor
+							}
+						}
+					}
+
+					trigger_if = {
+						limit = {
+							OR = {
+								has_minor_title = title_councilmember_king
+								has_minor_title = title_councilmember_emperor
+							}
+						}
+
+						trigger_if = {
+							limit = { ROOT = { has_job_title = job_chancellor } }
+							can_be_chancellor_trigger = yes
+						}
+						trigger_else_if = {
+							limit = { ROOT = { has_job_title = job_marshal } }
+							can_be_marshal_trigger = yes
+						}
+						trigger_else_if = {
+							limit = { ROOT = { has_job_title = job_treasurer } }
+							can_be_treasurer_trigger = yes
+						}
+						trigger_else_if = {
+							limit = { ROOT = { has_job_title = job_spymaster } }
+							can_be_spymaster_trigger = yes
+						}
+						trigger_else = {
+							ROOT = { has_job_title = job_spiritual }
+							can_be_spiritual_trigger = yes
+						}
+					}
+					trigger_else = {
+						ROOT = {
+							OR = {
+								has_minor_title = title_councilmember_king
+								has_minor_title = title_councilmember_emperor
+							}
+						}
+
+						trigger_if = {
+							limit = { has_job_title = job_chancellor }
+							ROOT = { can_be_chancellor_trigger = yes }
+						}
+						trigger_else_if = {
+							limit = { has_job_title = job_marshal }
+							ROOT = { can_be_marshal_trigger = yes }
+						}
+						trigger_else_if = {
+							limit = { has_job_title = job_treasurer }
+							ROOT = { can_be_treasurer_trigger = yes }
+						}
+						trigger_else_if = {
+							limit = { has_job_title = job_spymaster }
+							ROOT = { can_be_spymaster_trigger = yes }
+						}
+						trigger_else = {
+							has_job_title = job_spiritual
+							ROOT = { can_be_spiritual_trigger = yes }
+						}
+					}
+				}
+			}
+		}
+
+		allow = {
+			in_seclusion = no
+			is_incapable = no
+			prisoner = no
+		}
+
+		third_party_potential = {
+			FROMFROM = {
+				is_voter = yes
+				NOT = { character = ROOT }
+
+				trigger_if = {
+					limit = {
+						has_job_title = job_spiritual
+						ROOT_FROM = { religion_group = muslim }
+					}
+
+					NOT = { religion = ROOT_FROM }
+				}
+
+				trigger_if = {
+					limit = {
+						is_councillor = yes
+						ROOT = { is_councillor = yes }
+					}
+
+					can_swap_job_title = ROOT
+				}
+				trigger_else = {
+					# Switching two advisors around makes no difference
+					calc_true_if = {
+						amount == 1
+
+						OR = {
+							has_minor_title = title_councilmember_king
+							has_minor_title = title_councilmember_emperor
+						}
+
+						ROOT = {
+							OR = {
+								has_minor_title = title_councilmember_king
+								has_minor_title = title_councilmember_emperor
+							}
+						}
+					}
+
+					trigger_if = {
+						limit = {
+							OR = {
+								has_minor_title = title_councilmember_king
+								has_minor_title = title_councilmember_emperor
+							}
+						}
+
+						trigger_if = {
+							limit = { ROOT = { has_job_title = job_chancellor } }
+							can_be_chancellor_trigger = yes
+						}
+						trigger_else_if = {
+							limit = { ROOT = { has_job_title = job_marshal } }
+							can_be_marshal_trigger = yes
+						}
+						trigger_else_if = {
+							limit = { ROOT = { has_job_title = job_treasurer } }
+							can_be_treasurer_trigger = yes
+						}
+						trigger_else_if = {
+							limit = { ROOT = { has_job_title = job_spymaster } }
+							can_be_spymaster_trigger = yes
+						}
+						trigger_else = {
+							ROOT = { has_job_title = job_spiritual }
+							can_be_spiritual_trigger = yes
+						}
+					}
+					trigger_else = {
+						ROOT = {
+							OR = {
+								has_minor_title = title_councilmember_king
+								has_minor_title = title_councilmember_emperor
+							}
+						}
+
+						trigger_if = {
+							limit = { has_job_title = job_chancellor }
+							ROOT = { can_be_chancellor_trigger = yes }
+						}
+						trigger_else_if = {
+							limit = { has_job_title = job_marshal }
+							ROOT = { can_be_marshal_trigger = yes }
+						}
+						trigger_else_if = {
+							limit = { has_job_title = job_treasurer }
+							ROOT = { can_be_treasurer_trigger = yes }
+						}
+						trigger_else_if = {
+							limit = { has_job_title = job_spymaster }
+							ROOT = { can_be_spymaster_trigger = yes }
+						}
+						trigger_else = {
+							has_job_title = job_spiritual
+							ROOT = { can_be_spiritual_trigger = yes }
+						}
+					}
+				}
+			}
+		}
+
+		effect = {
+			set_character_flag = is_moving_councillor
+			FROM = { set_character_flag = is_moving_councillor }
+			FROMFROM = { set_character_flag = is_moving_councillor }
+
+			trigger_switch = {
+				on_trigger = has_job_title
+
+				job_chancellor = {
+					hidden_effect = { remove_title = job_chancellor }
+
+					FROMFROM = {
+						show_scope_change = no
+
+						trigger_switch = {
+							on_trigger = has_job_title
+
+							job_marshal = { PREV = { show_scope_change = no give_job_title = job_marshal } }
+							job_treasurer = { PREV = { show_scope_change = no give_job_title = job_treasurer } }
+							job_spymaster = { PREV = { show_scope_change = no give_job_title = job_spymaster } }
+							job_spiritual = { PREV = { show_scope_change = no give_job_title = job_spiritual } }
+
+							fallback = {
+								if = {
+									limit = { has_minor_title = title_councilmember_king }
+
+									hidden_effect = { remove_title = title_councilmember_king }
+									PREV = { show_scope_change = no give_minor_title = title_councilmember_king }
+								}
+								else_if = {
+									limit = { has_minor_title = title_councilmember_emperor }
+
+									hidden_effect = { remove_title = title_councilmember_emperor }
+									PREV = { show_scope_change = no give_minor_title = title_councilmember_emperor }
+								}
+							}
+						}
+
+						give_job_title = job_chancellor
+					}
+				}
+
+				job_marshal = {
+					hidden_effect = { remove_title = job_marshal }
+
+					FROMFROM = {
+						show_scope_change = no
+
+						trigger_switch = {
+							on_trigger = has_job_title
+
+							job_chancellor = { PREV = { show_scope_change = no give_job_title = job_chancellor } }
+							job_treasurer = { PREV = { show_scope_change = no give_job_title = job_treasurer } }
+							job_spymaster = { PREV = { show_scope_change = no give_job_title = job_spymaster } }
+							job_spiritual = { PREV = { show_scope_change = no give_job_title = job_spiritual } }
+
+							fallback = {
+								if = {
+									limit = { has_minor_title = title_councilmember_king }
+
+									hidden_effect = { remove_title = title_councilmember_king }
+									PREV = { show_scope_change = no give_minor_title = title_councilmember_king }
+								}
+								else_if = {
+									limit = { has_minor_title = title_councilmember_emperor }
+
+									hidden_effect = { remove_title = title_councilmember_emperor }
+									PREV = { show_scope_change = no give_minor_title = title_councilmember_emperor }
+								}
+							}
+						}
+
+						give_job_title = job_marshal
+					}
+				}
+
+				job_treasurer = {
+					hidden_effect = { remove_title = job_treasurer }
+
+					FROMFROM = {
+						show_scope_change = no
+
+						trigger_switch = {
+							on_trigger = has_job_title
+
+							job_chancellor = { PREV = { show_scope_change = no give_job_title = job_chancellor } }
+							job_marshal = { PREV = { show_scope_change = no give_job_title = job_marshal } }
+							job_spymaster = { PREV = { show_scope_change = no give_job_title = job_spymaster } }
+							job_spiritual = { PREV = { show_scope_change = no give_job_title = job_spiritual } }
+
+							fallback = {
+								if = {
+									limit = { has_minor_title = title_councilmember_king }
+
+									hidden_effect = { remove_title = title_councilmember_king }
+									PREV = { show_scope_change = no give_minor_title = title_councilmember_king }
+								}
+								else_if = {
+									limit = { has_minor_title = title_councilmember_emperor }
+
+									hidden_effect = { remove_title = title_councilmember_emperor }
+									PREV = { show_scope_change = no give_minor_title = title_councilmember_emperor }
+								}
+							}
+						}
+
+						give_job_title = job_treasurer
+					}
+				}
+
+				job_spymaster = {
+					hidden_effect = { remove_title = job_spymaster }
+
+					FROMFROM = {
+						show_scope_change = no
+
+						trigger_switch = {
+							on_trigger = has_job_title
+
+							job_chancellor = { PREV = { show_scope_change = no give_job_title = job_chancellor } }
+							job_marshal = { PREV = { show_scope_change = no give_job_title = job_marshal } }
+							job_treasurer = { PREV = { show_scope_change = no give_job_title = job_treasurer } }
+							job_spiritual = { PREV = { show_scope_change = no give_job_title = job_spiritual } }
+
+							fallback = {
+								if = {
+									limit = { has_minor_title = title_councilmember_king }
+
+									hidden_effect = { remove_title = title_councilmember_king }
+									PREV = { show_scope_change = no give_minor_title = title_councilmember_king }
+								}
+								else_if = {
+									limit = { has_minor_title = title_councilmember_emperor }
+
+									hidden_effect = { remove_title = title_councilmember_emperor }
+									PREV = { show_scope_change = no give_minor_title = title_councilmember_emperor }
+								}
+							}
+						}
+
+						give_job_title = job_spymaster
+					}
+				}
+
+				job_spiritual = {
+					hidden_effect = { remove_title = job_spiritual }
+
+					FROMFROM = {
+						show_scope_change = no
+
+						trigger_switch = {
+							on_trigger = has_job_title
+
+							job_chancellor = { PREV = { show_scope_change = no give_job_title = job_chancellor } }
+							job_marshal = { PREV = { show_scope_change = no give_job_title = job_marshal } }
+							job_treasurer = { PREV = { show_scope_change = no give_job_title = job_treasurer } }
+							job_spymaster = { PREV = { show_scope_change = no give_job_title = job_spymaster } }
+
+							fallback = {
+								if = {
+									limit = { has_minor_title = title_councilmember_king }
+
+									hidden_effect = { remove_title = title_councilmember_king }
+									PREV = { show_scope_change = no give_minor_title = title_councilmember_king }
+								}
+								else_if = {
+									limit = { has_minor_title = title_councilmember_emperor }
+
+									hidden_effect = { remove_title = title_councilmember_emperor }
+									PREV = { show_scope_change = no give_minor_title = title_councilmember_emperor }
+								}
+							}
+						}
+
+						give_job_title = job_spiritual
+					}
+				}
+
+				fallback = {
+					trigger_switch = {
+						on_trigger = has_minor_title
+
+						title_councilmember_king = {
+							hidden_effect = { remove_title = title_councilmember_king  }
+
+							FROMFROM = {
+								show_scope_change = no
+								set_character_flag = advisor_king
+								tooltip = { give_minor_title = title_councilmember_king }
+							}
+						}
+
+						title_councilmember_emperor = {
+							hidden_effect = { remove_title = title_councilmember_emperor }
+
+							FROMFROM = {
+								show_scope_change = no
+								set_character_flag = advisor_emperor
+								tooltip = { give_minor_title = title_councilmember_emperor }
+							}
+						}
+					}
+
+					FROMFROM = {
+						show_scope_change = no
+
+						trigger_switch = {
+							on_trigger = has_job_title
+
+							job_chancellor = { PREV = { show_scope_change = no give_job_title = job_chancellor } }
+							job_marshal = { PREV = { show_scope_change = no give_job_title = job_marshal } }
+							job_treasurer = { PREV = { show_scope_change = no give_job_title = job_treasurer } }
+							job_spymaster = { PREV = { show_scope_change = no give_job_title = job_spymaster } }
+							job_spiritual = { PREV = { show_scope_change = no give_job_title = job_spiritual } }
+						}
+
+						hidden_effect = {
+							if = {
+								limit = { has_character_flag = advisor_king }
+								give_minor_title = title_councilmember_king
+							}
+							else = {
+								give_minor_title = title_councilmember_emperor
+							}
+
+							clr_character_flag = advisor_king
+							clr_character_flag = advisor_emperor
+						}
+					}
+				}
+			}
+
+			clr_character_flag = is_moving_councillor
+			FROM = { clr_character_flag = is_moving_councillor }
+			FROMFROM = { clr_character_flag = is_moving_councillor }
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+}
+
+decisions = {
+	imperial_coronation = {
+		is_high_prio = yes
+
+		only_independent = yes
+
+		potential = {
+			real_tier = EMPEROR
+			trait = uncrowned
+			is_feudal = yes
+			is_landed = yes
+			has_horde_culture = no
+			is_nomadic = no
+
+			NOR = {
+				has_landed_title = e_hre
+				has_landed_title = e_karling
+				has_character_flag = planning_coronation
+				is_decision_potential = request_byzantine_coronation
+			}
+		}
+
+		allow = {
+			is_adult = yes
+			scaled_wealth >= 1.0
+			piety >= 25
+			war = no
+			has_regent = no
+			in_seclusion = no
+			NOT = { trait = excommunicated }
+			is_inaccessible_trigger = no
+
+			custom_tooltip = {
+				text = HAS_BISHOP_WILLING_TO_CORONATE
+
+				OR = {
+					job_spiritual = {
+						religion = ROOT
+						prisoner = no
+						is_incapable = no
+					}
+
+					any_realm_lord = {
+						is_theocracy = yes
+						religion = ROOT
+						is_ruler = yes
+						is_adult = yes
+						prisoner = no
+						is_incapable = no
+					}
+				}
+			}
+		}
+
+		effect = {
+			set_character_flag = planning_coronation
+			character_event = { id = Plus.1200 } # send invitations
+
+			add_character_modifier = {
+				name = do_not_disturb
+				days = 200
+				hidden = yes
+			}
+
+			character_event = {
+				id = Plus.1290 # Coronation start
+				months = 1
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	royal_coronation = {
+		is_high_prio = yes
+
+		only_playable = yes
+
+		potential = {
+			NOT = { is_decision_potential = prepare_coronation_ceremony }
+			trait = uncrowned
+			real_tier = KING
+			is_feudal = yes
+			is_landed = yes
+			has_horde_culture = no
+			is_nomadic = no
+			primary_title = { is_vice_royalty = no }
+			NOT = { has_character_flag = planning_coronation }
+		}
+
+		allow = {
+			is_adult = yes
+			war = no
+			has_regent = no
+			in_seclusion = no
+			NOT = { trait = excommunicated }
+			is_inaccessible_trigger = no
+
+			custom_tooltip = {
+				text = HAS_BISHOP_WILLING_TO_CORONATE
+
+				OR = {
+					any_realm_lord = {
+						is_theocracy = yes
+						religion = ROOT
+						is_adult = yes
+						prisoner = no
+						is_incapable = no
+					}
+
+					job_spiritual = {
+						religion = ROOT
+						prisoner = no
+						is_incapable = no
+					}
+				}
+			}
+		}
+
+		effect = {
+			set_character_flag = planning_coronation
+			character_event = { id = Plus.1200 } # send invitations
+
+			add_character_modifier = {
+				name = do_not_disturb
+				days = 200
+				hidden = yes
+			}
+
+			character_event = {
+				id = Plus.1290 # Coronation start
+				months = 1
+
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	give_to_charity = {
+		ai_check_interval = 12
+
+		only_rulers = yes
+
+		potential = {
+			has_regent = no
+			demesne_size = 1
+
+			NOR = {
+				religion = sunni
+				religion = shiite
+			}
+		}
+
+		allow = {
+			wealth >= 50
+
+			custom_tooltip = {
+				text = RECENTLY_GAVE_TO_CHARITY
+				NOT = { has_character_modifier = charity_timer }
+			}
+		}
+
+		effect = {
+			wealth = -50
+			piety = 25
+			pf_tradition_plus1_effect = yes
+
+			if = {
+				limit = { ai = no }
+
+				add_character_modifier = {
+					name = charity_timer
+					years = 3
+					hidden = yes
+				}
+			}
+			else = {
+				add_character_modifier = {
+					name = charity_timer
+					years = 10
+					hidden = yes
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				piety < 100
+
+				trigger_if = {
+					limit = { piety < 0 }
+					wealth >= 200
+				}
+				trigger_else = {
+					NOR = {
+						has_character_modifier = ai_austerity
+						trait = cynical
+						trait = cruel
+						trait = greedy
+						lower_real_tier_than = duke
+					}
+				}
+			}
+		}
+	}
+
+	bring_children_to_court = {
+		is_high_prio = yes
+
+		ai = no
+		only_rulers = yes
+
+		potential = {
+			any_child = {
+				is_adult = no
+				is_ruler = no
+				prisoner = no
+				has_inheritance_blocker = no
+				NOT = { is_vassal_or_below_of = ROOT }
+			}
+		}
+
+		allow = {
+			any_child = {
+				is_alive = yes
+				is_adult = no
+				is_ruler = no
+				prisoner = no
+				has_inheritance_blocker = no
+
+				opinion = {
+					who = ROOT
+					value >= 0
+				}
+
+				liege = {
+					lower_real_tier_than = ROOT
+
+					opinion = {
+						who = ROOT
+						value >= 0
+					}
+				}
+			}
+		}
+
+		effect = {
+			any_child = {
+				limit = {
+					is_adult = no
+					is_ruler = no
+					prisoner = no
+					has_inheritance_blocker = no
+
+					opinion = {
+						who = ROOT
+						value >= 0
+					}
+
+					liege = {
+						lower_real_tier_than = ROOT
+
+						opinion = {
+							who = ROOT
+							value >= 0
+						}
+					}
+				}
+
+				custom_tooltip = {
+					text = CUSTOMTOOLTIP38
+					move_character = ROOT
+				}
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	reclaim_titles_divorce = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		potential = {
+			has_character_flag = usurped_by_husband
+
+			any_opinion_modifier_target = {
+				reverse_has_opinion_modifier = {
+					name = opinion_divorced
+					who = ROOT
+				}
+
+				has_character_flag = usurped_my_wife@ROOT
+				NOT = { is_married = ROOT }
+
+				any_demesne_title = {
+					ROOT = { has_strong_claim = PREV }
+				}
+			}
+		}
+
+		allow = {
+			prisoner = no
+			is_incapable = no
+			NOT = { trait = excommunicated }
+		}
+
+		effect = {
+			clr_character_flag = usurped_by_husband
+
+			random_opinion_modifier_target = {
+				show_scope_change = no
+
+				limit = {
+					reverse_has_opinion_modifier = {
+						name = opinion_divorced
+						who = ROOT
+					}
+
+					has_character_flag = usurped_my_wife@ROOT
+					NOT = { is_married = ROOT }
+
+					any_demesne_title = {
+						ROOT = { has_strong_claim = PREV }
+					}
+				}
+
+				ROOT = { clr_character_flag = usurped_by_husband@PREV }
+				clr_character_flag = usurped_my_wife
+				clr_character_flag = usurped_my_wife@ROOT
+
+				character_event = {
+					id = FemRule.310
+					tooltip = REGAIN_TITLES_DIVORCE
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	usurp_husband = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		potential = {
+			is_female = yes
+			has_character_flag = usurped_by_husband
+			any_spouse = { has_character_flag = usurped_my_wife@ROOT }
+		}
+
+		allow = {
+			any_claim = {
+				holder_scope = {
+					any_liege = {
+						has_character_flag = usurped_my_wife@ROOT
+						is_married = ROOT
+						ROOT = { has_strong_claim = PREVPREVPREV }
+					}
+
+					NOT = {
+						is_child_of = ROOT
+						has_character_flag = usurped_my_wife
+					}
+				}
+			}
+		}
+
+		effect = {
+			any_claim = {
+				show_scope_change = no
+
+				limit = {
+					holder_scope = {
+						NOR = {
+							is_child_of = ROOT
+							is_married = ROOT
+						}
+
+						any_liege = {
+							has_character_flag = usurped_my_wife@ROOT
+							is_married = ROOT
+							ROOT = { has_strong_claim = PREVPREVPREV }
+						}
+					}
+				}
+
+				holder_scope = { set_character_flag = wife_regained_title }
+				usurp_title_plus_barony_if_unlanded = ROOT
+
+				any_claimant = {
+					show_scope_change = no
+
+					limit = { has_character_flag = wife_regained_title }
+
+					clr_character_flag = wife_regained_title
+					remove_claim = PREV
+				}
+			}
+
+			spouse = {
+				letter_event = { id = FemRule.312 }
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	request_important_prisoners = {
+		is_high_prio = yes
+
+		only_playable = yes
+
+		potential = {
+			higher_real_tier_than = BARON
+
+			any_realm_lord = {
+				ai = yes
+				NOT = { war_with = ROOT }
+
+				any_courtier = {
+					prisoner = yes
+					higher_real_tier_than = BARON
+					war_with = ROOT
+				}
+			}
+		}
+
+		allow = {
+			prisoner = no
+			prestige >= 0
+		}
+
+		effect = {
+			any_realm_lord = {
+				show_scope_change = no
+
+				limit = {
+					ai = yes
+					NOT = { war_with = ROOT }
+
+					any_courtier = {
+						prisoner = yes
+						higher_real_tier_than = BARON
+						war_with = ROOT
+					}
+				}
+
+				any_courtier = {
+					show_scope_change = no
+
+					limit = {
+						prisoner = yes
+						higher_tier_than = BARON
+						war_with = ROOT
+					}
+
+					hidden_effect = {
+						imprison = no
+					}
+
+					imprison = ROOT
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	fourth_crusade = {
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			can_call_crusade = yes
+			has_global_flag = catholic_crusade_failed
+			has_called_crusade = no
+			is_heretic = no
+			ai = yes
+
+			is_catholic_branch = yes
+
+			NOR = {
+				trait = pf_loyalist
+				trait = pf_rebel
+				has_character_modifier = crusade_timer
+				has_character_modifier = holy_truce_timer
+				has_global_flag = fourth_crusade_happened
+			}
+
+			c_constantinopolis = {
+				kingdom = {
+					c_constantinopolis = {
+						holder_scope = {
+							top_liege = {
+								num_of_realm_counties = {
+									title = PREVPREVPREV # Kingdom
+									value >= 6
+								}
+
+								prisoner = no
+
+								NOR = {
+									has_character_modifier = holy_truce_timer
+									religion = ROOT
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		allow = {
+			trait = bad_priest_christian
+			religion_authority >= 0.4
+		}
+
+		effect = {
+			set_global_flag = fourth_crusade_ongoing
+			set_global_flag = fourth_crusade_happened
+
+			c_constantinopolis = {
+				kingdom = {
+					ROOT = {
+						war = {
+							casus_belli = crusade
+							target = PREVPREV
+							thirdparty_title = PREV
+						}
+					}
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	take_loan = {
+		only_playable = yes
+
+		potential = {
+			NOT = { has_character_flag = offended_moneylenders }
+
+			check_variable = {
+				which = loan_amount
+				value == 0
+			}
+		}
+
+		allow = {
+			is_nomadic = no
+		}
+
+		effect = {
+			take_loan_effect = yes
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	repay_loan = {
+		only_playable = yes
+
+		potential = {
+			check_variable = {
+				which = loan_amount
+				value > 0
+			}
+		}
+
+		# If they pay before the moneylenders come for them they aren't charged interest. Can probably be improved
+		allow = {
+			wealth > loan_amount
+		}
+
+		effect = {
+			multiply_variable = {
+				which = loan_amount
+				value = -1
+			}
+
+			wealth = loan_amount
+
+			set_variable = {
+				which = loan_amount
+				value = 0
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				NOT = { has_character_modifier = ai_austerity }
+			}
+		}
+	}
+
+	ransom_nonvassal = {
+		ai = no
+
+		potential = {
+			any_courtier = {
+				prisoner = yes
+				host = { character = ROOT }
+				NOT = { same_realm = ROOT }
+			}
+
+			NOT = { has_dlc = "Mystics" } # MnM has its own version
+		}
+
+		allow = {
+			NOT = { has_character_modifier = ransom_timer }
+		}
+
+		effect = {
+			add_character_modifier = {
+				name = ransom_timer
+				days = 25
+				hidden = yes
+			}
+
+			any_courtier = {
+				show_scope_change = no
+
+				limit = {
+					prisoner = yes
+					host = { character = ROOT }
+					NOT = { same_realm = ROOT }
+				}
+
+				character_event = {
+					id = Plus.985
+					days = 5
+					random = 12
+					tooltip = ransom_all_tooltip
+				}
+			}
+		}
+	}
+
+	ransom_all = {
+		ai = no
+
+		potential = {
+			any_courtier = {
+				prisoner = yes
+				host = { character = ROOT }
+			}
+
+			NOT = { has_dlc = "Mystics" } # MnM has its own version
+		}
+
+		allow = {
+			NOT = { has_character_modifier = ransom_timer }
+		}
+
+		effect = {
+			add_character_modifier = {
+				name = ransom_timer
+				days = 25
+				hidden = yes
+			}
+
+			any_courtier = {
+				show_scope_change = no
+
+				limit = {
+					prisoner = yes
+					host = { character = ROOT }
+				}
+
+				character_event = {
+					id = Plus.985
+					days = 5
+					random = 12
+					tooltip = ransom_all_tooltip
+				}
+			}
+		}
+	}
+
+	nhv_begin = {
+		ai = no
+
+		potential = {
+			NOT = { has_character_modifier = nhv_explained }
+		}
+
+		effect = {
+			custom_tooltip = {
+				text = NHV_BEGIN
+
+				narrative_event = { id = Plus.970 }
+
+				add_character_modifier = {
+					name = nhv_explained
+					duration = -1
+					hidden = yes
+					inherit = yes
+				}
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	nhv_restart = {
+		ai = no
+
+		potential = {
+			has_character_modifier = nhv_explained
+			has_character_modifier = nhv_shut_off
+		}
+
+		effect = {
+			custom_tooltip = {
+				text = NHV_RESTART_TOOLTIP
+				remove_character_modifier = nhv_shut_off
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	nhv_dist_all = { # Vassalize All
+		potential = {
+			has_character_modifier = nhv_explained
+			NOT = { has_character_modifier = nhv_shut_off }
+		}
+
+		allow = {
+			trigger_if = {
+				limit = { has_dlc = "Conclave" }
+
+				has_law = grant_title_voting_power_0 # Council doesn't vote on granting count and higher titles
+				higher_real_tier_than = COUNT
+				has_regent = no
+
+				hidden_trigger = { # Hidden to reduce clutter
+					is_adult = yes
+					is_incapable = no
+				}
+			}
+
+			custom_tooltip = {
+				text = ONE_PROVINCE_FLAGGED
+
+				any_demesne_province = {
+					has_province_flag = keep_it
+					owned_by = PREV
+				}
+			}
+
+			custom_tooltip = {
+				text = CAN_DISTRIBUTE_TITLES
+
+				OR = {
+					any_demesne_title = {
+						real_tier = BARON
+						is_capital = yes
+						NOT = { holding_type = family_palace }
+						location = { NOT = { has_province_flag = keep_it } }
+					}
+
+					any_demesne_title = {
+						real_tier = BARON
+						is_capital = no
+						NOT = { holding_type = family_palace }
+						location = { NOT = { has_province_flag = keep_baronies } }
+					}
+				}
+			}
+		}
+
+		effect = {
+			custom_tooltip = { text = nhv_county_dist1 }
+
+			any_demesne_title = {
+				limit = {
+					real_tier = COUNT
+
+					location = {
+						has_province_flag = keep_it
+						NOT = { has_province_flag = keep_baronies }
+					}
+				}
+
+				custom_tooltip = { text = nhv_county_dist2 }
+			}
+
+			any_demesne_title = {
+				limit = {
+					real_tier = COUNT
+					location = { has_province_flag = keep_baronies }
+				}
+
+				custom_tooltip = { text = nhv_barony_dist2 }
+			}
+
+			character_event = { id = Plus.974 }
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	nhv_dist_barons = { # Vassalize All Barons
+		ai = no
+
+		potential = {
+			has_character_modifier = nhv_explained
+			NOT = { has_character_modifier = nhv_shut_off }
+		}
+
+		allow = {
+			custom_tooltip = {
+				text = CAN_DISTRIBUTE_BARONY_TITLES
+
+				any_demesne_title = {
+					real_tier = BARON
+					is_capital = no
+					NOT = { holding_type = family_palace }
+					location = { NOT = { has_province_flag = keep_baronies } }
+				}
+			}
+		}
+
+		effect = {
+			if = {
+				limit = {
+					any_demesne_province = {
+						has_province_flag = keep_baronies
+						owned_by = PREV
+					}
+				}
+
+				custom_tooltip = { text = nhv_barony_dist1 }
+
+				any_demesne_title = {
+					limit = {
+						real_tier = COUNT
+						location = { has_province_flag = keep_baronies }
+					}
+
+					custom_tooltip = { text = nhv_barony_dist2 }
+				}
+			}
+			else = {
+				custom_tooltip = { text = nhv_barony_dist3 }
+			}
+
+			character_event = { id = Plus.975 }
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	nhv_end = {
+		ai = no
+
+		potential = {
+			has_character_modifier = nhv_explained
+			NOT = { has_character_modifier = nhv_shut_off }
+		}
+
+		effect = {
+			custom_tooltip = {
+				text = NHV_END_TOOLTIP
+
+				any_realm_province = {
+					limit = { owned_by = ROOT }
+					clr_province_flag = keep_it
+					clr_province_flag = keep_baronies
+				}
+
+				add_character_modifier = {
+					name = nhv_shut_off
+					duration = -1
+					hidden = yes
+					inherit = yes
+				}
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	seek_ancient_knowledge = {
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			is_heretic = no
+			controls_religion = no
+			is_theocracy = yes
+
+			NOR = {
+				rightful_religious_head = ROOT
+				has_dlc = "Way of Life"
+				religion = jewish
+				religion_group = pagan_group
+				religion_group = zoroastrian_group
+				culture_group = mesoamerican
+				culture_group = indo_aryan_group
+				culture_group = dravidian_group
+				has_character_flag = seeks_pagan_knowledge
+			}
+		}
+
+		allow = {
+			OR = {
+				trait = mystic
+				trait = scholar
+
+				AND = {
+					trait = cynical
+					learning >= 10
+				}
+			}
+
+			war = no
+			has_regent = no
+			is_dumb_trigger = no
+
+			NOR = {
+				trait = zealous
+				has_character_modifier = voice_of_jesus
+				has_character_modifier = voice_of_satan
+			}
+		}
+
+		effect = {
+			set_character_flag = seeks_pagan_knowledge
+			piety = -25
+			custom_tooltip = { text = PURSUE_PAGAN_KNOWLEDGE }
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
+	ai_request_holy_war = {
+		ai_check_interval = 12
+
+		only_independent = yes
+
+		potential = {
+			higher_real_tier_than = COUNT
+			religion_group = top_liege
+			is_not_unreformed_pagan_trigger = yes
+			num_of_count_titles >= 1
+			realm_size < 200
+			is_nomadic = no
+			mercenary = no
+			pacifist = no
+			ai = yes
+
+			trigger_if = {
+				limit = { is_patrician = yes }
+				independent = yes
+			}
+
+			rightful_religious_head_scope = {
+				NOR = {
+					has_opinion_modifier = {
+						name = asked_holy_sanction
+						who = ROOT
+					}
+
+					character = ROOT
+				}
+
+				trigger_if = {
+					limit = {
+						ai = no
+						has_character_flag = do_not_bug_me
+					}
+
+					had_character_flag = {
+						flag = do_not_bug_me
+						years >= 1
+					}
+				}
+			}
+
+			NOR = {
+				religion_group = indian_group
+				religion_group = jewish_group
+				religion = orthodox
+				religion = bogomilist
+				religion = nestorian
+				religion = monothelite
+				religion = iconoclast
+				culture_group = west_african
+				culture_group = central_african
+				culture_group = east_african
+				trait = excommunicated
+				trait = cynical
+				has_character_modifier = holy_truce_timer
+			}
+		}
+
+		allow = {
+			piety >= 0
+			war = no
+			has_called_crusade = no
+			NOT = { has_any_opinion_modifier = holy_war_sanction }
+
+			any_neighbor_independent_ruler = {
+				reverse_realm_levy_diff = {
+					who = ROOT
+					value >= 3000
+				}
+
+				any_realm_province = {
+					held_under_PREV = yes
+
+					duchy = {
+						ROOT = {
+							can_use_cb = {
+								target = PREVPREVPREV
+								casus_belli = holy_war
+								thirdparty_title = PREV
+								only_check_triggers = yes
+							}
+						}
+					}
+
+					any_neighbor_province = {
+						has_province_flag = contingent_territory
+
+						owner = {
+							OR = {
+								is_vassal_or_below_of = ROOT
+								character = ROOT
+							}
+						}
+					}
+				}
+
+				trigger_if = {
+					limit = {
+						religion = tengri_pagan
+						ROOT = { religion_group = christian }
+					}
+
+					has_global_flag = mongol_horde_arrival
+				}
+
+				NOR = {
+					has_character_modifier = holy_truce_timer
+					reverse_has_truce = ROOT
+					has_non_aggression_pact_with = ROOT
+				}
+			}
+		}
+
+		effect = {
+			random_independent_ruler = {
+				limit = {
+					reverse_realm_levy_diff = {
+						who = ROOT
+						value >= 3000
+					}
+
+					any_realm_province = {
+						held_under_PREV = yes
+
+						duchy = {
+							ROOT = {
+								can_use_cb = {
+									target = PREVPREVPREV
+									casus_belli = holy_war
+									thirdparty_title = PREV
+									only_check_triggers = yes
+								}
+							}
+						}
+
+						any_neighbor_province = {
+							has_province_flag = contingent_territory
+
+							owner = {
+								OR = {
+									is_vassal_or_below_of = ROOT
+									character = ROOT
+								}
+							}
+						}
+					}
+
+					trigger_if = {
+						limit = {
+							religion = tengri_pagan
+							ROOT = { religion_group = christian }
+						}
+
+						has_global_flag = mongol_horde_arrival
+					}
+
+					NOR = {
+						has_character_modifier = holy_truce_timer
+						reverse_has_truce = ROOT
+						has_non_aggression_pact_with = ROOT
+					}
+				}
+
+				save_event_target_as = sanction_target
+				log = "[Root.GetTitledName] asked [Root.RelHead.GetBestName] for permission to Holy War against [sanction_target.GetBestName]"
+			}
+
+			save_event_target_as = sanction_requester
+
+			rightful_religious_head_scope = {
+				letter_event = { id = Plus.1650 }
+			}
+		}
+
+		ai_will_do = {
+			factor = 0.5
+
+			mult_modifier = {
+				factor = 0.5
+				year < 1000
+			}
+
+			mult_modifier = {
+				factor = 5
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = humble
+			}
+		}
+	}
+
+	claim_caliphate = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			religion_group = muslim
+			higher_real_tier_than = COUNT
+			is_feudal = yes
+			is_female = no
+			demesne_size >= 1
+			controls_religion = no
+			dynasty_head = { character = ROOT }
+
+			religion_head = {
+				NOT = { dynasty = ROOT }
+			}
+
+			NOR = {
+				trait = decadent
+				any_claim = { controls_religion = yes }
+			}
+		}
+
+		allow = {
+			war = no
+			has_regent = no
+			piety >= 100
+
+			NOR = {
+				trait = dynasty_decadence_low
+				trait = dynasty_decadence_med
+				trait = dynasty_decadence_high
+			}
+
+			religion_head = {
+				is_within_diplo_range = ROOT
+
+				OR = {
+					trait = dynasty_decadence_high
+					trait = decadent
+				}
+			}
+		}
+
+		effect = {
+			piety = -100
+
+			religion_head = {
+				show_scope_change = no
+
+				random_demesne_title = {
+					show_scope_change = no
+					limit = { controls_religion = yes }
+					add_claim = ROOT
+				}
+
+				character_event = { id = Plus.562 }
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				NOT = { trait = cynical }
+
+				religion_head = {
+					NOR = {
+						has_non_aggression_pact_with = ROOT
+						is_allied_with = ROOT
+						reverse_has_truce = ROOT
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				lower_real_tier_than = KING
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 3
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = brave
+			}
+		}
+	}
+
+	call_up_republic = {
+		is_high_prio = yes
+		ai_check_interval = 3
+
+		ai = no
+
+		potential = {
+			is_merchant_republic = yes
+			is_primary_war_defender = yes
+			realm_size < 30
+			NOT = { has_earmarked_regiments = republic_defense }
+
+			any_vassal = {
+				is_patrician = yes
+				prisoner = no
+				ai = yes
+				NOT = { has_character_modifier = defended_republic }
+			}
+
+			any_war = {
+				defender = { character = ROOT }
+
+				attacker = {
+					NOR = {
+						liege_before_war = { character = ROOT }
+
+						has_opinion_modifier = {
+							name = revolting_against
+							who = ROOT
+						}
+					}
+				}
+
+				NOT = {	using_cb = excommunicated_ruler }
+			}
+		}
+
+		allow = {
+			is_primary_war_defender = yes
+
+			any_vassal = {
+				custom_tooltip = {
+					text = HAS_100_LEVIES
+					realm_levies >= 100
+				}
+
+				is_patrician = yes
+				prisoner = no
+				NOT = { has_character_modifier = defended_republic }
+			}
+		}
+
+		effect = {
+			capital_scope = {
+				save_event_target_as = spawn_location
+			}
+
+			any_vassal = {
+				limit = {
+					is_patrician = yes
+					prisoner = no
+					realm_levies = 100
+					ai = yes
+					NOT = { has_character_modifier = defended_republic }
+				}
+
+				hidden_effect = {
+					add_character_modifier = {
+						name = defended_republic
+						years = 2
+						inherit = yes
+					}
+				}
+
+				spawn_unit = {
+					province = event_target:spawn_location
+					owner = ROOT
+					match_character = THIS
+					match_mult = 0.75
+					attrition = 1.0
+					maintenance_multiplier = 1.0
+					earmark = republic_defense
+					disband_on_peace = yes
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	create_caliphate = {
+		is_high_prio = yes
+		ai_check_interval = 12
+
+		only_independent = yes
+
+		potential = {
+			independent = yes
+			religion_group = muslim
+			dynasty_head = { character = ROOT }
+			is_feudal = yes
+			is_female = no
+			demesne_size >= 1
+			higher_real_tier_than = COUNT
+			controls_religion = no
+
+			OR = {
+				AND = {
+					religion = hurufi
+					NOT = { is_title_active = d_hurufi }
+				}
+				AND = {
+					religion = druze
+					NOT = { is_title_active = d_druze }
+				}
+				AND = {
+					religion = kharijite
+					NOT = { is_title_active = d_kharijite }
+				}
+				AND = {
+					religion = zikri
+					NOT = { is_title_active = d_zikri }
+				}
+				AND = {
+					religion = ibadi
+					NOT = { is_title_active = d_ibadi }
+				}
+			}
+
+			NOR = {
+				trait = decadent
+				any_claim = { controls_religion = yes }
+			}
+		}
+
+		allow = {
+			is_adult = yes
+			war = no
+			has_regent = no
+			is_heretic = no
+
+			trigger_if = {
+				limit = { NOT = { religion = druze } }
+
+				OR = {
+					trait = mirza
+					trait = sayyid
+					piety >= 1000
+				}
+
+				OR = {
+					piety >= 1000
+					trait = druze_ajawid
+					num_of_holy_sites >= 1
+					higher_tier_than = DUKE
+				}
+
+				OR = {
+					AND = {
+						trait = sayyid
+						piety >= 1000
+					}
+
+					custom_tooltip = {
+						text = controls_mecca_medina
+
+						c_mecca = {
+							holder_scope = {
+								OR = {
+									is_vassal_or_below_of = ROOT
+									character = ROOT
+								}
+							}
+						}
+
+						c_medina = {
+							holder_scope = {
+								OR = {
+									is_vassal_or_below_of = ROOT
+									character = ROOT
+								}
+							}
+						}
+					}
+
+					custom_tooltip = {
+						text = controls_jerusalem_damascus_baghdad
+
+						c_jerusalem = {
+							holder_scope = {
+								OR = {
+									is_vassal_or_below_of = ROOT
+									character = ROOT
+								}
+							}
+						}
+
+						c_damascus = {
+							holder_scope = {
+								OR = {
+									is_vassal_or_below_of = ROOT
+									character = ROOT
+								}
+							}
+						}
+
+						c_damascus = {
+							holder_scope = {
+								OR = {
+									is_vassal_or_below_of = ROOT
+									character = ROOT
+								}
+							}
+						}
+					}
+				}
+			}
+
+			NOR = {
+				trait = dynasty_decadence_low
+				trait = dynasty_decadence_med
+				trait = dynasty_decadence_high
+			}
+		}
+
+		effect = {
+			trigger_switch = {
+				on_trigger = religion
+
+				hurufi = { d_hurufi = { save_event_target_as = caliph_title } }
+				ibadi = { d_ibadi = { save_event_target_as = caliph_title } }
+				zikri = { d_zikri = { save_event_target_as = caliph_title } }
+				druze = { d_druze = { save_event_target_as = caliph_title } }
+				kharijite = { d_kharijite = { save_event_target_as = caliph_title } }
+			}
+
+			event_target:caliph_title = {
+				show_scope_change = no
+
+				activate_title = { title = THIS status = yes }
+				grant_title_no_opinion = ROOT
+				make_primary_title = yes
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				NOT = { trait = cynical }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				lower_real_tier_than = KING
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 3
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = brave
+			}
+		}
+	}
+
+	come_out_of_hiding_siege = {
+		is_high_prio = yes
+		ai_check_interval = 3
+
+		only_rulers = yes
+
+		potential = {
+			OR = {
+				AND = {
+					trait = in_hiding
+					has_character_flag = in_hiding_siege
+				}
+
+				any_courtier = {
+					trait = in_hiding
+					has_character_flag = in_hiding_siege
+				}
+			}
+		}
+
+		allow = {
+			custom_tooltip = {
+				text = CAPITAL_NOT_UNDER_SIEGE
+				# text = "No controlled holding in my capital province is under siege or sieged down"
+
+				# Note: Landless rulers don't have a capital province,
+				# but can still come out of hiding
+				NOT = {
+					capital_scope = {
+						any_province_holding = {
+							holder_scope = {
+								OR = {
+									character = ROOT
+									is_vassal_or_below_of = ROOT
+
+									any_liege = {
+										is_liege_or_above_of = ROOT # Could be a war of one of my lieges
+									}
+								}
+							}
+
+							OR = {
+								NOT = { controlled_by = holder_scope }
+								has_siege = yes
+							}
+						}
+					}
+				}
+			}
+		}
+
+		effect = {
+			if = {
+				limit = {
+					trait = in_hiding
+					has_character_flag = in_hiding_siege
+				}
+
+				custom_tooltip = {
+					text = come_out_of_hiding_info_tooltip
+
+					remove_trait = in_hiding
+					clr_character_flag = in_hiding_siege
+					clr_character_flag = defending_the_castle
+					remove_character_modifier = stalwart_defender
+					remove_character_modifier = left_at_siege
+					remove_character_modifier = escaped_siege
+				}
+			}
+
+			any_courtier = {
+				show_scope_change = no
+
+				limit = {
+					trait = in_hiding
+					has_character_flag = in_hiding_siege
+				}
+
+				custom_tooltip = {
+					text = come_out_of_hiding_other_tooltip
+
+					remove_trait = in_hiding
+					clr_character_flag = in_hiding_siege
+				}
+			}
+
+			hidden_effect = {
+				any_courtier = {
+					clr_character_flag = defending_the_castle
+					remove_character_modifier = stalwart_defender
+					remove_character_modifier = left_at_siege
+					remove_character_modifier = escaped_siege
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				# No hostile armies in my capital
+				NOR = {
+					any_current_enemy = {
+						any_army = {
+							location = {
+								ROOT = {
+									is_capital = PREV
+								}
+							}
+						}
+					}
+
+					any_liege = {
+						any_current_enemy = {
+							any_army = {
+								location = {
+									ROOT = {
+										is_capital = PREV
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

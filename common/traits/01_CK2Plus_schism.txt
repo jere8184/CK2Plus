@@ -1,0 +1,42 @@
+greek_rites = {
+	customizer = no
+	random = no
+	religious = yes
+
+	opposites = {
+		latin_rites
+		iconoclast_rites
+	}
+
+	opinion_of_latin_rites = -10
+	opinion_of_iconoclast_rites = -20
+}
+
+iconoclast_rites = {
+	customizer = no
+	random = no
+	religious = yes
+
+	opposites = {
+		greek_rites
+		latin_rites
+	}
+
+	opinion_of_latin_rites = -10
+	opinion_of_greek_rites = -10
+	muslim_opinion = 10
+}
+
+latin_rites = {
+	customizer = no
+	random = no
+	religious = yes
+
+	opposites = {
+		greek_rites
+		iconoclast_rites
+	}
+
+	opinion_of_greek_rites = -10
+	opinion_of_iconoclast_rites = -20
+}

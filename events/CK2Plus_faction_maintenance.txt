@@ -1,0 +1,4648 @@
+namespace = PlusFaction
+
+# reserved: PlusFaction.200 to PlusFaction.299
+
+##################################
+# FACTION MAINTENANCE EVENTS
+# Original Faction System by Wiz
+# Re-Written by Rylock
+##################################
+
+# PlusFaction.200 [Liege]
+# On-demand faction maintenance event
+character_event = {
+	id = PlusFaction.200
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_playable = yes
+
+	trigger = {
+		higher_real_tier_than = COUNT
+		is_nomadic = no
+		is_landed = yes
+		any_vassal = { pf_member_trigger = yes }
+	}
+
+	immediate = {
+		log = "PlusFaction.200: On-demand faction maintenance for [Root.GetBestName]"
+		pf_faction_vote_count = yes
+
+		# Make any one-time adjustments to faction opinions (fired from events & decisions)
+		any_vassal = {
+			limit = { pf_leader_trigger = yes }
+
+			save_event_target_as = faction_leader
+
+			while = {
+				limit = {
+					check_variable = {
+						which = local_faction_mood_increase
+						value > 0
+					}
+				}
+
+				opinion = {
+					name = faction_pleased
+					who = ROOT
+					years = 3
+				}
+
+				liege = {
+					any_vassal = {
+						limit = { pf_event_target_faction_backer_trigger = yes }
+
+						opinion = {
+							name = faction_pleased
+							who = ROOT
+							years = 3
+						}
+					}
+				}
+
+				change_variable = {
+					which = local_faction_mood_increase
+					value = -1
+				}
+			}
+
+			while = {
+				limit = {
+					check_variable = {
+						which = local_faction_mood_decrease
+						value > 0
+					}
+				}
+
+				opinion = {
+					name = faction_displeased
+					who = ROOT
+					years = 6
+				}
+
+				liege = {
+					any_vassal = {
+						limit = { pf_event_target_faction_backer_trigger = yes }
+
+						opinion = {
+							name = faction_displeased
+							who = ROOT
+							years = 6
+						}
+					}
+				}
+
+				change_variable = {
+					which = local_faction_mood_decrease
+					value = -1
+				}
+			}
+
+			clear_event_target = faction_leader
+		}
+
+		character_event = { id = PlusFaction.222 } # completion effects
+	}
+}
+
+# PlusFaction.201 [Liege & His Court Faction Members]
+# Notification of court faction mood change
+character_event = {
+	id = PlusFaction.201
+	picture = GFX_evt_council
+
+	is_triggered_only = yes
+	notification = yes
+	hide_from = yes
+
+	ai = no
+
+	desc = {
+		text = EVTDESC_PlusFaction_201_Happy
+		trigger = {
+			FROM = { has_character_flag = faction_court_happy }
+		}
+	}
+	desc = {
+		text = EVTDESC_PlusFaction_201_Neutral
+		trigger = {
+			FROM = {
+				NOR = {
+					has_character_flag = faction_court_happy
+					has_character_flag = faction_court_unhappy
+					has_character_flag = faction_court_angry
+				}
+			}
+		}
+	}
+	desc = {
+		text = EVTDESC_PlusFaction_201_Unhappy
+		trigger = {
+			FROM = { has_character_flag = faction_court_unhappy }
+		}
+	}
+	desc = {
+		text = EVTDESC_PlusFaction_201_Angry
+		trigger = {
+			FROM = { has_character_flag = faction_court_angry }
+		}
+	}
+
+	option = {
+		name = OK
+	}
+}
+
+# PlusFaction.202 [Liege & His Prosperity Faction Members]
+# Notification of prosperity faction mood change
+character_event = {
+	id = PlusFaction.202
+	picture = GFX_evt_council
+
+	is_triggered_only = yes
+	notification = yes
+	hide_from = yes
+
+	ai = no
+
+	desc = {
+		text = EVTDESC_PlusFaction_202_Happy
+		trigger = {
+			FROM = { has_character_flag = faction_prosperity_happy }
+		}
+	}
+	desc = {
+		text = EVTDESC_PlusFaction_202_Neutral
+		trigger = {
+			FROM = {
+				NOR = {
+					has_character_flag = faction_prosperity_happy
+					has_character_flag = faction_prosperity_unhappy
+					has_character_flag = faction_prosperity_angry
+				}
+			}
+		}
+	}
+	desc = {
+		text = EVTDESC_PlusFaction_202_Unhappy
+		trigger = {
+			FROM = { has_character_flag = faction_prosperity_unhappy }
+		}
+	}
+	desc = {
+		text = EVTDESC_PlusFaction_202_Angry
+		trigger = {
+			FROM = { has_character_flag = faction_prosperity_angry }
+		}
+	}
+
+	option = {
+		name = OK
+	}
+}
+
+# PlusFaction.203 [Liege & His Glory Faction Members]
+# Notification of glory faction mood change
+character_event = {
+	id = PlusFaction.203
+	picture = GFX_evt_council
+
+	is_triggered_only = yes
+	notification = yes
+	hide_from = yes
+
+	ai = no
+
+	desc = {
+		text = EVTDESC_PlusFaction_203_Happy
+		trigger = {
+			FROM = { has_character_flag = faction_glory_happy }
+		}
+	}
+	desc = {
+		text = EVTDESC_PlusFaction_203_Neutral
+		trigger = {
+			FROM = {
+				NOR = {
+					has_character_flag = faction_glory_happy
+					has_character_flag = faction_glory_unhappy
+					has_character_flag = faction_glory_angry
+				}
+			}
+		}
+	}
+	desc = {
+		text = EVTDESC_PlusFaction_203_Unhappy
+		trigger = {
+			FROM = { has_character_flag = faction_glory_unhappy }
+		}
+	}
+	desc = {
+		text = EVTDESC_PlusFaction_203_Angry
+		trigger = {
+			FROM = { has_character_flag = faction_glory_angry }
+		}
+	}
+
+	option = {
+		name = OK
+	}
+}
+
+# PlusFaction.204 [Liege & His Tradition Faction Members]
+# Notification of tradition faction mood change
+character_event = {
+	id = PlusFaction.204
+	picture = GFX_evt_council
+
+	is_triggered_only = yes
+	notification = yes
+	hide_from = yes
+
+	ai = no
+
+	desc = {
+		text = EVTDESC_PlusFaction_204_Happy
+		trigger = {
+			FROM = { has_character_flag = faction_tradition_happy }
+		}
+	}
+	desc = {
+		text = EVTDESC_PlusFaction_204_Neutral
+		trigger = {
+			FROM = {
+				NOR = {
+					has_character_flag = faction_tradition_happy
+					has_character_flag = faction_tradition_unhappy
+					has_character_flag = faction_tradition_angry
+				}
+			}
+		}
+	}
+	desc = {
+		text = EVTDESC_PlusFaction_204_Unhappy
+		trigger = {
+			FROM = { has_character_flag = faction_tradition_unhappy }
+		}
+	}
+	desc = {
+		text = EVTDESC_PlusFaction_204_Angry
+		trigger = {
+			FROM = { has_character_flag = faction_tradition_angry }
+		}
+	}
+
+	option = {
+		name = OK
+	}
+}
+
+# PlusFaction.205 [Dying Liege and/or Revolter]
+# Faction maintenance on character death
+character_event = {
+	id = PlusFaction.205
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_playable = yes
+
+	trigger = {
+		OR = {
+			pf_war_trait_trigger = yes
+
+			any_war = {
+				defender = { character = ROOT }
+
+				OR = {
+					using_cb = cb_faction_overthrow_ruler
+					using_cb = claim_on_liege_plot
+					using_cb = other_claim_on_liege_plot
+					using_cb = religious_overthrow_ruler
+					using_cb = cb_faction_independence
+				}
+			}
+
+			any_vassal = { pf_member_trigger = yes }
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = { is_vice_royalty = yes }
+
+			capital_scope = {
+				county = {
+					current_heir = {
+						save_event_target_as = heir
+					}
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				current_heir = { is_alive = yes }
+			}
+
+			current_heir = {
+				save_event_target_as = heir
+			}
+		}
+		else = {
+			save_event_target_as = heir
+		}
+
+		if = {
+			limit = {
+				OR = {
+					higher_real_tier_than = event_target:heir
+					event_target:heir = { is_ruler = no }
+				}
+			}
+
+			# Reset heir's faction variables
+			event_target:heir = {
+				clr_character_flag = faction_court_happy
+				clr_character_flag = faction_court_unhappy
+				clr_character_flag = faction_court_angry
+				clr_character_flag = faction_prosperity_happy
+				clr_character_flag = faction_prosperity_unhappy
+				clr_character_flag = faction_prosperity_angry
+				clr_character_flag = faction_glory_happy
+				clr_character_flag = faction_glory_unhappy
+				clr_character_flag = faction_glory_angry
+				clr_character_flag = faction_tradition_happy
+				clr_character_flag = faction_tradition_unhappy
+				clr_character_flag = faction_tradition_angry
+			}
+
+			# Pass on faction mood flags
+			trigger_switch = {
+				on_trigger = has_character_flag
+
+				faction_court_happy = { event_target:heir = { set_character_flag = faction_court_happy } }
+				faction_court_unhappy = { event_target:heir = { set_character_flag = faction_court_unhappy } }
+				faction_court_angry = { event_target:heir = { set_character_flag = faction_court_angry } }
+				faction_prosperity_happy = { event_target:heir = { set_character_flag = faction_prosperity_happy } }
+				faction_prosperity_unhappy = { event_target:heir = { set_character_flag = faction_prosperity_unhappy } }
+				faction_prosperity_angry = { event_target:heir = { set_character_flag = faction_prosperity_angry } }
+				faction_glory_happy = { event_target:heir = { set_character_flag = faction_glory_happy } }
+				faction_glory_unhappy = { event_target:heir = { set_character_flag = faction_glory_unhappy } }
+				faction_glory_angry = { event_target:heir = { set_character_flag = faction_glory_angry } }
+				faction_tradition_happy = { event_target:heir = { set_character_flag = faction_tradition_happy } }
+				faction_tradition_unhappy = { event_target:heir = { set_character_flag = faction_tradition_unhappy } }
+				faction_tradition_angry = { event_target:heir = { set_character_flag = faction_tradition_angry } }
+			}
+		}
+
+		# If we have these, we don't want them to persist after death
+		pf_teardown_loyalist_effect = yes
+		pf_teardown_neutral_effect = yes
+
+		if = {
+			limit = {
+				OR = {
+					trait = pf_rebel
+
+					any_war = {
+						defender = { character = ROOT }
+
+						OR = {
+							using_cb = cb_faction_overthrow_ruler
+							using_cb = claim_on_liege_plot
+							using_cb = other_claim_on_liege_plot
+							using_cb = religious_overthrow_ruler
+							using_cb = cb_faction_independence
+						}
+					}
+				}
+			}
+
+			log = "REVOLT-RELATED DEATH: [This.GetTitledFirstName] of the [This.PrimaryTitle.GetFullBaseName] (ID: [This.GetID]):"
+			log	= "<<<<<"
+
+			event_target:heir = {
+				if = {
+					limit = { character = ROOT }
+					log = "Dying ruler has no known heir"
+				}
+				else_if = {
+					limit = { is_ruler = yes }
+					log = "Heir is already a ruler: [This.GetTitledFirstName] of the [This.PrimaryTitle.GetFullBaseName] (ID: [This.GetID])"
+				}
+				else = {
+					log = "Heir is NOT yet a ruler: [This.GetTitledName] (ID: [This.GetID])"
+				}
+			}
+
+			if = { # Are we a civil war liege (defender) who is allowed to pass on our revolt to someone?
+				limit = {
+					any_war = {
+						defender = { character = ROOT }
+
+						OR = {
+							using_cb = cb_faction_overthrow_ruler
+							using_cb = claim_on_liege_plot
+							using_cb = other_claim_on_liege_plot
+							using_cb = religious_overthrow_ruler
+							using_cb = cb_faction_independence
+						}
+					}
+
+					# Our liege cannot also be our heir if the revolt is to continue, because the revolt leader's
+					# temporary liege (i.e., NOT the liege_before_war) for the revolt cannot also be the target
+					# of the revolt. This would otherwise violate the premises of the hard-coded revolt title
+					# system, although if Paradox wanted, they could handle this more gracefully by elevating the
+					# revolt title to a yet higher tier and revassalizing the revolt title to the liege
+					# of the dying ruler's liege/heir (or independent if no such liege).
+					NOR = {
+						vassal_of = event_target:heir # aforementioned case
+						character = event_target:heir # unknown heir
+						is_vice_royalty = yes # viceroys suck at everything
+					}
+				}
+
+				log = "Dying ruler is a civil war liege (defending against civil war)"
+
+				if = {
+					limit = {
+						has_opinion_modifier = {
+							name = revolting_against_me
+							who = event_target:heir
+						}
+					}
+
+					event_target:heir = {
+						log = "Heir was revolting against [Root.GetHerHim]... resetting [heir.GetTitledFirstName] AND will try vassalizing [heir.GetHerHim]"
+						pf_teardown_rebel_effect = yes
+						set_defacto_liege = ROOT
+					}
+				}
+
+				# Inherit demands flags
+				trigger_switch = {
+					on_trigger = has_character_flag
+
+					faction_court_war = { event_target:heir = { set_character_flag = faction_court_war } }
+					faction_prosperity_war = { event_target:heir = { set_character_flag = faction_prosperity_war } }
+					faction_glory_war = { event_target:heir = { set_character_flag = faction_glory_war } }
+					faction_tradition_war = { event_target:heir = { set_character_flag = faction_tradition_war } }
+					faction_separatist_war = { event_target:heir = { set_character_flag = faction_separatist_war } }
+					faction_pretender_war = { event_target:heir = { set_character_flag = faction_pretender_war } }
+					faction_religious_war = { event_target:heir = { set_character_flag = faction_religious_war } }
+					faction_succession_war = { event_target:heir = { set_character_flag = faction_succession_war } }
+					faction_authority_war = { event_target:heir = { set_character_flag = faction_authority_war } }
+				}
+
+				# Note liege change for our civil wars
+				any_war = {
+					limit = {
+						defender = { character = ROOT }
+
+						OR = {
+							using_cb = cb_faction_overthrow_ruler
+							using_cb = claim_on_liege_plot
+							using_cb = other_claim_on_liege_plot
+							using_cb = religious_overthrow_ruler
+							using_cb = cb_faction_independence
+						}
+					}
+
+					attacker = {
+						if = {
+							limit = { has_character_flag = original_war_liege }
+							log = "clearing original liege status for civil war (rebel success will be less dangerous)"
+						}
+
+						clr_character_flag = original_war_liege
+					}
+				}
+
+				# Transfer revolt TOMs
+				any_opinion_modifier_target = { # Those revolting against me
+					limit = {
+						is_alive = yes
+
+						reverse_has_opinion_modifier = {
+							name = revolting_against_me
+							who = PREV
+						}
+
+						NOR = {
+							character = event_target:heir
+
+							reverse_has_opinion_modifier = {
+								name = revolting_against_me
+								who = event_target:heir
+							}
+
+							has_opinion_modifier = {
+								name = revolting_against
+								who = event_target:heir
+							}
+						}
+					}
+
+					reverse_opinion = {
+						name = revolting_against_me
+						who = event_target:heir
+					}
+
+					opinion = {
+						name = revolting_against
+						who = event_target:heir
+					}
+
+					reverse_remove_opinion = {
+						name = revolting_against_me
+						who = ROOT
+					}
+
+					remove_opinion = {
+						name = revolting_against
+						who = ROOT
+					}
+				}
+
+				# Transfer loyalist/neutral TOMs
+				any_vassal = { # Those loyal to me
+					limit = {
+						trait = pf_loyalist
+
+						NOR = {
+							character = event_target:heir
+
+							reverse_has_opinion_modifier = {
+								name = pf_loyal_to_me
+								who = event_target:heir
+							}
+
+							has_opinion_modifier = {
+								name = pf_loyal_toward
+								who = event_target:heir
+							}
+						}
+					}
+
+					reverse_opinion = {
+						name = pf_loyal_to_me
+						who = event_target:heir
+					}
+
+					opinion = {
+						name = pf_loyal_toward
+						who = event_target:heir
+					}
+
+					reverse_remove_opinion = {
+						name = pf_loyal_to_me
+						who = ROOT
+					}
+
+					remove_opinion = {
+						name = pf_loyal_toward
+						who = ROOT
+					}
+				}
+
+				any_vassal = { # Those neutral to me
+					limit = {
+						trait = pf_neutral
+
+						NOR = {
+							character = event_target:heir
+
+							reverse_has_opinion_modifier = {
+								name = pf_neutral_to_me
+								who = event_target:heir
+							}
+
+							has_opinion_modifier = {
+								name = pf_neutral_toward
+								who = event_target:heir
+							}
+						}
+					}
+
+					reverse_opinion = {
+						name = pf_neutral_to_me
+						who = event_target:heir
+					}
+
+					opinion = {
+						name = pf_neutral_toward
+						who = event_target:heir
+					}
+
+					reverse_remove_opinion = {
+						name = pf_neutral_to_me
+						who = ROOT
+					}
+
+					remove_opinion = {
+						name = pf_neutral_toward
+						who = ROOT
+					}
+				}
+			}
+
+			if = { # Are we a civil war liege (defender) that is NOT allowed to pass on our revolt to someone?
+				limit = {
+					any_war = {
+						defender = { character = ROOT }
+
+						OR = {
+							using_cb = cb_faction_overthrow_ruler
+							using_cb = claim_on_liege_plot
+							using_cb = other_claim_on_liege_plot
+							using_cb = religious_overthrow_ruler
+							using_cb = cb_faction_independence
+						}
+					}
+
+					OR = {
+						vassal_of = event_target:heir
+						character = event_target:heir
+						is_vice_royalty = yes
+					}
+				}
+
+				if = {
+					limit = {
+						liege = {
+							character = event_target:heir
+							NOT = { character = ROOT }
+						}
+					}
+					log = "Dying ruler is a civil war liege, but [Root.GetHerHis] heir is also [Root.GetHerHis] liege, so the revolt should invalidate."
+				}
+				else_if = {
+					limit = { character = event_target:heir }
+					log = "Dying ruler is a civil war liege, but [Root.GetSheHe] has no known successor, so the revolt should invalidate."
+				}
+				else_if = {
+					limit = { is_vice_royalty = yes }
+					log = "Dying ruler is a civil war liege, but [Root.GetSheHe] is also a viceroy, so the revolt should invalidate."
+				}
+
+				any_war = {
+					limit = {
+						defender = { character = ROOT }
+
+						OR = {
+							using_cb = cb_faction_overthrow_ruler
+							using_cb = claim_on_liege_plot
+							using_cb = other_claim_on_liege_plot
+							using_cb = religious_overthrow_ruler
+							using_cb = cb_faction_independence
+						}
+					}
+
+					end_war = invalid # civil war state will be cleaned-up gracefully, because the war defender is [barely] still alive.
+				}
+			}
+
+			if = {
+				limit = { trait = pf_rebel }
+
+				# We're supposed to be involved in a PF revolt (as a revolter), if we made it here.
+
+				log = "Dying ruler is a revolter"
+
+				random_opinion_modifier_target = {
+					limit = {
+						reverse_has_opinion_modifier = {
+							name = revolting_against
+							who = PREV
+						}
+					}
+
+					save_event_target_as = pf_war_liege
+				}
+
+				if = {
+					limit = {
+						event_target:pf_war_liege = {
+							event_target:heir = {
+								NOR = {
+									character = PREV
+									character = ROOT
+									is_liege_of = ROOT
+									ROOT = { is_vice_royalty = yes }
+
+									AND = {
+										trait = pf_rebel
+
+										any_opinion_modifier_target = {
+											is_alive = yes
+
+											reverse_has_opinion_modifier = {
+												name = revolting_against
+												who = PREV
+											}
+
+											NOT = { character = PREVPREV }
+										}
+									}
+
+									AND = {
+										OR = {
+											trait = pf_loyalist
+											trait = pf_neutral
+										}
+
+										vassal_of = PREV
+									}
+								}
+							}
+						}
+					}
+
+					log = "Dying revolter's heir SHOULD inherit [Root.GetHerHis] revolt"
+
+					event_target:heir = {
+						if = {
+							limit = { trait = pf_loyalist }
+
+							log = "Clearing heir's unrelated loyalist status"
+
+							remove_opinion = {
+								name = pf_loyal_toward
+								who = liege
+							}
+
+							reverse_remove_opinion = {
+								name = pf_loyal_to_me
+								who = liege
+							}
+						}
+
+						else_if = {
+							limit = { trait = pf_neutral }
+
+							log = "clearing heir's unrelated neutral status"
+
+							remove_opinion = {
+								name = pf_neutral_toward
+								who = liege
+							}
+
+							reverse_remove_opinion = {
+								name = pf_neutral_to_me
+								who = liege
+							}
+						}
+
+						add_trait = pf_rebel
+					}
+
+					if = {
+						limit = {
+							any_war = {
+								attacker = { character = ROOT }
+
+								OR = {
+									using_cb = cb_faction_overthrow_ruler
+									using_cb = claim_on_liege_plot
+									using_cb = other_claim_on_liege_plot
+									using_cb = religious_overthrow_ruler
+									using_cb = cb_faction_independence
+								}
+							}
+						}
+
+						log = "Dying revolter is a rebel leader"
+
+						# Inherit original_war_liege if we have it.
+						if = {
+							limit = { has_character_flag = original_war_liege }
+
+							event_target:heir = { set_character_flag = original_war_liege }
+							log = "heir will inherit rebel leader's original_war_liege status (the proper liege hasn't changed during the war)"
+						}
+
+						# Inherit demands flags
+						trigger_switch = {
+							on_trigger = has_character_flag
+
+							demands_lower_CA = { event_target:heir = { set_character_flag = demands_lower_CA } }
+							demands_lower_TO = { event_target:heir = { set_character_flag = demands_lower_TO } }
+							demands_surrender_title = { event_target:heir = { set_character_flag = demands_surrender_title } }
+							demands_share_wealth = { event_target:heir = { set_character_flag = demands_share_wealth } }
+							demands_revert_succession = { event_target:heir = { set_character_flag = demands_revert_succession } }
+							demands_council_life_terms = { event_target:heir = { set_character_flag = demands_council_life_terms } }
+							demands_lower_feudal_obligations = { event_target:heir = { set_character_flag = demands_lower_feudal_obligations } }
+							demands_lower_tribal_obligations = { event_target:heir = { set_character_flag = demands_lower_tribal_obligations } }
+							demands_lower_city_obligations = { event_target:heir = { set_character_flag = demands_lower_city_obligations } }
+							demands_lower_temple_obligations = { event_target:heir = { set_character_flag = demands_lower_temple_obligations } }
+							demands_seniority = { event_target:heir = { set_character_flag = demands_seniority } }
+							demands_primogeniture = { event_target:heir = { set_character_flag = demands_primogeniture } }
+							demands_gavelkind = { event_target:heir = { set_character_flag = demands_gavelkind } }
+							demands_feudal_elective = { event_target:heir = { set_character_flag = demands_feudal_elective } }
+						}
+					}
+
+					event_target:pf_war_liege = {
+						if = {
+							limit = {
+								NOR = {
+									reverse_has_opinion_modifier = {
+										name = revolting_against
+										who = event_target:heir
+									}
+
+									has_opinion_modifier = {
+										name = revolting_against_me
+										who = event_target:heir
+									}
+								}
+							}
+
+							reverse_opinion = { who = event_target:heir name = revolting_against }
+							opinion = { who = event_target:heir name = revolting_against_me }
+							reverse_remove_opinion = { who = ROOT name = revolting_against }
+							remove_opinion = { who = ROOT name = revolting_against_me }
+						}
+					}
+
+					log = ">>>>>"
+				}
+			}
+			else = {
+				# We should NOT pass-down the revolt, if we made it here.
+				log = "Dying rebel's heir should NOT inherit their revolt. Reason(s):"
+
+				if = {
+					limit = { event_target:pf_war_liege = { character = event_target:heir } }
+					log = "-> The dying rebel's proper liege is also his heir"
+				}
+				else_if = {
+					limit = { character = event_target:heir }
+					log = "-> The dying rebel's successor is unknown"
+				}
+				else_if = {
+					limit = { vassal_of = event_target:heir }
+					log = "-> The dying rebel's current liege is also his heir"
+				}
+				else_if = {
+					limit = { is_vice_royalty = yes }
+					log = "-> The dying rebel is a viceroy, and viceroys can do nothing but drool incessantly"
+				}
+
+				if = {
+					limit = {
+						event_target:pf_war_liege = {
+							event_target:heir = {
+								trait = pf_rebel
+
+								any_opinion_modifier_target = {
+									is_alive = yes
+
+									reverse_has_opinion_modifier = {
+										name = revolting_against
+										who = PREV
+									}
+
+									NOT = { character = PREVPREV }
+								}
+							}
+						}
+					}
+
+					log = "-> Heir is already a rebel and [heir.GetHerHis] proper liege is NOT the same as the dying rebel's"
+				}
+				else_if = {
+					limit = {
+						event_target:pf_war_liege = {
+							event_target:heir = {
+								OR = {
+									trait = pf_loyalist
+									trait = pf_neutral
+								}
+
+								vassal_of = PREV
+							}
+						}
+					}
+
+					log = "-> Heir is already a loyalist/neutral AND [heir.GetHerHis] liege is the dying rebel's proper liege"
+				}
+
+				# If we're a revolt leader, then we can't pass down the revolt to anyone in this case, so invalidate our
+				# rebellion.
+				if = {
+					limit = {
+						any_war = {
+							attacker = { character = ROOT }
+
+							OR = {
+								using_cb = cb_faction_overthrow_ruler
+								using_cb = claim_on_liege_plot
+								using_cb = other_claim_on_liege_plot
+								using_cb = religious_overthrow_ruler
+								using_cb = cb_faction_independence
+							}
+						}
+					}
+
+					log = "Dying rebel is a rebel leader. since heir shouldn't inherit the revolt, the war must be invalidated."
+					log = ">>>>>"
+
+					any_war = {
+						limit = {
+							attacker = { character = ROOT }
+
+							OR = {
+								using_cb = cb_faction_overthrow_ruler
+								using_cb = claim_on_liege_plot
+								using_cb = other_claim_on_liege_plot
+								using_cb = religious_overthrow_ruler
+								using_cb = cb_faction_independence
+							}
+						}
+
+						end_war = invalid
+					}
+				}
+				else = {
+					# We're not a revolt leader, if we've made it here.
+
+					log = "Dying rebel is NOT a rebel leader"
+					pf_teardown_rebel_effect = yes
+					log = ">>>>>"
+				}
+			}
+		}
+	}
+}
+
+# PlusFaction.211 [Granted Title]
+# GRANT_LANDED_TITLE_INTERACTION_ACCEPT_EVENT - updates faction response to a granted title
+character_event = {
+	id = PlusFaction.211
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		FROM = {
+			character_event = {
+				id = PlusFaction.212
+				days = 1
+			}
+		}
+	}
+}
+
+# PlusFaction.212 [Granter of Title]
+# Faction pleased due to title granted to one of their members
+# FROM is granted title
+character_event = {
+	id = PlusFaction.212
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		# Save the title and new holder as event targets
+		FROM = {
+			save_event_target_as = pf_new_title
+			holder_scope = { save_event_target_as = pf_new_owner }
+		}
+
+		# First check to see if the AI shouldn't have been granted a county
+		# This is for the anti-border gore events in CK2Plus only
+		if = {
+			limit = {
+				# Only applies to AI vassals with multiple counties granted a county by AI lieges
+				ai = yes
+
+				event_target:pf_new_owner = {
+					ai = yes
+					num_of_count_titles >= 2
+					NOT = { is_primary_heir = ROOT }
+				}
+
+				event_target:pf_new_title = {
+					real_tier = COUNT
+
+					location = {
+						NOR = {
+							# Not within two provinces of a province owned by either the new ruler or one of his vassals
+							any_neighbor_province = {
+								OR = {
+									owner = {
+										OR = {
+											character = event_target:pf_new_owner
+											is_vassal_or_below_of = event_target:pf_new_owner
+										}
+									}
+
+									any_neighbor_province = {
+										owner = {
+											OR = {
+												character = event_target:pf_new_owner
+												is_vassal_or_below_of = event_target:pf_new_owner
+											}
+										}
+									}
+								}
+							}
+
+							# The de jure duchy is held by neither the new ruler or one of his vassals
+							duchy = {
+								holder_scope = {
+									OR = {
+										character = event_target:pf_new_owner
+										is_vassal_or_below_of = event_target:pf_new_owner
+									}
+								}
+							}
+
+							# The de jure kingdom is held by neither the new ruler or one of his vassals
+							kingdom = {
+								holder_scope = {
+									OR = {
+										character = event_target:pf_new_owner
+										is_vassal_or_below_of  = event_target:pf_new_owner
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			log = "[pf_new_owner.GetBestName] was granted the [pf_new_title.GetFullName] by [Root.GetBestName], but it will be re-assigned."
+
+			reverse_remove_opinion = {
+				name = opinion_granted_county
+				who = event_target:pf_new_owner
+			}
+
+			event_target:new_title = {
+				gain_title = ROOT
+				remove_claim = event_target:pf_new_owner
+			}
+
+			character_event = { id = Plus.1755 } # Re-assign title
+		}
+		else = {
+			# Then check for any vassals who have pf TOM's
+			any_vassal = {
+				limit = { is_playable = yes }
+				pf_liege_change_effect = yes
+			}
+
+			log = "[pf_new_owner.GetBestName] (ID:[pf_new_owner.GetID]) was granted the [pf_new_title.GetFullName] by [Root.GetBestName] (ID:[Root.GetID])"
+
+			# Claimants to the granted title who aren't close relatives of the new owner are displeased
+			event_target:pf_new_title = {
+				any_claimant = {
+					limit = {
+						is_vassal_or_below_of = ROOT
+
+						trigger_if = {
+							limit = { is_female = no }
+
+							ROOT = {
+								succ_law_title = {
+									NOR = {
+										has_law = enatic_succession
+										has_law = enatic_cognatic_succession
+									}
+								}
+							}
+						}
+						trigger_else = {
+							ROOT = {
+								succ_law_title = {
+									NOR = {
+										has_law = agnatic_succession
+										has_law = cognatic_succession
+									}
+								}
+							}
+						}
+
+						NOR = {
+							character = ROOT
+							character = event_target:pf_new_owner
+							is_close_relative = event_target:pf_new_owner
+						}
+					}
+
+					# TODO: Differentiate between pressed and unpressed claims?
+					if = {
+						limit = { has_strong_claim = PREV }
+
+						opinion = {
+							name = faction_disapprove_title_grant
+							who = ROOT
+							multiplier = 4
+							years = 10
+						}
+					}
+					else_if = {
+						opinion = {
+							name = faction_disapprove_title_grant
+							who = ROOT
+							multiplier = 2
+							years = 10
+						}
+					}
+				}
+			}
+
+			# Members of the same faction as the new holder are pleased, based on the tier of the granted title
+			any_vassal = {
+				limit = {
+					trigger_if = {
+						limit = { in_faction = faction_court }
+						event_target:pf_new_owner = { in_faction = faction_court }
+					}
+					trigger_else_if = {
+						limit = { in_faction = faction_prosperity }
+						event_target:pf_new_owner = { in_faction = faction_prosperity }
+					}
+					trigger_else_if = {
+						limit = { in_faction = faction_glory }
+						event_target:pf_new_owner = { in_faction = faction_glory }
+					}
+					trigger_else = {
+						in_faction = faction_tradition
+						event_target:pf_new_owner = { in_faction = faction_tradition }
+					}
+
+					NOT = { character = event_target:pf_new_owner }
+				}
+
+				event_target:pf_new_title = {
+					trigger_switch = {
+						on_trigger = real_tier
+
+						BARON = { PREV = { opinion = { name = faction_approve_title_grant who = ROOT years = 3 } } }
+						COUNT = { PREV = { opinion = { name = faction_approve_title_grant who = ROOT years = 3 multiplier = 2 } } }
+						DUKE = { PREV = { opinion = { name = faction_approve_title_grant who = ROOT years = 3 multiplier = 4 } } }
+						KING = { PREV = { opinion = { name = faction_approve_title_grant who = ROOT years = 3 multiplier = 6 } } }
+					}
+				}
+
+				character_event = {
+					id = PlusFaction.200 # Fire maintenance event to recalculate moods
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+# Check for an invalidated succession law
+character_event = {
+	id = PlusFaction.213
+
+	is_triggered_only = yes # on_new_holder(_inheritance/usurpation)
+	hide_window = yes
+
+	trigger = {
+		always = no # Disabled for now, seems to have outlived its usefulness
+	}
+
+	immediate = {
+		FROM = {
+			save_event_target_as = pf_new_title
+
+			# Check matrilineal marriage & viceroy status
+			if = {
+				limit = { is_primary_holder_title = yes }
+
+				ROOT = {
+					character_event = {
+						id = PlusFaction.216
+						days = 1
+					}
+				}
+			}
+		}
+
+		# Check if title has been granted
+		# NOTE: Inherited titles always work, and will reset the succession law to be readable even
+		# if it's currently broken, so it doesn't matter if FROMFROM is dead and the title inherited
+		# as even if it falls to the 'created titles' event below it will still fail at the trigger
+		if = {
+			limit = { FROMFROM = { is_alive = yes } }
+
+			FROMFROM = { save_event_target_as = pf_old_holder }
+
+			character_event = {
+				id = PlusFaction.214
+				days = 1
+			}
+		}
+		else = {
+			# Failing that, fire the event for created titles
+			character_event = {
+				id = PlusFaction.215
+				days = 1
+			}
+		}
+	}
+}
+
+# For granted titles
+character_event = {
+	id = PlusFaction.214
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		event_target:pf_new_title = {
+			OR = {
+				is_primary_holder_title = yes
+				higher_real_tier_than = DUKE
+			}
+		}
+	}
+
+	immediate = {
+		# Test the new title vs. the previous holder
+		event_target:pf_new_title = { current_inheritance_laws_effect = yes }
+		log = "---> Received Title From: [pf_old_holder.GetBestName], Primary Title: [pf_old_holder.PrimaryTitle.GetID]"
+
+		event_target:pf_old_holder = {
+			primary_title = {
+				trigger_switch = {
+					on_trigger = has_law
+
+					succ_gavelkind = { 			log = "---> Current succession law for [This.GetID]: Gavelkind" }
+					succ_elective_gavelkind = {	log = "---> Current succession law for [This.GetID]: Elective Gavelkind" }
+					succ_seniority = {			log = "---> Current succession law for [This.GetID]: Seniority" }
+					succ_primogeniture = {		log = "---> Current succession law for [This.GetID]: Primogeniture" }
+					succ_feudal_elective = {	log = "---> Current succession law for [This.GetID]: Feudal Elective" }
+					succ_hre_elective = {		log = "---> Current succession law for [This.GetID]: Princely Elective" }
+					succ_byzantine_elective = {	log = "---> Current succession law for [This.GetID]: Imperial Elective" }
+					succ_tanistry = {			log = "---> Current succession law for [This.GetID]: Tanistry" }
+					succ_eldership = {			log = "---> Current succession law for [This.GetID]: Eldership" }
+					succ_ultimogeniture = {		log = "---> Current succession law for [This.GetID]: Ultimogeniture" }
+					succ_turkish_succession = {	log = "---> Current succession law for [This.GetID]: Turkish Succession" }
+					succ_papal_succession = {	log = "---> Current succession law for [This.GetID]: Papal Succession" }
+					succ_appointment = {		log = "---> Current succession law for [This.GetID]: Appointment" }
+					succ_open_elective = {		log = "---> Current succession law for [This.GetID]: Open Elective" }
+					succ_catholic_bishopric = {	log = "---> Current succession law for [This.GetID]: Bishopric" }
+					succ_patrician_elective = {	log = "---> Current succession law for [This.GetID]: Patrician Elective" }
+					succ_nomad_succession = {	log = "---> Current succession law for [This.GetID]: Nomadic" }
+				}
+			}
+		}
+
+		# Before anything, take care of some high-priority cases:
+		event_target:pf_new_title = {
+			if = {
+				limit = { is_law_potential = succ_patrician_elective }
+
+				log = "---> INFO: [This.GetID] has to be manually corrected to Patrician Elective succession (due to base case)"
+
+				add_law = {
+					law = succ_patrician_elective
+					cooldown = no
+					opinion_effect = no
+				}
+			}
+
+			else_if = {
+				limit = { is_law_potential = succ_nomad_succession }
+
+				log = "---> INFO: [This.GetID] has to be manually corrected to Nomad succession (due to base case)"
+
+				add_law = {
+					law = succ_nomad_succession
+					cooldown = no
+					opinion_effect = no
+				}
+			}
+			else = {
+				# Then attempt to get the succession law from the granting liege
+				if = {
+					limit = {
+						is_law_potential = succ_gavelkind
+						event_target:pf_old_holder = { primary_title = { has_law = succ_gavelkind } }
+					}
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Gavelkind succession"
+					set_title_flag = succession_corrected
+
+					add_law = {
+						law = succ_gavelkind
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = {
+						is_law_potential = succ_elective_gavelkind
+						event_target:pf_old_holder = { primary_title = { has_law = succ_elective_gavelkind } }
+					}
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Elective Gavelkind succession"
+					set_title_flag = succession_corrected
+
+					add_law = {
+						law = succ_elective_gavelkind
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = {
+						is_law_potential = succ_seniority
+						event_target:pf_old_holder = { primary_title = { has_law = succ_seniority } }
+					}
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Seniority succession"
+					set_title_flag = succession_corrected
+
+					add_law = {
+						law = succ_seniority
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = {
+						is_law_potential = succ_primogeniture
+						event_target:pf_old_holder = { primary_title = { has_law = succ_primogeniture } }
+					}
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Primogeniture succession"
+					set_title_flag = succession_corrected
+
+					add_law = {
+						law = succ_primogeniture
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = {
+						is_law_potential = succ_feudal_elective
+
+						event_target:pf_old_holder = {
+							primary_title = {
+								OR = {
+									has_law = succ_feudal_elective
+									has_law = succ_hre_elective
+									has_law = succ_byzantine_elective
+								}
+							}
+						}
+					}
+
+					if = {
+						limit = {
+							OR = {
+								higher_real_tier_than = DUKE
+
+								AND = {
+									is_primary_holder_title = yes
+									real_tier = DUKE
+								}
+							}
+
+							event_target:pf_old_holder = { primary_title = { has_law = succ_feudal_elective } }
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Feudal Elective succession"
+						set_title_flag = succession_corrected
+
+						add_law = {
+							law = succ_feudal_elective
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+					else_if = {
+						limit = {
+							OR = {
+								title = e_hre
+								has_title_flag = alternate_hre
+							}
+
+							event_target:pf_old_holder = { primary_title = { has_law = succ_hre_elective } }
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Princely Elective succession"
+						set_title_flag = succession_corrected
+
+						add_law = {
+							law = succ_hre_elective
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+					else_if = {
+						limit = {
+							OR = {
+								title = e_byzantium
+								title = e_roman_empire
+								has_title_flag = alternate_byz
+							}
+
+							event_target:pf_old_holder = { primary_title = { has_law = succ_byzantine_elective } }
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Imperial Elective succession"
+						set_title_flag = succession_corrected
+
+						add_law = {
+							law = succ_byzantine_elective
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+				}
+				else_if = {
+					limit = {
+						is_law_potential = succ_tanistry
+
+						event_target:pf_old_holder = {
+							primary_title = {
+								OR = {
+									has_law = succ_tanistry
+									has_law = succ_eldership
+								}
+							}
+						}
+					}
+
+					if = {
+						limit = {
+							holder_scope = {
+								OR = {
+									culture_group = celtic
+									religion = celtic_pagan
+
+									any_owned_bloodline = {
+										has_bloodline_flag = bloodline_tanistry
+										bloodline_is_active_for = PREV
+									}
+								}
+							}
+
+							event_target:pf_old_holder = { primary_title = { has_law = succ_tanistry } }
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Tanistry succession"
+						set_title_flag = succession_corrected
+
+						add_law = {
+							law = succ_tanistry
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+					else_if = {
+						limit = {
+							holder_scope = {
+								OR = {
+									religion = baltic_pagan
+									religion = west_african_pagan
+									has_religion_feature = religion_beatification
+									has_religion_feature = religion_feature_baltic
+									has_religion_feature = religion_feature_west_african
+									has_religion_feature = religion_feature_egyptian
+								}
+							}
+
+							event_target:pf_old_holder = { primary_title = { has_law = succ_eldership } }
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Eldership succession"
+						set_title_flag = succession_corrected
+
+						add_law = {
+							law = succ_eldership
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+				}
+				else_if = {
+					limit = {
+						is_law_potential = succ_ultimogeniture
+						event_target:pf_old_holder = { primary_title = { has_law = succ_ultimogeniture } }
+					}
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Ultimogeniture succession"
+					set_title_flag = succession_corrected
+
+					add_law = {
+						law = succ_ultimogeniture
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+			}
+
+			if = {
+				limit = {
+					NOT = { has_title_flag = succession_corrected }
+				}
+
+				# Failing that, use the default
+				if = {
+					limit = { is_law_potential = succ_gavelkind }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Gavelkind succession (different from previous)"
+
+					add_law = {
+						law = succ_gavelkind
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_elective_gavelkind }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Elective Gavelkind succession (different from previous)"
+
+					add_law = {
+						law = succ_elective_gavelkind
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_seniority }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Seniority succession (different from previous)"
+
+					add_law = {
+						law = succ_seniority
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_primogeniture }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Primogeniture succession (different from previous)"
+
+					add_law = {
+						law = succ_primogeniture
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = {
+						is_law_potential = succ_feudal_elective
+
+						OR = {
+							higher_tier_than = DUKE
+							AND = {
+								is_primary_holder_title = yes
+								tier = DUKE
+							}
+						}
+					}
+
+					if = {
+						limit = {
+							OR = {
+								title = e_hre
+								has_title_flag = alternate_hre
+							}
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Princely Elective succession (different from previous)"
+
+						add_law = {
+							law = succ_hre_elective
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+					else_if = {
+						limit = {
+							OR = {
+								title = e_byzantium
+								title = e_roman_empire
+								has_title_flag = alternate_byz
+							}
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Imperial Elective succession (different from previous)"
+
+						add_law = {
+							law = succ_byzantine_elective
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+					else = {
+						log = "---> INFO: [This.GetID] has to be manually corrected to Feudal Elective succession (different from previous)"
+
+						add_law = {
+							law = succ_feudal_elective
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_tanistry }
+
+					if = {
+						limit = {
+							holder_scope = {
+								OR = {
+									religion = baltic_pagan
+									religion = west_african_pagan
+									has_religion_feature = religion_beatification
+									has_religion_feature = religion_feature_baltic
+									has_religion_feature = religion_feature_west_african
+									has_religion_feature = religion_feature_egyptian
+								}
+							}
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Eldership succession (different from previous)"
+
+						add_law = {
+							law = succ_eldership
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+					else_if = {
+						limit = {
+							holder_scope = {
+								OR = {
+									culture_group = celtic
+									religion = celtic_pagan
+
+									any_owned_bloodline = {
+										has_bloodline_flag = bloodline_tanistry
+										bloodline_is_active_for = PREV
+									}
+								}
+							}
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Tanistry succession (different from previous)"
+
+						add_law = {
+							law = succ_tanistry
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_ultimogeniture }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Ultimogeniture succession (different from previous)"
+
+					add_law = {
+						law = succ_ultimogeniture
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_turkish_succession }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Turkish succession (different from previous)"
+
+					add_law = {
+						law = succ_turkish_succession
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_papal_succession }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Papal succession (different from previous)"
+
+					add_law = {
+						law = succ_papal_succession
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_appointment }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Appointment succession (different from previous)"
+
+					add_law = {
+						law = succ_appointment
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_open_elective }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Open Elective succession (different from previous)"
+
+					add_law = {
+						law = succ_open_elective
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_catholic_bishopric }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Bishopric succession (different from previous)"
+
+					add_law = {
+						law = succ_catholic_bishopric
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else = {
+					log = "---> ASSERT: Failed to find appropriate succession law for [pf_new_title.GetFullName] ([pf_new_title.GetID])!"
+				}
+			}
+
+			clr_title_flag = succession_corrected
+		}
+	}
+}
+
+# For created titles
+character_event = {
+	id = PlusFaction.215
+
+	hide_window = yes
+	is_triggered_only = yes
+
+	trigger = {
+		event_target:pf_new_title = {
+			OR = {
+				is_primary_holder_title = yes
+				higher_real_tier_than = DUKE
+			}
+		}
+	}
+
+	immediate = {
+		# Save another title that we can get the succession law from
+		random_demesne_title = {
+			limit = {
+				is_primary_holder_title = no
+				lower_real_tier_than = KING
+			}
+
+			save_event_target_as = other_demesne_title
+		}
+
+		event_target:pf_new_title = {
+			current_inheritance_laws_effect = yes
+			log = "---> [This.GetID] is a new title created by [Root.GetBestName]"
+
+			# Before anything, take care of some high-priority cases:
+			if = {
+				limit = { is_law_potential = succ_patrician_elective }
+
+				log = "---> INFO: [This.GetID] has to be manually corrected to Patrician Elective succession (due to base case)"
+
+				add_law = {
+					law = succ_patrician_elective
+					cooldown = no
+					opinion_effect = no
+				}
+			}
+
+			else_if = {
+				limit = { is_law_potential = succ_nomad_succession }
+
+				log = "---> INFO: [This.GetID] has to be manually corrected to Nomad succession (due to base case)"
+
+				add_law = {
+					law = succ_nomad_succession
+					cooldown = no
+					opinion_effect = no
+				}
+			}
+			else = {
+				log = "---> Attempting to derive succession law from [other_demesne_title.GetID] (other held title)"
+
+				if = {
+					limit = {
+						event_target:other_demesne_title = { has_law = succ_gavelkind }
+						is_law_potential = succ_gavelkind
+					}
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Gavelkind succession"
+					set_title_flag = succession_corrected
+
+					add_law = {
+						law = succ_gavelkind
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = {
+						event_target:other_demesne_title = { has_law = succ_elective_gavelkind }
+						is_law_potential = succ_elective_gavelkind
+					}
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Elective Gavelkind succession"
+					set_title_flag = succession_corrected
+
+					add_law = {
+						law = succ_elective_gavelkind
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = {
+						event_target:other_demesne_title = { has_law = succ_seniority }
+						is_law_potential = succ_seniority
+					}
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Seniority succession"
+					set_title_flag = succession_corrected
+
+					add_law = {
+						law = succ_seniority
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = {
+						event_target:other_demesne_title = { has_law = succ_primogeniture }
+						is_law_potential = succ_primogeniture
+					}
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Primogeniture succession"
+					set_title_flag = succession_corrected
+
+					add_law = {
+						law = succ_primogeniture
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = {
+						event_target:other_demesne_title = { has_law = succ_feudal_elective }
+
+						is_law_potential = succ_feudal_elective
+
+						OR = {
+							higher_real_tier_than = DUKE
+
+							AND = {
+								is_primary_holder_title = yes
+								real_tier = DUKE
+							}
+						}
+					}
+
+					if = {
+						limit = {
+							OR = {
+								title = e_hre
+								has_title_flag = alternate_hre
+							}
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Princely Elective succession"
+						set_title_flag = succession_corrected
+
+						add_law = {
+							law = succ_hre_elective
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+					else_if = {
+						limit = {
+							OR = {
+								title = e_byzantium
+								title = e_roman_empire
+								has_title_flag = alternate_byz
+							}
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Imperial Elective succession"
+						set_title_flag = succession_corrected
+
+						add_law = {
+							law = succ_byzantine_elective
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+
+					else = {
+						log = "---> INFO: [This.GetID] has to be manually corrected to Feudal Elective succession"
+						set_title_flag = succession_corrected
+
+						add_law = {
+							law = succ_feudal_elective
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+				}
+				else_if = {
+					limit = {
+						event_target:other_demesne_title = { has_law = succ_tanistry }
+						is_law_potential = succ_tanistry
+					}
+
+					if = {
+						limit = {
+							holder_scope = {
+								OR = {
+									religion = baltic_pagan
+									religion = west_african_pagan
+									has_religion_feature = religion_beatification
+									has_religion_feature = religion_feature_baltic
+									has_religion_feature = religion_feature_west_african
+									has_religion_feature = religion_feature_egyptian
+								}
+							}
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Eldership succession"
+						set_title_flag = succession_corrected
+
+						add_law = {
+							law = succ_eldership
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+					else_if = {
+						limit = {
+							holder_scope = {
+								OR = {
+									culture_group = celtic
+									religion = celtic_pagan
+
+									any_owned_bloodline = {
+										has_bloodline_flag = bloodline_tanistry
+										bloodline_is_active_for = PREV
+									}
+								}
+							}
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Tanistry succession"
+						set_title_flag = succession_corrected
+
+						add_law = {
+							law = succ_tanistry
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+				}
+				else_if = {
+					limit = {
+						event_target:other_demesne_title = { has_law = succ_ultimogeniture }
+						is_law_potential = succ_ultimogeniture
+					}
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Ultimogeniture succession"
+					set_title_flag = succession_corrected
+
+					add_law = {
+						law = succ_ultimogeniture
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+			}
+
+			if = {
+				limit = {
+					NOT = { has_title_flag = succession_corrected }
+				}
+
+				# Failing that, use the default
+				if = {
+					limit = { is_law_potential = succ_gavelkind }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Gavelkind succession (different from previous)"
+
+					add_law = {
+						law = succ_gavelkind
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_elective_gavelkind }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Elective Gavelkind succession (different from previous)"
+
+					add_law = {
+						law = succ_elective_gavelkind
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_seniority }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Seniority succession (different from previous)"
+
+					add_law = {
+						law = succ_seniority
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_primogeniture }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Primogeniture succession (different from previous)"
+
+					add_law = {
+						law = succ_primogeniture
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = {
+						is_law_potential = succ_feudal_elective
+
+						OR = {
+							higher_tier_than = DUKE
+							AND = {
+								is_primary_holder_title = yes
+								tier = DUKE
+							}
+						}
+					}
+
+					if = {
+						limit = {
+							OR = {
+								title = e_hre
+								has_title_flag = alternate_hre
+							}
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Princely Elective succession (different from previous)"
+
+						add_law = {
+							law = succ_hre_elective
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+					else_if = {
+						limit = {
+							OR = {
+								title = e_byzantium
+								title = e_roman_empire
+								has_title_flag = alternate_byz
+							}
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Imperial Elective succession (different from previous)"
+
+						add_law = {
+							law = succ_byzantine_elective
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+					else = {
+						log = "---> INFO: [This.GetID] has to be manually corrected to Feudal Elective succession (different from previous)"
+
+						add_law = {
+							law = succ_feudal_elective
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_tanistry }
+
+					if = {
+						limit = {
+							holder_scope = {
+								OR = {
+									religion = baltic_pagan
+									religion = west_african_pagan
+									has_religion_feature = religion_beatification
+									has_religion_feature = religion_feature_baltic
+									has_religion_feature = religion_feature_west_african
+									has_religion_feature = religion_feature_egyptian
+								}
+							}
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Eldership succession (different from previous)"
+
+						add_law = {
+							law = succ_eldership
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+					else_if = {
+						limit = {
+							holder_scope = {
+								OR = {
+									culture_group = celtic
+									religion = celtic_pagan
+
+									any_owned_bloodline = {
+										has_bloodline_flag = bloodline_tanistry
+										bloodline_is_active_for = PREV
+									}
+								}
+							}
+						}
+
+						log = "---> INFO: [This.GetID] has to be manually corrected to Tanistry succession (different from previous)"
+
+						add_law = {
+							law = succ_tanistry
+							cooldown = no
+							opinion_effect = no
+						}
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_ultimogeniture }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Ultimogeniture succession (different from previous)"
+
+					add_law = {
+						law = succ_ultimogeniture
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_turkish_succession }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Turkish succession (different from previous)"
+
+					add_law = {
+						law = succ_turkish_succession
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_papal_succession }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Papal succession (different from previous)"
+
+					add_law = {
+						law = succ_papal_succession
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_appointment }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Appointment succession (different from previous)"
+
+					add_law = {
+						law = succ_appointment
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_open_elective }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Open Elective succession (different from previous)"
+
+					add_law = {
+						law = succ_open_elective
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else_if = {
+					limit = { is_law_potential = succ_catholic_bishopric }
+
+					log = "---> INFO: [This.GetID] has to be manually corrected to Bishopric succession (different from previous)"
+
+					add_law = {
+						law = succ_catholic_bishopric
+						cooldown = no
+						opinion_effect = no
+					}
+				}
+				else = {
+					log = "---> ASSERT: Failed to find appropriate succession law for [pf_new_title.GetFullName] ([pf_new_title.GetID])!"
+				}
+			}
+
+			clr_title_flag = succession_corrected
+		}
+	}
+}
+
+# Update matrilineal marriage status for created titles
+character_event = {
+	id = PlusFaction.216
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		primary_title = {
+			if = {
+				limit = {
+					has_law = agnatic_succession
+
+					NOR = {
+						has_law = status_of_women_2
+						has_law = status_of_women_3
+						has_law = status_of_women_4
+					}
+				}
+
+				law_set_allow_matrilineal_marriage = no
+			}
+			else = {
+				law_set_allow_matrilineal_marriage = yes
+			}
+		}
+	}
+}
+
+# PlusFaction.220 [Liege]
+#
+# Annual faction maintenance event
+
+character_event = {
+	id = PlusFaction.220
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_playable = yes
+
+	trigger = {
+		higher_real_tier_than = COUNT
+		is_landed = yes
+		is_nomadic = no
+		any_vassal = { pf_member_trigger = yes }
+	}
+
+	immediate = {
+		log = "PlusFaction.220: Annual faction maintenance for [Root.GetBestName]"
+		pf_faction_vote_count = yes
+
+		# In the future, we will support execution of deferred faction mood impulse
+		# maintenance here: ---->   <------
+
+		## ANNUAL MAINTENANCE CORE ##
+
+		# Crown Authority
+		any_vassal = {
+			while = {
+				count = 10
+
+				remove_opinion = {
+					name = faction_approve_CA
+					who = ROOT
+				}
+
+				remove_opinion = {
+					name = faction_disapprove_CA
+					who = ROOT
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				any_demesne_title = { is_crown_law_title = yes }
+				is_tribal = no
+				is_nomadic = no # For completeness only
+			}
+
+			# Court faction disapproves the most of high CA, with court factions in the HRE being even more extreme
+			any_vassal = {
+				limit = { in_faction = faction_court }
+
+				if = {
+					limit = {
+						crownlaw_title = {
+							holder = ROOT
+						}
+					}
+
+					if = {
+						limit = {
+							ROOT = {
+								has_landed_title = e_hre
+							}
+						}
+
+						crownlaw_title = {
+							trigger_switch = {
+								on_trigger = has_law
+
+								crown_authority_0 = { PREV = { opinion = { name = faction_approve_CA who = ROOT months = 14 } } }
+								crown_authority_1 = { PREV = { opinion = { name = faction_disapprove_CA who = ROOT months = 14 multiplier = 2 } } }
+								crown_authority_2 = { PREV = { opinion = { name = faction_disapprove_CA who = ROOT months = 14 multiplier = 3 } } }
+								crown_authority_3 = { PREV = { opinion = { name = faction_disapprove_CA who = ROOT months = 14 multiplier = 4 } } }
+								crown_authority_4 = { PREV = { opinion = { name = faction_disapprove_CA who = ROOT months = 14 multiplier = 5 } } }
+							}
+						}
+					}
+					else = {
+						crownlaw_title = {
+							trigger_switch = {
+								on_trigger = has_law
+
+								crown_authority_0 = { PREV = { opinion = { name = faction_approve_CA who = ROOT months = 14 } } }
+								crown_authority_1 = { PREV = { opinion = { name = faction_disapprove_CA who = ROOT months = 14 } } }
+								crown_authority_2 = { PREV = { opinion = { name = faction_disapprove_CA who = ROOT months = 14 } } }
+								crown_authority_3 = { PREV = { opinion = { name = faction_disapprove_CA who = ROOT months = 14 multiplier = 2 } } }
+								crown_authority_4 = { PREV = { opinion = { name = faction_disapprove_CA who = ROOT months = 14 multiplier = 3 } } }
+							}
+						}
+					}
+				}
+			}
+
+			# Prosperity faction approves of high CA (more order in the realm)
+			any_vassal = {
+				limit = {
+					in_faction = faction_prosperity
+					crownlaw_title = { holder = ROOT }
+				}
+
+				crownlaw_title = {
+					trigger_switch = {
+						on_trigger = has_law
+
+						crown_authority_0 = { PREV = { opinion = { name = faction_disapprove_CA who = ROOT months = 14 } } }
+						crown_authority_3 = { PREV = { opinion = { name = faction_approve_CA who = ROOT months = 14 } } }
+						crown_authority_4 = { PREV = { opinion = { name = faction_approve_CA who = ROOT months = 14 multiplier = 2 } } }
+					}
+				}
+			}
+
+			# Glory and tradition factions disapprove of high CA, but only in the HRE
+			if = {
+				limit = { has_landed_title = e_hre }
+
+				any_vassal = {
+					limit = {
+						OR = {
+							in_faction = faction_glory
+							in_faction = faction_tradition
+						}
+
+						crownlaw_title = { holder = ROOT }
+					}
+
+					crownlaw_title = {
+						trigger_switch = {
+							on_trigger = has_law
+
+							crown_authority_2 = { PREV = { opinion = { name = faction_disapprove_CA who = ROOT months = 14 } } }
+							crown_authority_2 = { PREV = { opinion = { name = faction_disapprove_CA who = ROOT months = 14 multiplier = 2 } } }
+							crown_authority_2 = { PREV = { opinion = { name = faction_disapprove_CA who = ROOT months = 14 multiplier = 3 } } }
+						}
+					}
+				}
+			}
+		}
+
+		# TRIBAL ORGANIZATION
+		any_vassal = {
+			while = {
+				count = 10
+
+				remove_opinion = {
+					name = faction_approve_TO
+					who = ROOT
+				}
+
+				remove_opinion = {
+					name = faction_disapprove_TO
+					who = ROOT
+				}
+			}
+		}
+
+		if = {
+			limit = { is_tribal = yes }
+
+			trigger_switch = {
+				on_trigger = has_law
+
+				tribal_organization_0 = {
+					any_vassal = {
+						# Court factions approve
+						if = {
+							limit = { in_faction = faction_court }
+							opinion = { name = faction_approve_TO who = ROOT months = 14 }
+						}
+						# Prosperity factions disapprove
+						else_if = {
+							limit = { in_faction = faction_prosperity }
+							opinion = { name = faction_disapprove_TO who = ROOT months = 14 }
+						}
+					}
+				}
+
+				tribal_organization_1 = {
+					any_vassal = {
+						# Court factions disapprove
+						if = {
+							limit = { in_faction = faction_court }
+							opinion = { name = faction_disapprove_TO who = ROOT months = 14 }
+						}
+					}
+				}
+
+				tribal_organization_2 = {
+					any_vassal = {
+						# Court factions disapprove
+						if = {
+							limit = { in_faction = faction_court }
+							opinion = { name = faction_disapprove_TO who = ROOT months = 14 }
+						}
+					}
+				}
+
+				tribal_organization_3 = {
+					any_vassal = {
+						# Court factions really disapprove
+						if = {
+							limit = { in_faction = faction_court }
+							opinion = { name = faction_disapprove_TO who = ROOT months = 14 multiplier = 2 }
+						}
+						# Prosperity factions approve
+						else_if = {
+							limit = { in_faction = faction_prosperity }
+							opinion = { name = faction_approve_TO who = ROOT months = 14 }
+						}
+						# Tradition factions disapprove
+						else_if = {
+							limit = { in_faction = faction_tradition }
+							opinion = { name = faction_disapprove_TO who = ROOT months = 14 }
+						}
+					}
+				}
+
+				tribal_organization_4 = {
+					any_vassal = {
+						# Court factions really disapprove
+						if = {
+							limit = { in_faction = faction_court }
+							opinion = { name = faction_disapprove_TO who = ROOT months = 14 multiplier = 3 }
+						}
+						# Prosperity factions really approve
+						else_if = {
+							limit = { in_faction = faction_prosperity }
+							opinion = { name = faction_approve_TO who = ROOT months = 14 multiplier = 2 }
+						}
+						# Tradition factions disapprove
+						else_if = {
+							limit = { in_faction = faction_tradition }
+							opinion = { name = faction_disapprove_TO who = ROOT months = 14 }
+						}
+					}
+				}
+			}
+		}
+
+		# OBLIGATIONS
+		# Max. stacking for faction_disapprove_obligations:
+		#
+		# ================================================
+		# FACTION | FEUDAL/IQTA | TEMPLE | CITY | TRIBAL |
+		# --------+-------------+--------+------+--------+
+		# court   |	   3 |	  0 |	   0 |	  3 | => 6
+		# prosper |	   1 |	  1 |	   3 |	  1 | => 6
+		# glory   |	   2 |	  0 |	   0 |	  2 | => 4
+		# traditi |	   0 |	  3 |	   0 |	  0 | => 3
+		# =================================================+
+
+		any_vassal = {
+			while = {
+				count = 10
+
+				remove_opinion = {
+					name = faction_approve_obligations
+					who = ROOT
+				}
+
+				remove_opinion = {
+					name = faction_disapprove_obligations
+					who = ROOT
+				}
+			}
+		}
+
+		trigger_switch = {
+			on_trigger = has_law
+
+			feudal_obligations_0 = {
+				any_vassal = {
+					limit = {
+						OR = {
+							in_faction = faction_court
+							in_faction = faction_glory
+						}
+					}
+
+					opinion = { name = faction_approve_obligations who = ROOT months = 14 }
+				}
+			}
+
+			feudal_obligations_2 = {
+				any_vassal = {
+					limit = { in_faction = faction_court }
+					opinion = { name = faction_disapprove_obligations who = ROOT months = 14 }
+				}
+			}
+
+			feudal_obligations_3 = {
+				any_vassal = {
+					if = {
+						limit = { in_faction = faction_court }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 multiplier = 2 }
+					}
+					else_if = {
+						limit = { in_faction = faction_glory }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 }
+					}
+				}
+			}
+
+			feudal_obligations_4 = {
+				any_vassal = {
+					if = {
+						limit = { in_faction = faction_court }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 multiplier = 3 }
+					}
+					else_if = {
+						limit = { in_faction = faction_glory }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 multiplier = 2 }
+					}
+					else_if = {
+						limit = { in_faction = faction_prosperity }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 }
+					}
+				}
+			}
+		}
+
+		trigger_switch = {
+			on_trigger = has_law
+
+			temple_obligations_0 = {
+				any_vassal = {
+					limit = { in_faction = faction_tradition }
+					opinion = { name = faction_approve_obligations who = ROOT months = 14 }
+				}
+			}
+
+			temple_obligations_2 = {
+				any_vassal = {
+					limit = { in_faction = faction_tradition }
+					opinion = { name = faction_disapprove_obligations who = ROOT months = 14 }
+				}
+			}
+
+			temple_obligations_3 = {
+				any_vassal = {
+					limit = { in_faction = faction_tradition }
+					opinion = { name = faction_disapprove_obligations who = ROOT months = 14 multiplier = 2 }
+				}
+			}
+
+			temple_obligations_4 = {
+				any_vassal = {
+					if = {
+						limit = { in_faction = faction_tradition }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 multiplier = 3 }
+					}
+					else_if = {
+						limit = { in_faction = faction_prosperity }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 }
+					}
+				}
+			}
+		}
+
+		trigger_switch = {
+			on_trigger = has_law
+
+			city_obligations_0 = {
+				any_vassal = {
+					limit = { in_faction = faction_prosperity }
+					opinion = { name = faction_approve_obligations who = ROOT months = 14 }
+				}
+			}
+
+			city_obligations_2 = {
+				any_vassal = {
+					limit = { in_faction = faction_prosperity }
+					opinion = { name = faction_disapprove_obligations who = ROOT months = 14 }
+				}
+			}
+
+			city_obligations_3 = {
+				any_vassal = {
+					limit = { in_faction = faction_prosperity }
+					opinion = { name = faction_disapprove_obligations who = ROOT months = 14 multiplier = 2 }
+				}
+			}
+
+			city_obligations_4 = {
+				any_vassal = {
+					limit = { in_faction = faction_prosperity }
+					opinion = { name = faction_disapprove_obligations who = ROOT months = 14 multiplier = 3 }
+				}
+			}
+		}
+
+		trigger_switch = {
+			on_trigger = has_law
+
+			iqta_obligations_0 = {
+				any_vassal = {
+					limit = {
+						OR = {
+							in_faction = faction_court
+							in_faction = faction_glory
+						}
+					}
+
+					opinion = { name = faction_approve_obligations who = ROOT months = 14 }
+				}
+			}
+
+			iqta_obligations_2 = {
+				any_vassal = {
+					limit = { in_faction = faction_court }
+					opinion = { name = faction_disapprove_obligations who = ROOT months = 14 }
+				}
+			}
+
+			iqta_obligations_3 = {
+				any_vassal = {
+					if = {
+						limit = { in_faction = faction_court }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 multiplier = 2 }
+					}
+					else_if = {
+						limit = { in_faction = faction_glory }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 }
+					}
+				}
+			}
+
+			iqta_obligations_4 = {
+				any_vassal = {
+					if = {
+						limit = { in_faction = faction_court }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 multiplier = 3 }
+					}
+					else_if = {
+						limit = { in_faction = faction_glory }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 multiplier = 2 }
+					}
+					else_if = {
+						limit = { in_faction = faction_prosperity }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 }
+					}
+				}
+			}
+		}
+
+		trigger_switch = {
+			on_trigger = has_law
+
+			tribal_obligations_0 = {
+				any_vassal = {
+					limit = {
+						is_tribal = yes
+
+						OR = {
+							in_faction = faction_court
+							in_faction = faction_glory
+						}
+					}
+
+					opinion = { name = faction_approve_obligations who = ROOT months = 14 }
+				}
+			}
+
+			tribal_obligations_2 = {
+				any_vassal = {
+					limit = {
+						is_tribal = yes
+						in_faction = faction_court
+					}
+
+					opinion = { name = faction_disapprove_obligations who = ROOT months = 14 }
+				}
+			}
+
+			tribal_obligations_3 = {
+				any_vassal = {
+					limit = { is_tribal = yes }
+
+					if = {
+						limit = { in_faction = faction_court }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 multiplier = 2 }
+					}
+					else_if = {
+						limit = { in_faction = faction_glory }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 }
+					}
+				}
+			}
+
+			tribal_obligations_4 = {
+				any_vassal = {
+					limit = { is_tribal = yes }
+
+					if = {
+						limit = { in_faction = faction_court }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 multiplier = 3 }
+					}
+					else_if = {
+						limit = { in_faction = faction_glory }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 multiplier = 2 }
+					}
+					else_if = {
+						limit = { in_faction = faction_prosperity }
+						opinion = { name = faction_disapprove_obligations who = ROOT months = 14 }
+					}
+				}
+			}
+		}
+
+		# COUNCIL TERMS
+		any_vassal = {
+			remove_opinion = {
+				name = faction_approve_council_term
+				who = ROOT
+			}
+		}
+
+		if = {
+			limit = { has_law = council_privileges_1 }
+
+			any_voter = {
+				remove_opinion = {
+					name = grateful_council_term
+					who = ROOT
+				}
+
+				opinion = {
+					name = grateful_council_term
+					who = ROOT
+					months = 14
+				}
+			}
+
+			any_vassal = {
+				limit = { in_faction = faction_tradition }
+
+				opinion = {
+					who = ROOT
+					name = faction_approve_council_term
+					months = 14
+				}
+			}
+		}
+
+		# COUNCILLORS
+		any_vassal = {
+			remove_opinion = {
+				name = faction_approve_council
+				who = ROOT
+			}
+
+			remove_opinion = {
+				name = faction_disapprove_council
+				who = ROOT
+			}
+		}
+
+		# Court Faction member on council
+		if = {
+			limit = { pf_councillor_court_trigger = yes }
+
+			any_vassal = {
+				limit = {
+					in_faction = faction_court
+					is_voter = no
+				}
+
+				opinion = { who = ROOT name = faction_approve_council months = 14 }
+			}
+		}
+		# No Court Faction member on council
+		else = {
+			any_vassal = {
+				limit = { in_faction = faction_court }
+				opinion = { who = ROOT name = faction_disapprove_council months = 14 }
+			}
+		}
+
+		# Prosperity Faction member on council
+		if = {
+			limit = { pf_councillor_prosperity_trigger = yes }
+
+			any_vassal = {
+				limit = {
+					is_voter = no
+					in_faction = faction_prosperity
+				}
+				opinion = { who = ROOT name = faction_approve_council months = 14 }
+			}
+		}
+		# No Prosperity Faction member on council
+		else = {
+			any_vassal = {
+				limit = { in_faction = faction_prosperity }
+				opinion = { who = ROOT name = faction_disapprove_council months = 14 }
+			}
+		}
+
+		# Glory Faction member on council
+		if = {
+			limit = { pf_councillor_glory_trigger = yes }
+
+			any_vassal = {
+				limit = {
+					in_faction = faction_glory
+					is_voter = no
+				}
+
+				opinion = { who = ROOT name = faction_approve_council months = 14 }
+			}
+		}
+		# No Glory Faction member on council
+		else = {
+			any_vassal = {
+				limit = { in_faction = faction_glory }
+				opinion = { who = ROOT name = faction_disapprove_council months = 14 }
+			}
+		}
+
+		# Tradition Faction member on council
+		if = {
+			limit = { pf_councillor_tradition_trigger = yes }
+
+			any_vassal = {
+				limit = {
+					in_faction = faction_tradition
+					is_voter = no
+				}
+
+				opinion = { who = ROOT name = faction_approve_council months = 14 }
+			}
+		}
+		# No Tradition Faction member on council
+		else = {
+			any_vassal = {
+				limit = { in_faction = faction_tradition }
+				opinion = { who = ROOT name = faction_disapprove_council months = 14 }
+			}
+		}
+
+		# LIEGE PIETY
+		any_vassal = {
+			while = {
+				count = 10
+
+				remove_opinion = {
+					name = faction_approve_piety
+					who = ROOT
+				}
+
+				remove_opinion = {
+					name = faction_disapprove_piety
+					who = ROOT
+				}
+			}
+		}
+
+		# Liege has negative piety and NOT in a crusade or holy war
+		if = {
+			limit = {
+				piety < 0
+				pf_tradition_approved_war_trigger = no
+			}
+
+			any_vassal = {
+				if = {
+					limit = { in_faction = faction_tradition }
+
+					# Muslim Tradition Faction disapproves more
+					if = {
+						limit = { religion_group = muslim }
+						opinion = { name = faction_disapprove_piety who = ROOT months = 14 multiplier = 4 }
+					}
+					# Non-muslim Tradition Faction disapproves
+					else = {
+						opinion = { name = faction_disapprove_piety who = ROOT  months = 14 multiplier = 2 }
+					}
+				}
+				# Muslim Court Faction disapproves
+				else_if = {
+					limit = {
+						in_faction = faction_court
+						religion_group = muslim
+					}
+
+					opinion = { name = faction_disapprove_piety who = ROOT months = 14 multiplier = 2 }
+				}
+				# Muslim Glory Faction disapproves less
+				else_if = {
+					limit = {
+						in_faction = faction_glory
+						religion_group = muslim
+					}
+
+					opinion = { name = faction_disapprove_piety who = ROOT months = 14 }
+				}
+			}
+		}
+
+		# Liege has 1000+ Piety
+		if = {
+			limit = { piety >= 1000 }
+
+			# Tradition Faction approves more
+			any_vassal = {
+				limit = { in_faction = faction_tradition }
+				opinion = { name = faction_approve_piety who = ROOT months = 14 multiplier = 2 }
+			}
+		}
+
+		# Liege has 500-999 Piety
+		else_if = {
+			limit = { piety >= 500 }
+
+			# Tradition Faction approves
+			any_vassal = {
+				limit = { in_faction = faction_tradition }
+				opinion = { name = faction_approve_piety who = ROOT months = 14 }
+			}
+		}
+
+		# Liege is in a crusade or holy war
+		if = {
+			limit = { pf_tradition_approved_war_trigger = yes }
+
+			# Tradition Faction approves more
+			any_vassal = {
+				limit = { in_faction = faction_tradition }
+				opinion = { name = faction_approve_piety who = ROOT months = 14 multiplier = 2 }
+			}
+		}
+
+		# LIEGE DEBT/WEALTH
+		any_vassal = {
+			remove_opinion = {
+				name = faction_disapprove_debt
+				who = ROOT
+			}
+
+			remove_opinion = {
+				name = faction_approve_wealth
+				who = ROOT
+			}
+		}
+
+		# Liege has negative wealth or is in debt
+		if = {
+			limit = {
+				OR = {
+					wealth < 0
+					has_character_flag = loan_taken
+
+					check_variable = {
+						which = loan_amount
+						value >= 50
+					}
+				}
+			}
+
+			# Prosperity faction disapproves
+			any_vassal = {
+				limit = { in_faction = faction_prosperity }
+				opinion = { name = faction_disapprove_debt who = ROOT months = 14 multiplier = 2 }
+			}
+		}
+
+		# Liege has 5.0+ scaled wealth, and no loan
+		else_if = {
+			limit = { scaled_wealth >= 5.0 }
+
+			# Prosperity faction approves more
+			any_vassal = {
+				limit = { in_faction = faction_prosperity }
+				opinion = { name = faction_approve_wealth who = ROOT months = 14 multiplier = 2 }
+			}
+		}
+
+		# Liege has 2.5-4.9 scaled wealth, and no loan
+		else_if = {
+			limit = { scaled_wealth >= 2.5 }
+
+			# Prosperity faction approves
+			any_vassal = {
+				limit = { in_faction = faction_prosperity }
+				opinion = { name = faction_approve_wealth who = ROOT months = 14 }
+			}
+		}
+
+		# LIEGE PRESTIGE
+		any_vassal = {
+			while = {
+				count = 10
+
+				remove_opinion = {
+					name = faction_approve_prestige
+					who = ROOT
+				}
+
+				remove_opinion = {
+					who = ROOT
+					name = faction_disapprove_prestige
+				}
+			}
+		}
+
+		# Liege has negative prestige
+		if = {
+			limit = { prestige < 0 }
+
+			# Glory Faction disapproves
+			any_vassal = {
+				limit = { in_faction = faction_glory }
+				opinion = { name = faction_disapprove_prestige who = ROOT months = 14 multiplier = 2 }
+			}
+		}
+		# Liege has 2500 Prestige+
+		else_if = {
+			limit = { prestige >= 2500 }
+
+			# Glory Faction approves more
+			any_vassal = {
+				limit = { in_faction = faction_glory }
+				opinion = { name = faction_approve_prestige who = ROOT months = 14 multiplier = 2 }
+			}
+		}
+		# Liege has 1000-2499 Prestige
+		else_if = {
+			limit = { prestige >= 1000 }
+
+			# Glory Faction approves
+			any_vassal = {
+				limit = { in_faction = faction_glory }
+				opinion = { who = ROOT name = faction_approve_prestige months = 14 }
+			}
+		}
+
+		# YEARS OF PEACE
+		any_vassal = {
+			while = {
+				count = 10
+
+				remove_opinion = {
+					name = faction_approve_peace
+					who = ROOT
+				}
+
+				remove_opinion = {
+					name = faction_disapprove_peace
+					who = ROOT
+				}
+			}
+		}
+
+		# 20+ years of consecutive peace
+		if = {
+			limit = {
+				check_variable = {
+					which = years_of_peace
+					value >= 20
+				}
+			}
+
+			any_vassal = {
+				# Prosperity Faction REALLY approves
+				if = {
+					limit = { in_faction = faction_prosperity }
+					opinion = { name = faction_approve_peace who = ROOT months = 14 multiplier = 4 }
+				}
+				# Glory Faction REALLY disapproves
+				else_if = {
+					limit = { in_faction = faction_glory }
+					opinion = { name = faction_disapprove_peace who = ROOT months = 14 multiplier = 4 }
+				}
+			}
+		}
+		# 15-20 years of consecutive peace
+		else_if = {
+			limit = {
+				check_variable = {
+					which = years_of_peace
+					value >= 15
+				}
+			}
+
+			# Prosperity Faction approves more & more
+			any_vassal = {
+				if = {
+					limit = { in_faction = faction_prosperity }
+					opinion = { name = faction_approve_peace who = ROOT months = 14 multiplier = 3 }
+				}
+				# Glory Faction disapproves more & more
+				else_if = {
+					limit = { in_faction = faction_glory }
+					opinion = { name = faction_disapprove_peace who = ROOT months = 14 multiplier = 3 }
+				}
+			}
+		}
+		# 10-15 years of consecutive peace
+		else_if = {
+			limit = {
+				check_variable = {
+					which = years_of_peace
+					value >= 10
+				}
+			}
+
+			any_vassal = {
+				# Prosperity Faction approves more
+				if = {
+					limit = { in_faction = faction_prosperity }
+					opinion = { name = faction_approve_peace who = ROOT months = 14 multiplier = 2 }
+				}
+				# Glory Faction disapproves more
+				else_if = {
+					limit = { in_faction = faction_glory }
+					opinion = { name = faction_disapprove_peace who = ROOT months = 14 multiplier = 2 }
+				}
+			}
+		}
+		# 5-10 years of consecutive peace
+		else_if = {
+			limit = {
+				check_variable = {
+					which = years_of_peace
+					value >= 5
+				}
+			}
+
+			any_vassal = {
+				# Prosperity Faction approves
+				if = {
+					limit = { in_faction = faction_prosperity }
+					opinion = { name = faction_approve_peace who = ROOT months = 14 }
+				}
+				# Glory Faction disapproves
+				else_if = {
+					limit = { in_faction = faction_glory }
+					opinion = { name = faction_disapprove_peace who = ROOT months = 14 }
+				}
+			}
+		}
+
+		# Adjust moods of faction members towards their own leaders, based on agreement over opinion of liege
+		any_vassal = {
+			limit = { pf_leader_trigger = yes }
+
+			save_event_target_as = faction_leader
+
+			# First remove the old agree/disagree modifiers for all the liege's vassals
+			ROOT = {
+				any_vassal = {
+					while = {
+						count = 10
+
+						remove_opinion = {
+							name = faction_agree_liege
+							who = event_target:faction_leader
+						}
+
+						remove_opinion = {
+							name = faction_disagree_liege
+							who = event_target:faction_leader
+						}
+					}
+				}
+			}
+
+			# Then check the faction leader's opinion range of the liege
+			# and look at all fellow faction members, and see if they sit in the same range or NOT
+			# the larger the difference, the larger the disapproval of the faction leader
+
+			if = {
+				limit = {
+					opinion = {
+						who = ROOT
+						value < -75
+					}
+				}
+
+				ROOT = {
+					any_vassal = {
+						limit = { pf_event_target_faction_backer_trigger = yes }
+
+						if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < -75
+								}
+							}
+
+							opinion = {
+								name = faction_agree_liege
+								who = event_target:faction_leader
+								months = 14
+							}
+						}
+						else_if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < -25
+								}
+							}
+							# Nothing
+						}
+						else_if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < 25
+								}
+							}
+
+							opinion = {
+								name = faction_disagree_liege
+								who = event_target:faction_leader
+								months = 14
+							}
+						}
+						else_if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < 75
+								}
+							}
+
+							opinion = {
+								name = faction_disagree_liege
+								who = event_target:faction_leader
+								months = 14
+								multiplier = 2
+							}
+						}
+						else = {
+							opinion = {
+								name = faction_disagree_liege
+								who = event_target:faction_leader
+								months = 14
+								multiplier = 3
+							}
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					opinion = {
+						who = ROOT
+						value < -25
+					}
+				}
+
+				ROOT = {
+					any_vassal = {
+						limit = { pf_event_target_faction_backer_trigger = yes }
+
+						if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < -75
+								}
+							}
+							# Nothing
+						}
+						else_if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < -25
+								}
+							}
+
+							opinion = {
+								name = faction_agree_liege
+								who = event_target:faction_leader
+								months = 14
+							}
+						}
+						else_if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < 25
+								}
+							}
+							# Nothing
+						}
+						else_if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < 75
+								}
+							}
+
+							opinion = {
+								name = faction_disagree_liege
+								who = event_target:faction_leader
+								months = 14
+							}
+						}
+						else = {
+							opinion = {
+								name = faction_disagree_liege
+								who = event_target:faction_leader
+								months = 14
+								multiplier = 2
+							}
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					opinion = {
+						who = ROOT
+						value < 25
+					}
+				}
+
+				ROOT = {
+					any_vassal = {
+						limit = { pf_event_target_faction_backer_trigger = yes }
+
+						if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < -75
+								}
+							}
+
+							opinion = {
+								name = faction_disagree_liege
+								who = event_target:faction_leader
+								months = 14
+							}
+						}
+						else_if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < -25
+								}
+							}
+							# Nothing
+						}
+						else_if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < 25
+								}
+							}
+
+							opinion = {
+								name = faction_agree_liege
+								who = event_target:faction_leader
+								months = 14
+							}
+						}
+						else_if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value >= 75
+								}
+							}
+
+							opinion = {
+								name = faction_disagree_liege
+								who = event_target:faction_leader
+								months = 14
+							}
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					opinion = {
+						who = ROOT
+						value < 75
+					}
+				}
+
+				ROOT = {
+					any_vassal = {
+						limit = { pf_event_target_faction_backer_trigger = yes }
+
+						if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < -75
+								}
+							}
+
+							opinion = {
+								name = faction_disagree_liege
+								who = event_target:faction_leader
+								months = 14
+								multiplier = 2
+							}
+						}
+						else_if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < -25
+								}
+							}
+
+							opinion = {
+								name = faction_disagree_liege
+								who = event_target:faction_leader
+								months = 14
+							}
+						}
+						else_if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < 25
+								}
+							}
+							# Nothing
+						}
+						else_if = {
+							limit = {
+
+								opinion = {
+									who = ROOT
+									value < 75
+								}
+							}
+
+							opinion = {
+								name = faction_agree_liege
+								who = event_target:faction_leader
+								months = 14
+							}
+						}
+					}
+				}
+			}
+			else = {
+				ROOT = {
+					any_vassal = {
+						limit = { pf_event_target_faction_backer_trigger = yes }
+
+						if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < -75
+								}
+							}
+
+							opinion = {
+								name = faction_disagree_liege
+								who = event_target:faction_leader
+								months = 14
+								multiplier = 3
+							}
+						}
+						else_if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < -25
+								}
+							}
+
+							opinion = {
+								name = faction_disagree_liege
+								who = event_target:faction_leader
+								months = 14
+								multiplier = 2
+							}
+						}
+						else_if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value < 25
+								}
+							}
+
+							opinion = {
+								name = faction_disagree_liege
+								who = event_target:faction_leader
+								months = 14
+							}
+						}
+						else_if = {
+							limit = {
+								opinion = {
+									who = ROOT
+									value >= 75
+								}
+							}
+
+							opinion = {
+								name = faction_agree_liege
+								who = event_target:faction_leader
+								months = 14
+							}
+						}
+					}
+				}
+			}
+
+			clear_event_target = faction_leader
+		}
+
+		character_event = { id = PlusFaction.222 } # completion effects
+	}
+}
+
+# PlusFaction.222 [Liege]
+# Faction maintenance completion effects
+character_event = {
+	id = PlusFaction.222
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		log = "PlusFaction.222: Faction maintenance completion for [Root.GetBestName]"
+
+		# Now calculate each faction's mood, which is the average of each faction member's
+		# overall opinion of the liege, weighted by the number of votes they have in the faction
+		if = {
+			limit = { ai = yes }
+
+			any_vassal = {
+				limit = { pf_member_trigger = yes }
+
+				# Set a number based on their opinion of the liege (from 1 to 100, 100 being the best)
+				if = {
+					limit = { opinion = { who = ROOT value >= 75 } }
+					set_variable = { which = local_faction_member_approval value = 100 }
+				}
+				else_if = {
+					limit = { opinion = { who = ROOT value >= 50 } }
+					set_variable = { which = local_faction_member_approval value = 87.5 }
+				}
+				else_if = {
+					limit = { opinion = { who = ROOT value >= 25 } }
+					set_variable = { which = local_faction_member_approval value = 75 }
+				}
+				else_if = {
+					limit = { opinion = { who = ROOT value >= 0 } }
+					set_variable = { which = local_faction_member_approval value = 62.5 }
+				}
+				else_if = {
+					limit = { opinion = { who = ROOT value >= -25 } }
+					set_variable = { which = local_faction_member_approval value = 50 }
+				}
+				else_if = {
+					limit = { opinion = { who = ROOT value >= -50 } }
+					set_variable = { which = local_faction_member_approval value = 37.5 }
+				}
+				else_if = {
+					limit = { opinion = { who = ROOT value >= -75 } }
+					set_variable = { which = local_faction_member_approval value = 25 }
+				}
+				else_if = {
+					limit = { opinion = { who = ROOT value >= -99 } }
+					set_variable = { which = local_faction_member_approval value = 12.5 }
+				}
+				else = {
+					set_variable = { which = local_faction_member_approval value = 1 }
+				}
+
+				# then multiply that number by the number of votes they have in the faction
+				# NOTE: Barons would multiply x1, so no point in actually calculating that
+				trigger_switch = {
+					on_trigger = real_tier
+
+					COUNT = { multiply_variable = { which = local_faction_member_approval value = 2 } }
+					DUKE  = { multiply_variable = { which = local_faction_member_approval value = 4 } }
+					KING  = { multiply_variable = { which = local_faction_member_approval value = 8 } }
+				}
+
+				# then divide by the total number of votes in the faction and add that to the liege's mood variable
+				trigger_switch = {
+					on_trigger = in_faction
+
+					faction_court = {
+						divide_variable = { which = local_faction_member_approval which = local_faction_votes_court }
+						change_variable = { which = local_local_faction_mood_court which = local_faction_member_approval }
+					}
+
+					faction_prosperity = {
+						divide_variable = { which = local_faction_member_approval which = local_faction_votes_prosperity }
+						change_variable = { which = local_faction_mood_prosperity which = local_faction_member_approval }
+					}
+
+					faction_glory = {
+						divide_variable = { which = local_faction_member_approval which = local_faction_votes_glory }
+						change_variable = { which = local_faction_mood_glory which = local_faction_member_approval }
+					}
+
+					faction_tradition = {
+						divide_variable = { which = local_faction_member_approval which = local_faction_votes_tradition }
+						change_variable = { which = local_faction_mood_tradition which = local_faction_member_approval }
+					}
+				}
+			}
+		}
+
+		else = { # For players, a bit harsher overall
+			any_vassal = {
+				limit = { pf_member_trigger = yes }
+
+				# set a number based on their opinion of the liege (from 1 to 100, 100 being the best)
+				if = {
+					limit = { opinion = { who = ROOT value >= 90 } }
+					set_variable = { which = local_faction_member_approval value = 100 }
+				}
+				else_if = {
+					limit = { opinion = { who = ROOT value >= 70 } }
+					set_variable = { which = local_faction_member_approval value = 87.5 }
+				}
+				else_if = {
+					limit = { opinion = { who = ROOT value >= 50 }}
+					set_variable = { which = local_faction_member_approval value = 75 }
+				}
+				else_if = {
+					limit = { opinion = { who = ROOT value >= 30 } }
+					set_variable = { which = local_faction_member_approval value = 62.5 }
+				}
+				else_if = {
+					limit = { opinion = { who = ROOT value >= 10 } }
+					set_variable = { which = local_faction_member_approval value = 50 }
+				}
+				else_if = {
+					limit = { opinion = { who = ROOT value >= -10 } }
+					set_variable = { which = local_faction_member_approval value = 37.5 }
+				}
+				else_if = {
+					limit = { opinion = { who = ROOT value >= -30 } }
+					set_variable = { which = local_faction_member_approval value = 25 }
+				}
+				else_if = {
+					limit = { opinion = { who = ROOT value >= -50 } }
+					set_variable = { which = local_faction_member_approval value = 12.5 }
+				}
+				else = {
+					set_variable = { which = local_faction_member_approval value = 1 }
+				}
+
+				# then multiply that number by the number of votes they have in the faction
+				# NOTE: Barons would multiply x1, so no point in actually calculating that
+				trigger_switch = {
+					on_trigger = real_tier
+
+					COUNT = { multiply_variable = { which = local_faction_member_approval value = 2 } }
+					DUKE  = { multiply_variable = { which = local_faction_member_approval value = 4 } }
+					KING  = { multiply_variable = { which = local_faction_member_approval value = 8 } }
+				}
+
+				#then divide by the total number of votes in the faction and add that to the liege's mood variable
+				trigger_switch = {
+					on_trigger = in_faction
+
+					faction_court = {
+						divide_variable = { which = local_faction_member_approval which = local_faction_votes_court }
+						change_variable = { which = local_faction_mood_court which = local_faction_member_approval }
+					}
+
+					faction_prosperity = {
+						divide_variable = { which = local_faction_member_approval which = local_faction_votes_prosperity }
+						change_variable = { which = local_faction_mood_prosperity which = local_faction_member_approval }
+					}
+
+					faction_glory = {
+						divide_variable = { which = local_faction_member_approval which = local_faction_votes_glory }
+						change_variable = { which = local_faction_mood_glory which = local_faction_member_approval }
+					}
+
+					faction_tradition = {
+						divide_variable = { which = local_faction_member_approval which = local_faction_votes_tradition }
+						change_variable = { which = local_faction_mood_tradition which = local_faction_member_approval }
+					}
+				}
+			}
+		}
+
+		# Now determine the overall mood category of the faction and set the flag if it's different than before
+		# and notify the liege if it's actually changed (and only then, to avoid spam)
+		if = {
+			limit = { faction_exists = { faction = faction_court } }
+
+			if = {
+				limit = { check_variable = { which = local_faction_mood_court value >= 75 } }
+
+				log = "Court faction mood for [Root.GetBestName] is happy"
+
+				if = {
+					limit = { NOT = { has_character_flag = faction_court_happy } }
+
+					set_character_flag = faction_court_happy
+					clr_character_flag = faction_court_unhappy
+					clr_character_flag = faction_court_angry
+					character_event = { id = PlusFaction.201 days = 1 }
+
+					any_vassal = {
+						limit = { in_faction = faction_court }
+						character_event = { id = PlusFaction.201 days = 1 }
+					}
+				}
+			}
+			else_if = {
+				limit = { check_variable = { which = local_faction_mood_court value >= 50 } }
+
+				log = "Court faction mood for [Root.GetBestName] is content"
+
+				if = {
+					limit = {
+						OR = {
+							has_character_flag = faction_court_happy
+							has_character_flag = faction_court_unhappy
+							has_character_flag = faction_court_angry
+						}
+					}
+
+					clr_character_flag = faction_court_happy
+					clr_character_flag = faction_court_unhappy
+					clr_character_flag = faction_court_angry
+					character_event = { id = PlusFaction.201 days = 1 }
+
+					any_vassal = {
+						limit = { in_faction = faction_court }
+						character_event = { id = PlusFaction.201 days = 1 }
+					}
+				}
+			}
+			else_if = {
+				limit = { check_variable = { which = local_faction_mood_court value >= 37.5 } }
+
+				log = "Court faction mood for [Root.GetBestName] is unhappy"
+
+				if = {
+					limit = { NOT = { has_character_flag = faction_court_unhappy } }
+
+					set_character_flag = faction_court_unhappy
+					clr_character_flag = faction_court_happy
+					clr_character_flag = faction_court_angry
+					character_event = { id = PlusFaction.201 days = 1 }
+
+					any_vassal = {
+						limit = { in_faction = faction_court }
+						character_event = { id = PlusFaction.201 days = 1 }
+					}
+				}
+			}
+			else = {
+				log = "Court faction mood for [Root.GetBestName] is angry"
+
+				if = {
+					limit = { NOT = { has_character_flag = faction_court_angry } }
+
+					set_character_flag = faction_court_angry
+					clr_character_flag = faction_court_unhappy
+					clr_character_flag = faction_court_happy
+					character_event = { id = PlusFaction.201 days = 1 }
+
+					any_vassal = {
+						limit = { in_faction = faction_court }
+						character_event = { id = PlusFaction.201 days = 1 }
+					}
+				}
+			}
+		}
+
+		if = {
+			limit = { faction_exists = { faction = faction_prosperity } }
+
+			if = {
+				limit = { check_variable = { which = local_faction_mood_prosperity value >= 75 } }
+
+				log = "Prosperity faction mood for [Root.GetBestName] is happy"
+
+				if = {
+					limit = { NOT = { has_character_flag = faction_prosperity_happy } }
+
+					set_character_flag = faction_prosperity_happy
+					clr_character_flag = faction_prosperity_unhappy
+					clr_character_flag = faction_prosperity_angry
+					character_event = { id = PlusFaction.202 days = 1 }
+
+					any_vassal = {
+						limit = { in_faction = faction_prosperity }
+						character_event = { id = PlusFaction.202 days = 1 }
+					}
+				}
+			}
+			else_if = {
+				limit = { check_variable = { which = local_faction_mood_prosperity value >= 50 } }
+
+				log = "Prosperity faction mood for [Root.GetBestName] is content"
+
+				if = {
+					limit = {
+						OR = {
+							has_character_flag = faction_prosperity_happy
+							has_character_flag = faction_prosperity_unhappy
+							has_character_flag = faction_prosperity_angry
+						}
+					}
+
+					clr_character_flag = faction_prosperity_happy
+					clr_character_flag = faction_prosperity_unhappy
+					clr_character_flag = faction_prosperity_angry
+					character_event = { id = PlusFaction.202 days = 1 }
+
+					any_vassal = {
+						limit = { in_faction = faction_prosperity }
+						character_event = { id = PlusFaction.202 days = 1 }
+					}
+				}
+			}
+			else_if = {
+				limit = { check_variable = { which = local_faction_mood_prosperity value >= 37.5 } }
+
+				log = "Prosperity faction mood for [Root.GetBestName] is unhappy"
+
+				if = {
+					limit = { NOT = { has_character_flag = faction_prosperity_unhappy } }
+
+					set_character_flag = faction_prosperity_unhappy
+					clr_character_flag = faction_prosperity_happy
+					clr_character_flag = faction_prosperity_angry
+					character_event = { id = PlusFaction.202 days = 1 }
+
+					any_vassal = {
+						limit = { in_faction = faction_prosperity }
+						character_event = { id = PlusFaction.202 days = 1 }
+					}
+				}
+			}
+			else = {
+				log = "Prosperity faction mood for [Root.GetBestName] is angry"
+
+				if = {
+					limit = { NOT = { has_character_flag = faction_prosperity_angry } }
+
+					set_character_flag = faction_prosperity_angry
+					clr_character_flag = faction_prosperity_unhappy
+					clr_character_flag = faction_prosperity_happy
+					character_event = { id = PlusFaction.202 days = 1 }
+
+					any_vassal = {
+						limit = { in_faction = faction_prosperity }
+						character_event = { id = PlusFaction.202 days = 1 }
+					}
+				}
+			}
+		}
+
+		if = {
+			limit = { faction_exists = { faction = faction_glory } }
+
+			if = {
+				limit = { check_variable = { which = local_faction_mood_glory value >= 75 } }
+
+				log = "Glory faction mood for [Root.GetBestName] is happy"
+
+				if = {
+					limit = { NOT = { has_character_flag = faction_glory_happy } }
+
+					set_character_flag = faction_glory_happy
+					clr_character_flag = faction_glory_unhappy
+					clr_character_flag = faction_glory_angry
+					character_event = { id = PlusFaction.203 days = 1 }
+
+					any_vassal = {
+						limit = { in_faction = faction_glory }
+						character_event = { id = PlusFaction.203 days = 1 }
+					}
+				}
+			}
+			else_if = {
+				limit = { check_variable = { which = local_faction_mood_glory value >= 50 } }
+
+				log = "Glory faction mood for [Root.GetBestName] is content"
+
+				if = {
+					limit = {
+						OR = {
+							has_character_flag = faction_glory_happy
+							has_character_flag = faction_glory_unhappy
+							has_character_flag = faction_glory_angry
+						}
+					}
+
+					clr_character_flag = faction_glory_happy
+					clr_character_flag = faction_glory_unhappy
+					clr_character_flag = faction_glory_angry
+					character_event = { id = PlusFaction.203 days = 1 }
+
+					any_vassal = {
+						limit = { in_faction = faction_glory }
+						character_event = { id = PlusFaction.203 days = 1 }
+					}
+				}
+			}
+			else_if = {
+				limit = { check_variable = { which = local_faction_mood_glory value >= 37.5 } }
+
+				log = "Glory faction mood for [Root.GetBestName] is unhappy"
+
+				if = {
+					limit = { NOT = { has_character_flag = faction_glory_unhappy } }
+
+					set_character_flag = faction_glory_unhappy
+					clr_character_flag = faction_glory_happy
+					clr_character_flag = faction_glory_angry
+					character_event = { id = PlusFaction.203 days = 1 }
+
+					any_vassal = {
+						limit = { in_faction = faction_glory }
+						character_event = { id = PlusFaction.203 days = 1 }
+					}
+				}
+			}
+			else = {
+				log = "Glory faction mood for [Root.GetBestName] is angry"
+
+				if = {
+					limit = { NOT = { has_character_flag = faction_glory_angry } }
+
+					set_character_flag = faction_glory_angry
+					clr_character_flag = faction_glory_unhappy
+					clr_character_flag = faction_glory_happy
+					character_event = { id = PlusFaction.203 days = 1 }
+
+					any_vassal = {
+						limit = { in_faction = faction_glory }
+						character_event = { id = PlusFaction.203 days = 1 }
+					}
+				}
+			}
+		}
+
+		if = {
+			limit = { faction_exists = { faction = faction_tradition } }
+
+			if = {
+				limit = { check_variable = { which = local_faction_mood_tradition value >= 75 } }
+
+				log = "Tradition faction mood for [Root.GetBestName] is happy"
+
+				if = {
+					limit = { NOT = { has_character_flag = faction_tradition_happy } }
+
+					set_character_flag = faction_tradition_happy
+					clr_character_flag = faction_tradition_unhappy
+					clr_character_flag = faction_tradition_angry
+					character_event = { id = PlusFaction.204 days = 1 }
+
+					any_vassal = {
+						limit = { in_faction = faction_tradition }
+						character_event = { id = PlusFaction.204 days = 1 }
+					}
+				}
+			}
+			else_if = {
+				limit = { check_variable = { which = local_faction_mood_tradition value >= 50 } }
+
+				log = "Tradition faction mood for [Root.GetBestName] is content"
+
+				if = {
+					limit = {
+						OR = {
+							has_character_flag = faction_tradition_happy
+							has_character_flag = faction_tradition_unhappy
+							has_character_flag = faction_tradition_angry
+						}
+					}
+
+					clr_character_flag = faction_tradition_happy
+					clr_character_flag = faction_tradition_unhappy
+					clr_character_flag = faction_tradition_angry
+					character_event = { id = PlusFaction.204 days = 1 }
+
+					any_vassal = {
+						limit = { in_faction = faction_tradition }
+						character_event = { id = PlusFaction.204 days = 1 }
+					}
+				}
+			}
+			else_if = {
+				limit = { check_variable = { which = local_faction_mood_tradition value >= 37.5 } }
+
+				log = "Tradition faction mood for [Root.GetBestName] is unhappy"
+
+				if = {
+					limit = { NOT = { has_character_flag = faction_tradition_unhappy } }
+
+					set_character_flag = faction_tradition_unhappy
+					clr_character_flag = faction_tradition_happy
+					clr_character_flag = faction_tradition_angry
+					character_event = { id = PlusFaction.204 days = 1 }
+
+					any_vassal = {
+						limit = { in_faction = faction_tradition }
+						character_event = { id = PlusFaction.204 days = 1 }
+					}
+				}
+			}
+			else = {
+				log = "Tradition faction mood for [Root.GetBestName] is angry"
+
+				if = {
+					limit = { NOT = { has_character_flag = faction_tradition_angry } }
+
+					set_character_flag = faction_tradition_angry
+					clr_character_flag = faction_tradition_unhappy
+					clr_character_flag = faction_tradition_happy
+					character_event = { id = PlusFaction.204 days = 1 }
+
+					any_vassal = {
+						limit = { in_faction = faction_tradition }
+						character_event = { id = PlusFaction.204 days = 1 }
+					}
+				}
+			}
+		}
+	}
+}
+
+# PlusFaction.230 [New Holder]
+#
+# Civil war transfers to a new liege due to title gain
+character_event = {
+	id = PlusFaction.230
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_playable = yes
+
+	trigger = {
+		FROM = { higher_real_tier_than = COUNT }
+		FROMFROM = { is_dying = no }
+
+		any_war = { # We've inherited at least one of FROMFROM's civil wars
+			defender = { character = ROOT }
+
+			attacker = {
+				has_opinion_modifier = {
+					name = revolting_against
+					who = FROMFROM
+				}
+			}
+
+			OR = {
+				using_cb = cb_faction_overthrow_ruler
+				using_cb = claim_on_liege_plot
+				using_cb = other_claim_on_liege_plot
+				using_cb = religious_overthrow_ruler
+				using_cb = cb_faction_independence
+			}
+		}
+
+		NOT = { has_global_flag = pf_teardown_lock }
+	}
+
+	immediate = {
+		FROMFROM = {
+			log = "INFO: ruler took-over defense against civil war due to gaining title '[From.GetFullBaseName]'. old liege's interim state pre-transfer:"
+			pf_log_state_effect = yes
+
+			# Transfer revolt TOMs
+			any_opinion_modifier_target = {
+				if = {
+					limit = { # Those who were revolting against FROMFROM
+						reverse_has_opinion_modifier = {
+							name = revolting_against_me
+							who = PREV
+						}
+					}
+
+					reverse_remove_opinion = {
+						name = revolting_against_me
+						who = PREV
+					}
+
+					remove_opinion = {
+						name = revolting_against
+						who = PREV
+					}
+
+					if = {
+						limit = {
+							NOR = {
+								reverse_has_opinion_modifier = {
+									name = revolting_against_me
+									who = ROOT
+								}
+
+								has_opinion_modifier = {
+									name = revolting_against
+									who = ROOT
+								}
+							}
+						}
+
+						reverse_opinion = {
+							name = revolting_against_me
+							who = ROOT
+						}
+
+						opinion = {
+							name = revolting_against
+							who = ROOT
+						}
+					}
+				}
+
+				# Tear-down loyalist/neutral state; we've got a new liege altogether now.
+				# NOTE: We intentionally do not transfer neutral/loyalist to new liege
+				else_if = {
+					limit = { # Those who were loyal to FROMFROM
+						reverse_has_opinion_modifier = {
+							name = pf_loyal_to_me
+							who = PREV
+						}
+					}
+
+					reverse_remove_opinion = {
+						name = pf_loyal_to_me
+						who = PREV
+					}
+
+					remove_opinion = {
+						name = pf_loyal_toward
+						who = PREV
+					}
+
+					remove_trait = pf_loyalist
+				}
+				else_if = {
+					limit = { # Those who were neutral in FROMFROM's civil war
+						reverse_has_opinion_modifier = {
+							name = pf_neutral_to_me
+							who = PREV
+						}
+					}
+
+					reverse_remove_opinion = {
+						name = pf_neutral_to_me
+						who = PREV
+					}
+
+					remove_opinion = {
+						name = pf_neutral_toward
+						who = PREV
+					}
+
+					remove_trait = pf_neutral
+				}
+			}
+
+			# Transfer war flags
+			trigger_switch = {
+				on_trigger = has_character_flag
+
+				faction_court_war = {		ROOT = { set_character_flag = faction_court_war } }
+				faction_prosperity_war = {	ROOT = { set_character_flag = faction_prosperity_war } }
+				faction_glory_war = {		ROOT = { set_character_flag = faction_glory_war } }
+				faction_tradition_war = {	ROOT = { set_character_flag = faction_tradition_war } }
+				faction_pretender_war = {	ROOT = { set_character_flag = faction_pretender_war } }
+				faction_separatist_war = {	ROOT = { set_character_flag = faction_separatist_war } }
+				faction_religious_war = {	ROOT = { set_character_flag = faction_religious_war } }
+				faction_succession_war = {	ROOT = { set_character_flag = faction_succession_war } }
+				faction_authority_war = {	ROOT = { set_character_flag = faction_authority_war } }
+			}
+
+			# NOTE: Only valid to clear all war flags due to the fact that loss
+			# of a title leading to a new civil war liege altogether implies
+			# that all of FROMFROM's civil wars were transferred to ROOT
+			pf_clear_war_flags_effect = yes
+
+			log = "... old liege's state post-transfer:"
+			pf_log_state_effect = yes
+		}
+
+		# Note the liege change for transferred civil wars
+		any_war = {
+			limit = {
+				defender = { character = ROOT }
+
+				attacker = {
+					has_opinion_modifier = {
+						name = revolting_against
+						who = FROMFROM
+					}
+				}
+
+				OR = {
+					using_cb = cb_faction_overthrow_ruler
+					using_cb = claim_on_liege_plot
+					using_cb = other_claim_on_liege_plot
+					using_cb = religious_overthrow_ruler
+					using_cb = cb_faction_independence
+				}
+			}
+
+			attacker = {
+				if = {
+					limit = { has_character_flag = original_war_liege }
+					log = "... clearing original liege status for civil war (rebel success will be less dangerous)"
+				}
+
+				clr_character_flag = original_war_liege
+			}
+		}
+
+		log = "... new liege's state post-transfer:"
+		pf_log_state_effect = yes
+	}
+}
+
+# PlusFaction.231 [New Holder]
+#
+# State cleanup when rebel drops-out of a civil war due to losing a title
+character_event = {
+	id = PlusFaction.231
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		FROMFROM = {
+			trait = pf_rebel
+
+			trigger_if = {
+				limit = {
+					is_ruler = yes
+					in_revolt = yes
+				}
+
+				liege_before_war = {
+					NOT = {
+						has_opinion_modifier = {
+							name = revolting_against_me
+							who = PREV
+						}
+					}
+				}
+			}
+		}
+
+		NOT = { has_global_flag = pf_teardown_lock }
+	}
+
+	immediate = {
+		FROMFROM = {
+			log = "INFO: rebel dropped-out of a civil war after losing a title ([From.GetFullBaseName]). interim state pre-cleanup:"
+			pf_log_state_effect = yes
+			pf_teardown_rebel_effect = yes
+			log = "... ex-rebel's state post-cleanup:"
+			pf_log_state_effect = yes
+		}
+	}
+}
+
+# PlusFaction.232 [New Holder]
+#
+# State cleanup when rebel drops-out of a civil war due to gaining a title
+character_event = {
+	id = PlusFaction.232
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_playable = yes # Due to nature of title gain and preexisting rebel state
+
+	trigger = {
+		trait = pf_rebel
+
+		FROM = {
+			is_primary_holder_title = yes
+			higher_real_tier_than = COUNT
+			temporary = no
+		}
+
+		any_opinion_modifier_target = { # Old civil war liege
+			in_revolt = yes
+
+			reverse_has_opinion_modifier = {
+				name = revolting_against
+				who = PREV
+			}
+
+			any_war = {
+				defender = { character = PREVPREV }
+
+				attacker = { # Old revolt leader
+					NOR = {
+						character = ROOT
+						is_liege_or_above_of = ROOT
+					}
+				}
+
+				OR = {
+					using_cb = cb_faction_overthrow_ruler
+					using_cb = claim_on_liege_plot
+					using_cb = other_claim_on_liege_plot
+					using_cb = religious_overthrow_ruler
+					using_cb = cb_faction_independence
+				}
+			}
+		}
+
+		NOT = { has_global_flag = pf_teardown_lock }
+	}
+
+	immediate = {
+		log = "INFO: rebel is dropping-out of civil war due to [This.GetHerHim] gaining title ([From.GetFullBaseName]): [This.GetHerHis] interim state follows..."
+		pf_log_state_effect = yes
+		pf_teardown_rebel_effect = yes
+		log = "... ex-rebel's state post-cleanup:"
+		pf_log_state_effect = yes
+	}
+}
+
+# PlusFaction.233 [New Holder]
+#
+# Civil war state cleanup when loyalist/neutral's liege changes due to gaining a title
+character_event = {
+	id = PlusFaction.233
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_playable = yes # Due to nature of title gain and preexisting loyalist/neutral state
+
+	trigger = {
+		primary_title = { title = FROM }
+
+		trigger_if = {
+			limit = { trait = pf_neutral }
+
+			NOT = {
+				has_opinion_modifier = {
+					name = pf_neutral_toward
+					who = liege
+				}
+			}
+		}
+		trigger_else = {
+			trait = pf_loyalist
+
+			NOT = {
+				has_opinion_modifier = {
+					name = pf_loyal_toward
+					who = liege
+				}
+			}
+		}
+
+		NOT = { has_global_flag = pf_teardown_lock }
+	}
+
+	immediate = {
+		if = {
+			limit = { trait = pf_loyalist }
+
+			log = "INFO: loyalist's liege changed due to [This.GetHerHim] gaining a title ([From.GetFullBaseName]): [This.GetHerHis] interim state follows..."
+			pf_log_state_effect = yes
+			pf_teardown_loyalist_effect = yes
+			log = "... ex-loyalist's PF state dump post-cleanup:"
+			pf_log_state_effect = yes
+		}
+		else_if = {
+			limit = { trait = pf_neutral }
+
+			log = "INFO: neutral's liege changed due to [This.GetHerHim] gaining a title ([From.GetFullBaseName]): [This.GetHerHis] interim state follows..."
+			pf_log_state_effect = yes
+			pf_teardown_neutral_effect = yes
+			log = "... ex-neutral's PF state dump post-cleanup:"
+			pf_log_state_effect = yes
+		}
+	}
+}
+
+# PlusFaction.234 [Unlanded Character]
+#
+# Civil war state cleanup when loyalist/neutral is unlanded
+# NOTE: Unlanded rebels are already handled by PlusFaction.231
+character_event = {
+	id = PlusFaction.234
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		OR = {
+			trait = pf_loyalist
+			trait = pf_neutral
+		}
+
+		is_dying = no # This is handled directly on_death by PlusFaction.205
+		has_game_started = yes
+		NOT = { has_global_flag = pf_teardown_lock }
+	}
+
+	immediate = {
+		if = {
+			limit = { trait = pf_loyalist }
+
+			log = "INFO: loyalist unlanded. interim state pre-cleanup:"
+			pf_log_state_effect = yes
+			pf_teardown_loyalist_effect = yes
+			log = "... ex-loyalist's PF state dump post-cleanup:"
+			pf_log_state_effect = yes
+		}
+		else_if = {
+			limit = { trait = pf_neutral }
+
+			log = "INFO: neutral unlanded. interim state pre-cleanup:"
+			pf_log_state_effect = yes
+			pf_teardown_neutral_effect = yes
+			log = "... ex-neutral's PF state dump post-cleanup:"
+			pf_log_state_effect = yes
+		}
+	}
+}
+
+
+# Main Annual faction maintenance event
+character_event = {
+	id = PlusFaction.250
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_playable = yes
+
+	trigger = {
+		owns = event_target:pulse_province
+	}
+
+	immediate = {
+		log = "Annual faction maintenance pulse begins"
+
+		# Clean up flags
+		any_character = {
+			limit = { is_ruler = yes }
+
+			clr_character_flag = pf_pulse
+
+			if = {
+				limit = { war = no }
+
+				clr_character_flag = faction_court_war
+				clr_character_flag = faction_prosperity_war
+				clr_character_flag = faction_glory_war
+				clr_character_flag = faction_tradition_war
+				clr_character_flag = faction_pretender_war
+				clr_character_flag = faction_separatist_war
+				clr_character_flag = faction_religious_war
+			}
+
+			if = {
+				limit = {
+					pf_leader_trigger = no
+
+					OR = {
+						has_character_flag = faction_meeting
+						has_character_flag = faction_meeting_called
+						has_character_flag = faction_meeting_begun
+						has_character_flag = faction_meeting_postponed
+						has_character_flag = faction_leadership_challenge
+					}
+				}
+
+				clr_character_flag = faction_meeting
+				clr_character_flag = can_make_demand
+				clr_character_flag = faction_meeting_called
+				clr_character_flag = faction_meeting_begun
+				clr_character_flag = faction_meeting_postponed
+				clr_character_flag = faction_leadership_challenge
+				clr_character_flag = faction_is_happy
+				clr_character_flag = faction_is_content
+				clr_character_flag = faction_is_unhappy
+				clr_character_flag = faction_is_angry
+				clr_character_flag = made_great_speech
+				clr_character_flag = made_good_speech
+				clr_character_flag = made_fair_speech
+				clr_character_flag = made_poor_speech
+				clr_character_flag = made_terrible_speech
+				clr_character_flag = liege_opinion_increased
+				clr_character_flag = liege_opinion_slightly_increased
+				clr_character_flag = liege_opinion_slightly_decreased
+				clr_character_flag = liege_opinion_decreased
+				clr_character_flag = demand_money_liege
+				clr_character_flag = demand_support_liege
+				clr_character_flag = faction_demand_refused
+			}
+
+			if = {
+				limit = {
+					OR = {
+						had_character_flag = { flag = faction_meeting_called years >= 1 }
+						had_character_flag = { flag = faction_meeting_begun years >= 1 }
+						had_character_flag = { flag = faction_leadership_challenge years >= 1 }
+					}
+				}
+
+				clr_character_flag = can_make_demand
+				clr_character_flag = faction_meeting_called
+				clr_character_flag = faction_meeting_begun
+				clr_character_flag = faction_meeting_postponed
+				clr_character_flag = faction_leadership_challenge
+				clr_character_flag = faction_is_happy
+				clr_character_flag = faction_is_content
+				clr_character_flag = faction_is_unhappy
+				clr_character_flag = faction_is_angry
+				clr_character_flag = made_great_speech
+				clr_character_flag = made_good_speech
+				clr_character_flag = made_fair_speech
+				clr_character_flag = made_poor_speech
+				clr_character_flag = made_terrible_speech
+				clr_character_flag = liege_opinion_increased
+				clr_character_flag = liege_opinion_slightly_increased
+				clr_character_flag = liege_opinion_slightly_decreased
+				clr_character_flag = liege_opinion_decreased
+				clr_character_flag = demand_money_liege
+				clr_character_flag = demand_support_liege
+				clr_character_flag = faction_demand_refused
+			}
+
+			if = {
+				limit = { had_character_flag = { flag = former_faction_leader days >= 7 } }
+				clr_character_flag = former_faction_leader
+			}
+
+			if = {
+				limit = { had_character_flag = { flag = faction_reboot days >= 7 } }
+				clr_character_flag = faction_reboot
+			}
+		}
+	}
+}

@@ -1,0 +1,5267 @@
+###########################################
+#
+# Heresy Events - Sons of Abraham
+#
+# ID SoA 4000-4999 is reserved
+#
+###########################################
+# Written by Henrik Fåhraeus
+###########################################
+
+namespace = SoA
+namespace = PerformanceSoA
+
+###################################################
+# Heresy Appears in Province
+###################################################
+
+# Heresy Appears in Province
+province_event = {
+	id = SoA.4000
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC39000
+		trigger = { is_heretic = yes }
+	}
+	desc = {
+		text = EVTDESC39000_B
+		trigger = { is_heretic = no }
+	}
+
+	has_dlc = "Sons of Abraham"
+
+	trigger = {
+		OR = {
+			has_castle = yes
+			has_temple = yes
+			has_city = yes
+			has_tribal = yes
+		}
+
+		has_heresies = yes
+		is_heretic = no
+
+		# Heretic top lieges must spread the faith themselves
+		owner = {
+			top_liege = {
+				NOT = { is_heresy_of = ROOT }
+			}
+		}
+
+		NOT = { religion_authority >= 0.9 }
+
+		total_years_played >= 3
+	}
+
+	mean_time_to_happen = {
+		years = 800
+
+		mult_modifier = {
+			factor = 1.5
+
+			religion = chalcedonian
+			year < 1000
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			year < 900
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			year < 800
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			religion_authority >= 0.6
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			religion_authority >= 0.7
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			religion_authority >= 0.8
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			religion_authority >= 0.9
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			NOT = { religion_authority >= 0.2 }
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			NOT = { religion_authority >= 0.3 }
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			NOT = { religion_authority >= 0.4 }
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			NOT = { religion_authority >= 0.5 }
+		}
+
+		mult_modifier = {
+			factor = 3.0
+
+			OR = {
+				province_id = c_roma
+				province_id = c_thrake
+				province_id = c_mecca
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			any_neighbor_province = {
+				is_land = yes
+				is_heresy_of = ROOT
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.25
+
+			any_neighbor_province = {
+				is_land = yes
+				has_province_modifier = heretic_stronghold
+				is_heresy_of = ROOT
+			}
+		}
+	}
+
+	immediate = {
+		# Prefer a neighboring heresy
+		random_neighbor_province = {
+			limit = {
+				is_land = yes
+				is_heresy_of = ROOT
+			}
+
+			reverse_religion = ROOT
+		}
+
+		# If that fails, prefer an existing heresy in the realm
+		if = {
+			limit = { is_heretic = no }
+
+			owner = {
+				top_liege = {
+					random_realm_province = {
+						limit = {
+							is_land = yes
+							is_heresy_of = ROOT
+							held_under_PREV = yes
+						}
+
+						reverse_religion = ROOT
+					}
+				}
+			}
+		}
+
+		# ...otherwise, just pick a heresy
+		if = {
+			limit = { is_heretic = no }
+			become_heretic = yes
+		}
+
+		# Two years of much higher revolt risk
+		add_province_modifier = {
+			name = religious_unrest
+			years = 2
+		}
+
+		# One heretic province in the realm is the epicentre of the heresy
+		if = {
+			limit = {
+				is_heretic = yes
+				owner = {
+					top_liege = {
+						NOT = {
+							any_realm_province = {
+								has_province_modifier = heretic_stronghold
+								religion = ROOT
+								held_under_PREV = yes
+							}
+						}
+					}
+				}
+			}
+
+			add_province_modifier = {
+				name = heretic_stronghold # Ten years of even higher revolt risk
+				years = 10
+			}
+		}
+
+		owner = {
+			if = {
+				limit = { ai = no }
+
+				chronicle = {
+					entry = CHRONICLE_HERESY_SPREAD
+					picture = GFX_evt_heretic
+				}
+			}
+
+			any_liege = {
+				character_event = { id = 39400 } # Notify the lieges
+
+				if = {
+					limit = { ai = no }
+
+					chronicle = {
+						entry = CHRONICLE_HERESY_SPREAD
+						picture = GFX_evt_heretic
+					}
+				}
+			}
+
+		}
+	}
+
+	option = {
+		name = EVTOPTA39000 # The owner is of the parent religion
+
+		trigger = { is_heresy_of = owner }
+
+		owner = {
+			show_scope_change = no
+
+			piety = -10
+		}
+
+		ai_chance = { factor = 95 }
+	}
+
+	option = {
+		name = {
+			text = EVTOPTB39000 # The owner is of the same heresy
+			trigger = { religion = owner }
+		}
+		name = {
+			text = EVTOPTC_SOA_4000 # The owner is of some other religion
+			trigger = {
+				NOT = { religion = owner }
+			}
+		}
+
+		trigger = {
+			NOT = { is_heresy_of = owner }
+		}
+
+		ai_chance = { factor = 95 }
+	}
+
+	option = {
+		name = EVTOPTD_SOA_4000 # The owner is of the parent religion and interested in the heresy
+
+		trigger = { is_heresy_of = owner }
+
+		owner = {
+			show_scope_change = no
+
+			piety = -250
+
+			set_secret_religion = {
+				target_type = public
+				target = ROOT
+			}
+
+			any_spouse = {
+				show_scope_change = no
+
+				limit = {
+					ai = yes
+					has_secret_religion = no
+				}
+
+				set_secret_religion = {
+					target_type = public
+					target = ROOT
+				}
+			}
+
+			any_child = {
+				show_scope_change = no
+
+				limit = {
+					ai = yes
+					has_secret_religion = no
+				}
+
+				set_secret_religion = {
+					target_type = public
+					target = ROOT
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 5
+
+			trigger = {
+				owner = {
+					NOT = { trait = zealous }
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+				owner = { trait = cynical }
+			}
+		}
+	}
+}
+
+###################################################
+# Character picks up province religion
+###################################################
+
+# SoA.4020 - Character picks up province religion, if it's in the same religion group but not the top liege's religion
+#	- Notify liege: SoA 4021
+
+# Character converts to local religion
+character_event = {
+	id = SoA.4020
+	desc = EVTDESC_SOA_4020
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_decade_pulse, random_events
+
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	has_dlc = "Sons of Abraham"
+
+	trigger = {
+		NOT = { religion = location }
+		can_change_religion = yes
+
+		trigger_if = {
+			limit = {
+				ai = no
+				is_nomadic = no
+			}
+
+			location = { has_safe_religion = yes }
+		}
+
+		location = {
+			OR = {
+				religion_group = ROOT
+				religion = manichaean
+			}
+
+			OR = {
+				is_heretic = yes
+				religion_authority >= ROOT # The local religion has at least the same authority as my religion
+			}
+
+			NOT = { religion_group = pagan_group }
+		}
+
+		is_heretic = no # Heretics, already people of strong conviction, never change religion spontaneously
+		is_theocracy = no
+		controls_religion = no
+		is_inaccessible_trigger = no
+
+		NOR = {
+			religion_authority >= 0.9
+			trait = zealous
+			trait = shiite_claimant
+			father = { trait = shiite_claimant }
+			any_sibling = { trait = shiite_claimant }
+			rightful_religious_head = ROOT
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.75
+			religion_authority >= 0.6
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			religion_authority >= 0.7
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			religion_authority >= 0.8
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			religion_authority >= 0.9
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			NOT = { religion_authority >= 0.2 }
+		}
+
+		mult_modifier = {
+			factor = 1.75
+			NOT = { religion_authority >= 0.3 }
+		}
+
+		mult_modifier = {
+			factor = 1.75
+			NOT = { religion_authority >= 0.4 }
+		}
+
+		mult_modifier = {
+			factor = 1.75
+			NOT = { religion_authority >= 0.5 }
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			NOT = { is_heresy_of = ROOT }
+		}
+
+		mult_modifier = {
+			factor = 1.75
+
+			trait = cynical
+			independent = no
+
+			location = {
+				ROOT = {
+					top_liege = {
+						religion = PREVPREV
+					}
+				}
+			}
+		}
+	}
+
+	immediate = {
+		save_event_target_as = converting_courtier
+
+		location = {
+			religion_scope = {
+				save_event_target_as = target_religion
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_SOA_4020
+
+		if = {
+			limit = {
+				independent = no
+				religion = liege
+			}
+
+			liege = {
+				character_event = {
+					id = SoA.4021 # Liege responds and may demand reconversion
+					days = 3
+				}
+			}
+		}
+
+		# Workaround for automatic usurption of theocratic characters
+		convert_religion_failsafe_effect = yes
+
+		if = {
+			limit = { has_dharmic_religion_trigger = yes }
+
+			set_character_flag = india_converted
+			character_event = { id = RoI.30120 } # Set religious branch randomly
+		}
+	}
+
+	option = {
+		name = EVTOPTB_SOA_4020
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# SoA.4021 - Liege response
+character_event = {
+	id = SoA.4021
+	desc = EVTDESC_SOA_4021
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = { # Demand reconversion
+		name = EVTOPTA_SOA_4021
+
+		trigger = {
+			trigger_if = {
+				limit = { is_tribal = yes }
+
+				OR = {
+					has_law = tribal_organization_2
+					has_law = tribal_organization_3
+					has_law = tribal_organization_4
+				}
+			}
+			trigger_else = {
+				crownlaw_title = {
+					OR = {
+						has_law = crown_authority_2
+						has_law = crown_authority_3
+						has_law = crown_authority_4
+					}
+				}
+			}
+		}
+
+		tyrant_plus_1_effect = yes
+
+		if = {
+			limit = { FROM = { is_ruler = yes } }
+			piety = -50
+		}
+		else = {
+			piety = -10
+		}
+
+		event_target:converting_courtier = {
+			show_scope_change = no
+
+			character_event = {
+				id = GoPagan.143
+				days = 7
+				tooltip = THREATEN_CONVERSION
+			}
+
+			custom_tooltip = { text = CONVERSION_START }
+			custom_tooltip = { text = CONVERSION_BASE_THREAT }
+
+			if = {
+				limit = { has_sympathy_for_public_religion_of_root_trigger = yes }
+				custom_tooltip = { text = CONVERSION_SYMPATHY }
+			}
+
+			if = {
+				limit = {
+					religion_group = jewish_group
+					NOT = { religion_group = ROOT }
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_BAD_4 }
+			}
+
+			if = {
+				limit = {
+					OR = {
+						is_heresy_of = ROOT
+						is_parent_religion = ROOT
+					}
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_BAD_2 }
+			}
+
+			if = {
+				limit = { is_ruler = yes }
+				custom_tooltip = { text = CONVERSION_RULER_BAD_2 }
+			}
+
+			if = {
+				limit = { is_priest = yes }
+				custom_tooltip = { text = CONVERSION_PRIEST_BAD_2 }
+			}
+
+			if = {
+				limit = { trait = cynical }
+				custom_tooltip = { text = CONVERSION_CYNICAL_GOOD_3 }
+			}
+
+			if = {
+				limit = { trait = craven }
+				custom_tooltip = { text = CONVERSION_CRAVEN_GOOD_3 }
+			}
+
+			if = {
+				limit = { trait = brave }
+				custom_tooltip = { text = CONVERSION_BRAVE_BAD_3 }
+			}
+
+			if = {
+				limit = { trait = humble }
+				custom_tooltip = { text = CONVERSION_HUMBLE_GOOD_1 }
+			}
+
+			if = {
+				limit = { trait = content }
+				custom_tooltip = { text = CONVERSION_CONTENT_GOOD_1 }
+			}
+
+			if = {
+				limit = { trait = proud }
+				custom_tooltip = { text = CONVERSION_PROUD_BAD_1 }
+			}
+
+			if = {
+				limit = { trait = wroth }
+				custom_tooltip = { text = CONVERSION_WROTH_BAD_1 }
+			}
+
+			if = {
+				limit = { opinion = { who = ROOT value < -75 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_4 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < -50 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_3 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < -25 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_2 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 0 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_1 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 25 } }
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_1 }
+			}
+			else = {
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_2 }
+			}
+
+			if = {
+				limit = {
+					ROOT = {
+						trigger_if = {
+							limit = { is_tribal = yes }
+							has_law = tribal_organization_3
+						}
+						trigger_else = {
+							crownlaw_title = { has_law = crown_authority_3 }
+						}
+					}
+				}
+				custom_tooltip = { text = CONVERSION_AUTHORITY_GOOD_1 }
+			}
+			else_if = {
+				limit = {
+					ROOT = {
+						trigger_if = {
+							limit = { is_tribal = yes }
+							has_law = tribal_organization_4
+						}
+						trigger_else = {
+							crownlaw_title = { has_law = crown_authority_4 }
+						}
+					}
+				}
+				custom_tooltip = { text = CONVERSION_AUTHORITY_GOOD_2 }
+			}
+
+			custom_tooltip = { text = IMPRISON_IF_REFUSE }
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				OR = {
+					trait = wroth
+					trait = proud
+					trait = cruel
+					trait = arbitrary
+					trait = zealous
+					trait = impaler
+				}
+
+				NOR = {
+					is_friend = FROM
+					is_lover = FROM
+					trait = kind
+					trait = just
+					trait = humble
+					trait = tyrant5
+					has_sympathy_for_public_religion_of_from_trigger = yes
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				is_close_relative = FROM
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = impaler
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = paranoid
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				reverse_opinion = {
+					who = FROM
+					value >= 50
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				reverse_opinion = {
+					who = FROM
+					value >= 75
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				reverse_opinion = {
+					who = FROM
+					value < 25
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				reverse_opinion = {
+					who = FROM
+					value < 0
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.8
+
+				OR = {
+					trait = tyrant1
+					trait = tyrant2
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				OR = {
+					trait = tyrant4
+					trait = tyrant3
+				}
+			}
+		}
+	}
+
+	option = { # Let it slide
+		name = EVTOPTB_SOA_4021
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 10
+
+				OR = {
+					trait = kind
+					is_friend = FROM
+					is_lover = FROM
+					has_sympathy_for_public_religion_of_from_trigger = yes
+				}
+			}
+		}
+	}
+
+	option = { # Debate for reconversion
+		name = EVTOPTC_SOA_4021
+		tooltip_info = learning
+
+		trigger = {
+			learning >= 8
+			piety >= 0
+		}
+
+		if = {
+			limit = { FROM = { is_ruler = yes } }
+			piety = -50
+		}
+		else = {
+			piety = -10
+		}
+
+		event_target:converting_courtier = {
+			show_scope_change = no
+
+			character_event = {
+				id = GoPagan.135
+				tooltip = DEBATE_CONVERSION
+			}
+
+			custom_tooltip = { text = CONVERSION_START }
+			custom_tooltip = { text = CONVERSION_BASE_DEBATE }
+
+			if = {
+				limit = { has_sympathy_for_public_religion_of_root_trigger = yes }
+				custom_tooltip = { text = CONVERSION_SYMPATHY }
+			}
+
+			if = {
+				limit = {
+					culture_group = east_slavic
+					religion_group = pagan_group
+
+					ROOT = {
+						is_orthodox_branch = yes
+						is_heretic = no
+					}
+				}
+				custom_tooltip = { text = CONVERSION_CULTURE_GOOD_2 }
+			}
+
+			if = {
+				limit = {
+					culture_group = north_germanic
+					religion_group = pagan_group
+
+					ROOT = {
+						is_catholic_branch = yes
+						is_heretic = no
+					}
+				}
+				custom_tooltip = { text = CONVERSION_CULTURE_GOOD_2 }
+			}
+
+			if = {
+				limit = {
+					culture_group = baltic
+					religion_group = pagan_group
+				}
+				custom_tooltip = { text = CONVERSION_CULTURE_BAD_3 }
+			}
+
+			if = {
+				limit = {
+					OR = {
+						culture_group = north_germanic
+						culture_group = east_slavic
+					}
+					religion_group = pagan_group
+					ROOT = { religion_group = muslim }
+				}
+				custom_tooltip = { text = CONVERSION_CULTURE_BAD_3 }
+			}
+
+			if = {
+				limit = {
+					is_unreformed_pagan_trigger = yes
+					ROOT = { NOT = { religion_group = pagan_group } }
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_GOOD_1 }
+			}
+
+			if = {
+				limit = {
+					religion_group = jewish_group
+					ROOT = { NOT = { religion_group = jewish_group } }
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_BAD_3 }
+			}
+
+			if = {
+				limit = {
+					OR = {
+						is_heresy_of = ROOT
+						is_parent_religion = ROOT
+					}
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_BAD_2 }
+			}
+			else_if = {
+				limit = { religion_group = ROOT }
+
+				if = {
+					limit = {
+						OR = {
+							religion_group = muslim
+							religion_group = pagan_group
+						}
+					}
+					custom_tooltip = { text = CONVERSION_RELIGION_BAD_2 }
+				}
+				else = {
+					custom_tooltip = { text = CONVERSION_RELIGION_GOOD_2 }
+				}
+			}
+
+			if = {
+				limit = { opinion = { who = ROOT value < -25 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_4 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 0 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_3 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 50 } }
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_1 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 75 } }
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_2 }
+			}
+			else = {
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_3 }
+			}
+
+			if = {
+				limit = { trait = cynical }
+				custom_tooltip = { text = CONVERSION_CYNICAL_GOOD_3 }
+			}
+
+			if = {
+				limit = { is_heretic = no }
+
+				if = {
+					limit = { NOT = { religion_authority >= 0.1 } }
+					custom_tooltip = { text = CONVERSION_RA_GOOD_3 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.25 } }
+					custom_tooltip = { text = CONVERSION_RA_GOOD_2 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.4 } }
+					custom_tooltip = { text = CONVERSION_RA_GOOD_1 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.75 } }
+					custom_tooltip = { text = CONVERSION_RA_BAD_1 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.9 } }
+					custom_tooltip = { text = CONVERSION_RA_BAD_2 }
+				}
+				else = {
+					custom_tooltip = { text = CONVERSION_RA_BAD_3 }
+				}
+			}
+
+			if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value <= -9 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_GOOD_3 }
+			}
+			else_if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value <= -5 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_GOOD_2 }
+			}
+			else_if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value <= -1 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_GOOD_1 }
+			}
+			else_if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value >= 9 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_BAD_3 }
+			}
+			else_if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value >= 5 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_BAD_2 }
+			}
+			else_if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value >= 1 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_BAD_1 }
+			}
+
+			if = {
+				limit = {
+					learning > ROOT
+					has_sympathy_for_public_religion_of_root_trigger = no
+					NOT = { religion_group = ROOT }
+
+					ROOT = {
+						NOT = { trait = zealous }
+
+						opinion = {
+							who = PREV
+							value >= 0
+						}
+					}
+				}
+
+				custom_tooltip = { text = CONVERSION_CHANCE_SYMP }
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2
+				is_priest = yes
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 10
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 12
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 14
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 16
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 18
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 20
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 2.0
+
+				OR = {
+					trait = scholar
+					trait = theologian
+					trait = faqih
+				}
+			}
+		}
+	}
+
+	option = { # Convince him to convert
+		name = EVTOPTD_SOA_4021
+
+		trigger = { piety >= 0 }
+
+		if = {
+			limit = { FROM = { is_ruler = yes } }
+			piety = -50
+		}
+		else = {
+			piety = -10
+		}
+
+		event_target:converting_courtier = {
+			show_scope_change = no
+
+			character_event = {
+				id = GoPagan.131
+				days = 7
+				tooltip = CONVINCE_CONVERSION
+			}
+
+			custom_tooltip = { text = CONVERSION_START }
+			custom_tooltip = { text = CONVERSION_BASE_DIPLOMACY }
+
+			if = {
+				limit = { has_sympathy_for_public_religion_of_root_trigger = yes }
+				custom_tooltip = { text = CONVERSION_SYMPATHY }
+			}
+
+			else_if = {
+				limit = {
+					trigger_if = {
+						limit = {
+							culture_group = east_slavic
+							religion_group = pagan_group
+						}
+
+						ROOT = {
+							is_orthodox_branch = yes
+							is_heretic = no
+						}
+					}
+					trigger_else = {
+						culture_group = north_germanic
+						religion_group = pagan_group
+
+						ROOT = {
+							is_catholic_branch = yes
+							is_heretic = no
+						}
+					}
+				}
+				custom_tooltip = { text = CONVERSION_CULTURE_GOOD_3 }
+			}
+
+			if = {
+				limit = {
+					religion_group = pagan_group
+
+					OR = {
+						culture_group = baltic
+
+						AND = {
+							OR = {
+								culture_group = north_germanic
+								culture_group = east_slavic
+							}
+
+							ROOT = { religion_group = muslim }
+						}
+					}
+				}
+				custom_tooltip = { text = CONVERSION_CULTURE_BAD_4 }
+			}
+
+			if = {
+				limit = {
+					is_unreformed_pagan_trigger = yes
+					NOT = { religion_group = ROOT }
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_GOOD_2 }
+			}
+			else_if = {
+				limit = {
+					trigger_if = {
+						limit = { religion_group = jewish_group }
+						NOT = { religion_group = ROOT }
+					}
+					trigger_else = {
+						OR = {
+							is_heresy_of = ROOT
+							is_parent_religion = ROOT
+						}
+					}
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_BAD_4 }
+			}
+			else_if = {
+				limit = { religion_group = ROOT }
+
+				if = {
+					limit = {
+						OR = {
+							religion_group = muslim
+							religion_group = pagan_group
+						}
+
+						NOR = {
+							is_heresy_of = ROOT
+							is_parent_religion = ROOT
+						}
+					}
+					custom_tooltip = { text = CONVERSION_RELIGION_BAD_3 }
+				}
+				else = {
+					custom_tooltip = { text = CONVERSION_RELIGION_GOOD_1 }
+				}
+			}
+
+			if = {
+				limit = { opinion = { who = ROOT value < 0 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_4 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 25 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_3 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 50 } }
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_1 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 75 } }
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_2 }
+			}
+			else = {
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_3 }
+			}
+
+			if = {
+				limit = {
+					is_ruler = no
+
+					any_spouse = {
+						OR = {
+							character = ROOT
+							is_parent_of = ROOT
+							is_child_of = ROOT
+							sibling = ROOT
+						}
+					}
+
+					OR = {
+						is_close_relative = ROOT
+						is_lover = ROOT
+					}
+				}
+
+				custom_tooltip = { text = CONVERSION_RELATION_GOOD_3 }
+			}
+			else_if = {
+				limit = {
+					calc_true_if = {
+						amount == 1
+
+						AND = {
+							is_ruler = no
+
+							any_spouse = {
+								OR = {
+									character = ROOT
+									is_parent_of = ROOT
+									is_child_of = ROOT
+									sibling = ROOT
+								}
+							}
+						}
+
+						OR = {
+							is_close_relative = ROOT
+							is_lover = ROOT
+						}
+					}
+				}
+				custom_tooltip = { text = CONVERSION_RELATION_GOOD_2 }
+			}
+
+			if = {
+				limit = { trait = cynical }
+				custom_tooltip = { text = CONVERSION_CYNICAL_GOOD_3 }
+			}
+
+			if = {
+				limit = { is_heretic = no }
+
+				if = {
+					limit = { NOT = { religion_authority >= 0.1 } }
+					custom_tooltip = { text = CONVERSION_RA_GOOD_3 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.25 } }
+					custom_tooltip = { text = CONVERSION_RA_GOOD_2 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.4 } }
+					custom_tooltip = { text = CONVERSION_RA_GOOD_1 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.75 } }
+					custom_tooltip = { text = CONVERSION_RA_BAD_1 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.9 } }
+					custom_tooltip = { text = CONVERSION_RA_BAD_2 }
+				}
+				else = {
+					custom_tooltip = { text = CONVERSION_RA_BAD_3 }
+				}
+			}
+
+			if = {
+				limit = { ROOT = { diplomacy >= 16 } }
+				custom_tooltip = { text = CONVERSION_DIPLOMACY_GOOD_2 }
+			}
+			else_if = {
+				limit = { ROOT = { diplomacy >= 12 } }
+				custom_tooltip = { text = CONVERSION_DIPLOMACY_GOOD_1 }
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 1.5
+				trait = kind
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = gregarious
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = shy
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				diplomacy < 8
+			}
+
+			mult_modifier = {
+				factor = 2.0
+
+				OR = {
+					diplomacy >= 15
+					trait = socializer
+					trait = poet
+				}
+			}
+		}
+	}
+}
+
+######################################################################################################
+# Courtier with minority religion attempts to convert another character at court
+######################################################################################################
+
+# SoA.4030 - Courtier with minority religion attempts to convert another character at court
+character_event = {
+	id = SoA.4030
+
+	hide_window = yes
+	is_triggered_only = yes # attempt_conversion, CK2Plus_conversion_decisons.txt
+
+	immediate = {
+		save_event_target_as = converting_courtier
+
+		FROM = {
+			save_event_target_as = targeted_courtier
+			character_event = { id = SoA.4031 }
+		}
+	}
+}
+
+# SoA.4031 - Character is approached about conversion
+character_event = {
+	id = SoA.4031
+	desc = EVTDESC_SOA_4031
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_religion
+	portrait = event_target:converting_courtier
+
+	is_triggered_only = yes
+
+	immediate = {
+		add_character_modifier = {
+			name = conversion_attempt_timer
+			years = 5
+			hidden = yes
+		}
+	}
+
+	option = { # Accept
+		name = EVTOPTA_SOA_4031
+
+		trigger = {
+			OR = {
+				religion_group = FROM
+				has_sympathy_for_public_religion_of_from_trigger = yes
+			}
+		}
+
+		if = {
+			limit = {
+				FROM = { religion_group = christian }
+				trait = sympathy_christendom
+			}
+			remove_trait = sympathy_christendom
+		}
+		else_if = {
+			limit = {
+				FROM = { religion_group = muslim }
+				trait = sympathy_islam
+			}
+			remove_trait = sympathy_islam
+		}
+		else_if = {
+			limit = {
+				FROM = { religion_group = pagan_group }
+				trait = sympathy_pagans
+			}
+			remove_trait = sympathy_pagans
+		}
+		else_if = {
+			limit = {
+				FROM = { religion_group = zoroastrian_group }
+				trait = sympathy_zoroastrianism
+			}
+			remove_trait = sympathy_zoroastrianism
+		}
+		else_if = {
+			limit = {
+				FROM = { religion_group = jewish_group }
+				trait = sympathy_judaism
+			}
+			remove_trait = sympathy_judaism
+		}
+		else_if = {
+			limit = {
+				FROM = { religion_group = indian_group }
+				trait = sympathy_indian
+			}
+			remove_trait = sympathy_indian
+		}
+
+		if = {
+			limit = { NOT = { religion_group = FROM } }
+
+			random = {
+				chance = 50
+
+				trigger_switch = {
+					on_trigger = religion_group
+
+					christian = { add_trait = sympathy_christendom }
+					muslim = { add_trait = sympathy_islam }
+					pagan_group = { add_trait = sympathy_pagans }
+					zoroastrian_group = { add_trait = sympathy_zoroastrianism }
+					jewish_group = { add_trait = sympathy_judaism }
+					indian_group = { add_trait = sympathy_indian }
+				}
+			}
+		}
+
+		hidden_effect = {
+			if = {
+				limit = { religion_group = FROM }
+
+				if = {
+					limit = { higher_real_tier_than = DUKE }
+					FROM = { piety = 100 }
+				}
+				else_if = {
+					limit = { real_tier = DUKE }
+					FROM = { piety = 50 }
+				}
+				else_if = {
+					limit = { is_ruler = yes }
+					FROM = { piety = 25 }
+				}
+			}
+			else = {
+				if = {
+					limit = { higher_real_tier_than = DUKE }
+
+					set_character_flag = king_converted
+
+					FROM = {
+						if = {
+							limit = { has_nickname = no }
+
+							random_list = {
+								10 = {}
+								20 = { give_nickname = nick_the_preacher }
+								20 = { give_nickname = nick_the_proselytizer }
+								10 = { give_nickname = nick_the_pious }
+								5 = { give_nickname = nick_the_illuminator }
+							}
+						}
+
+						piety = 200
+						set_character_flag = converted_king
+					}
+				}
+				else_if = {
+					limit = { real_tier = DUKE }
+
+					FROM = {
+						piety = 100
+
+						if = {
+							limit = { has_nickname = no }
+
+							random_list = {
+								30 = {}
+								20 = { give_nickname = nick_the_preacher }
+								10 = { give_nickname = nick_the_proselytizer }
+								10 = { give_nickname = nick_the_pious }
+							}
+						}
+					}
+				}
+				else_if = {
+					limit = { is_ruler = yes }
+					FROM = { piety = 50 }
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				secret_religion = {
+					target = FROM
+					target_type = public
+				}
+			}
+
+			clear_secret_religion = yes
+		}
+
+		# Workaround for automatic usuraption of theocratic characters
+		FROM = { religion_scope = { save_event_target_as = target_religion } }
+		convert_religion_failsafe_effect = yes
+
+		if = {
+			limit = {
+				NOR = {
+					trait = cynical
+					trait = sympathy_christendom
+					trait = sympathy_islam
+					trait = sympathy_pagans
+					trait = sympathy_zoroastrianism
+					trait = sympathy_judaism
+					trait = sympathy_indian
+				}
+			}
+
+			random = {
+				chance = 25
+				add_trait_zealous_effect = yes
+			}
+		}
+
+		if = {
+			limit = { trait = cynical }
+			remove_trait = cynical
+		}
+
+		opinion = {
+			name = converted_me
+			who = FROM
+			years = 20
+		}
+
+		reverse_opinion = {
+			name = agreed_to_convert
+			who = FROM
+			years = 20
+		}
+
+		if = {
+			limit = { religion_group = indian_group }
+
+			set_character_flag = india_converted
+			character_event = { id = RoI.30122 }
+		}
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				trigger_if = {
+					limit = { has_secret_religion = yes }
+
+					secret_religion = {
+						target = FROM
+						target_type = public
+					}
+				}
+
+				trigger_if = {
+					limit = {
+						is_ruler = yes
+
+						capital_scope = {
+							NOT = { religion = FROM }
+						}
+					}
+
+					trigger_if = {
+						limit = { religion_group = muslim }
+
+						FROM = {
+							OR = {
+								religion_group = ROOT
+								religion = jewish
+								religion = zoroastrian
+							}
+						}
+					}
+					trigger_else_if = {
+						limit = {
+							NOR = {
+								religion_group = muslim
+								religion_group = zoroastrian_group
+							}
+						}
+
+						FROM = {
+							OR = {
+								religion_group = ROOT
+								religion = jewish
+							}
+						}
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				is_ruler = yes
+
+				OR = {
+					independent = yes
+					liege = { NOT = { religion = FROM } }
+				}
+			}
+
+			mult_modifier = {
+				factor = 3
+
+				trigger_if = {
+					limit = {
+						culture_group = east_slavic
+						religion_group = pagan_group
+					}
+
+					FROM = {
+						is_orthodox_branch = yes
+						is_heretic = no
+					}
+				}
+				trigger_else = {
+					culture_group = north_germanic
+					religion_group = pagan_group
+
+					FROM = {
+						is_catholic_branch = yes
+						is_heretic = no
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				is_heretic = yes
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				culture_group = baltic
+				religion_group = pagan_group
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				OR = {
+					culture_group = north_germanic
+					culture_group = east_slavic
+				}
+
+				religion_group = pagan_group
+				FROM = { religion_group = muslim }
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				is_unreformed_pagan_trigger = yes
+				FROM = { is_not_unreformed_pagan_trigger = yes }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				is_ruler = no
+				liege = { NOT = { religion = FROM } }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				is_ruler = no
+				liege = { religion = FROM }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				location = { religion = FROM }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				FROM = {
+					trigger_if = {
+						limit = { religion_group = ROOT }
+
+						religion_group = ROOT
+						is_heretic = no
+
+						OR = {
+							religion_group = muslim
+							religion_group = pagan_group
+						}
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				religion_group = jewish_group
+				NOT = { religion_group = FROM }
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				personal_opinion = {
+					who = FROM
+					value < 0
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				personal_opinion = {
+					who = FROM
+					value >= 25
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				personal_opinion = {
+					who = FROM
+					value >= 50
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				personal_opinion = {
+					who = FROM
+					value >= 75
+				}
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				trait = excommunicated
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				NOT = { religion_authority >= 0.4 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				NOT = { religion_authority >= 0.3 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				NOT = { religion_authority >= 0.2 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				NOT = { religion_authority >= 0.1 }
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				FROM = { diplomacy >= 14 }
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				FROM = { diplomacy >= 16 }
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				FROM = { diplomacy >= 18 }
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				FROM = { diplomacy >= 20 }
+			}
+
+			mult_modifier = {
+				factor = 10
+
+				secret_religion = {
+					target = FROM
+					target_type = public
+				}
+			}
+		}
+	}
+
+	option = { # Sympathy
+		name = EVTOPTF_SOA_4031
+
+		trigger = {
+			has_sympathy_for_public_religion_of_from_trigger = no
+
+			NOR = {
+				religion_group = FROM
+				trait = zealous
+			}
+		}
+
+		if = {
+			limit = { FROM = { religion_group = christian } }
+			add_trait = sympathy_christendom
+		}
+		else_if = {
+			limit = { FROM = { religion_group = muslim } }
+			add_trait = sympathy_islam
+		}
+		else_if = {
+			limit = { FROM = { religion_group = pagan_group } }
+			add_trait = sympathy_pagans
+		}
+		else_if = {
+			limit = { FROM = { religion_group = zoroastrian_group } }
+			add_trait = sympathy_zoroastrianism
+		}
+		else_if = {
+			limit = { FROM = { religion_group = jewish_group } }
+			add_trait = sympathy_judaism
+		}
+		else_if = {
+			limit = { FROM = { religion_group = indian_group } }
+			add_trait = sympathy_indian
+		}
+
+		if = {
+			limit = { NOT = { trait = cynical } }
+
+			random = {
+				chance = 50
+				add_trait_cynical_effect = yes
+			}
+		}
+
+		opinion = {
+			name = opinion_mutual_respect
+			who = FROM
+			years = 20
+			multiplier = 2
+		}
+
+		reverse_opinion = {
+			name = opinion_mutual_respect
+			who = FROM
+			years = 20
+			multiplier = 2
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 0.25
+
+				OR = {
+					AND = {
+						trait = sympathy_christendom
+						NOT = { FROM = { religion_group = christian } }
+					}
+
+					AND = {
+						trait = sympathy_islam
+						NOT = { FROM = { religion_group = muslim } }
+					}
+
+					AND = {
+						trait = sympathy_pagans
+						NOT = { FROM = { religion_group = pagan_group } }
+					}
+
+					AND = {
+						trait = sympathy_zoroastrianism
+						NOT = { FROM = { religion_group = zoroastrian_group } }
+					}
+
+					AND = {
+						trait = sympathy_judaism
+						NOT = { FROM = { religion_group = jewish_group } }
+					}
+
+					AND = {
+						trait = sympathy_indian
+						NOT = { FROM = { religion_group = indian_group } }
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				trigger_if = {
+					limit = { independent = no }
+
+					liege = {
+						NOR = {
+							religion = FROM
+							character = FROM
+						}
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				is_ruler = no
+				liege = { religion = FROM }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				capital_scope = { religion = FROM }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				NOT = { religion_group = FROM }
+			}
+
+			mult_modifier = {
+				factor = 3
+
+				trigger_if = {
+					limit = {
+						culture_group = east_slavic
+						religion_group = pagan_group
+					}
+
+					FROM = {
+						is_orthodox_branch = yes
+						is_heretic = no
+					}
+				}
+				trigger_else = {
+					culture_group = north_germanic
+					religion_group = pagan_group
+
+					FROM = {
+						is_catholic_branch = yes
+						is_heretic = no
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				is_heretic = yes
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				culture_group = baltic
+				religion_group = pagan_group
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				OR = {
+					culture_group = north_germanic
+					culture_group = east_slavic
+				}
+
+				religion_group = pagan_group
+				FROM = { religion_group = muslim }
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				is_unreformed_pagan_trigger = yes
+				FROM = { is_not_unreformed_pagan_trigger = yes }
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				religion_group = jewish_group
+				NOT = { religion_group = FROM }
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				personal_opinion = {
+					who = FROM
+					value < 0
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				personal_opinion = {
+					who = FROM
+					value >= 25
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				personal_opinion = {
+					who = FROM
+					value >= 50
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				personal_opinion = {
+					who = FROM
+					value >= 75
+				}
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				trait = excommunicated
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				NOT = { religion_authority >= 0.4 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				NOT = { religion_authority >= 0.3 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				NOT = { religion_authority >= 0.2 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				NOT = { religion_authority >= 0.1 }
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				FROM = { diplomacy >= 14 }
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				FROM = { diplomacy >= 16 }
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				FROM = { diplomacy >= 18 }
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				FROM = { diplomacy >= 20 }
+			}
+		}
+	}
+
+	option = { # Refuse
+		name = EVTOPTB_SOA_4031
+
+		trigger = {
+			OR = {
+				learning < 8
+				NOT = { is_liege_of = FROM }
+			}
+		}
+
+		opinion = {
+			name = tried_to_convert_me
+			who = FROM
+			years = 20
+		}
+
+		ai_chance = {
+			factor = 300
+
+			trigger = {
+				NOT = {
+					secret_religion = {
+						target = FROM
+						target_type = public
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				OR = {
+					AND = {
+						independent = no
+						liege = { religion = FROM }
+					}
+
+					capital_scope = { religion = FROM }
+					has_sympathy_for_public_religion_of_from_trigger = yes
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				religion_authority >= 0.6
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				religion_authority >= 0.7
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				religion_authority >= 0.8
+			}
+		}
+	}
+
+	option = { # Debate for reconversion
+		name = EVTOPTC_SOA_4031
+		tooltip_info = learning
+
+		trigger = {
+			learning >= 8
+			is_liege_of = FROM
+			piety >= 0
+		}
+
+		if = {
+			limit = { FROM = { is_ruler = yes } }
+			piety = -50
+		}
+		else = {
+			piety = -10
+		}
+
+		FROM = {
+			character_event = {
+				id = GoPagan.135
+				tooltip = DEBATE_CONVERSION
+			}
+
+			custom_tooltip = { text = CONVERSION_START }
+			custom_tooltip = { text = CONVERSION_BASE_DEBATE }
+
+			if = {
+				limit = {
+					has_sympathy_for_public_religion_of_root_trigger = yes
+				}
+				custom_tooltip = { text = CONVERSION_SYMPATHY }
+			}
+
+			if = {
+				limit = {
+					trigger_if = {
+						limit = {
+							culture_group = east_slavic
+							religion_group = pagan_group
+						}
+
+						ROOT = {
+							is_orthodox_branch = yes
+							is_heretic = no
+						}
+					}
+					trigger_else = {
+						culture_group = north_germanic
+						religion_group = pagan_group
+
+						ROOT = {
+							religion = chalcedonian
+							is_catholic_branch = yes
+							is_heretic = no
+						}
+					}
+				}
+				custom_tooltip = { text = CONVERSION_CULTURE_GOOD_2 }
+			}
+			else_if = {
+				limit = {
+					culture_group = baltic
+					religion_group = pagan_group
+				}
+				custom_tooltip = { text = CONVERSION_CULTURE_BAD_3 }
+			}
+			else_if = {
+				limit = {
+					OR = {
+						culture_group = north_germanic
+						culture_group = east_slavic
+					}
+
+					religion_group = pagan_group
+					ROOT = { religion_group = muslim }
+				}
+				custom_tooltip = { text = CONVERSION_CULTURE_BAD_3 }
+			}
+
+			if = {
+				limit = {
+					is_unreformed_pagan_trigger = yes
+					ROOT = { NOT = { religion_group = pagan_group } }
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_GOOD_1 }
+			}
+			else_if = {
+				limit = {
+					religion_group = jewish_group
+					NOT = { religion_group = ROOT }
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_BAD_3 }
+			}
+			else_if = {
+				limit = {
+					OR = {
+						is_heresy_of = ROOT
+						is_parent_religion = ROOT
+					}
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_BAD_2 }
+			}
+			else_if = {
+				limit = { religion_group = ROOT }
+
+				if = {
+					limit = {
+						OR = {
+							religion_group = muslim
+							religion_group = pagan_group
+						}
+
+						NOR = {
+							is_heresy_of = ROOT
+							is_parent_religion = ROOT
+						}
+					}
+					custom_tooltip = { text = CONVERSION_RELIGION_BAD_2 }
+				}
+				else = {
+					custom_tooltip = { text = CONVERSION_RELIGION_GOOD_2 }
+				}
+			}
+
+			if = {
+				limit = { opinion = { who = ROOT value < -25 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_4 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 0 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_3 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 50 } }
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_1 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 75 } }
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_2 }
+			}
+			else = {
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_3 }
+			}
+
+			if = {
+				limit = { trait = cynical }
+				custom_tooltip = { text = CONVERSION_CYNICAL_GOOD_3 }
+			}
+
+			if = {
+				limit = { is_heretic = no }
+
+				if = {
+					limit = { NOT = { religion_authority >= 0.1 } }
+					custom_tooltip = { text = CONVERSION_RA_GOOD_3 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.25 } }
+					custom_tooltip = { text = CONVERSION_RA_GOOD_2 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.4 } }
+					custom_tooltip = { text = CONVERSION_RA_GOOD_1 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.75 } }
+					custom_tooltip = { text = CONVERSION_RA_BAD_1 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.9 } }
+					custom_tooltip = { text = CONVERSION_RA_BAD_2 }
+				}
+				else = {
+					custom_tooltip = { text = CONVERSION_RA_BAD_3 }
+				}
+			}
+
+			if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value <= -9 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_GOOD_3 }
+			}
+			else_if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value <= -5 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_GOOD_2 }
+			}
+			else_if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value <= -1 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_GOOD_1 }
+			}
+			else_if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value >= 9 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_BAD_3 }
+			}
+			else_if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value >= 5 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_BAD_2 }
+			}
+			else_if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value >= 1 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_BAD_1 }
+			}
+
+			if = {
+				limit = {
+					learning > ROOT
+					has_sympathy_for_public_religion_of_root_trigger = no
+
+					ROOT = {
+						NOT = { trait = zealous }
+
+						opinion = {
+							who = PREV
+							value >= 0
+						}
+					}
+
+					NOT = { religion_group = ROOT }
+				}
+				custom_tooltip = { text = CONVERSION_CHANCE_SYMP }
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				NOT = {
+					secret_religion = {
+						target = FROM
+						target_type = public
+					}
+				}
+			}
+		}
+	}
+
+	option = { # Imprison (if liege)
+		name = EVTOPTD_SOA_4031
+
+		trigger = { is_liege_of = FROM }
+
+		opinion = {
+			name = tried_to_convert_me
+			who = FROM
+			years = 20
+			multiplier = 2
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = 39024
+				tooltip = ATTEMPT_IMPRISON
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				personal_opinion = {
+					who = FROM
+					value < 0
+				}
+
+				has_sympathy_for_public_religion_of_from_trigger = no
+
+				NOR = {
+					trait = kind
+					is_friend = FROM
+					is_lover = FROM
+
+					secret_religion = {
+						target = FROM
+						target_type = public
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = trusting
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				OR = {
+					trait = cruel
+					trait = impaler
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 3.0
+
+				personal_opinion = {
+					who = FROM
+					value < -25
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.9
+				FROM = { diplomacy >= 14 }
+			}
+
+			mult_modifier = {
+				factor = 0.9
+				FROM = { diplomacy >= 16 }
+			}
+
+			mult_modifier = {
+				factor = 0.9
+				FROM = { diplomacy >= 18 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				FROM = { diplomacy >= 20 }
+			}
+		}
+	}
+
+	option = { # Refuse and blab to liege (if not liege)
+		name = EVTOPTE_SOA_4031
+
+		trigger = {
+			religion = liege
+			intrigue >= 8
+			intrigue > FROM
+			NOT = { is_liege_of = FROM }
+		}
+
+		tooltip_info = intrigue
+
+		opinion = {
+			name = tried_to_convert_me
+			who = FROM
+			years = 20
+			multiplier = 2
+		}
+
+		liege = {
+			letter_event = {
+				id = SoA.4032
+				days = 7
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				personal_opinion = {
+					who = FROM
+					value < 0
+				}
+
+				has_sympathy_for_public_religion_of_from_trigger = no
+
+				NOR = {
+					trait = kind
+					is_friend = FROM
+					is_lover = FROM
+
+					secret_religion = {
+						target = FROM
+						target_type = public
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = trusting
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				OR = {
+					trait = cruel
+					trait = impaler
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 3.0
+
+				personal_opinion = {
+					who = FROM
+					value < -25
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.9
+				FROM = { diplomacy >= 14 }
+			}
+
+			mult_modifier = {
+				factor = 0.9
+				FROM = { diplomacy >= 16 }
+			}
+
+			mult_modifier = {
+				factor = 0.9
+				FROM = { diplomacy >= 18 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				FROM = { diplomacy >= 20 }
+			}
+		}
+	}
+}
+
+# SoA.4032 - Liege learns of conversion attempt
+letter_event = {
+	id = SoA.4032
+	desc = EVTDESC_SOA_4032
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = { # Convince him to convert
+		name = EVTOPTD_SOA_4032
+
+		trigger = { piety >= 0 }
+
+		show_portrait = FROMFROM
+
+		if = {
+			limit = { FROMFROM = { is_ruler = yes } }
+			piety = -50
+		}
+		else = {
+			piety = -10
+		}
+
+		FROMFROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = GoPagan.131
+				days = 7
+				tooltip = CONVINCE_CONVERSION
+			}
+
+			custom_tooltip = { text = CONVERSION_START }
+			custom_tooltip = { text = CONVERSION_BASE_DIPLOMACY }
+
+			if = {
+				limit = { has_sympathy_for_public_religion_of_root_trigger = yes }
+				custom_tooltip = { text = CONVERSION_SYMPATHY }
+			}
+
+			if = {
+				limit = {
+					trigger_if = {
+						limit = {
+							culture_group = east_slavic
+							religion_group = pagan_group
+						}
+
+						ROOT = {
+							is_orthodox_branch = yes
+							is_heretic = no
+						}
+					}
+					trigger_else = {
+						culture_group = north_germanic
+						religion_group = pagan_group
+
+						ROOT = {
+							is_catholic_branch = yes
+							is_heretic = no
+						}
+					}
+					custom_tooltip = { text = CONVERSION_CULTURE_GOOD_3 }
+				}
+			}
+			else_if = {
+				limit = {
+					OR = {
+						AND = {
+							culture_group = baltic
+							religion_group = pagan_group
+						}
+
+						AND = {
+							OR = {
+								culture_group = north_germanic
+								culture_group = east_slavic
+							}
+							religion_group = pagan_group
+							ROOT = { religion_group = muslim }
+						}
+					}
+				}
+				custom_tooltip = { text = CONVERSION_CULTURE_BAD_4 }
+			}
+
+			if = {
+				limit = {
+					is_unreformed_pagan_trigger = yes
+					ROOT = { NOT = { religion_group = pagan_group } }
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_GOOD_2 }
+			}
+			else_if = {
+				limit = {
+					religion_group = jewish_group
+					ROOT = { NOT = { religion_group = jewish_group } }
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_BAD_4 }
+			}
+			else_if = {
+				limit = {
+					OR = {
+						is_heresy_of = ROOT
+						is_parent_religion = ROOT
+					}
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_BAD_4 }
+			}
+			else_if = {
+				limit = { religion_group = ROOT }
+
+				if = {
+					limit = {
+						OR = {
+							religion_group = muslim
+							religion_group = pagan_group
+						}
+					}
+
+					custom_tooltip = { text = CONVERSION_RELIGION_BAD_3 }
+				}
+				else = {
+					custom_tooltip = { text = CONVERSION_RELIGION_GOOD_1 }
+				}
+			}
+
+			if = {
+				limit = { opinion = { who = ROOT value < 0 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_4 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 25 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_3 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 50 } }
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_1 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 75 } }
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_2 }
+			}
+			else = {
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_3 }
+			}
+
+			if = {
+				limit = {
+					is_ruler = no
+
+					any_spouse = {
+						OR = {
+							character = ROOT
+							is_parent_of = ROOT
+							is_child_of = ROOT
+							sibling = ROOT
+						}
+					}
+
+					OR = {
+						is_close_relative = ROOT
+						is_lover = ROOT
+					}
+				}
+
+				custom_tooltip = { text = CONVERSION_RELATION_GOOD_3 }
+			}
+			else_if = {
+				limit = {
+					calc_true_if = {
+						amount == 1
+
+						AND = {
+							is_ruler = no
+
+							any_spouse = {
+								OR = {
+									character = ROOT
+									is_parent_of = ROOT
+									is_child_of = ROOT
+									sibling = ROOT
+								}
+							}
+						}
+
+						OR = {
+							is_close_relative = ROOT
+							is_lover = ROOT
+						}
+					}
+				}
+				custom_tooltip = { text = CONVERSION_RELATION_GOOD_2 }
+			}
+
+			if = {
+				limit = { trait = cynical }
+				custom_tooltip = { text = CONVERSION_CYNICAL_GOOD_3 }
+			}
+
+			if = {
+				limit = { is_heretic = no }
+
+				if = {
+					limit = { NOT = { religion_authority >= 0.1 } }
+					custom_tooltip = { text = CONVERSION_RA_GOOD_3 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.25 } }
+					custom_tooltip = { text = CONVERSION_RA_GOOD_2 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.4 } }
+					custom_tooltip = { text = CONVERSION_RA_GOOD_1 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.75 } }
+					custom_tooltip = { text = CONVERSION_RA_BAD_1 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.9 } }
+					custom_tooltip = { text = CONVERSION_RA_BAD_2 }
+				}
+				else = {
+					custom_tooltip = { text = CONVERSION_RA_BAD_3 }
+				}
+			}
+
+			if = {
+				limit = { ROOT = { diplomacy >= 16 } }
+				custom_tooltip = { text = CONVERSION_DIPLOMACY_GOOD_2 }
+			}
+			else_if = {
+				limit = { ROOT = { diplomacy >= 12 } }
+				custom_tooltip = { text = CONVERSION_DIPLOMACY_GOOD_1 }
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 1.5
+				trait = kind
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = gregarious
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = shy
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				diplomacy < 8
+			}
+
+			mult_modifier = {
+				factor = 2.0
+
+				OR = {
+					diplomacy >= 15
+					trait = socializer
+					trait = poet
+				}
+			}
+		}
+	}
+
+	option = { # Debate for reconversion
+		name = EVTOPTC_SOA_4032
+		tooltip_info = learning
+
+		trigger = { learning >= 7 }
+
+		if = {
+			limit = { FROMFROM = { is_ruler = yes } }
+			piety = -50
+		}
+		else = {
+			piety = -10
+		}
+
+		FROMFROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = GoPagan.135
+				tooltip = DEBATE_CONVERSION
+			}
+
+			custom_tooltip = { text = CONVERSION_START }
+			custom_tooltip = { text = CONVERSION_BASE_DEBATE }
+
+			if = {
+				limit = {
+					OR = {
+						AND = {
+							trait = sympathy_christendom
+							ROOT = { religion_group = christian }
+						}
+
+						AND = {
+							trait = sympathy_islam
+							ROOT = { religion_group = muslim }
+						}
+
+						AND = {
+							trait = sympathy_pagans
+							ROOT = { religion_group = pagan_group }
+						}
+
+						AND = {
+							trait = sympathy_zoroastrianism
+							ROOT = { religion_group = zoroastrian_group }
+						}
+
+						AND = {
+							trait = sympathy_judaism
+							ROOT = { religion_group = jewish_group }
+						}
+
+						AND = {
+							trait = sympathy_indian
+							ROOT = { religion_group = indian_group }
+						}
+					}
+				}
+
+				custom_tooltip = { text = CONVERSION_SYMPATHY }
+			}
+
+			if = {
+				limit = {
+					trigger_if = {
+						limit = {
+							culture_group = east_slavic
+							religion_group = pagan_group
+						}
+
+						ROOT = {
+							is_orthodox_branch = yes
+							is_heretic = no
+						}
+					}
+					trigger_else = {
+						culture_group = north_germanic
+						religion_group = pagan_group
+
+						ROOT = {
+							is_catholic_branch = yes
+							is_heretic = no
+						}
+					}
+					custom_tooltip = { text = CONVERSION_CULTURE_GOOD_2 }
+				}
+			}
+			else_if = {
+				limit = {
+					OR = {
+						AND = {
+							culture_group = baltic
+							religion_group = pagan_group
+						}
+
+						AND = {
+							OR = {
+								culture_group = north_germanic
+								culture_group = east_slavic
+							}
+							religion_group = pagan_group
+							ROOT = { religion_group = muslim }
+						}
+					}
+				}
+				custom_tooltip = { text = CONVERSION_CULTURE_BAD_3 }
+			}
+
+			if = {
+				limit = {
+					is_unreformed_pagan_trigger = yes
+					ROOT = { NOT = { religion_group = pagan_group } }
+				}
+
+				custom_tooltip = { text = CONVERSION_RELIGION_GOOD_1 }
+			}
+			else_if = {
+				limit = {
+					religion_group = jewish_group
+					ROOT = { NOT = { religion_group = jewish_group } }
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_BAD_3 }
+			}
+			else_if = {
+				limit = {
+					OR = {
+						is_heresy_of = ROOT
+						is_parent_religion = ROOT
+					}
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_BAD_2 }
+			}
+			else_if = {
+				limit = {
+					religion_group = ROOT
+
+					OR = {
+						religion_group = muslim
+						religion_group = pagan_group
+					}
+
+					custom_tooltip = { text = CONVERSION_RELIGION_BAD_2 }
+				}
+			}
+			else = {
+				custom_tooltip = { text = CONVERSION_RELIGION_GOOD_2 }
+			}
+
+			if = {
+				limit = { opinion = { who = ROOT value < -25 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_4 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 0 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_3 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 50 } }
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_1 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 75 } }
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_2 }
+			}
+			else = {
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_3 }
+			}
+
+			if = {
+				limit = { trait = cynical }
+				custom_tooltip = { text = CONVERSION_CYNICAL_GOOD_3 }
+			}
+
+			if = {
+				limit = { is_heretic = no }
+
+				if = {
+					limit = { religion_authority = 0.9 }
+					custom_tooltip = { text = CONVERSION_RA_BAD_3 }
+				}
+				else_if = {
+					limit = { religion_authority = 0.75 }
+					custom_tooltip = { text = CONVERSION_RA_BAD_2 }
+				}
+				else_if = {
+					limit = { religion_authority = 0.6 }
+					custom_tooltip = { text = CONVERSION_RA_BAD_1 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority = 0.1 } }
+					custom_tooltip = { text = CONVERSION_RA_GOOD_3 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority = 0.25 } }
+					custom_tooltip = { text = CONVERSION_RA_GOOD_2 }
+				}
+				else_if = {
+					limit = { NOT = { religion_authority >= 0.4 } }
+					custom_tooltip = { text = CONVERSION_RA_GOOD_1 }
+				}
+			}
+
+			if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value <= -9 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_GOOD_3 }
+			}
+			else_if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value <= -5 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_GOOD_2 }
+			}
+			else_if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value <= -1 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_GOOD_1 }
+			}
+			else_if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value >= 9 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_BAD_3 }
+			}
+			else_if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value >= 5 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_BAD_2 }
+			}
+			else_if = {
+				limit = { attribute_diff = { character = ROOT attribute = learning value >= 1 } }
+				custom_tooltip = { text = CONVERSION_LEARNING_BAD_1 }
+			}
+
+			if = {
+				limit = {
+					ROOT = { NOT = { trait = zealous } }
+
+					reverse_opinion = {
+						who = ROOT
+						value >= 0
+					}
+
+					attribute_diff = {
+						character = ROOT
+						attribute = learning
+						value >= 1
+					}
+
+					NOR = {
+						religion_group = ROOT
+
+						AND = {
+							ROOT = { trait = sympathy_christendom }
+							religion_group = christian
+						}
+
+						AND = {
+							ROOT = { trait = sympathy_islam }
+							religion_group = muslim
+						}
+
+						AND = {
+							ROOT = { trait = sympathy_pagans }
+							religion_group = pagan_group
+						}
+
+						AND = {
+							ROOT = { trait = sympathy_zoroastrianism }
+							religion_group = zoroastrian_group
+						}
+
+						AND = {
+							ROOT = { trait = sympathy_judaism }
+							religion_group = jewish_group
+						}
+
+						AND = {
+							ROOT = { trait = sympathy_indian }
+							religion_group = indian_group
+						}
+					}
+				}
+
+				custom_tooltip = { text = CONVERSION_CHANCE_SYMP }
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2
+				is_priest = yes
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 10
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 12
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 14
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 16
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 18
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				learning >= 20
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 2.0
+
+				OR = {
+					trait = scholar
+					trait = theologian
+					trait = faqih
+				}
+			}
+		}
+	}
+
+	option = { # Threaten unless he converts
+		name = EVTOPTA_SOA_4021
+
+		trigger = {
+			piety >= 0
+
+			trigger_if = {
+				limit = { is_tribal = yes }
+
+				OR = {
+					has_law = tribal_organization_2
+					has_law = tribal_organization_3
+					has_law = tribal_organization_4
+
+				}
+			}
+			trigger_else = {
+				crownlaw_title = {
+					OR = {
+						has_law = crown_authority_2
+						has_law = crown_authority_3
+						has_law = crown_authority_4
+					}
+				}
+			}
+		}
+
+		if = {
+			limit = { FROMFROM = { is_ruler = yes } }
+			piety = -50
+		}
+		else = {
+			piety = -10
+		}
+
+		tyrant_plus_1_effect = yes
+
+		FROMFROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = GoPagan.143
+				days = 7
+				tooltip = THREATEN_CONVERSION
+			}
+
+			custom_tooltip = { text = CONVERSION_START }
+			custom_tooltip = { text = CONVERSION_BASE_THREAT }
+
+			if = {
+				limit = { has_sympathy_for_public_religion_of_root_trigger = yes }
+				custom_tooltip = { text = CONVERSION_SYMPATHY }
+			}
+
+			if = {
+				limit = {
+					religion_group = jewish_group
+					NOT = { religion_group = ROOT }
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_BAD_4 }
+			}
+			else_if = {
+				limit = {
+					OR = {
+						is_heresy_of = ROOT
+						is_parent_religion = ROOT
+					}
+				}
+				custom_tooltip = { text = CONVERSION_RELIGION_BAD_2 }
+			}
+
+			if = {
+				limit = { is_ruler = yes }
+				custom_tooltip = { text = CONVERSION_RULER_BAD_2 }
+			}
+
+			if = {
+				limit = { is_priest = yes }
+				custom_tooltip = { text = CONVERSION_PRIEST_BAD_2 }
+			}
+
+			if = {
+				limit = { trait = cynical }
+				custom_tooltip = { text = CONVERSION_CYNICAL_GOOD_3 }
+			}
+			if = {
+				limit = { trait = craven }
+				custom_tooltip = { text = CONVERSION_CRAVEN_GOOD_3 }
+			}
+			if = {
+				limit = { trait = brave }
+				custom_tooltip = { text = CONVERSION_BRAVE_BAD_3 }
+			}
+			if = {
+				limit = { trait = humble }
+				custom_tooltip = { text = CONVERSION_HUMBLE_GOOD_1 }
+			}
+			if = {
+				limit = { trait = content }
+				custom_tooltip = { text = CONVERSION_CONTENT_GOOD_1 }
+			}
+			if = {
+				limit = { trait = proud }
+				custom_tooltip = { text = CONVERSION_PROUD_BAD_1 }
+			}
+			if = {
+				limit = { trait = wroth }
+				custom_tooltip = { text = CONVERSION_WROTH_BAD_1 }
+			}
+
+			if = {
+				limit = { opinion = { who = ROOT value < -75 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_4 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < -50 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_3 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < -25 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_2 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 0 } }
+				custom_tooltip = { text = CONVERSION_OPINION_BAD_1 }
+			}
+			else_if = {
+				limit = { opinion = { who = ROOT value < 25 } }
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_1 }
+			}
+			else = {
+				custom_tooltip = { text = CONVERSION_OPINION_GOOD_2 }
+			}
+
+			if = {
+				limit = {
+					ROOT = {
+						trigger_if = {
+							limit = { is_tribal = yes }
+							has_law = tribal_organization_3
+						}
+						trigger_else = {
+							crownlaw_title = { has_law = crown_authority_3 }
+						}
+					}
+				}
+				custom_tooltip = { text = CONVERSION_AUTHORITY_GOOD_1 }
+			}
+			else_if = {
+				limit = {
+					ROOT = {
+						trigger_if = {
+							limit = { is_tribal = yes }
+							has_law = tribal_organization_4
+						}
+						trigger_else = {
+							crownlaw_title = { has_law = crown_authority_4 }
+						}
+					}
+				}
+				custom_tooltip = { text = CONVERSION_AUTHORITY_GOOD_2 }
+			}
+
+			custom_tooltip = { text = IMPRISON_IF_REFUSE }
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				OR = {
+					trait = wroth
+					trait = proud
+					trait = cruel
+					trait = arbitrary
+					trait = zealous
+					trait = impaler
+				}
+
+				FROMFROM = {
+					ROOT = {
+						has_sympathy_for_public_religion_of_from_trigger = no
+					}
+				}
+
+				NOR = {
+					is_friend = FROMFROM
+					is_lover = FROMFROM
+					trait = kind
+					trait = just
+					trait = humble
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				is_close_relative = FROMFROM
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = impaler
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = paranoid
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				reverse_opinion = {
+					who = FROMFROM
+					value >= 50
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				reverse_opinion = {
+					who = FROMFROM
+					value >= 75
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				reverse_opinion = {
+					who = FROMFROM
+					value < 25
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				reverse_opinion = {
+					who = FROMFROM
+					value < 0
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				OR = {
+					trait = tyrant1
+					trait = tyrant2
+					trait = tyrant3
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				OR = {
+					trait = tyrant3
+					trait = tyrant4
+				}
+			}
+
+			mult_modifier = {
+				factor = 0
+				trait = tyrant5
+			}
+		}
+	}
+
+	option = { # Imprison
+		name = EVTOPTD_SOA_4031
+
+		trigger = {
+			piety < 0
+
+			trigger_if = {
+				limit = { is_tribal = yes }
+
+				OR = {
+					has_law = tribal_organization_2
+					has_law = tribal_organization_3
+					has_law = tribal_organization_4
+				}
+			}
+			trigger_else = {
+				crownlaw_title = {
+					OR = {
+						has_law = crown_authority_2
+						has_law = crown_authority_3
+						has_law = crown_authority_4
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				personal_opinion = {
+					who = FROMFROM
+					value < 0
+				}
+
+				FROMFROM = {
+					ROOT = {
+						has_sympathy_for_public_religion_of_prev_trigger = no
+					}
+				}
+
+				NOR = {
+					trait = kind
+					is_friend = FROMFROM
+					is_lover = FROMFROM
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = trusting
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				OR = {
+					trait = cruel
+					trait = impaler
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 3.0
+
+				personal_opinion = {
+					who = FROMFROM
+					value < -25
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.9
+				FROMFROM = { diplomacy >= 14 }
+			}
+
+			mult_modifier = {
+				factor = 0.9
+				FROMFROM = { diplomacy >= 16 }
+			}
+
+			mult_modifier = {
+				factor = 0.9
+				FROMFROM = { diplomacy >= 18 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				FROMFROM = { diplomacy >= 20 }
+			}
+		}
+
+		tyrant_plus_1_effect = yes
+
+		FROMFROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = 39024
+				tooltip = ATTEMPT_IMPRISON
+			}
+		}
+	}
+
+	option = { # Let it slide
+		name = EVTOPTB_SOA_4021
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 10
+
+				OR = {
+					trait = kind
+					is_friend = FROMFROM
+
+					FROMFROM = {
+						ROOT = {
+							has_sympathy_for_public_religion_of_prev_trigger = yes
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+######################################################################################################
+# Heretic province worries parent religion Head
+######################################################################################################
+
+# SoA.4100 - Heretic province worries parent religion Head (hidden province event)
+#	Immediate: SoA 4101 (head)
+
+province_event = {
+	id = SoA.4100
+
+	hide_window = yes
+
+	has_dlc = "Sons of Abraham"
+
+	trigger = {
+		is_heretic = yes
+
+		parent_religion_head = {
+			wealth >= 100
+		}
+
+		owner = {
+			is_nomadic = no
+
+			top_liege = {
+				is_parent_religion = ROOT
+			}
+		}
+
+		NOR = {
+			has_province_modifier = theological_dialogue
+			has_province_modifier = active_inquisition
+		}
+	}
+
+	mean_time_to_happen = {
+		years = 100
+
+		mult_modifier = {
+			factor = 3.0 # Do not spam human players with this
+			parent_religion_head = { ai = no }
+		}
+	}
+
+	immediate = {
+		save_event_target_as = heretic_province
+
+		owner = {
+			top_liege = {
+				save_event_target_as = heretic_province_top_liege
+			}
+		}
+
+		parent_religion_head = {
+			save_event_target_as = heretic_province_parent_religion_head
+			character_event = { id = SoA.4101 }
+		}
+	}
+}
+
+# SoA.4101 - Heretic province worries parent religion Head
+#	- A: Send in the Inquisition! Costs 100 gold. SoA 4110.
+#	- B: Dispatch Legate to Ruler: (top liege) SoA 4120.
+#	- C: Open Dialogue. (High learning) Costs 50 gold. SoA 4130.
+#	- D: Do nothing
+
+character_event = {
+	id = SoA.4101
+	desc = EVTDESC_SOA_4101
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = { # Send in the Inquisition!
+		name = EVTOPTA_SOA_4101
+
+		wealth = -100
+
+		event_target:heretic_province = {
+			show_scope_change = no
+
+			province_event = {
+				id = SoA.4110
+				tooltip = EVTTOOLTIP_SOA_4110
+			}
+		}
+
+		ai_chance = {
+			factor = 200
+
+			mult_modifier = {
+				factor = 10
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 3
+				trait = zealous
+			}
+		}
+	}
+
+	option = { # Dispatch Legate to Ruler
+		name = EVTOPTB_SOA_4101
+
+		trigger = {
+			NOT = { character = event_target:heretic_province_top_liege }
+		}
+
+		event_target:heretic_province_top_liege = {
+			show_scope_change = no
+
+			character_event = {
+				id = SoA.4120
+				days = 2
+				tooltip = EVTTOOLTIP_SOA_4120
+			}
+		}
+
+		ai_chance = { factor = 100 }
+	}
+
+	option = { # Open Dialogue
+		name = EVTOPTC_SOA_4101
+		tooltip_info = learning
+
+		trigger = { learning >= 7 }
+
+		wealth = -50
+
+		event_target:heretic_province = {
+			show_scope_change = no
+
+			province_event = {
+				id = SoA.4130
+				tooltip = EVTTOOLTIP_SOA_4130
+			}
+		}
+
+		ai_chance = { factor = 1000 }
+	}
+
+	option = { # Do nothing
+		name = EVTOPTD_SOA_4101
+	}
+}
+
+# SoA.4110 - Inquisition arrives in province.
+province_event = {
+	id = SoA.4110
+	desc = EVTDESC_SOA_4110
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		add_province_modifier = {
+			name = active_inquisition
+			years = 2
+		}
+
+		random_list = {
+			50 = {
+				province_event = {
+					id = SoA.4111
+					years = 2
+				}
+			}
+
+			50 = {
+				province_event = {
+					id = SoA.4113
+					years = 2
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_SOA_4110
+	}
+}
+
+# SoA.4111 - Inquisition fails! Fire SoA.4112 to the head of religion.
+province_event = {
+	id = SoA.4111
+	desc = EVTDESC_SOA_4111
+	picture = GFX_evt_burning_house
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_heretic = yes
+	}
+
+	immediate = {
+		remove_province_modifier = active_inquisition
+
+		event_target:heretic_province_parent_religion_head = {
+			character_event = { id = SoA.4112 }
+		}
+
+		add_province_modifier = {
+			name = religious_unrest
+			years = 1
+		}
+	}
+
+	option = {
+		name = EVTOPTA_SOA_4111
+	}
+}
+
+# SoA.4112 - Notification: Inquisition fails! Loss of authority.
+character_event = {
+	id = SoA.4112
+	desc = EVTDESC_SOA_4112
+	picture = GFX_evt_burning_house
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_SOA_4112
+
+		religion_authority = {
+			name = failed_inquisition
+		}
+	}
+}
+
+# SoA.4113 - Inquisition succeeds. Fire SoA.4114 to the head of religion.
+province_event = {
+	id = SoA.4113
+	desc = EVTDESC_SOA_4113
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_heretic = yes
+	}
+
+	immediate = {
+		religion = event_target:heretic_province_parent_religion_head
+		remove_province_modifier = active_inquisition
+		remove_province_modifier = religious_unrest
+		remove_province_modifier = heretic_stronghold
+
+		event_target:heretic_province_parent_religion_head = {
+			character_event = { id = SoA.4114 }
+		}
+	}
+
+	option = {
+		name = EVTOPTA_SOA_4113
+	}
+}
+
+# SoA.4114 - Notification: Inquisition succeeds!
+character_event = {
+	id = SoA.4114
+	desc = EVTDESC_SOA_4114
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_SOA_4114
+
+		religion_authority = {
+			name = successful_inquisition
+		}
+	}
+}
+
+# SoA.4120 - Legate berates ruler about heretic province
+character_event = {
+	id = SoA.4120
+	desc = EVTDESC_SOA_4120
+	picture = GFX_evt_pope
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		add_character_modifier = {
+			name = promised_to_clear_out_heresy
+			years = 10
+		}
+
+		event_target:heretic_province = {
+			add_province_modifier = {
+				name = promised_to_clear_out_heresy
+				years = 10
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_SOA_4120
+	}
+}
+
+# SoA.4121 - The heresy is eradicated in the county. On-action.
+province_event = {
+	id = SoA.4121
+
+	hide_window = yes
+	is_triggered_only = yes # on_county_religion_change
+
+	has_dlc = "Sons of Abraham"
+
+	trigger = {
+		has_province_modifier = promised_to_clear_out_heresy
+
+		owner = {
+			top_liege = {
+				has_character_modifier = promised_to_clear_out_heresy
+				religion = ROOT
+			}
+		}
+	}
+
+	immediate = {
+		remove_province_modifier = promised_to_clear_out_heresy
+		save_event_target_as = heretic_province
+
+		owner = {
+			top_liege = {
+				save_event_target_as = heretic_province_top_liege
+			}
+		}
+
+		religion_head = {
+			save_event_target_as = heretic_province_parent_religion_head
+			character_event = { id = SoA.4122 }
+		}
+	}
+}
+
+# SoA.4122 - The heresy has been eradicated in the county.
+character_event = {
+	id = SoA.4122
+	desc = EVTDESC_SOA_4122
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		opinion = {
+			name = opinion_grateful
+			who = event_target:heretic_province_top_liege
+			years = 10
+		}
+	}
+
+	option = { # Reward the ruler with money
+		name = EVTOPTA_SOA_4122
+
+		trigger = { wealth >= 100 }
+
+		transfer_scaled_wealth = {
+			to = event_target:heretic_province_top_liege
+			value = 1
+			min = 100
+			max = 100
+		}
+
+		event_target:heretic_province_top_liege = {
+			show_scope_change = no
+
+			opinion = {
+				name = opinion_grateful
+				who = ROOT
+				years = 10
+			}
+
+			character_event = {
+				id = SoA.4123
+				tooltip = EVTTOOLTIP_SOA_4123
+			}
+		}
+	}
+
+	option = { # Reward the ruler with piety
+		name = EVTOPTB_SOA_4122
+
+		event_target:heretic_province_top_liege = {
+			show_scope_change = no
+
+			opinion = {
+				name = opinion_grateful
+				who = ROOT
+				years = 10
+			}
+
+			character_event = {
+				id = SoA.4124
+				tooltip = EVTTOOLTIP_SOA_4124
+			}
+		}
+	}
+
+	option = { # Lift the excommunication
+		name = EVTOPTC_SOA_4122
+
+		trigger = {
+			event_target:heretic_province_top_liege = {
+				excommunicated_for = ROOT
+			}
+		}
+
+		event_target:heretic_province_top_liege = {
+			show_scope_change = no
+
+			opinion = {
+				name = opinion_grateful
+				who = ROOT
+				years = 10
+			}
+
+			character_event = {
+				id = SoA.4125
+				tooltip = EVTTOOLTIP_SOA_4125
+			}
+		}
+
+		ai_chance = { factor = 100 }
+	}
+}
+
+# SoA.4123 - Reward the ruler with money
+character_event = {
+	id = SoA.4123
+	desc = EVTDESC_SOA_4123
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_SOA_4123
+
+		tooltip = {
+			transfer_scaled_wealth = {
+				from = event_target:heretic_province_parent_religion_head
+				value = 1
+				min = 100
+				max = 100
+			}
+
+			opinion = {
+				name = opinion_grateful
+				who = event_target:heretic_province_parent_religion_head
+				years = 10
+			}
+		}
+	}
+}
+
+# SoA.4124 - Reward the ruler with piety
+character_event = {
+	id = SoA.4124
+	desc = EVTDESC_SOA_4124
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_SOA_4123
+
+		piety = 200
+
+		tooltip = {
+			opinion = {
+				name = opinion_grateful
+				who = event_target:heretic_province_parent_religion_head
+				years = 10
+			}
+		}
+	}
+}
+
+# SoA.4125 - Excommunication is lifted
+character_event = {
+	id = SoA.4125
+	desc = EVTDESC_SOA_4125
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_SOA_4123
+
+		excommunicate = no
+
+		tooltip = {
+			opinion = {
+				name = opinion_grateful
+				who = event_target:heretic_province_parent_religion_head
+				years = 10
+			}
+		}
+	}
+}
+
+# SoA.4130 - Theologians arrive in the province.
+province_event = {
+	id = SoA.4130
+	desc = EVTDESC_SOA_4130
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		add_province_modifier = {
+			name = theological_dialogue
+			years = 2
+		}
+
+		random_list = {
+			50 = {
+				province_event = {
+					id = SoA.4131
+					years = 2
+				}
+			}
+
+			50 = {
+				province_event = {
+					id = SoA.4133
+					years = 2
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_SOA_4130
+	}
+}
+
+# SoA.4131 - Dialogue fails! Fire SoA.4132 to the head of religion.
+province_event = {
+	id = SoA.4131
+	desc = EVTDESC_SOA_4131
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_heretic = yes
+	}
+
+	immediate = {
+		remove_province_modifier = theological_dialogue
+
+		event_target:heretic_province_parent_religion_head = {
+			character_event = { id = SoA.4132 }
+		}
+	}
+
+	option = {
+		name = EVTOPTA_SOA_4131
+	}
+}
+
+# SoA.4132 - Notification: Dialogue fails! Loss of authority.
+character_event = {
+	id = SoA.4132
+	desc = EVTDESC_SOA_4132
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_SOA_4132
+
+		religion_authority = {
+			name = failed_heretic_dialogue
+		}
+	}
+}
+
+# SoA.4133 - Dialogue succeeds. Fire SoA.4134 to the head of religion.
+province_event = {
+	id = SoA.4133
+	desc = EVTDESC_SOA_4133
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_heretic = yes
+	}
+
+	immediate = {
+		religion = event_target:heretic_province_parent_religion_head
+		remove_province_modifier = theological_dialogue
+		remove_province_modifier = religious_unrest
+		remove_province_modifier = heretic_stronghold
+
+		event_target:heretic_province_parent_religion_head = {
+			character_event = { id = SoA.4134 }
+		}
+	}
+
+	option = {
+		name = EVTOPTA_SOA_4133
+	}
+}
+
+# SoA.4134 - Notification: Dialogue succeeds!
+character_event = {
+	id = SoA.4134
+	desc = EVTDESC_SOA_4134
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_SOA_4134
+
+		religion_authority = {
+			name = successful_heretic_dialogue
+		}
+	}
+}
+
+# SoA.4200 - A heresy has become the new orthodoxy
+# FROM is new parent religion scope
+# FROMFROM is new heresy religion scope
+narrative_event = {
+	id = SoA.4200
+	title = EVTTITLE_SOA_4200
+	desc = EVTDESC_SOA_4200
+	picture = GFX_evt_bishop
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes # on_heresy_takeover
+	major = yes
+	hide_from = yes
+
+	trigger = {
+		trigger_if = {
+			limit = { is_alternate_start = yes }
+			total_years_played >= 1
+		}
+	}
+
+	immediate = {
+		log = "[From.GetName] is the new orthodoxy of [FromFrom.GetName]"
+
+		# Update holy order persistent event target religion scopes
+		# Holy Order titles and their leaders should already have been switched to the new orthodoxy
+		# Looks clumsy, but done this way because 'FROM = { is_parent_religion = cathar }' doesn't work
+
+		if = {
+			limit = {
+				OR = {
+					catholic = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					cathar = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					fraticelli = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					lollard = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					waldensian = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_knights_templar = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+
+			d_livonian_order = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+
+			d_teutonic_order = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+
+			k_teutonic_state = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+
+			d_knights_hospitaller = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+
+			d_knights_santiago = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+
+			d_knights_calatrava = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					orthodox = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					bogomilist = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					iconoclast = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					monothelite = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					paulician = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_holy_sepulchre = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					miaphysite = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					monophysite = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_saint_anthony = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					nestorian = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					messalian = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_saint_addai = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					shiite = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					druze = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					hurufi = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					qarmatian = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_fedayeen = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					sunni = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					zikri = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					yazidi = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_bektashi = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					ibadi = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					kharijite = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_haruriyyah = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					jewish = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					karaite = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					samaritan = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_zealots = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					zoroastrian = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					mazdaki = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					manichaean = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					khurmazta = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_immortals = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+
+			d_army_light = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					norse_pagan = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					norse_pagan_reformed = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_jomsvikings = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					tengri_pagan = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					tengri_pagan_reformed = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_sky_lords = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					west_african_pagan = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					west_african_pagan_reformed = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_spirit_guardians = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					slavic_pagan = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					slavic_pagan_reformed = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_warriors_perun = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					baltic_pagan = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					baltic_pagan_reformed = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_chosen_perkunas = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					finnish_pagan = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					finnish_pagan_reformed = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_sons_kaleva = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					aztec_pagan = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					aztec_pagan_reformed = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_huitzilopochtli = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					bon_pagan = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					bon_pagan_reformed = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_dralhas_children = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					zun_pagan = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					zun_pagan_reformed = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_zun_warriors = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					hellenic_pagan = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+
+					hellenic_pagan_reformed = {
+						parent_religion = {
+							religion = FROM
+						}
+					}
+				}
+			}
+
+			d_myrmidons = {
+				log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+
+				save_persistent_event_target = {
+					name = holy_order_religion
+					scope = FROM
+				}
+			}
+		}
+
+		# Dharmic religions have no heresies in vanilla
+	#	if = {
+	#		limit = {
+	#			hindu = {
+	#				parent_religion = {
+	#					religion = FROM
+	#				}
+	#			}
+	#		}
+	#
+	#		# Dharmic
+	#		d_followers_arjuna = {
+	#			log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+	#
+	#			save_persistent_event_target = {
+	#				name = holy_order_religion
+	#				scope = FROM
+	#			}
+	#		}
+	#	}
+	#
+	#	if = {
+	#		limit = {
+	#			buddhist = {
+	#				parent_religion = {
+	#					religion = FROM
+	#				}
+	#			}
+	#		}
+	#
+	#		d_ashokas_chosen = {
+	#			log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+	#
+	#			save_persistent_event_target = {
+	#				name = holy_order_religion
+	#				scope = FROM
+	#			}
+	#		}
+	#	}
+	#
+	#	if = {
+	#		limit = {
+	#			jain = {
+	#				parent_religion = {
+	#					religion = FROM
+	#				}
+	#			}
+	#		}
+	#
+	#		d_bulls_rishabha = {
+	#			log = "Updated persistent holy order religion scope of the [This.GetFullName] to [From.GetName]"
+	#
+	#			save_persistent_event_target = {
+	#				name = holy_order_religion
+	#				scope = FROM
+	#			}
+	#		}
+	#	}
+	}
+
+	option = {
+		name = EVTOPTA_SOA_4200
+
+		trigger = { religion = FROM }
+
+		if = {
+			limit = { ai = no }
+
+			chronicle = {
+				entry = CHRONICLE_HERESY_TAKEOVER_PLAYER_IS_NEW
+				portrait = [Root.GetID]
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_SOA_4200
+
+		trigger = { religion = FROMFROM }
+
+		if = {
+			limit = { ai = no }
+
+			chronicle = {
+				entry = CHRONICLE_HERESY_TAKEOVER_PLAYER_IS_OLD
+				portrait = [Root.GetID]
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_SOA_4200
+
+		trigger = {
+			NOR = {
+				religion = FROM
+				religion = FROMFROM
+			}
+		}
+	}
+}

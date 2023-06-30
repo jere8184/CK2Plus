@@ -1,0 +1,125 @@
+# For generic War on_actions not necessarily tied to any other mechanic
+
+# FROM is Attacker
+# ROOT is Defender
+on_war_started = {
+	effect = {
+		cb_attacking_tributary_effect = yes
+		peaceful_years_reset_effect = yes
+	}
+}
+
+# FROM is attacker
+# ROOT is defender
+on_war_ended_victory = {
+	effect = {
+		civil_war_cleanup_effect = yes
+
+		if = {
+			limit = {
+				OR = {
+					using_cb = crusade
+					using_cb = new_crusade
+					using_cb = cb_install_antiking
+					using_cb = holy_war
+					using_cb = religious_overthrow_ruler
+					using_cb = italian_reconquest
+					using_cb = reconquista_cb
+				}
+			}
+
+			FROM = {
+				imperial_decadence_minus_2_effect = yes
+			}
+			ROOT = {
+				imperial_decadence_plus_2_effect = yes
+			}
+		}
+		else = {
+			FROM = {
+				imperial_decadence_minus_1_effect = yes
+			}
+			ROOT = {
+				imperial_decadence_plus_1_effect = yes
+			}
+		}
+
+		any_attacker = { # Needs testing. Does this work here?
+			add_character_modifier = {
+				name = victory_timer
+				duration = 1
+				hidden = yes
+			}
+		}
+	}
+}
+
+# FROM is attacker
+# ROOT is defender
+on_war_ended_defeat = {
+	effect = {
+		civil_war_cleanup_effect = yes
+
+		if = {
+			limit = {
+				OR = {
+					using_cb = crusade
+					using_cb = new_crusade
+					using_cb = cb_install_antiking
+					using_cb = holy_war
+					using_cb = religious_overthrow_ruler
+					using_cb = italian_reconquest
+					using_cb = reconquista_cb
+				}
+			}
+
+			ROOT = {
+				imperial_decadence_minus_2_effect = yes
+			}
+			FROM = {
+				imperial_decadence_plus_2_effect = yes
+			}
+		}
+		else = {
+			ROOT = {
+				imperial_decadence_minus_1_effect = yes
+			}
+			FROM = {
+				imperial_decadence_plus_1_effect = yes
+			}
+		}
+
+		any_defender = { # Needs testing. Does this work here?
+			add_character_modifier = {
+				name = victory_timer
+				duration = 1
+				hidden = yes
+			}
+		}
+	}
+}
+
+# FROM is attacker
+# ROOT is defender
+on_war_ended_invalid = {
+	effect = {
+		civil_war_cleanup_effect = yes
+	}
+}
+
+# FROM is attacker
+# ROOT is defender
+on_war_ended_whitepeace = {
+	effect = {
+		civil_war_cleanup_effect = yes
+	}
+}
+
+# ROOT is the character
+# FROM is the title
+# FROMFROM is the old holder
+on_new_holder = {
+	effect = {
+		cb_nomad_culture_preservation_effect = yes
+	}
+}

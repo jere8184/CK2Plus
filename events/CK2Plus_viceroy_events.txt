@@ -1,0 +1,2438 @@
+namespace = Plus
+
+#reserved: Plus.3200 to Plus.3299
+
+#######################################
+# VICEROY EVENTS
+#######################################
+
+# Duke/King title inherited in Imperial realm
+character_event = {
+	id = Plus.3200
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		higher_real_tier_than = COUNT
+		top_liege = { has_imperial_government_trigger = yes }
+		is_vice_royalty = no
+		independent = no
+		in_revolt = no
+
+		FROM = {
+			OR = {
+				is_primary_holder_title = yes
+				is_primary_holder_title_tier = yes
+			}
+
+			is_titular = no
+			is_primary_type_title = no
+		}
+	}
+
+	immediate = {
+		FROM = { save_event_target_as = viceroy_title }
+		FROMFROM = { save_event_target_as = former_viceroy }
+
+		liege = {
+			character_event = {
+				id = Plus.3202
+				days = 1
+			}
+		}
+	}
+}
+
+# Duke/King title usurped in Imperial realm
+character_event = {
+	id = Plus.3201
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		higher_real_tier_than = COUNT
+		top_liege = { has_imperial_government_trigger = yes }
+		is_vice_royalty = no
+		independent = no
+		in_revolt = no
+
+		FROM = {
+			OR = {
+				is_primary_holder_title = yes
+				is_primary_holder_title_tier = yes
+			}
+
+			is_titular = no
+			is_primary_type_title = no
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = { FROM = { has_title_flag = granted_by_liege } }
+			FROM = { clr_title_flag = granted_by_liege }
+		}
+		else = {
+			FROM = {
+				save_event_target_as = viceroy_title
+				set_title_flag = usurped_title
+			}
+
+			FROMFROM = { save_event_target_as = former_viceroy }
+
+			liege = {
+				character_event = {
+					id = Plus.3202
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+# Liege is asked to assent to new holder
+character_event = {
+	id = Plus.3202
+	picture = GFX_evt_throne_room
+
+	desc = {
+		text = EVTDESC_Plus_3202_inherit
+		trigger = {
+			event_target:viceroy_title = { NOT = { has_title_flag = usurped_title } }
+		}
+	}
+	desc = {
+		text = EVTDESC_Plus_3202_usurp
+		trigger = {
+			event_target:viceroy_title = { has_title_flag = usurped_title }
+		}
+	}
+
+	is_triggered_only = yes
+
+	only_independent = yes
+
+	trigger = {
+		has_imperial_government_trigger = yes
+		top_liege = { has_imperial_government_trigger = yes }
+
+		FROM = {
+			has_landed_title = event_target:viceroy_title
+			vassal_of = ROOT
+			has_imperial_government_trigger = yes
+			is_vice_royalty = no
+
+			NOT = {
+				has_opinion_modifier = {
+					name = pressed_my_claim
+					who = ROOT
+				}
+			}
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = { event_target:viceroy_title = { has_title_flag = usurped_title } }
+			log = "INFO: [viceroy_title.GetFullName] ([viceroy_title.GetID]) has been usurped by [From.GetBestName] in Imperial realm"
+		}
+		else = {
+			log = "INFO: [viceroy_title.GetFullName] ([viceroy_title.GetID]) has been inherited by [From.GetBestName] in Imperial realm"
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_3202 # Assent
+
+		log = "---> [Root.GetBestName] has assented to the title transfer"
+
+		event_target:viceroy_title = {
+			if = {
+				limit = { has_title_flag = usurped_title }
+				clr_title_flag = usurped_title
+			}
+		}
+
+		if = {
+			limit = {
+				event_target:viceroy_title = { real_tier = DUKE }
+
+				FROM = {
+					vassal_of = ROOT
+					de_jure_liege_or_above = ROOT
+				}
+			}
+
+			reverse_opinion = {
+				name = opinion_granted_duchy_vice_royalty
+				who = FROM
+				years = 20
+			}
+		}
+		else_if = {
+			limit = {
+				event_target:viceroy_title = { real_tier = KING }
+
+				FROM = {
+					vassal_of = ROOT
+					de_jure_liege_or_above = ROOT
+				}
+			}
+
+			reverse_opinion = {
+				name = opinion_granted_kingdom_vice_royalty
+				who = FROM
+				years = 20
+			}
+		}
+
+		FROM = {
+			letter_event = { id = Plus.3203 }
+		}
+
+		ai_chance = {
+			factor = 70
+
+			mult_modifier = {
+				factor = 0.7
+				event_target:viceroy_title = { has_title_flag = usurped_title }
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				FROM = { is_incapable = yes }
+			}
+
+			mult_modifier = {
+				factor = 0.9
+				FROM = { is_adult = no }
+			}
+
+			mult_modifier = {
+				factor = 0.9
+				FROM = { age < 14 }
+			}
+
+			mult_modifier = {
+				factor = 0.9
+				FROM = { age < 12 }
+			}
+
+			mult_modifier = {
+				factor = 0.9
+				FROM = { age < 10 }
+			}
+
+			mult_modifier = {
+				factor = 0.9
+				FROM = { age < 8 }
+			}
+
+			mult_modifier = {
+				factor = 0.05
+				is_foe = FROM
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = lunatic
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = kind
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = strong_basileus
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				FROM = {
+					diplomacy < 5
+					martial < 5
+					stewardship < 5
+					intrigue < 5
+					learning < 5
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				FROM = { is_dumb_trigger = yes }
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				reverse_opinion = { who = FROM value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				reverse_opinion = { who = FROM value < -25 }
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				reverse_opinion = { who = FROM value < -50 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				reverse_opinion = { who = FROM value >= 25 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				reverse_opinion = { who = FROM value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				opinion = { who = FROM value >= 20 }
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				opinion = { who = FROM value >= 40 }
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				opinion = { who = FROM value >= 60 }
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				opinion = { who = FROM value >= 80 }
+			}
+
+			mult_modifier = {
+				factor = 4.0
+				owes_favor_to = FROM
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				holds_favor_on = FROM
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_3202 # Refuse
+
+		trigger = {
+			OR = {
+				de_jure_vassal_or_below = FROM # Close control
+
+				trigger_if = {
+					limit = { has_law = revoke_title_law_1 }
+
+					FROM = {
+						OR = {
+							trait = slow
+							trait = imbecile
+							trait = inbred
+							is_incapable = yes
+
+							AND = {
+								trait = excommunicated
+								religion = ROOT
+							}
+						}
+					}
+				}
+
+				trigger_if = {
+					limit = {
+						has_law = revoke_title_law_2
+						religion_group = FROM
+					}
+
+					# One is a heresy of the other
+					OR = {
+						is_heresy_of = FROM
+						is_parent_religion = FROM
+					}
+				}
+
+				OR = {
+					has_law = crown_authority_2
+					has_law = crown_authority_3
+					has_law = crown_authority_4
+				}
+
+				FROM = {
+					# Known criminal
+					is_foe = ROOT
+					NOT = { is_rival = ROOT }
+				}
+			}
+		}
+
+		log = "---> [Root.GetBestName] has refused to assent to the title transfer"
+
+		event_target:viceroy_title = {
+			if = {
+				limit = { has_title_flag = usurped_title }
+				clr_title_flag = usurped_title
+			}
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			save_event_target_as = current_viceroy
+
+			letter_event = {
+				id = Plus.3204
+				tooltip = REACTS_TO_LOSS_OF_TITLE
+			}
+		}
+
+		ai_chance = {
+			factor = 30
+
+			trigger = {
+				NOR = {
+					is_friend = FROM
+					is_allied_with = FROM
+					is_close_relative = FROM
+					is_lover = FROM
+				}
+
+				opinion = {
+					who = FROM
+					value < 50
+				}
+
+				FROM = {
+					is_voter = no
+
+					NOR = {
+						has_minor_title = title_commander
+						has_minor_title = title_appointed_regent
+						has_minor_title = title_tanist
+						has_minor_title = title_despot
+						has_minor_title = title_despot_nc
+						has_minor_title = title_caesar
+						has_minor_title = title_chief_qadi
+						has_minor_title = title_chief_qadi_nc
+					}
+				}
+
+				# Don't deny players their primary title
+				NAND = {
+					FROM = { ai = no }
+					event_target:viceroy_title = { is_primary_holder_title = yes }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.3
+				event_target:viceroy_title = { has_title_flag = usurped_title }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				dynasty = FROM
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				FROM = {
+					OR = {
+						is_smart_trigger = yes
+						diplomacy >= 15
+						martial >= 15
+						stewardship >= 15
+						intrigue >= 15
+						learning >= 15
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				FROM = { among_most_powerful_vassals = 5 }
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				FROM = { pf_leader_trigger = yes }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				relative_power = { who = FROM power < 4.0 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				opinion = { who = FROM value < 80 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				opinion = { who = FROM value < 60 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				opinion = { who = FROM value < 40 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				opinion = { who = FROM value < 20 }
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				opinion = { who = FROM value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				opinion = { who = FROM value < -20 }
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				opinion = { who = FROM value < -40 }
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				opinion = { who = FROM value < -60 }
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				opinion = { who = FROM value < -80 }
+			}
+		}
+	}
+}
+
+# New holder is told they're keeping the title
+letter_event = {
+	id = Plus.3203
+	desc = EVTDESC_Plus_3203
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_Plus_3203
+	}
+}
+
+# New holder is told they'll potentially be losing the title
+letter_event = {
+	id = Plus.3204
+	desc = EVTDESC_Plus_3204
+
+	is_triggered_only = yes
+
+	trigger = {
+		vassal_of = FROM
+	}
+
+	immediate = {
+		remove_opinion = { who = FROM name = refused_favor }
+		remove_opinion = { who = FROM name = refused_bribe }
+	}
+
+	option = {
+		name = EVTOPTA_Plus_3204 # Accept the decision
+
+		log = "---> [Root.GetBestName] has decided to accept [From.GetTitledFirstNameNoRegnal]'s decision"
+
+		FROM = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.3205
+				tooltip = IS_INFORMED
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				NOT = { holds_favor_on = FROM }
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = wroth
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_3204 # Offer a favor
+
+		trigger = {
+			is_adult = yes
+			is_incapable = no
+			is_dumb_trigger = no
+
+			NOR = {
+				owes_favor_to = FROM
+				holds_favor_on = FROM
+			}
+		}
+
+		log = "---> [Root.GetBestName] has decided to offer a favor to [From.GetTitledFirstNameNoRegnal]"
+
+		FROM = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.3206
+				tooltip = OFFER_FAVOR
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				OR = {
+					intrigue >= 8
+					learning >= 8
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 10
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 12
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 14
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 16
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_3204 # Call in my favor
+
+		trigger = {
+			is_adult = yes
+			holds_favor_on = FROM
+			is_incapable = no
+		}
+
+		log = "---> [Root.GetBestName] has decided to call in their favor with [From.GetTitledFirstNameNoRegnal]"
+		tooltip = { reverse_remove_favor = FROM }
+
+		FROM = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.3209
+				tooltip = CALL_IN_FAVOR
+			}
+		}
+
+		ai_chance = { factor = 50 }
+	}
+
+	option = {
+		name = EVTOPTD_Plus_3204 # Bribe them
+
+		trigger = {
+			is_adult = yes
+			is_incapable = no
+
+			scaled_wealth = {
+				value = 1.0
+				min = 100
+			}
+		}
+
+		log = "---> [Root.GetBestName] has decided to offer a bribe to [From.GetTitledFirstNameNoRegnal]"
+
+		FROM = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.3210
+				tooltip = OFFER_BRIBE
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				OR = {
+					intrigue >= 8
+					stewardship >= 8
+				}
+
+				NOT = { holds_favor_on = FROM }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				scaled_wealth = {
+					value = 2
+					min = 200
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				scaled_wealth = {
+					value = 3
+					min = 300
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				stewardship >= 10
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				stewardship >= 12
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				stewardship >= 14
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				stewardship >= 16
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTE_Plus_3204 # Rebel
+
+		trigger = {
+			is_adult = yes
+			prisoner = no
+			is_incapable = no
+		}
+
+		log = "---> [Root.GetBestName] has decided to rebel rather than submit to [From.GetTitledFirstNameNoRegnal]"
+		set_character_flag = resisting_viceroy_revocation
+
+		tooltip = {
+			war = {
+				target = FROM
+				casus_belli = resist_viceroy_revocation_cb
+			}
+		}
+
+		FROM = {
+			letter_event = { id = Plus.3214 }
+		}
+
+		ai_chance = {
+			factor = 25
+
+			trigger = {
+				OR = {
+					trait = lunatic
+					relative_power_to_liege >= 0.50
+				}
+
+				OR = {
+					trait = brave
+					trait = wroth
+					trait = ambitious
+					trait = lunatic
+					trait = possessed
+				}
+
+				NOR = {
+					holds_favor_on = FROM
+					trait = content
+					trait = humble
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				relative_power_to_liege < 0.75
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				relative_power_to_liege >= 1.0
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				relative_power_to_liege >= 1.5
+			}
+
+			mult_modifier = {
+				factor = 2.5
+				relative_power_to_liege >= 2.0
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+		}
+	}
+}
+
+# Liege informed that new holder will accept their decision
+letter_event = {
+	id = Plus.3205
+	desc = EVTDESC_Plus_3205
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_liege_of = FROM
+	}
+
+	option = {
+		name = EXCELLENT
+
+		character_event = {
+			id = Plus.3215
+			tooltip = COUNCIL_FINDS_REPLACEMENT
+		}
+	}
+}
+
+# Liege offered a favor in return for letting new holder keep title
+letter_event = {
+	id = Plus.3206
+	desc = EVTDESC_Plus_3206
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_liege_of = FROM
+	}
+
+	option = {
+		name = EVTOPTA_Plus_3206 # Accept
+
+		log = "---> [Root.GetBestName] has accepted the offer of a favor"
+
+		if = {
+			limit = {
+				primary_title = {
+					check_variable = { which = imperial_decadence value < 50 }
+				}
+			}
+
+			imperial_decadence_plus_1_effect = yes
+		}
+
+		tooltip = { add_favor = FROM }
+
+		if = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = refused_bribe
+					who = FROM
+				}
+			}
+
+			transfer_scaled_wealth = {
+				from = FROM
+				value = 1.0
+				min = 100
+			}
+		}
+
+		if = {
+			limit = { event_target:viceroy_title = { real_tier = DUKE } }
+
+			reverse_opinion = {
+				name = opinion_granted_duchy_vice_royalty
+				who = FROM
+				years = 20
+			}
+		}
+		else_if = {
+			limit = { event_target:viceroy_title = { real_tier = KING } }
+
+			reverse_opinion = {
+				name = opinion_granted_kingdom_vice_royalty
+				who = FROM
+				years = 20
+			}
+		}
+
+		FROM = {
+			letter_event = { id = Plus.3207 }
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 1.5
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = trusting
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				OR = {
+					trait = master_schemer
+					trait = strategist
+					trait = game_master
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				intrigue >= 10
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				intrigue >= 12
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				intrigue >= 14
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				intrigue >= 16
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				intrigue >= 18
+			}
+
+			mult_modifier = {
+				factor = 2
+				opinion = { who = FROM value >= 0 }
+			}
+
+			mult_modifier = {
+				factor = 2
+				FROM = { relative_income_to_liege >= 0.25 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_3206 # Refuse
+
+		log = "---> [Root.GetBestName] has refused the offer of a favor"
+
+		FROM = {
+			show_scope_change = no
+
+			opinion = {
+				name = refused_favor
+				who = ROOT
+				years = 5
+			}
+
+			letter_event = {
+				id = Plus.3208
+				tooltip = IS_INFORMED
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				FROM = {
+					is_voter = no
+					relative_power_to_liege < 0.25
+					relative_income_to_liege < 0.5
+					NOT = { among_most_powerful_vassals = 5 }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = paranoid
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				intrigue < 8
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				intrigue < 6
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				intrigue < 4
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				intrigue < 2
+			}
+		}
+	}
+}
+
+# New holder's offer of a favor is accepted
+letter_event = {
+	id = Plus.3207
+	desc = EVTDESC_Plus_3207
+
+	is_triggered_only = yes
+
+	trigger = {
+		vassal_of = FROM
+	}
+
+	option = {
+		name = EXCELLENT
+
+		reverse_add_favor = FROM
+	}
+}
+
+# New holder's offer of a favor is turned down
+letter_event = {
+	id = Plus.3208
+	desc = EVTDESC_Plus_3208
+
+	is_triggered_only = yes
+
+	trigger = {
+		vassal_of = FROM
+	}
+
+	option = {
+		name = EVTOPTA_Plus_3204 # Accept the decision
+
+		log = "---> [Root.GetBestName] has decided to accept [From.GetTitledFirstNameNoRegnal]'s decision"
+
+		FROM = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.3205
+				tooltip = IS_INFORMED
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				NOT = { holds_favor_on = FROM }
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = wroth
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTD_Plus_3204 # Bribe them
+
+		trigger = {
+			is_adult = yes
+			is_incapable = no
+
+			scaled_wealth = {
+				value = 1
+				min = 100
+			}
+
+			NOT = {
+				has_opinion_modifier = {
+					name = refused_bribe
+					who = FROM
+				}
+			}
+		}
+
+		log = "---> [Root.GetBestName] has decided to offer a bribe to [From.GetTitledFirstNameNoRegnal]"
+
+		FROM = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.3210
+				tooltip = OFFER_BRIBE
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				OR = {
+					intrigue >= 8
+					stewardship >= 8
+				}
+
+				NOT = { holds_favor_on = FROM }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				scaled_wealth = {
+					value = 2
+					min = 200
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				scaled_wealth = {
+					value = 3
+					min = 300
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				stewardship >= 10
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				stewardship >= 12
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				stewardship >= 14
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				stewardship >= 16
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTE_Plus_3204 # Rebel
+
+		trigger = {
+			is_adult = yes
+			prisoner = no
+			is_incapable = no
+		}
+
+		log = "---> [Root.GetBestName] has decided to rebel rather than submit to [From.GetTitledFirstNameNoRegnal]"
+		set_character_flag = resisting_viceroy_revocation
+
+		tooltip = {
+			war = {
+				target = FROM
+				casus_belli = resist_viceroy_revocation_cb
+			}
+		}
+
+		FROM = {
+			letter_event = { id = Plus.3214 }
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				OR = {
+					trait = lunatic
+					relative_power_to_liege >= 0.50
+				}
+
+				OR = {
+					trait = brave
+					trait = wroth
+					trait = ambitious
+					trait = lunatic
+					trait = possessed
+				}
+
+				NOR = {
+					holds_favor_on = FROM
+					trait = content
+					trait = humble
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				relative_power_to_liege < 0.75
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				relative_power_to_liege >= 1.0
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				relative_power_to_liege >= 1.5
+			}
+
+			mult_modifier = {
+				factor = 2.5
+				relative_power_to_liege >= 2.0
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+		}
+	}
+}
+
+# Liege's favor is called in to force acceptance of the title
+letter_event = {
+	id = Plus.3209
+	desc = EVTDESC_Plus_3209
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_liege_of = FROM
+	}
+
+	option = {
+		name = OK
+
+		remove_favor = FROM
+
+		if = {
+			limit = { event_target:viceroy_title = { real_tier = DUKE } }
+
+			reverse_opinion = {
+				name = opinion_granted_duchy_vice_royalty
+				who = FROM
+				years = 20
+			}
+		}
+		else_if = {
+			limit = { event_target:viceroy_title = { real_tier = KING } }
+
+			reverse_opinion = {
+				name = opinion_granted_kingdom_vice_royalty
+				who = FROM
+				years = 20
+			}
+		}
+	}
+}
+
+# Liege offered bribe in return for letting new holder keep title
+letter_event = {
+	id = Plus.3210
+	desc = EVTDESC_Plus_3210
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_liege_of = FROM
+	}
+
+	option = {
+		name = EVTOPTA_Plus_3210 # Accept
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 2.0
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = gluttonous
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = envious
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = deceitful
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 2
+				opinion = { who = FROM value >= 0 }
+			}
+		}
+
+		log = "---> [Root.GetBestName] has accepted the offer of a bribe"
+
+		if = {
+			limit = {
+				primary_title = {
+					check_variable = { which = imperial_decadence value < 50 }
+				}
+			}
+
+			imperial_decadence_plus_1_effect = yes
+		}
+
+		if = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = refused_favor
+					who = FROM
+				}
+			}
+
+			add_favor = FROM
+		}
+
+		tooltip = {
+			transfer_scaled_wealth = {
+				from = FROM
+				value = 1.0
+				min = 100
+			}
+		}
+
+		if = {
+			limit = { event_target:viceroy_title = { real_tier = DUKE } }
+
+			reverse_opinion = {
+				name = opinion_granted_duchy_vice_royalty
+				who = FROM
+				years = 20
+			}
+		}
+		else_if = {
+			limit = { event_target:viceroy_title = { real_tier = KING } }
+
+			reverse_opinion = {
+				name = opinion_granted_kingdom_vice_royalty
+				who = FROM
+				years = 20
+			}
+		}
+
+		FROM = {
+			letter_event = { id = Plus.3211 }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_3210 # Refuse
+
+		log = "---> [Root.GetBestName] has refused the offer of a bribe"
+
+		FROM = {
+			show_scope_change = no
+
+			opinion = {
+				who = ROOT
+				name = refused_bribe
+				years = 5
+			}
+
+			letter_event = {
+				id = Plus.3212
+				tooltip = IS_INFORMED
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				wealth >= 0
+				check_variable = { which = loan_amount value < 50 }
+				NOT = { has_character_flag = loan_taken }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = honest
+			}
+		}
+	}
+}
+
+# New holder's offer of a bribe is accepted
+letter_event = {
+	id = Plus.3211
+	desc = EVTDESC_Plus_3211
+
+	is_triggered_only = yes
+
+	trigger = {
+		vassal_of = FROM
+	}
+
+	option = {
+		name = EXCELLENT
+
+		transfer_scaled_wealth = {
+			to = FROM
+			value = 1.0
+			min = 100
+		}
+	}
+}
+
+# New holder's offer of a bribe is turned down
+letter_event = {
+	id = Plus.3212
+	desc = EVTDESC_Plus_3212
+
+	is_triggered_only = yes
+
+	trigger = {
+		vassal_of = FROM
+	}
+
+	option = {
+		name = EVTOPTA_Plus_3204 # Accept the decision
+
+		log = "---> [Root.GetBestName] has decided to accept [From.GetTitledFirstNameNoRegnal]'s decision"
+
+		FROM = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.3205
+				tooltip = IS_INFORMED
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				NOT = { holds_favor_on = FROM }
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = wroth
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_3204 # Offer a favor
+
+		trigger = {
+			is_adult = yes
+			is_incapable = no
+			is_dumb_trigger = no
+
+			NOR = {
+				owes_favor_to = FROM
+				holds_favor_on = FROM
+
+				has_opinion_modifier = {
+					name = refused_favor
+					who = FROM
+				}
+			}
+		}
+
+		log = "---> [Root.GetBestName] has decided to offer a favor to [From.GetTitledFirstNameNoRegnal]"
+
+		FROM = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.3206
+				tooltip = OFFER_FAVOR
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				OR = {
+					intrigue >= 8
+					learning >= 8
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 10
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 12
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 14
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 16
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_3204 # Call in my favor
+
+		trigger = {
+			holds_favor_on = FROM
+			is_adult = yes
+			is_incapable = no
+		}
+
+		tooltip = { reverse_remove_favor = FROM }
+		log = "---> [Root.GetBestName] has decided to call in their favor on [From.GetTitledFirstNameNoRegnal]"
+
+		FROM = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.3209
+				tooltip = CALL_IN_FAVOR
+			}
+		}
+
+		ai_chance = { factor = 50 }
+	}
+
+	option = {
+		name = EVTOPTE_Plus_3204 # Rebel
+
+		trigger = {
+			is_adult = yes
+			prisoner = no
+			is_incapable = no
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				OR = {
+					trait = lunatic
+					relative_power_to_liege >= 0.50
+				}
+
+				OR = {
+					trait = brave
+					trait = wroth
+					trait = ambitious
+					trait = lunatic
+					trait = possessed
+				}
+
+				NOR = {
+					holds_favor_on = FROM
+					trait = content
+					trait = humble
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				relative_power_to_liege < 0.75
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				relative_power_to_liege >= 1.0
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				relative_power_to_liege >= 1.5
+			}
+
+			mult_modifier = {
+				factor = 2.5
+				relative_power_to_liege >= 2.0
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+		}
+
+		log = "---> [Root.GetBestName] has decided to rebel rather than submit to [From.GetTitledFirstNameNoRegnal]"
+		set_character_flag = resisting_viceroy_revocation
+
+		tooltip = {
+			war = {
+				target = FROM
+				casus_belli = resist_viceroy_revocation_cb
+			}
+		}
+
+		FROM = {
+			letter_event = { id = Plus.3214 }
+		}
+	}
+}
+
+# New holder rebels rather than have their title stripped from them
+letter_event = {
+	id = Plus.3214
+	desc = EVTDESC_Plus_3214
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_liege_of = FROM
+	}
+
+	option = {
+		name = CURSES
+
+		reverse_war = {
+			target = FROM
+			casus_belli = resist_viceroy_revocation_cb
+		}
+	}
+}
+
+# Council is consulted to determine suitable successors
+character_event = {
+	id = Plus.3215
+	picture = GFX_evt_council
+
+	desc = {
+		text = EVTDESC_Plus_3215_several_choices
+		trigger = {
+			OR = {
+				event_target:council_second_pick = { always = yes }
+				event_target:council_third_pick = { always = yes }
+			}
+		}
+	}
+	desc = {
+		text = EVTDESC_Plus_3215_one_choice
+		trigger = {
+			NOR = {
+				event_target:council_first_pick = { character = event_target:current_viceroy }
+				event_target:council_second_pick = { always = yes }
+				event_target:council_third_pick = { always = yes }
+			}
+		}
+	}
+	desc = {
+		text = EVTDESC_Plus_3215_no_change
+		trigger = {
+			event_target:council_first_pick = { character = event_target:current_viceroy }
+			NOR = {
+				event_target:council_second_pick = { always = yes }
+				event_target:council_third_pick = { always = yes }
+			}
+		}
+	}
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	immediate = {
+		# Always start with previous holder, if still alive
+		if = {
+			limit = {
+				event_target:former_viceroy = {
+					valid_viceroy_trigger = yes
+					is_alive = yes
+
+					trigger_if = {
+						limit = { is_voter = no }
+
+						ROOT = {
+							NOT = {
+								any_voter = {
+									opinion = {
+										who = PREVPREV
+										value < -20
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			event_target:former_viceroy = {
+				save_viceroy_pick_effect = yes
+			}
+		}
+
+		# Then check if the current holder is not disliked by the council
+		else_if = {
+			limit = {
+				event_target:current_viceroy = {
+					valid_viceroy_trigger = yes
+
+					trigger_if = {
+						limit = { is_voter = no }
+
+						ROOT = {
+							NOT = {
+								any_voter = {
+									opinion = {
+										who = PREVPREV
+										value < -20
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			event_target:current_viceroy = {
+				save_viceroy_pick_effect = yes
+			}
+		}
+
+		# Then find a nearby ruler
+		random_playable_ruler = {
+			limit = {
+				close_viceroy_trigger = yes
+
+				ROOT = {
+					NOT = {
+						any_voter = {
+							opinion = {
+								who = PREVPREV
+								value < -20
+							}
+						}
+					}
+				}
+			}
+
+			# Then check for someone who is friends/relative of someone on the council, or on the council
+			preferred_limit = {
+				ROOT = {
+					any_voter = {
+						OR = {
+							character = PREVPREV
+							is_friend = PREVPREV
+							is_close_relative = PREVPREV
+						}
+					}
+				}
+			}
+
+			# Then expand criteria to strong claimant liked by a voter
+			preferred_limit = {
+				has_strong_claim = event_target:viceroy_title
+
+				ROOT = {
+					any_voter = {
+						opinion = {
+							who = PREVPREV
+							value >= 0
+						}
+					}
+				}
+			}
+
+			# Then expand criteria to claimaint liked by a voter
+			random_playable_ruler = {
+				preferred_limit = {
+					OR = {
+						ROOT = {
+							any_voter = {
+								OR = {
+									dynasty = PREVPREV
+									character = PREVPREV
+									is_friend = PREVPREV
+									is_close_relative = PREVPREV
+								}
+							}
+						}
+
+						trigger_if = {
+							limit = { has_claim = event_target:viceroy_title }
+
+							ROOT = {
+								any_voter = {
+									opinion = {
+										who = PREVPREV
+										value >= 0
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			# Then check for anyone qualified and nearby who at least one voter likes
+			preferred_limit = {
+				ROOT = {
+					any_voter = {
+						opinion = {
+							who = PREVPREV
+							value >= 20
+						}
+					}
+				}
+			}
+
+			# Then check for anyone qualified and nearby who isn't disliked by anyone
+			save_viceroy_pick_effect = yes
+		}
+
+		random_playable_ruler = {
+			limit = {
+				valid_viceroy_trigger = yes
+
+				ROOT = {
+					NOT = {
+						any_voter = {
+							opinion = {
+								who = PREVPREV
+								value < -20
+							}
+						}
+					}
+				}
+			}
+
+			# Then check for someone that is friends/relative of someone on the council, or on the council
+			preferred_limit = {
+				ROOT = {
+					any_voter = {
+						OR = {
+							character = PREVPREV
+							is_friend = PREVPREV
+							is_close_relative = PREVPREV
+						}
+					}
+				}
+			}
+
+			# Then expand criteria to strong claimaint liked by a voter
+			preferred_limit = {
+				has_strong_claim = event_target:viceroy_title
+
+				ROOT = {
+					any_voter = {
+						opinion = {
+							who = PREVPREV
+							value >= 0
+						}
+					}
+				}
+			}
+
+			# Then expand criteria to anyone with a claim on the title who a voter likes
+			preferred_limit = {
+				OR = {
+					ROOT = {
+						any_voter = {
+							OR = {
+								dynasty = PREVPREV
+								character = PREVPREV
+								is_friend = PREVPREV
+								is_close_relative = PREVPREV
+							}
+						}
+					}
+
+					trigger_if = {
+						limit = { has_claim = event_target:viceroy_title }
+
+						ROOT = {
+							any_voter = {
+								opinion = {
+									who = PREVPREV
+									value >= 0
+								}
+							}
+						}
+					}
+				}
+			}
+
+			# Then check for anyone qualified who at least one voter likes
+			preferred_limit = {
+				valid_viceroy_trigger = yes
+
+				ROOT = {
+					any_voter = {
+						opinion = { who = PREVPREV value = 20 }
+					}
+				}
+			}
+
+			# Then check for anyone qualified who isn't disliked by anyone
+			save_viceroy_pick_effect = yes
+		}
+
+		# Failing that, the default is whoever holds the title now
+		if = {
+			limit = { NOT = { event_target:council_first_pick = { always = yes } } }
+			event_target:current_viceroy = { save_event_target_as = council_first_pick }
+		}
+	}
+
+	option = {
+		name = {
+			text = EVTOPTA_Plus_3215 # First pick
+			trigger = {
+				NOT = { event_target:council_first_pick = { character = event_target:current_viceroy } }
+				OR = {
+					event_target:council_second_pick = { always = yes }
+					event_target:council_third_pick = { always = yes }
+					AND = {
+						event_target:viceroy_title = { real_tier = DUKE }
+						prestige >= 200
+					}
+					AND = {
+						event_target:viceroy_title = { real_tier = KING }
+						prestige >= 400
+					}
+				}
+			}
+		}
+		name = {
+			text = EVTOPTA_Plus_3215_no_change
+			trigger = {
+				event_target:council_first_pick = { character = event_target:current_viceroy }
+				OR = {
+					event_target:council_second_pick = { always = yes }
+					event_target:council_third_pick = { always = yes }
+					AND = {
+						event_target:viceroy_title = { real_tier = DUKE }
+						prestige >= 200
+					}
+					AND = {
+						event_target:viceroy_title = { real_tier = KING }
+						prestige >= 400
+					}
+				}
+			}
+		}
+		name = {
+			text = EVTOPTA_Plus_3215_default
+			trigger = {
+				NOR = {
+					event_target:council_second_pick = { always = yes }
+					event_target:council_third_pick = { always = yes }
+					AND = {
+						event_target:viceroy_title = { real_tier = DUKE }
+						prestige >= 200
+					}
+					AND = {
+						event_target:viceroy_title = { real_tier = KING }
+						prestige >= 400
+					}
+				}
+			}
+		}
+
+		log = "---> [council_first_pick.GetTitledName] (id#[council_first_pick.GetID]) has been selected to hold the [viceroy_title.GetFullName]"
+
+		if = {
+			limit = { event_target:council_first_pick = { character = event_target:current_viceroy } }
+
+			event_target:current_viceroy = {
+				letter_event = { id = Plus.3216 }
+			}
+		}
+		else = {
+			event_target:council_first_pick = {
+				letter_event = { id = Plus.3217 }
+			}
+
+			hidden_effect = {
+				reverse_opinion = {
+					name = opinion_outraged
+					who = event_target:current_viceroy
+					years = 20
+				}
+			}
+
+			event_target:viceroy_title = {
+				show_scope_change = no
+
+				set_title_flag = granted_by_liege
+				usurp_title = event_target:council_first_pick
+			}
+		}
+
+		if = {
+			limit = { event_target:viceroy_title = { real_tier = DUKE } }
+
+			reverse_opinion = {
+				name = opinion_granted_duchy_vice_royalty
+				who = event_target:council_first_pick
+				years = 20
+			}
+		}
+		else_if = {
+			limit = { event_target:viceroy_title = { real_tier = KING } }
+
+			reverse_opinion = {
+				name = opinion_granted_kingdom_vice_royalty
+				who = event_target:council_first_pick
+				years = 20
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 1.1
+				opinion = { who = event_target:council_first_pick value >= 20 }
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				opinion = { who = event_target:council_first_pick value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				opinion = { who = event_target:council_first_pick value >= 75 }
+			}
+
+			mult_modifier = {
+				factor = 2
+				is_friend = event_target:council_first_pick
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				is_rival = event_target:council_first_pick
+			}
+		}
+	}
+
+	option = {
+		name = {
+			text = EVTOPTB_Plus_3215
+			trigger = { NOT = { event_target:council_second_pick = { character = event_target:current_viceroy } } }
+		}
+		name = {
+			text = EVTOPTA_Plus_3215_no_change
+			trigger = { event_target:council_second_pick = { character = event_target:current_viceroy } }
+		}
+
+		trigger = { event_target:council_second_pick = { always = yes } }
+		log = "---> [council_second_pick.GetTitledName] (id#[council_second_pick.GetID]) has been selected to hold the [viceroy_title.GetFullName]"
+
+		if = {
+			limit = { event_target:council_second_pick = { character = event_target:current_viceroy } }
+
+			event_target:current_viceroy = {
+				letter_event = { id = Plus.3216 }
+			}
+		}
+		else = {
+			event_target:council_second_pick = {
+				letter_event = { id = Plus.3217 }
+			}
+
+			hidden_effect = {
+				reverse_opinion = {
+					name = opinion_outraged
+					who = event_target:current_viceroy
+					years = 20
+				}
+			}
+
+			event_target:viceroy_title = {
+				show_scope_change = no
+
+				set_title_flag = granted_by_liege
+				usurp_title = event_target:council_second_pick
+			}
+		}
+
+		if = {
+			limit = { event_target:viceroy_title = { real_tier = DUKE } }
+
+			reverse_opinion = {
+				name = opinion_granted_duchy_vice_royalty
+				who = event_target:council_second_pick
+				years = 20
+			}
+		}
+		else_if = {
+			limit = { event_target:viceroy_title = { real_tier = KING } }
+
+			reverse_opinion = {
+				who = event_target:council_second_pick
+				name = opinion_granted_kingdom_vice_royalty
+				years = 20
+			}
+		}
+
+		ai_chance = {
+			factor = 33
+
+			mult_modifier = {
+				factor = 1.1
+				opinion = { who = event_target:council_second_pick value >= 20 }
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				opinion = { who = event_target:council_second_pick value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				opinion = { who = event_target:council_second_pick value >= 75 }
+			}
+
+			mult_modifier = {
+				factor = 3
+				is_friend = event_target:council_second_pick
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				is_rival = event_target:council_second_pick
+			}
+		}
+	}
+
+	option = {
+		name = {
+			text = EVTOPTC_Plus_3215
+			trigger = { NOT = { event_target:council_third_pick = { character = event_target:current_viceroy } } }
+		}
+		name = {
+			text = EVTOPTA_Plus_3215_no_change
+			trigger = { event_target:council_third_pick = { character = event_target:current_viceroy } }
+		}
+
+		trigger = { event_target:council_third_pick = { always = yes } }
+
+		log = "---> [council_third_pick.GetTitledName] (id#[council_third_pick.GetID]) has been selected to hold the [viceroy_title.GetFullName]"
+
+		if = {
+			limit = { event_target:council_third_pick = { character = event_target:current_viceroy } }
+
+			event_target:current_viceroy = {
+				letter_event = { id = Plus.3216 }
+			}
+		}
+		else = {
+			event_target:council_third_pick = {
+				letter_event = { id = Plus.3217 }
+			}
+
+			hidden_effect = {
+				reverse_opinion = {
+					name = opinion_outraged
+					who = event_target:current_viceroy
+					years = 20
+				}
+			}
+
+			event_target:viceroy_title = {
+				show_scope_change = no
+				set_title_flag = granted_by_liege
+				usurp_title = event_target:council_third_pick
+			}
+		}
+
+		if = {
+			limit = { event_target:viceroy_title = { real_tier = DUKE } }
+
+			reverse_opinion = {
+				name = opinion_granted_duchy_vice_royalty
+				who = event_target:council_third_pick
+				years = 20
+			}
+		}
+		else_if = {
+			limit = { event_target:viceroy_title = { real_tier = KING } }
+
+			reverse_opinion = {
+				name = opinion_granted_kingdom_vice_royalty
+				who = event_target:council_third_pick
+				years = 20
+			}
+		}
+
+		ai_chance = {
+			factor = 10
+
+			mult_modifier = {
+				factor = 1.1
+				opinion = { who = event_target:council_third_pick value >= 20 }
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				opinion = { who = event_target:council_third_pick value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				opinion = { who = event_target:council_third_pick value >= 75 }
+			}
+
+			mult_modifier = {
+				factor = 4
+				is_friend = event_target:council_third_pick
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				is_rival = event_target:council_third_pick
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTD_Plus_3215 # Usurp title
+
+		trigger = {
+			trigger_if = {
+				limit = { event_target:viceroy_title = { real_tier = DUKE } }
+				prestige >= 200
+			}
+			trigger_else = {
+				prestige >= 400
+			}
+		}
+
+		log = "---> [Root.GetBestName] has elected to keep the [viceroy_title.GetFullName] for [Root.GetHerHim]self"
+
+		if = {
+			limit = { event_target:viceroy_title = { real_tier = DUKE } }
+			prestige = -200
+		}
+		else = {
+			prestige = -400
+		}
+
+		usurp_title = event_target:viceroy_title
+
+		ai_chance = {
+			factor = 10
+
+			trigger = {
+				NOT = { trait = charitable }
+			}
+
+			mult_modifier = {
+				factor = 10
+				trait = greedy
+			}
+		}
+	}
+}
+
+# New holder informed they'll be keeping the title after all
+letter_event = {
+	id = Plus.3216
+	desc = EVTDESC_Plus_3216
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_Plus_3216
+	}
+}
+
+# Title is granted to someone else
+letter_event = {
+	id = Plus.3217
+	desc = EVTDESC_Plus_3217
+
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = EXCELLENT
+	}
+}

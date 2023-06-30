@@ -1,0 +1,3864 @@
+
+namespace = FemRule
+#reserved: FemRule.200 to FemRule.299
+
+#######################################
+# INTEGRATION OF WOMEN INTO TOURNAMENTS
+# Written by Rylock
+#######################################
+
+# Female character invited to the tourney
+character_event = {
+	id = FemRule.200 # formerly 1000182583
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_200
+	picture = GFX_evt_tournament_gallery
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_200 # Of course, I MUST be there!
+
+		set_character_flag = spectating_tournament
+		end_inaccessibility_effect = yes
+
+		add_character_modifier = {
+			name = do_not_disturb
+			months = 5
+			hidden = yes
+		}
+
+		ai_chance = {
+			factor = 75
+
+			mult_modifier = {
+				factor = 0.1
+				is_pregnant = yes
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = attractive
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = gregarious
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = gluttonous
+			}
+
+			mult_modifier = {
+				factor = 1.25
+
+				OR = {
+					trait = hedonist
+					trait = poet
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				health < 3.1
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				practical_age < 30
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				practical_age >= 40
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				practical_age >= 50
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_200 # My faithful champion will represent me
+
+		trigger = {
+			any_courtier_or_vassal = {
+				OR = {
+					has_minor_title = title_ladys_champion
+					has_minor_title = title_champion
+				}
+
+				prisoner = no
+				is_incapable = no
+				is_inaccessible_trigger = no
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 0.1
+				is_pregnant = yes
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				health < 3.1
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				martial < 12
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				martial < 8
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				martial < 5
+			}
+
+			mult_modifier = {
+				factor = 2
+				real_tier = DUKE
+			}
+
+			mult_modifier = {
+				factor = 4
+				real_tier = KING
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = content
+			}
+
+			mult_modifier = { # Women warriors should consider participating themselves
+				factor = 0.5
+
+				martial >= 12
+
+				OR = {
+					trait = martial_lady_pagan
+					trait = martial_lady
+					trait = martial_lady_tengri
+				}
+			}
+		}
+
+		prestige = 25
+		set_character_flag = spectating_tournament
+		end_inaccessibility_effect = yes
+
+		add_character_modifier = {
+			name = do_not_disturb
+			months = 5
+			hidden = yes
+		}
+
+		hidden_effect = {
+			any_courtier_or_vassal = {
+				limit = {
+					OR = {
+						has_minor_title = title_ladys_champion
+						has_minor_title = title_champion
+					}
+
+					prisoner = no
+					is_incapable = no
+					is_inaccessible_trigger = no
+				}
+
+				letter_event = {
+					id = FemRule.201
+					days = 1
+				}
+			}
+		}
+
+	}
+
+	option = {
+		name = EVTOPTC_FemRule_200 # Watch? I will show them my mettle!
+
+		trigger = {
+			OR = {
+				trait = martial_lady_pagan
+				trait = martial_lady
+				trait = martial_lady_tengri
+			}
+
+			NOT = { religion_group = muslim }
+		}
+
+		ai_chance = {
+			factor = 20
+
+			trigger = {
+				health >= 3.1
+				martial >= 8
+				practical_age < 40
+				is_pregnant = no
+				is_weak_trigger = no
+
+				NOR = {
+					trait = craven
+					trait = humble
+					trait = content
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				NOT = { trait = brave }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				martial < 12
+			}
+
+			mult_modifier = {
+				factor = 2
+				martial >= 15
+			}
+
+			mult_modifier = {
+				factor = 2
+				martial >= 20
+			}
+
+			mult_modifier = {
+				factor = 2
+				martial >= 25 # only JoA should have this much
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				is_strong_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 1.25
+
+				OR = {
+					trait = skilled_tactician
+					trait = brilliant_strategist
+				}
+			}
+		}
+
+		prestige = 100
+
+		if = {
+			limit = {
+				OR = {
+					religion_group = christian
+					religion_group = jewish_group
+				}
+			}
+
+			piety = -25
+		}
+
+		set_character_flag = attending_tournament
+
+		add_character_modifier = {
+			name = do_not_disturb
+			months = 5
+			hidden = yes
+		}
+
+		end_inaccessibility_effect = yes
+	}
+
+	option = {
+		name = EVTOPTD_FemRule_200 # No, I will not attend
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 10
+				is_inaccessible_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 3
+				is_pregnant = yes
+			}
+
+			mult_modifier = {
+				factor = 3
+				health_traits >= 1
+			}
+
+			mult_modifier = {
+				factor = 3
+
+				OR = {
+					trait = paranoid
+					trait = depressed
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				OR = {
+					trait = ugly
+					trait = shy
+					trait = clubfooted
+					trait = hunchback
+					trait = dwarf
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = gregarious
+			}
+		}
+
+		prestige = -10
+	}
+}
+
+### LADY'S CHAMPION EVENTS
+
+# Champion informed they must come
+letter_event = {
+	id = FemRule.201
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_201
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_201
+
+		prestige = 50
+		set_character_flag = attending_tournament
+		set_character_flag = championing_liege_lady
+
+		hidden_effect = {
+			remove_do_not_disturb_effect = yes
+
+			add_character_modifier = {
+				name = do_not_disturb
+				months = 5
+				hidden = yes
+			}
+		}
+	}
+}
+
+# Champion killed
+character_event = {
+	id = FemRule.202 #formerly 1000182585
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_202
+	picture = GFX_evt_death
+
+	is_triggered_only = yes
+
+	option = {
+		name = SHEDATEAR
+
+		prestige = -50
+	}
+}
+
+# Champion maimed
+character_event = {
+	id = FemRule.203 # formerly 1000182586
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_203
+	picture = GFX_evt_melee
+
+	is_triggered_only = yes
+
+	option = {
+		name = SHEDATEAR
+
+		prestige = -25
+	}
+}
+
+# Champion injured
+character_event = {
+	id = FemRule.204 # formerly 1000182587
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_204
+	picture = GFX_evt_melee
+
+	is_triggered_only = yes
+
+	option = {
+		name = SHEDATEAR
+
+		prestige = -25
+	}
+}
+
+# Champion victorious
+character_event = {
+	id = FemRule.205 # formerly 1000182588
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_205
+	picture = GFX_evt_joust
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_205
+
+		trigger = { scaled_wealth >= 0.2 }
+
+		prestige = 150
+		scaled_wealth = -0.2
+
+		opinion = {
+			name = opinion_tournament_winner
+			who = FROM
+			years = 20
+		}
+
+		reverse_opinion = {
+			name = opinion_impressed
+			who = FROM
+			years = 20
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_205
+
+		prestige = 75
+
+		opinion = {
+			name = opinion_tournament_winner
+			who = FROM
+			years = 20
+		}
+
+		reverse_opinion = {
+			name = opinion_upset
+			who = ROOT
+			years = 20
+		}
+	}
+}
+
+# Champion runner-up
+character_event = {
+	id = FemRule.206 # formerly 1000182589
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_206
+	picture = GFX_evt_joust
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_205
+
+		trigger = { scaled_wealth >= 0.15 }
+
+		prestige = 125
+		scaled_wealth = -0.15
+
+		opinion = {
+			name = opinion_tournament_second_place
+			who = FROM
+			years = 15
+		}
+
+		reverse_opinion = {
+			name = opinion_impressed
+			who = FROM
+			years = 15
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_205
+
+		prestige = 65
+
+		opinion = {
+			name = opinion_tournament_second_place
+			who = FROM
+			years = 15
+		}
+
+		reverse_opinion = {
+			name = opinion_upset
+			who = FROM
+			years = 15
+		}
+	}
+}
+
+# Champion third place
+character_event = {
+	id = FemRule.207 # formerly 1000182590
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_207
+	picture = GFX_evt_joust
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_205
+
+		trigger = { scaled_wealth >= 0.10 }
+
+		prestige = 100
+		scaled_wealth = -0.10
+
+		opinion = {
+			name = opinion_tournament_third_place
+			who = FROM
+			years = 10
+		}
+
+		reverse_opinion = {
+			name = opinion_impressed
+			who = FROM
+			years = 10
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_205
+
+		prestige = 50
+
+		opinion = {
+			name = opinion_tournament_third_place
+			who = FROM
+			years = 10
+		}
+
+		reverse_opinion = {
+			name = opinion_upset
+			who = FROM
+			years = 10
+		}
+	}
+}
+
+### EVENTS FOR WOMEN AT THE TOURNAMENT
+
+# Lady becomes proud
+character_event = {
+	id = FemRule.210
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_210
+	picture = GFX_evt_grazia
+
+	is_triggered_only = yes
+
+	only_women = yes
+	has_character_flag = spectating_tournament
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		top_liege = {
+			has_character_flag = tournament_begins
+			NOT = { has_character_flag = tournament_has_ended }
+		}
+
+		NOR = {
+			has_character_flag = lady_pride
+			has_character_flag = tournament_has_ended
+			trait = proud
+		}
+	}
+
+	immediate = {
+		set_character_flag = lady_pride
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_210
+
+		add_trait = proud
+	}
+}
+
+# Lady becomes humble
+character_event = {
+	id = FemRule.211
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_211
+	picture = GFX_evt_grazia
+
+	is_triggered_only = yes
+
+	only_women = yes
+	has_character_flag = spectating_tournament
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		top_liege = {
+			has_character_flag = tournament_begins
+			NOT = { has_character_flag = tournament_has_ended }
+		}
+
+		NOR = {
+			has_character_flag = lady_pride
+			has_character_flag = tournament_has_ended
+			trait = humble
+		}
+	}
+
+	immediate = {
+		set_character_flag = lady_pride
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_211
+
+		add_trait = humble
+	}
+}
+
+# Lady becomes gregarious
+character_event = {
+	id = FemRule.212
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_212
+	picture = GFX_evt_grazia
+
+	is_triggered_only = yes
+
+	only_women = yes
+	has_character_flag = spectating_tournament
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		top_liege = {
+			has_character_flag = tournament_begins
+			NOT = { has_character_flag = tournament_has_ended }
+		}
+
+		NOR = {
+			has_character_flag = lady_shyness
+			has_character_flag = tournament_has_ended
+			trait = gregarious
+		}
+	}
+
+	immediate = {
+		set_character_flag = lady_shyness
+	}
+
+	option = {
+		name = OK
+
+		add_trait = gregarious
+	}
+}
+
+# Lady becomes shy
+character_event = {
+	id = FemRule.213
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_213
+	picture = GFX_evt_grazia
+
+	is_triggered_only = yes
+
+	only_women = yes
+	has_character_flag = spectating_tournament
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		top_liege = {
+			has_character_flag = tournament_begins
+			NOT = { has_character_flag = tournament_has_ended }
+		}
+
+		NOR = {
+			has_character_flag = lady_shyness
+			has_character_flag = tournament_has_ended
+			trait = shy
+		}
+	}
+
+	immediate = {
+		set_character_flag = lady_shyness
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_213
+
+		add_trait = shy
+	}
+}
+
+# Lady becomes honest
+character_event = {
+	id = FemRule.214
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_214
+	picture = GFX_evt_grazia
+
+	is_triggered_only = yes
+
+	only_women = yes
+	has_character_flag = spectating_tournament
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		top_liege = {
+			has_character_flag = tournament_begins
+			NOT = { has_character_flag = tournament_has_ended }
+		}
+
+		NOR = {
+			has_character_flag = lady_honesty
+			has_character_flag = tournament_has_ended
+			trait = honest
+		}
+	}
+
+	immediate = {
+		set_character_flag = lady_honesty
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_214
+
+		add_trait = honest
+
+	}
+}
+
+# Lady becomes deceitful
+character_event = {
+	id = FemRule.215
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_215
+	picture = GFX_evt_grazia
+
+	is_triggered_only = yes
+
+	only_women = yes
+	has_character_flag = spectating_tournament
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		top_liege = {
+			has_character_flag = tournament_begins
+			NOT = { has_character_flag = tournament_has_ended }
+		}
+
+		NOR = {
+			has_character_flag = lady_honesty
+			has_character_flag = tournament_has_ended
+			trait = deceitful
+		}
+	}
+
+	immediate = {
+		set_character_flag = lady_honesty
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_215
+
+		add_trait = deceitful
+
+	}
+}
+
+# Lady becomes lustful
+character_event = {
+	id = FemRule.216
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_216
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	only_women = yes
+	has_character_flag = spectating_tournament
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		top_liege = {
+			has_character_flag = tournament_begins
+			NOT = { has_character_flag = tournament_has_ended }
+		}
+
+		NOR = {
+			has_character_flag = lady_lust
+			has_character_flag = tournament_has_ended
+			trait = lustful
+			trait = celibate
+		}
+	}
+
+	immediate = {
+		set_character_flag = lady_lust
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_216
+
+		add_trait = lustful
+	}
+}
+
+# Lady becomes chaste
+character_event = {
+	id = FemRule.217
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_217
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	only_women = yes
+	has_character_flag = spectating_tournament
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		top_liege = {
+			has_character_flag = tournament_begins
+			NOT = { has_character_flag = tournament_has_ended }
+		}
+
+		NOR = {
+			has_character_flag = lady_lust
+			has_character_flag = tournament_has_ended
+			trait = chaste
+			trait = hedonist
+		}
+	}
+
+	immediate = {
+		set_character_flag = lady_lust
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_217
+
+		add_trait = chaste
+	}
+}
+
+# Men react poorly to lady contestant
+character_event = {
+	id = FemRule.218
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_218
+	picture = GFX_evt_girl_with_sword
+
+	is_triggered_only = yes
+
+	only_women = yes
+	has_character_flag = attending_tournament
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		top_liege = {
+			has_character_flag = tournament_begins
+
+			NOR = {
+				has_character_flag = tournament_has_ended
+				religion_group = muslim
+			}
+		}
+
+		NOR = {
+			has_character_flag = attending_tournament_sexism
+			has_character_flag = tournament_has_ended
+		}
+	}
+
+	immediate = {
+		set_character_flag = attending_tournament_sexism
+	}
+
+	option = {
+		name = EVTOPTA_FemRule_218 # RAGE
+
+		piety = -25
+		add_trait = wroth
+
+		random = {
+			chance = 30
+			add_trait_diligent_effect = yes
+		}
+
+		random = {
+			chance = 50
+			add_trait_proud_effect = yes
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 0.5
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = diligent
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = honest
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_218 # Zen
+
+		prestige = -50
+		add_trait = patient
+
+		random = {
+			chance = 30
+			add_trait_slothful_effect = yes
+		}
+
+		random = {
+			chance = 50
+			add_trait_humble_effect = yes
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 0.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = diligent
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = craven
+			}
+		}
+	}
+}
+
+### BEAUTY CONTEST EVENTS
+
+# Character wins beauty pageant
+character_event = {
+	id = FemRule.219
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	has_character_flag = tournament_begins
+
+	immediate = {
+		any_realm_character = {
+			limit = {
+				has_character_flag = spectating_tournament
+				is_female = yes
+				practical_age <= 30
+				has_unattractive_trait_trigger = no
+			}
+
+			score_value = {
+				value = 10
+
+				mult_modifier = {
+					factor = 10
+					trait = attractive
+				}
+
+				mult_modifier = {
+					factor = 4
+					trait = beauty
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					NOT = { trait = attractive }
+				}
+
+				mult_modifier = {
+					factor = 1.33
+
+					OR = {
+						trait = lustful
+						trait = hedonist
+						trait = poet
+					}
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = tall
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = temperate
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = gregarious
+				}
+
+				mult_modifier = {
+					factor = 1.33
+					trait = ambitious
+				}
+
+				mult_modifier = {
+					factor = 0.2
+
+					OR = {
+						trait = gluttonous
+						trait = imbecile
+						trait = inbred
+						trait = blinded
+					}
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = shy
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					trait = content
+				}
+
+				mult_modifier = {
+					factor = 1.11
+					diplomacy >= 12
+				}
+
+				mult_modifier = {
+					factor = 1.11
+					diplomacy >= 14
+				}
+
+				mult_modifier = {
+					factor = 1.11
+					diplomacy >= 16
+				}
+
+				mult_modifier = {
+					factor = 1.11
+					diplomacy >= 18
+				}
+
+				mult_modifier = {
+					factor = 1.11
+					diplomacy >= 20
+				}
+
+				mult_modifier = {
+					factor = 1.11
+					intrigue >= 12
+				}
+
+				mult_modifier = {
+					factor = 1.11
+					intrigue >= 14
+				}
+
+				mult_modifier = {
+					factor = 1.11
+					intrigue >= 16
+				}
+
+				mult_modifier = {
+					factor = 1.11
+					intrigue >= 18
+				}
+
+				mult_modifier = {
+					factor = 1.11
+					intrigue >= 20
+				}
+
+				mult_modifier = {
+					factor = 2
+					is_ruler = yes
+				}
+			}
+
+			character_event = { id = FemRule.220 }
+		}
+	}
+}
+
+character_event = {
+	id = FemRule.220
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_220
+	picture = GFX_evt_grazia
+
+	is_triggered_only = yes
+
+	immediate = {
+		top_liege = { set_character_flag = beauty_winner }
+	}
+
+	option = {
+		name = EXCELLENT
+
+		prestige = 300
+		add_trait = beauty
+
+		hidden_effect = {
+			top_liege = {
+				any_realm_character = {
+					limit = {
+						is_female = yes
+						has_character_flag = spectating_tournament
+					}
+
+					character_event = {
+						id = FemRule.221
+						days = 1
+					}
+				}
+			}
+
+			if = {
+				limit = { independent = no }
+
+				top_liege = {
+					character_event = { id = FemRule.222 }
+				}
+			}
+		}
+	}
+}
+
+# Other women attending the tournament become jealous of the winner
+character_event = {
+	id = FemRule.221
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_221
+	picture = GFX_evt_grazia
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_221 # How dare they!
+
+		trigger = {
+			has_unattractive_trait_trigger = no
+			NOT = { religion_group = muslim }
+		}
+
+		random = {
+			chance = 20
+			add_trait_partially_envious_effect = yes
+		}
+
+		piety = -10
+
+		opinion = {
+			name = jealous
+			who = FROM
+			years = 5
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 3
+				trait = envious
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = shy
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = content
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_FemRule_221 # They would never pick me.
+
+		trigger = { has_unattractive_trait_trigger = yes }
+
+		random = {
+			chance = 20
+			add_trait_partially_envious_effect = yes
+		}
+
+		piety = -10
+
+		opinion = {
+			who = FROM
+			name = jealous
+			years = 5
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 3
+				trait = envious
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_221 # She deserves it
+
+		random = {
+			chance = 20
+			add_trait_partially_humble_effect = yes
+		}
+
+		prestige = -25
+
+		opinion = {
+			name = opinion_impressed
+			who = FROM
+			years = 5
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 1.5
+				trait = kind
+			}
+
+			mult_modifier = {
+				factor = 3
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = patient
+			}
+		}
+	}
+}
+
+# Notify liege of the beauty contest winner
+character_event = {
+	id = FemRule.222
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_222
+	picture = GFX_evt_grazia
+
+	is_triggered_only = yes
+
+	option = {
+		name = OK
+
+		if = {
+			limit = {
+				OR = {
+					has_character_flag = beauty_winner
+					religion_group = muslim
+				}
+
+				has_character_flag = winner
+				has_character_flag = second_place
+				has_character_flag = third_place
+			}
+
+			character_event = {
+				id = 70002
+				days = 5
+			}
+		}
+	}
+}
+
+### TOURNAMENT ROMANCE EVENTS
+
+# Male knight is at the tournament and available
+character_event = {
+	id = FemRule.225
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	# only_men = yes
+	has_character_flag = attending_tournament
+	min_age = 16
+	max_age = 50
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		NOT = { has_character_flag = tournament_romance }
+	}
+
+	immediate = {
+		if = {
+			limit = { trait = homosexual }
+
+			set_character_flag = tournament_romance
+
+			top_liege = {
+				random_realm_character = {
+					limit = {
+						same_sex = ROOT
+						trait = homosexual
+						is_adult = yes
+						practical_age < 40
+						has_lover = no
+						is_ill = no
+						has_unattractive_trait_trigger = no
+
+						OR = {
+							has_character_flag = spectating_tournament
+							has_character_flag = attending_tournament
+						}
+
+						NOR = {
+							trait = celibate
+							trait = imbecile
+							trait = infirm
+							is_close_relative = ROOT
+							is_former_lover = ROOT
+							is_rival = ROOT
+							has_character_flag = tournament_romance
+						}
+					}
+
+					character_event = {
+						id = FemRule.226
+						days = 1
+						random = 3}
+				}
+			}
+		}
+		else = {
+			set_character_flag = tournament_romance
+
+			top_liege = {
+				random_realm_character = {
+					limit = {
+						is_opposite_sex = ROOT
+						is_adult = yes
+						practical_age < 40
+						has_lover = no
+						is_consort = no
+						is_pregnant = no
+						is_ill = no
+						has_unattractive_trait_trigger = no
+
+						OR = {
+							has_character_flag = spectating_tournament
+							has_character_flag = attending_tournament
+						}
+
+						NOR = {
+							trait = celibate
+							trait = imbecile
+							trait = infirm
+							trait = homosexual
+							is_close_relative = ROOT
+							is_former_lover = ROOT
+							is_rival = ROOT
+							is_married = ROOT
+							has_character_flag = tournament_romance
+						}
+					}
+
+					if = {
+						limit = { is_female = yes }
+						character_event = { id = FemRule.226 days = 1 random = 3 }
+					}
+					else = {
+						character_event = { id = FemRule.227 days = 1 random = 3 }
+					}
+				}
+			}
+		}
+	}
+}
+
+# A knight catches your eye
+character_event = {
+	id = FemRule.226
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_226
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_226 # Send him a signal
+
+		set_character_flag = tournament_romance
+
+		FROM = {
+			character_event = {
+				id = FemRule.227
+				days = 1
+				random = 3
+			}
+		}
+
+		ai_chance = {
+			factor = 60
+
+			mult_modifier = {
+				factor = 5
+				trait = hedonist
+			}
+
+			mult_modifier = {
+				factor = 3
+				has_ambition = obj_find_lover
+			}
+
+			mult_modifier = {
+				factor = 3
+				trait = lustful
+			}
+
+			mult_modifier = {
+				factor = 3
+				FROM = { trait = attractive }
+			}
+
+			mult_modifier = {
+				factor = 2
+				FROM = { is_smart_trigger = yes }
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				FROM = {
+					is_female = no
+					is_strong_trigger = yes
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				FROM = { trait = gregarious }
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = trusting
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				trait = ambitious
+				vassal_of = FROM
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				is_married = yes
+				spouse = { has_lover = yes }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = poet
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				FROM = { trait = poet }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				FROM = { trait = tall }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = brave
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value >= 20 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value >= 40 }
+			}
+
+			mult_modifier = {
+				factor = 0.25
+				trait = chaste
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				FROM = { is_married = yes }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = shy
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = temperate
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = paranoid
+			}
+
+			mult_modifier = {
+				factor = 0.8
+
+				FROM = {
+					OR = {
+						trait = slow
+						trait = dull
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				opinion = { who = FROM value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = FROM value < -20 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = FROM value < -40 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_226 # Do nothing
+
+		FROM = {
+			character_event = { id = FemRule.228 }
+		}
+
+		ai_chance = {
+			factor = 40
+
+			trigger = {
+				NOT = { has_ambition = obj_find_lover }
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				is_married = yes
+
+				NOR = {
+					trait = lustful
+					trait = hedonist
+				}
+			}
+		}
+	}
+}
+
+# A lord/lady beckons to you
+character_event = {
+	id = FemRule.227
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_227
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_227 # Respond favourably
+
+		if = {
+			limit = { is_female = no }
+			FROM = {
+				character_event = { id = FemRule.235 days = 1 random = 3 }
+			}
+		}
+		else = {
+			FROM = {
+				character_event = { id = FemRule.229 days = 1 random = 3 }
+			}
+		}
+
+		ai_chance = {
+			factor = 80
+
+			mult_modifier = {
+				factor = 5
+				trait = hedonist
+			}
+
+			mult_modifier = {
+				factor = 3
+				has_ambition = obj_find_lover
+			}
+
+			mult_modifier = {
+				factor = 3
+				trait = lustful
+			}
+
+			mult_modifier = {
+				factor = 3
+				FROM = { trait = attractive }
+			}
+
+			mult_modifier = {
+				factor = 2
+				FROM = { is_smart_trigger = yes }
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				FROM = {
+					is_female = no
+					is_strong_trigger = yes
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = homosexual
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				FROM = { trait = gregarious }
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = trusting
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				trait = ambitious
+				vassal_of = FROM
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				is_married = yes
+				spouse = { has_lover = yes }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = poet
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				FROM = { trait = poet }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				FROM = { trait = tall }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = brave
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value >= 20 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value >= 40 }
+			}
+
+			mult_modifier = {
+				factor = 0.25
+				trait = chaste
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				FROM = { is_married = yes }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = shy
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = temperate
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = paranoid
+			}
+
+			mult_modifier = {
+				factor = 0.8
+
+				FROM = {
+					OR = {
+						trait = slow
+						trait = dull
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				opinion = { who = FROM value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = FROM value < -20 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = FROM value < -40 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_226 # Rebuff him/her
+
+		FROM = {
+			character_event = { id = FemRule.230 }
+		}
+
+		clr_character_flag = tournament_romance
+
+		ai_chance = {
+			factor = 20
+
+			trigger = {
+				NOT = { has_ambition = obj_find_lover }
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				is_married = yes
+
+				NOR = {
+					trait = lustful
+					trait = hedonist
+				}
+			}
+		}
+	}
+}
+
+# Clear flag from rejected knight
+character_event = {
+	id = FemRule.228
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		clr_character_flag = tournament_romance
+	}
+}
+
+# The knight comes to you
+character_event = {
+	id = FemRule.229
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_229
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_229 # Offer him your favour for the jousting
+
+		FROM = {
+			character_event = { id = FemRule.231 }
+		}
+
+		ai_chance = {
+			factor = 40
+
+			mult_modifier = {
+				factor = 1.25
+				trait = brave
+			}
+
+			mult_modifier = {
+				factor = 1.25
+
+				OR = {
+					trait = martial_lady_pagan
+					trait = martial_lady
+					trait = martial_lady_tengri
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				religion = catholic
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = honest
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = shy
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_229 # Mention your love of minstrels
+
+		FROM = {
+			character_event = { id = FemRule.232 }
+		}
+
+		ai_chance = {
+			factor = 25
+
+			mult_modifier = {
+				factor = 1.25
+				trait = poet
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = hedonist
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				culture = occitan
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = gregarious
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = attractive
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_FemRule_229 # Ask him to show you how to shoot the bow
+
+		FROM = {
+			character_event = { id = FemRule.233 }
+		}
+
+		ai_chance = {
+			factor = 25
+
+			mult_modifier = {
+				factor = 1.25
+				is_strong_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = tall
+			}
+
+			mult_modifier = {
+				factor = 1.25
+
+				OR = {
+					trait = martial_lady_pagan
+					trait = martial_lady
+					trait = martial_lady_tengri
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = diligent
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = hunter
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTD_FemRule_229 # Reject him
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = { id = FemRule.234 }
+
+			opinion = {
+				who = ROOT
+				name = insulted
+			}
+		}
+
+		clr_character_flag = tournament_romance
+
+		ai_chance = {
+			factor = 10
+
+			mult_modifier = {
+				factor = 1.25
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = impaler
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = paranoid
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = chaste
+			}
+		}
+	}
+}
+
+# The knight snubs you
+character_event = {
+	id = FemRule.230
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_230
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_230 # Oh no!
+
+		prestige = -25
+		clr_character_flag = tournament_romance
+
+		opinion = {
+			name = insulted
+			who = FROM
+		}
+	}
+}
+
+# Jousting for your lady--pure martial 'date'
+character_event = {
+	id = FemRule.231
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_231
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_231 # Joust successfully
+
+		trigger = {
+			OR = {
+				martial >= 12
+
+				AND = {
+					martial >= 7
+
+					OR = {
+						is_strong_trigger = yes
+						trait = tough_soldier
+						trait = attractive
+					}
+				}
+
+				AND = {
+					martial >= 9
+
+					OR = {
+						trait = tall
+						trait = misguided_warrior
+						trait = duelist
+						trait = brave
+					}
+				}
+
+				AND = {
+					martial > 11
+
+					OR = {
+						trait = skilled_tactician
+						trait = brilliant_strategist
+					}
+				}
+			}
+		}
+
+		prestige = 50
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = { id = FemRule.235 }
+
+			opinion = {
+				name = opinion_impressed
+				who = ROOT
+				years = 1
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_231 # Joust unsuccessfully
+
+		trigger = {
+			NOR = {
+				martial >= 12
+
+				AND = {
+					martial >= 7
+
+					OR = {
+						is_strong_trigger = yes
+						trait = tough_soldier
+						trait = attractive
+					}
+				}
+
+				AND = {
+					martial >= 9
+
+					OR = {
+						trait = tall
+						trait = misguided_warrior
+						trait = duelist
+						trait = brave
+					}
+				}
+
+				AND = {
+					martial > 11
+
+					OR = {
+						trait = skilled_tactician
+						trait = brilliant_strategist
+					}
+				}
+			}
+		}
+
+		prestige = -25
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = { id = FemRule.236 }
+
+			opinion = {
+				name = opinion_disappointed
+				who = ROOT
+				years = 1
+			}
+		}
+	}
+}
+
+# The minstrel's show--diplomacy 'date'
+character_event = {
+	id = FemRule.232
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_232
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_232 # Improvise a love song
+
+		trigger = {
+			OR = {
+				diplomacy >= 12
+
+				AND = {
+					diplomacy >= 5
+
+					OR = {
+						trait = poet
+						trait = genius
+						trait = grey_eminence
+					}
+				}
+
+				AND = {
+					diplomacy >= 7
+
+					OR = {
+						trait = quick
+						trait = shrewd
+						trait = charismatic_negotiator
+						trait = scholar
+						trait = trusting
+						trait = detached_priest
+					}
+				}
+
+				AND = {
+					diplomacy >= 9
+
+					OR = {
+						trait = underhanded_rogue
+						trait = brilliant_strategist
+						trait = mastermind_theologian
+						trait = elusive_shadow
+						trait = midas_touched
+						trait = deceitful
+						trait = gregarious
+					}
+				}
+			}
+		}
+
+		prestige = 50
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = { id = FemRule.235 }
+
+			opinion = {
+				name = opinion_impressed
+				who = ROOT
+				years = 1
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_232 # Embarass yourself dancing
+
+		trigger = {
+			NOR = {
+				diplomacy >= 12
+
+				AND = {
+					diplomacy >= 5
+
+					OR = {
+						trait = poet
+						trait = genius
+						trait = grey_eminence
+					}
+				}
+
+				AND = {
+					diplomacy >= 7
+
+					OR = {
+						trait = quick
+						trait = shrewd
+						trait = charismatic_negotiator
+						trait = scholar
+						trait = trusting
+						trait = detached_priest
+					}
+				}
+
+				AND = {
+					diplomacy >= 9
+
+					OR = {
+						trait = underhanded_rogue
+						trait = brilliant_strategist
+						trait = mastermind_theologian
+						trait = elusive_shadow
+						trait = midas_touched
+						trait = deceitful
+						trait = gregarious
+					}
+				}
+			}
+		}
+
+		prestige = -25
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = { id = FemRule.236 }
+
+			opinion = {
+				name = opinion_disappointed
+				who = ROOT
+				years = 1
+			}
+		}
+	}
+}
+
+# The archery range--intrigue/martial 'date'
+character_event = {
+	id = FemRule.233
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_233
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_233 # Show her a bullseye, then split her arrow
+
+		trigger = {
+			OR = {
+				AND = {
+					trait = hunter
+					martial >= 4
+					intrigue >= 4
+				}
+
+				AND = {
+					is_strong_trigger = yes
+					martial >= 5
+					intrigue >= 5
+				}
+
+				AND = {
+					martial >= 6
+					intrigue >= 6
+
+					OR = {
+						trait = patient
+						trait = diligent
+					}
+				}
+
+				AND = {
+					martial >= 7
+					intrigue >= 7
+
+					OR = {
+						trait = cynical
+						trait = kind
+					}
+				}
+
+				AND = {
+					martial >= 8
+					intrigue >= 8
+				}
+			}
+		}
+
+		prestige = 25
+
+		FROM = {
+			show_scope_change = no
+
+			if = {
+				limit = { lifestyle_traits < 1 }
+
+				random = {
+					chance = 33
+					add_trait = hunter
+				}
+			}
+
+			character_event = { id = FemRule.235 }
+
+			opinion = {
+				name = opinion_impressed
+				who = ROOT
+				years = 2
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_233 # Embarass yourself
+
+		trigger = {
+			NOR = {
+				AND = {
+					trait = hunter
+					martial >= 4
+					intrigue >= 4
+				}
+
+				AND = {
+					is_strong_trigger = yes
+					martial >= 5
+					intrigue >= 5
+				}
+
+				AND = {
+					martial >= 6
+					intrigue >= 6
+
+					OR = {
+						trait = patient
+						trait = diligent
+					}
+				}
+
+				AND = {
+					martial >= 7
+					intrigue >= 7
+
+					OR = {
+						trait = cynical
+						trait = kind
+					}
+				}
+
+				AND = {
+					martial >= 8
+					intrigue >= 8
+				}
+			}
+		}
+
+		prestige = -25
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = { id = FemRule.236 }
+
+			opinion = {
+				name = opinion_disappointed
+				who = ROOT
+				years = 1
+			}
+		}
+	}
+}
+
+# The lady snubs you
+character_event = {
+	id = FemRule.234
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_234
+
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_234 # Oh no!
+
+		prestige = -50
+		clr_character_flag = tournament_romance
+	}
+}
+
+# Successful 'date'
+character_event = {
+	id = FemRule.235
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_235
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_235 # Continue the romance
+
+		trigger = { is_female = yes }
+
+		prestige = 25
+
+		FROM = {
+			character_event = {
+				id = FemRule.239
+				days = 1
+				random = 2
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 1.25
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = scholar
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = shy
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 1.25
+
+				OR = {
+					trait = mastermind_theologian
+					trait = scholarly_theologian
+					trait = dutiful_cleric
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.25
+
+				OR = {
+					trait = grey_eminence
+					trait = charismatic_negotiator
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = lustful
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				is_smart_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value >= 20 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value >= 40 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = FROM value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = FROM value < -20 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_235 # Leave the bedroom door ajar....
+
+		trigger = {
+			NOT = { trait = chaste }
+		}
+
+		prestige = 25
+
+		FROM = {
+			character_event = {
+				id = FemRule.238
+				days = 1
+				random = 2
+			}
+		}
+
+		ai_chance = {
+			factor = 25
+
+			mult_modifier = {
+				factor = 4
+
+				trait = homosexual
+				is_female = no
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = hedonist
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = lustful
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = gluttonous
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				has_education_intrigue_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				FROM = { trait = attractive }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				FROM = { is_strong_trigger = yes }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				FROM = { trait = tall }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value >= 40 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value >= 60 }
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				opinion = { who = FROM value < 20 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = FROM value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = FROM value < -20 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_226 # He's not right for me
+
+		prestige = 10
+
+		FROM = {
+			character_event = {
+				id = FemRule.237
+				days = 1
+				random = 2
+			}
+		}
+
+		ai_chance = {
+			factor = 25
+
+			mult_modifier = {
+				factor = 2
+				is_married = yes
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				has_education_martial_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				is_smart_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = lustful
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = hedonist
+			}
+		}
+	}
+}
+
+# Failed 'date'
+character_event = {
+	id = FemRule.236
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_236
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_236 # He's not right for me
+
+		prestige = -10
+
+		FROM = {
+			character_event = {
+				id = FemRule.237
+				days = 1
+				random = 2
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 1.25
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				has_education_martial_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				is_smart_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = lustful
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_236 # Continue the romance
+
+		prestige = -25
+
+		FROM = {
+			character_event = {
+				id = FemRule.239
+				days = 1
+				random = 2
+			}
+		}
+
+		ai_chance = {
+			factor = 25
+
+			mult_modifier = {
+				factor = 1.25
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = scholar
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = shy
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 1.25
+
+				OR = {
+					trait = mastermind_theologian
+					trait = scholarly_theologian
+					trait = dutiful_cleric
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.25
+
+				OR = {
+					trait = grey_eminence
+					trait = charismatic_negotiator
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = lustful
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = hedonist
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				is_smart_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value >= 20 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = FROM value >= 40 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = FROM value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = FROM value < -20 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_FemRule_236 # Leave the bedroom door ajar....
+
+		trigger = {
+			NOT = { trait = chaste }
+		}
+
+		prestige = -25
+
+		FROM = {
+			character_event = {
+				id = FemRule.238
+				days = 1
+				random = 2
+			}
+		}
+
+		ai_chance = {
+			factor = 25
+
+			mult_modifier = {
+				factor = 2
+				trait = hedonist
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = lustful
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = gluttonous
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				has_education_intrigue_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				FROM = { trait = attractive }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				FROM = { is_strong_trigger = yes }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				FROM = { trait = tall }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value >= 30 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value >= 40 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value >= 60 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value >= 70 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value >= 80 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value >= 90 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value >= 100 }
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				opinion = { who = FROM value < 20 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = FROM value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = FROM value < -20 }
+			}
+		}
+	}
+}
+
+# The lady breaks it off
+character_event = {
+	id = FemRule.237
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_237
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_237 # Oh no!
+
+		prestige = -25
+		clr_character_flag = tournament_romance
+
+		opinion = {
+			name = opinion_angry
+			who = FROM
+			years = 999
+		}
+
+		reverse_opinion = {
+			name = opinion_angry
+			who = FROM
+			years = 999
+		}
+	}
+}
+
+# A trip to the bedroom?
+character_event = {
+	id = FemRule.238
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_238
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_238 # Hubba Hubba
+
+		add_lover = FROM
+		prestige = 10
+
+		FROM = {
+			character_event = {
+				id = FemRule.241
+				days = 1
+				random = 2
+			}
+		}
+
+		if = {
+			limit = { trait = chaste }
+			remove_trait = chaste
+		}
+		else = {
+			random = {
+				chance = 50
+				add_trait_lustful_effect = yes
+			}
+		}
+
+		random = {
+			chance = 30
+			remove_trait_temperate_effect = yes
+		}
+
+		if = {
+			limit = {
+				trait = patient
+				FROM = { is_female = yes }
+			}
+
+			random = {
+				chance = 50
+				remove_trait_patient_effect = yes
+			}
+		}
+
+		ai_chance = {
+			factor = 80
+
+			trigger = {
+				trigger_if = {
+					limit = { trait = homosexual }
+					FROM = { is_female = no }
+				}
+			}
+
+			mult_modifier = {
+				factor = 3
+				trait = lustful
+			}
+
+			mult_modifier = {
+				factor = 3
+				trait = hedonist
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = diligent
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = gluttonous
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				FROM = { trait = attractive }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				FROM = { trait = tall }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value >= 20 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value >= 40 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value >= 60 }
+			}
+
+			mult_modifier = {
+				factor = 0.25
+				trait = chaste
+			}
+
+			mult_modifier = {
+				factor = 3
+
+				trait = homosexual
+				FROM = { is_female = no }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				opinion = { who = FROM value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = FROM value < -20 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = FROM value < -40 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_238 # Rebuff him/her
+
+		FROM = {
+			character_event = {
+				id = FemRule.240
+				days = 1
+				random = 2
+			}
+		}
+
+		clr_character_flag = tournament_romance
+
+		if = {
+			limit = { trait = lustful }
+
+			random = {
+				chance = 50
+				remove_trait_lustful_effect = yes
+			}
+		}
+		else = {
+			random = {
+				chance = 20
+				add_trait_chaste_effect = yes
+			}
+		}
+
+		piety = 25
+
+		ai_chance = {
+			factor = 20
+
+			mult_modifier = {
+				factor = 3
+
+				trait = homosexual
+				FROM = { is_female = yes }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = chaste
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = scholar
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 1.25
+
+				OR = {
+					trait = mastermind_theologian
+					trait = scholarly_theologian
+					trait = dutiful_cleric
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value < -20 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value < -40 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				opinion = { who = FROM value >= 20 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				opinion = { who = FROM value >= 40 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				opinion = { who = FROM value >= 60 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_FemRule_238 # This is too soon...
+
+		trigger = {
+			learning >= 16
+			FROM = { is_female = yes }
+		}
+
+		prestige = 25
+		piety = 25
+		add_trait_fully_silently_patient_effect = yes
+		add_trait_fully_silently_temperate_effect = yes
+		add_lover = FROM
+
+		FROM = {
+			character_event = {
+				id = FemRule.242
+				days = 1
+				random = 2
+			}
+		}
+
+		ai_chance = { factor = 100 }
+	}
+}
+
+# Keep it up?
+character_event = {
+	id = FemRule.239
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_239
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_239 # Courtly love
+
+		add_lover = FROM
+		prestige = 25
+
+		random = {
+			chance = 25
+			add_trait_fully_silently_chaste_effect = yes
+		}
+
+		if = {
+			limit = { lifestyle_traits < 1 }
+
+			random = {
+				chance = 50
+				add_trait = poet
+			}
+		}
+
+		FROM = {
+			character_event = {
+				id = FemRule.242
+				days = 1
+				random = 2
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				NOT = { trait = homosexual }
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = lustful
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = hedonist
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = diligent
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = honest
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = poet
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				FROM = { trait = attractive }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				FROM = { trait = tall }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value >= 20 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value >= 40 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value >= 60 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				opinion = { who = FROM value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = FROM value < -20 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = FROM value < -40 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_239 # Break up
+
+		clr_character_flag = tournament_romance
+
+		random = {
+			chance = 25
+			add_trait_fully_silently_arbitrary_effect = yes
+		}
+
+		prestige = 10
+
+		FROM = {
+			character_event = {
+				id = FemRule.240
+				days = 1
+				random = 2
+			}
+		}
+
+		ai_chance = {
+			factor = 25
+
+			mult_modifier = {
+				factor = 1.25
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value < -20 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				opinion = { who = FROM value < -40 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				opinion = { who = FROM value >= 20 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				opinion = { who = FROM value >= 40 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				opinion = { who = FROM value >= 60 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_FemRule_239 # I'd rather just be friends
+
+		prestige = 25
+		piety = 25
+
+		random = {
+			chance = 25
+			add_trait_fully_silently_chaste_effect = yes
+		}
+
+		FROM = {
+			character_event = {
+				id = FemRule.243
+				days = 1
+				random = 2
+			}
+		}
+
+		ai_chance = {
+			factor = 25
+
+			mult_modifier = {
+				factor = 2
+				is_married = yes
+			}
+
+			mult_modifier = {
+				factor = 4
+				trait = chaste
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = temperate
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = zealous
+			}
+		}
+	}
+}
+
+# Knight breaks it off
+character_event = {
+	id = FemRule.240
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_240
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_240 # Oh no!
+
+		prestige = -25
+		clr_character_flag = tournament_romance
+
+		random = {
+			chance = 25
+			remove_trait_silently_kind_effect = yes
+		}
+
+		random = {
+			chance = 25
+			add_trait_fully_silently_shy_effect = yes
+		}
+
+		opinion = {
+			name = opinion_angry
+			who = FROM
+			years = 50
+		}
+
+		reverse_opinion = {
+			name = opinion_disappointed
+			who = FROM
+			years = 50
+		}
+	}
+}
+
+# Nocturnal gymnastics
+character_event = {
+	id = FemRule.241
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_241
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_241 # heavy breathing
+
+		if = {
+			limit = { trait = chaste }
+			remove_trait = chaste
+		}
+		else = {
+			random = {
+				chance = 50
+				add_trait_lustful_effect = yes
+			}
+		}
+
+		prestige = 10
+		clr_character_flag = tournament_romance
+
+		if = {
+			limit = {
+				is_female = yes
+				fertility >= 0.33
+				FROM = { fertility >= 0.33 }
+			}
+
+			random = {
+				chance = 50
+
+				if = {
+					limit = { is_married = yes }
+					impregnate = FROM
+				}
+				else = {
+					impregnate_cuckoo = FROM
+				}
+			}
+		}
+	}
+}
+
+# Romance continues
+character_event = {
+	id = FemRule.242
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_242
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_242 # Sickeningly sweet
+
+		prestige = 25
+		clr_character_flag = tournament_romance
+
+		random = {
+			chance = 25
+			add_trait_fully_chaste_effect = yes
+		}
+
+		if = {
+			limit = { lifestyle_traits < 1 }
+
+			random = {
+				chance = 50
+				add_trait = poet
+			}
+		}
+	}
+}
+
+# Just friends?
+character_event = {
+	id = FemRule.243
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_243
+	picture = GFX_evt_courtly_love
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_243 # I've made a friend
+
+		prestige = 25
+		clr_character_flag = tournament_romance
+		add_friend = FROM
+	}
+
+	option = {
+		name = EVTOPTB_FemRule_243 # I wanted more � player-only
+
+		prestige = 10
+
+		random = {
+			chance = 25
+			add_trait_fully_wroth_effect = yes
+		}
+
+		clr_character_flag = tournament_romance
+
+		opinion = {
+			name = opinion_angry
+			who = FROM
+			years = 50
+		}
+
+		reverse_opinion = {
+			name = opinion_disappointed
+			who = FROM
+			years = 50
+		}
+	}
+}
+
+### TOURNAMENT END EVENTS
+
+# Tournament is over
+character_event = {
+	id = FemRule.245 # formerly 1000182626
+	title = TOURNAMENTTITLE
+	desc = EVTDESC_FemRule_245
+	picture = GFX_evt_tournament_gallery
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_FemRule_245 # It was fun
+
+		prestige = 25
+
+		opinion = {
+			name = opinion_tournament_spectator
+			who = FROM
+			years = 2
+		}
+
+		remove_do_not_disturb_effect = yes
+		clr_character_flag = attending_tournament
+		clr_character_flag = attending_tournament_sexism
+ 		clr_character_flag = attending_tournament_fear
+ 		clr_character_flag = attending_tournament_MartialEd
+ 		clr_character_flag = attending_tournament_gay
+ 		clr_character_flag = attending_tournament_syph
+ 		clr_character_flag = attending_tournament_drunk
+ 		clr_character_flag = attending_tournament_duelist
+ 		clr_character_flag = attending_tournament_intrigue
+		clr_character_flag = attending_tournament_event
+ 		clr_character_flag = attending_tournament_stew
+ 		clr_character_flag = attending_tournament_dip
+		clr_character_flag = lady_pride
+ 		clr_character_flag = lady_shyness
+ 		clr_character_flag = lady_honesty
+ 		clr_character_flag = lady_lust
+		clr_character_flag = tournament_third_place
+		clr_character_flag = tournament_second_place
+		clr_character_flag = tournament_winner
+		clr_character_flag = tournament_romance
+		clr_character_flag = spectating_tournament
+		clr_character_flag = attending_tournament_wound
+		clr_character_flag = championing_liege_lady
+	}
+}

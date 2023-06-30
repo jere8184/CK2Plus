@@ -1,0 +1,102 @@
+# Titular kingdom titles
+
+k_avaria = {
+	color = { 250 120 90 } # Only for the CoA
+	culture = avar
+
+	capital = 707 # Esztergom
+
+	allow = {
+		can_create_kingdom = yes
+		NOT = { has_global_flag = carpathia_is_avaria }
+
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_tier_than = king
+				culture = avar
+			}
+		}
+	}
+}
+
+k_carpathia = {
+	color = { 215 192 149 }
+	color2 = { 255 255 255 }
+
+	capital = 707 # Esztergom
+	culture = hungarian
+
+	catholic = 10 #Crusade target weight
+	tengri_pagan_reformed = 10 # Crusade target weight
+	slavic_pagan_reformed = 5 # Crusade target weight
+
+	allow = {
+		can_create_kingdom = yes
+
+		OR = {
+			FROM = {
+				OR = {
+					has_holder = yes
+					is_titular = no
+				}
+			}
+
+			ROOT = {
+				lower_real_tier_than = KING
+
+				OR = {
+					culture = hungarian
+					culture = ostrogothic
+				}
+			}
+		}
+	}
+}
+
+k_liao = {
+	color = { 33 202 156 }
+	color2 = { 255 255 255 }
+
+	culture = khitan
+}
+
+k_lombardy = {
+	color = { 234 217 110 } # Only for the CoA
+	culture = longobard
+
+	capital = 441 # Pavia
+
+	christian = 1000 # Crusade target weight
+	hellenic_pagan_reformed = 5000 # Crusade target weight
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_tier_than = king
+				culture = longobard
+			}
+		}
+	}
+}
+
+k_pechenegs = {
+	color = { 173 110 43 }
+	color2 = { 0 128 128 }
+
+	capital = 645 # Oleshye
+
+	culture = pecheneg
+
+	allow = {
+		always = no
+	}
+}
+
+k_sakya_trizin = {
+	color = { 95 190 50 }
+}

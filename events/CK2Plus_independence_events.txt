@@ -1,0 +1,1064 @@
+namespace = Plus
+
+#reserved: Plus.411 to Plus.424
+#reserved: Plus.430 to Plus.434
+
+###########################################
+# Independence Events
+###########################################
+
+### TRIBUTARY EVENTS
+
+# Ruler dies who has tributes
+character_event = {
+	id = Plus.411
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_independent = yes
+
+	trigger = {
+		any_tributary = {
+			OR = {
+				is_tributary = { type = forced }
+				is_tributary = { type = voluntary }
+				is_tributary = { type = default }
+				is_tributary = { type = protectorate }
+			}
+		}
+	}
+
+	immediate = {
+		current_heir = { save_event_target_as = new_suzerain }
+
+		any_tributary = {
+			limit = { NOT = { character = event_target:new_suzerain } }
+
+			if = {
+				limit = { is_tributary = { type = forced } }
+
+				set_character_flag = is_forced_tributary
+				character_event = { id = Plus.417 days = 1 } # renew tribute status
+			}
+			else_if = {
+				limit = {
+					OR = {
+						is_tributary = { type = voluntary }
+						is_tributary = { type = default }
+					}
+				}
+
+				set_character_flag = is_voluntary_tributary
+				character_event = { id = Plus.417 days = 1 } # renew tribute status
+			}
+			else_if = {
+				limit = { is_tributary = { type = protectorate } }
+
+				set_character_flag = is_protectorate
+				character_event = { id = Plus.417 days = 1 } # renew tribute status
+			}
+		}
+	}
+}
+
+# Tribute accepted
+character_event = {
+	id = Plus.414
+	desc = EVTDESC_Plus_414
+	picture = GFX_evt_emissary
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		clr_character_flag = is_forced_tributary
+		clr_character_flag = is_voluntary_tributary
+		clr_character_flag = is_protectorate
+	}
+}
+
+# Tribute refused
+character_event = {
+	id = Plus.415
+	desc = EVTDESC_Plus_415
+	picture = GFX_evt_emissary
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_415
+
+		clr_character_flag = is_forced_tributary
+		clr_character_flag = is_voluntary_tributary
+		clr_character_flag = is_protectorate
+	}
+}
+
+# Tributes decide whether or not to break tribute with heir
+character_event = {
+	id = Plus.417
+	desc = EVTDESC_Plus_417
+	picture = GFX_evt_emissary
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOR = {
+			higher_real_tier_than = event_target:new_suzerain
+			war_with = event_target:new_suzerain
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_417 # Accept tribute status
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 1.2
+				has_character_flag = is_voluntary_tributary
+			}
+
+			mult_modifier = {
+				factor = 2
+				has_character_flag = is_protectorate
+			}
+
+			mult_modifier = {
+				factor = 3
+				is_primary_war_defender = yes
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				shares_realm_border_with = ROOT
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				OR = {
+					dynasty = event_target:new_suzerain
+					is_allied_with = event_target:new_suzerain
+					has_non_aggression_pact_with = event_target:new_suzerain
+					is_friend = event_target:new_suzerain
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+				dynasty_head = { character = event_target:new_suzerain}
+			}
+		}
+
+		if = {
+			limit = { has_character_flag = is_voluntary_tributary }
+
+			event_target:new_suzerain = {
+				show_scope_change = no
+
+				tooltip = {
+					make_tributary = {
+						who = ROOT
+						tributary_type = voluntary
+					}
+				}
+
+				character_event = { id = Plus.418 }
+			}
+		}
+		else_if = {
+			limit = { has_character_flag = is_forced_tributary }
+
+			event_target:new_suzerain = {
+				show_scope_change = no
+
+				tooltip = {
+					make_tributary = {
+						who = ROOT
+						tributary_type = forced
+					}
+				}
+
+				character_event = { id = Plus.418 }
+			}
+		}
+		else_if = {
+			limit = { has_character_flag = is_protectorate }
+
+			event_target:new_suzerain = {
+				show_scope_change = no
+
+				tooltip = {
+					make_tributary = {
+						who = ROOT
+						tributary_type = protectorate
+					}
+				}
+
+				character_event = { id = Plus.418 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_417 # Break tribute status
+
+		trigger = {
+			is_adult = yes
+			is_incapable = no
+			prisoner = no
+		}
+
+		event_target:new_suzerain = {
+			show_scope_change = no
+
+			character_event = {
+				id = Plus.419
+				tooltip = BREAK_TRIBUTE_STATUS
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				NAND = {
+					shares_realm_border_with = event_target:new_suzerain
+					realm_levy_diff = { who = event_target:new_suzerain value < -5000 }
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+				is_rival = event_target:new_suzerain
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				NOT = { shares_realm_border_with = event_target:new_suzerain }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = brave
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				realm_levy_diff = { who = event_target:new_suzerain value >= 10000 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				realm_levy_diff = { who = event_target:new_suzerain value >= 7500 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				realm_levy_diff = { who = event_target:new_suzerain value >= 5000 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				realm_levy_diff = { who = event_target:new_suzerain value >= 1000 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				realm_levy_diff = { who = event_target:new_suzerain value < -5000 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				realm_levy_diff = { who = event_target:new_suzerain value < -7500 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				realm_levy_diff = { who = event_target:new_suzerain value < -10000 }
+			}
+		}
+	}
+}
+
+# Former tribute offers to become tribute of heir
+character_event = {
+	id = Plus.418
+	desc = EVTDESC_Plus_418
+	picture = GFX_evt_emissary
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_418 # Accept tribute
+
+		if = {
+			limit = { FROM = { has_character_flag = is_voluntary_tributary } }
+			make_tributary = { who = FROM tributary_type = voluntary }
+		}
+		else_if = {
+			limit = { FROM = { has_character_flag = is_forced_tributary } }
+			make_tributary = { who = FROM tributary_type = forced }
+		}
+		else_if = {
+			limit = { FROM = { has_character_flag = is_protectorate } }
+			make_tributary = { who = FROM tributary_type = protectorate }
+		}
+
+		FROM = {
+			character_event = { id = Plus.414 }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_418 # Refuse tribute
+
+		FROM = {
+			show_scope_change = no
+
+			character_event = {
+				id = Plus.415
+				tooltip = REFUSE_TRIBUTE_STATUS
+			}
+		}
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Former tribute refuses to become tribute of heir
+character_event = {
+	id = Plus.419
+	desc = EVTDESC_Plus_419
+	picture = GFX_evt_emissary
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_416 # Let them go
+
+		opinion = {
+			name = opinion_outraged
+			who = FROM
+			years = 10
+		}
+
+		FROM = {
+			clr_character_flag = is_forced_tributary
+			clr_character_flag = is_voluntary_tributary
+			clr_character_flag = is_protectorate
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 2
+				FROM = { has_character_flag = is_protectorate }
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				FROM = { has_character_flag = is_voluntary_tributary }
+			}
+
+			mult_modifier = {
+				factor = 3
+				war = yes
+			}
+
+			mult_modifier = {
+				factor = 2
+				NOT = { shares_realm_border_with = FROM }
+			}
+
+			mult_modifier = {
+				factor = 2
+				reverse_realm_levy_diff = { who = FROM value >= 100 }
+			}
+
+			mult_modifier = {
+				factor = 2
+				reverse_realm_levy_diff = { who = FROM value >= 2500 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = kind
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = craven
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_416 # Attack them
+
+		trigger = {
+			FROM = {
+				NOR = {
+					higher_real_tier_than = ROOT
+					has_character_flag = is_protectorate
+				}
+			}
+		}
+
+		FROM = {
+			clr_character_flag = is_forced_tributary
+			clr_character_flag = is_voluntary_tributary
+		}
+
+		set_character_flag = trying_to_gain_tributary
+
+		war = {
+			target = FROM
+			casus_belli = tributary_cb
+		}
+
+		clr_character_flag = trying_to_gain_tributary
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				reverse_realm_levy_diff = { who = FROM value < 5000 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				realm_levy_diff = { who = FROM value >= 2500 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				realm_levy_diff = { who = FROM value >= 5000 }
+			}
+
+			mult_modifier = {
+				factor = 2
+				realm_levy_diff = { who = FROM value >= 10000 }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				NOT = { shares_realm_border_with = FROM }
+			}
+		}
+	}
+}
+
+# Ruler steps down peacefully - tributes automatically transfer
+character_event = {
+	id = Plus.420
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		if = {
+			limit = { has_character_flag = is_voluntary_tributary }
+			event_target:abdicate_heir = { make_tributary = { who = ROOT tributary_type = voluntary } }
+		}
+		else_if = {
+			limit = { has_character_flag = is_forced_tributary }
+			event_target:abdicate_heir = { make_tributary = { who = ROOT tributary_type = forced } }
+		}
+		else_if = {
+			limit = { has_character_flag = is_protectorate }
+			event_target:abdicate_heir = { make_tributary = { who = ROOT tributary_type = protectorate } }
+		}
+
+		clr_character_flag = is_voluntary_tributary
+		clr_character_flag = is_forced_tributary
+		clr_character_flag = is_protectorate
+	}
+}
+
+### INDEPENDENCE EVENTS
+
+character_event = {
+	id = Plus.430 # formerly 1000182684
+	desc = EVTDESC_Plus_430
+	picture = GFX_evt_council
+
+	is_triggered_only = yes
+
+	only_rulers = yes
+	is_patrician = no
+
+	trigger = {
+		# Non-rebelling landed count+ with an independent liege
+		independent = no
+		is_nomadic = no
+		liege = { independent = yes }
+		num_of_count_titles >= 1
+		in_revolt = no
+		NOT = { trait = pf_rebel }
+
+		# Who is not their de jure liege
+		NOT = {
+			liege = {
+				ROOT = {
+					primary_title = { de_jure_liege_or_above = PREVPREV }
+				}
+			}
+		}
+
+		# And who is either isolated from their liege, not subject to crown law, has Autonomous Vassals, or their liege is a Duke
+		OR = {
+			NOT = {
+				any_demesne_province = {
+					has_province_flag = contingent_territory
+					owned_by = PREV
+				}
+			}
+
+			liege = {
+				capital_scope = {
+					ROOT = {
+						capital_scope = {
+							distance = {
+								where = PREVPREV
+								value >= 400
+							}
+						}
+					}
+				}
+			}
+
+			trigger_if = {
+				limit = { crownlaw_title = { always = yes } }
+				crownlaw_title = { has_law = crown_authority_0 }
+			}
+
+			liege = { lower_real_tier_than = KING }
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_430 # Declare independence
+
+		trigger = {
+			prisoner = no
+			is_adult = yes
+			is_incapable = no
+		}
+
+		ai_chance = {
+			factor = 4
+
+			trigger = {
+				NOT = { is_primary_heir = liege }
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				any_allied_character = {
+					independent = yes
+					de_jure_vassal_or_below = ROOT
+					NOT = { same_realm = ROOT }
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 5
+				liege = { primary_title = { is_titular = yes } }
+			}
+
+			mult_modifier = {
+				factor = 25
+				in_faction = faction_separatist
+			}
+
+			mult_modifier = {
+				factor = 4
+				real_tier = KING
+			}
+
+			mult_modifier = {
+				factor = 2
+				NOT = { religion = liege }
+			}
+
+			mult_modifier = {
+				factor = 15
+				NOT = { religion_group = liege }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				NOT = { culture_group = liege }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				NOT = { culture = liege }
+			}
+
+			# Strong neighbouring realms might holy war me
+			mult_modifier = {
+				factor = 0.50
+
+				any_neighbor_independent_ruler = {
+					shares_realm_border_with = ROOT
+
+					realm_levy_diff = {
+						who = ROOT
+						value >= 1000
+					}
+
+					OR = {
+						NOT = { religion_group = ROOT }
+						is_heresy_of = ROOT
+						is_parent_religion = ROOT
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.50
+
+				any_neighbor_independent_ruler = {
+					shares_realm_border_with = ROOT
+
+					realm_levy_diff = {
+						who = ROOT
+						value >= 2500
+					}
+
+					OR = {
+						NOT = { religion_group = ROOT }
+						is_heresy_of = ROOT
+						is_parent_religion = ROOT
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.25
+
+				any_neighbor_independent_ruler = {
+					shares_realm_border_with = ROOT
+
+					realm_levy_diff = {
+						who = ROOT
+						value >= 5000
+					}
+
+					OR = {
+						NOT = { religion_group = ROOT }
+						is_heresy_of = ROOT
+						is_parent_religion = ROOT
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 25
+				trait = lunatic
+			}
+
+			mult_modifier = {
+				factor = 0.10
+
+				trait = possessed
+				has_character_modifier = voice_of_jesus
+			}
+
+			mult_modifier = {
+				factor = 30
+
+				trait = possessed
+				has_character_modifier = voice_of_satan
+			}
+
+			mult_modifier = {
+				factor = 15
+
+				trait = possessed
+
+				NOR = {
+					has_character_modifier = voice_of_jesus
+					has_character_modifier = voice_of_satan
+				}
+			}
+		}
+
+		hidden_effect = {
+			liege = {
+				if = {
+					limit = { NOT = { trait = depressed } }
+					character_event = { id = Plus.431 }
+				}
+			}
+		}
+
+		set_defacto_liege = ROOT
+		pf_liege_change_effect = yes
+	}
+
+	option = {
+		name = EVTOPTB_Plus_430 # Remain loyal
+
+		ai_chance = {
+			factor = 25
+
+			trigger = {
+				trigger_if = {
+					limit = { uses_decadence = yes }
+
+					liege = {
+						NAND = {
+							uses_decadence = yes
+							decadence < 100
+							decadence >= 80
+						}
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 15
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 5
+				liege = { primary_title = { is_titular = no } }
+			}
+
+			mult_modifier = {
+				factor = 5
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = infirm
+			}
+
+			mult_modifier = {
+				factor = 4
+
+				liege = {
+					has_landed_title = e_hre
+					trait = crowned_by_pope
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+				liege = { trait = crowned_by_relhead }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				liege = { trait = crowned_by_vip }
+			}
+
+			mult_modifier = {
+				factor = 20
+				is_close_relative = liege
+			}
+
+			mult_modifier = {
+				factor = 10
+				dynasty = liege
+			}
+
+			mult_modifier = {
+				factor = 10
+
+				OR = {
+					is_allied_with = liege
+					has_non_aggression_pact_with = liege
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.2
+				opinion = { who = liege value <= -100 }
+			}
+
+			mult_modifier = {
+				factor = 0.4
+				opinion = { who = liege value < -75 }
+			}
+
+			mult_modifier = {
+				factor = 0.6
+				opinion = { who = liege value < -50 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				opinion = { who = liege value < -25 }
+			}
+
+			mult_modifier = {
+				factor = 3
+				opinion = { who = liege value >= 25 }
+			}
+
+			mult_modifier = {
+				factor = 6
+				opinion = { who = liege value >= 50 }
+			}
+
+			mult_modifier = {
+				factor = 12
+				opinion = { who = liege value >= 75 }
+			}
+
+			mult_modifier = {
+				factor = 24
+				opinion = { who = liege value >= 100 }
+			}
+
+			mult_modifier = {
+				factor = 100
+
+				religion = liege
+				trait = zealous
+
+				liege = {
+					OR = {
+						controls_religion = yes
+						ROOT = { rightful_religious_head = PREV }
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 25
+
+				religion = liege
+				NOT = { trait = zealous }
+
+				liege = {
+					OR = {
+						controls_religion = yes
+						ROOT = { rightful_religious_head = PREV }
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 10
+
+				is_heretic = no
+				religion_group = liege
+
+				liege = {
+					is_heretic = no
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.3
+
+				uses_decadence = yes
+
+				liege = {
+					uses_decadence = yes
+					decadence < 80
+					decadence >= 60
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.6
+
+				uses_decadence = yes
+
+				liege = {
+					uses_decadence = yes
+					decadence < 60
+					decadence >= 40
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.8
+
+				uses_decadence = yes
+
+				liege = {
+					uses_decadence = yes
+					decadence < 40
+					decadence >= 25
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				uses_decadence = yes
+
+				liege = {
+					uses_decadence = yes
+					decadence < 20
+					decadence >= 15
+				}
+			}
+
+			mult_modifier = {
+				factor = 4
+
+				uses_decadence = yes
+
+				liege = {
+					uses_decadence = yes
+					decadence < 15
+					decadence >= 10
+				}
+			}
+
+			mult_modifier = {
+				factor = 8
+
+				uses_decadence = yes
+
+				liege = {
+					uses_decadence = yes
+					decadence < 10
+					decadence >= 5
+				}
+			}
+
+			mult_modifier = {
+				factor = 16
+
+				uses_decadence = yes
+
+				liege = {
+					uses_decadence = yes
+					decadence < 5
+					decadence >= 0
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.75
+
+				liege = {
+					OR = {
+						trait = tyrant1
+						trait = tyrant2
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.50
+				liege = { trait = tyrant3 }
+			}
+
+			mult_modifier = {
+				factor = 0.25
+				liege = { trait = tyrant4 }
+			}
+
+			mult_modifier = {
+				factor = 0.10
+				liege = { trait = tyrant5 }
+			}
+
+			mult_modifier = {
+				factor = 10
+				in_faction = faction_court
+			}
+		}
+	}
+}
+
+character_event = {
+	id = Plus.431 # formerly 1000182685
+	desc = EVTDESC_Plus_431
+	picture = GFX_evt_council
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_431 # Oh no!
+
+		opinion = {
+			name = opinion_independent
+			who = FROM
+			years = 50
+		}
+
+		random = {
+			chance = 25
+			add_trait_stressed_effect = yes
+		}
+	}
+}

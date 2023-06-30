@@ -1,0 +1,3780 @@
+namespace = Plus
+
+#reserved: Plus.2000 to Plus.2099
+
+#######################################
+# CHRISTIAN HERESY EVENTS
+# Adapted from Heretic Pride by Rylock
+#######################################
+
+### CATHAR EVENTS
+
+# Cathar child gains chaste
+character_event = {
+	id = Plus.2000
+	desc = EVTDESC_Plus_2000
+	picture = GFX_evt_child_talking
+
+	is_triggered_only = yes
+
+	religion = cathar
+	min_age = 6
+	max_age = 16
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = lustful
+			trait = chaste
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.1
+			educator = { trait = lustful }
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			educator = { trait = chaste }
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2000
+
+		add_trait = chaste
+	}
+}
+
+# Cathar male child becomes homosexual
+character_event = {
+	id = Plus.2001
+	desc = EVTDESC_Plus_2001
+	picture = GFX_evt_brothel
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	religion = cathar
+	only_men = yes
+	min_age = 13
+	max_age = 18
+	is_married = no
+
+	trigger = {
+		NOR = {
+			trait = homosexual
+			trait = celibate
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.8
+			trait = chaste
+		}
+
+		mult_modifier = {
+			factor = 1.33
+
+			trait = attractive
+			martial >= 10
+		}
+
+		mult_modifier = {
+			factor = 1.33
+
+			trait = shy
+			learning >= 10
+		}
+
+		mult_modifier = {
+			factor = 1.33
+
+			trait = trusting
+
+			any_courtier = {
+				trait = homosexual
+				age = 13
+				age < 18
+
+				reverse_opinion = {
+					who = ROOT
+					value >= 25
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2001
+
+		add_trait = homosexual
+		set_character_flag = revealed_homosexual@ROOT
+	}
+}
+
+# Cathar female child becomes homosexual
+character_event = {
+	id = Plus.2002
+	desc = EVTDESC_Plus_2002
+	picture = GFX_evt_garden
+
+	is_triggered_only = yes # on_five_year_pulse, random_events
+
+	religion = cathar
+	only_women = yes
+	min_age = 12
+	max_age = 17
+	is_married = no
+
+	trigger = {
+		NOR = {
+			trait = homosexual
+			trait = celibate
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = chaste
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2001
+
+		add_trait = homosexual
+		set_character_flag = revealed_homosexual@ROOT
+	}
+}
+
+# Adult Cathar becomes celibate
+character_event = {
+	id = Plus.2003
+	desc = EVTDESC_Plus_2003
+	picture = GFX_evt_brothel
+
+	is_triggered_only = yes
+
+	religion = cathar
+	min_age = 25
+
+	trigger = {
+		trait = zealous
+
+		NOR = {
+			trait = celibate
+			trait = hedonist
+		}
+	}
+
+	weight_multiplier = {
+		factor  = 1
+
+		mult_modifier = {
+			factor = 2
+			trait = chaste
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = lustful
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2003
+
+		add_trait = celibate
+	}
+}
+
+# Cathar child malus
+character_event = {
+	id = Plus.2004
+
+	is_triggered_only = yes # on_birth
+	hide_window = yes
+
+	trigger = {
+		any_close_relative = {
+			is_parent_of = ROOT
+			religion = cathar
+		}
+	}
+
+	immediate = {
+		any_close_relative = {
+			limit = {
+				is_parent_of = ROOT
+				religion = cathar
+			}
+
+			character_event = {
+				id = Plus.2005
+				days = 2
+			}
+		}
+	}
+}
+
+# Cathars lose piety and prestige for having children
+character_event = {
+	id = Plus.2005
+	desc = EVTDESC_Plus_2005
+	picture = GFX_evt_lovers
+
+	is_triggered_only = yes
+
+	religion = cathar
+
+	option = {
+		name = EVTOPTA_Plus_2005
+
+		piety = -25
+	}
+}
+
+# Cathar/Bogomilist ruler adopts a child (fired from decision)
+character_event = {
+	id = Plus.2006
+	desc = EVTDESC_Plus_2006
+	picture = GFX_evt_child_talking
+
+	is_triggered_only = yes
+
+	immediate = {
+		random_realm_province = {
+			limit = {
+				religion = ROOT
+				held_under_PREV = yes
+			}
+
+			save_event_target_as = adopted_province
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2006
+
+		piety = 20
+
+		create_character = {
+			dynasty = ROOT
+			religion = ROOT
+			culture = ROOT
+			female = no
+			age = 5
+			health = 6.5
+			fertility = 0.4
+
+			attributes = {
+				learning = 2
+				diplomacy = 2
+				martial = 2
+				stewardship = 2
+				intrigue = 2
+			}
+		}
+
+		new_character = {
+			if = {
+				limit = { ROOT = { is_female = no } }
+				set_father = ROOT
+			}
+			else = {
+				set_mother = ROOT
+			}
+
+			random_list = {
+				1 = { add_trait = genius }
+				3 = { add_trait = quick }
+				3 = { add_trait = strong }
+				3 = { add_trait = tall }
+				4 = { change_diplomacy = 2 }
+				4 = { change_learning = 2 }
+				4 = { change_martial = 2 }
+				4 = { change_stewardship = 2 }
+				4 = { change_intrigue = 2 }
+				10 = { }
+			}
+
+			random_list = {
+				3 = { add_trait = shy }
+				1 = { add_trait = humble }
+				1 = { add_trait = trusting }
+			}
+
+			add_trait = adopted
+		}
+
+		recalc_succession = yes
+	}
+}
+
+# Council of Saint-Félix
+narrative_event = {
+	id = Plus.2010
+	title = EVTTITLE_Plus_2010
+	desc = EVTDESC_Plus_2010
+	picture = GFX_evt_ecumenical_council
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	only_playable = yes
+	religion = catholic
+	war = no
+
+	trigger = {
+		year >= 1165
+
+		c_carcassonne = {
+			holder = ROOT
+			location = { religion = catholic }
+		}
+
+		NOR = {
+			any_independent_ruler = { religion = cathar }
+			has_global_flag = rise_cathar
+		}
+	}
+
+	major_trigger = {
+		OR = {
+			has_landed_title = c_carcassonne
+			has_landed_title = c_toulouse
+			has_landed_title = c_foix
+			has_landed_title = c_narbonne
+			religion = cathar
+			religion = bogomilist
+
+			capital_scope = {
+				distance = {
+					where = c_carcassonne
+					value < 600	# Same part of the world
+				}
+			}
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			year >= 1167
+		}
+	}
+
+	immediate = {
+		set_global_flag = rise_cathar
+
+		any_province = {
+			limit = {
+				OR = {
+					province = c_carcassonne
+					province = c_toulouse
+					province = c_foix
+					province = c_narbonne
+				}
+
+				trigger_if = {
+					limit = { NOT = { province = c_carcassonne } }
+					religion = catholic
+				}
+			}
+
+			religion = cathar
+
+			add_province_modifier = {
+				name = heretic_stronghold
+				years = 10
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2010
+
+		trigger = {
+			religion = catholic
+
+			OR = {
+				has_landed_title = c_carcassonne
+				has_landed_title = c_toulouse
+				has_landed_title = c_foix
+				has_landed_title = c_narbonne
+			}
+		}
+
+		piety = -100
+
+		hidden_effect = {
+			create_character = {
+				random_traits = yes
+				dynasty = random
+				religion = cathar
+				culture = ROOT
+				female = no
+				age = 35
+				trait = mastermind_theologian
+				trait = perfecti
+				trait = zealous
+				trait = gregarious
+				trait = scholar
+
+				attributes = {
+					learning = 5
+					diplomacy = 5
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2010
+
+		trigger = {
+			religion = catholic
+
+			NOR = {
+				has_landed_title = c_carcassonne
+				has_landed_title = c_toulouse
+				has_landed_title = c_foix
+				has_landed_title = c_narbonne
+			}
+		}
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = {
+			NOR = {
+				religion = catholic
+				religion = bogomilist
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_2010
+
+		trigger = { religion = bogomilist }
+
+		# character_event = {
+		#	id = HPbogomilist.10210
+		#	days = 2
+		# }
+	}
+}
+
+# Cathars are allowed to use holy wars once Catholic holy war is used against them
+character_event = {
+	id = Plus.2011
+	title = EVTTITLE_Plus_2011
+	desc = EVTDESC_Plus_2011
+	picture = GFX_evt_heresy_defeated
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+	major = yes
+
+	only_playable = yes
+	religion = cathar
+	war = yes
+
+	trigger = {
+		is_heretic = yes
+		is_primary_war_defender = yes
+		NOT = { has_global_flag = cathar_war }
+
+		any_war = {
+			attacker = { is_parent_religion = ROOT }
+			defender = { character = ROOT }
+
+			OR = {
+				using_cb = crusade
+				using_cb = holy_war
+			}
+		}
+	}
+
+	major_trigger = {
+		ai = no
+		religion = cathar
+	}
+
+	immediate = {
+		set_global_flag = cathar_war
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2011
+	}
+}
+
+# A Cathar Pope is elected (fired from decision)
+character_event = {
+	id = Plus.2012
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		activate_title = {
+			title = d_cathar
+			status = yes
+		}
+
+		if = {
+			limit = {
+				any_realm_lord = {
+					is_theocracy = yes
+					religion = cathar
+					trait = perfecti
+					capital_holding = { is_holy_site = ROOT }
+					prisoner = no
+					is_incapable = no
+					in_revolt = no
+				}
+			}
+
+			random_realm_lord = {
+				limit = {
+					is_theocracy = yes
+					religion = cathar
+					trait = perfecti
+					capital_holding = { is_holy_site = ROOT }
+					prisoner = no
+					is_incapable = no
+					in_revolt = no
+				}
+
+				grant_title = d_cathar
+				set_defacto_liege = ROOT
+				pf_liege_change_effect = yes
+				save_event_target_as = new_cathar_pope
+			}
+		}
+		else = {
+			create_random_priest = {
+				random_traits = yes
+				dynasty = random
+				religion = cathar
+				culture = ROOT
+				age = 40
+				health = 7
+				trait = quick
+				trait = zealous
+				trait = perfecti
+				trait = scholar
+				trait = mastermind_theologian
+
+				attributes = {
+					learning = 5
+					diplomacy = 5
+					martial = 2
+					stewardship = 5
+					intrigue = 5
+				}
+			}
+
+			new_character = {
+				grant_title = d_cathar
+				set_defacto_liege = ROOT
+				save_event_target_as = new_cathar_pope
+
+				ROOT = {
+					random_realm_title = {
+						limit = { is_holy_site = ROOT }
+						gain_title = PREVPREV
+					}
+				}
+			}
+		}
+
+		narrative_event = { id = Plus.2013 }
+	}
+}
+
+# The rest of the world is told about the new Cathar Pope
+narrative_event = {
+	id = Plus.2013
+	title = EVTTITLE_Plus_2013
+	desc = EVTDESC_Plus_2013
+	picture = GFX_evt_pope
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	option = {
+		name = EVTOPTA_Plus_2013
+
+		trigger = {
+			NOT = { religion = cathar }
+			religion_group = christian
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2013
+
+		trigger = {
+			NOT = { religion_group = christian }
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_2013
+
+		trigger = { religion = cathar }
+	}
+}
+
+### LOLLARD EVENTS
+
+# John Wycliff appears in England
+narrative_event = {
+	id = Plus.2015
+	title = EVTNAME_Plus_2015
+	desc = EVTDESC_Plus_2015
+	picture = GFX_evt_lollard_heresy
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	only_playable = yes
+	religion = catholic
+	war = no
+
+	trigger = {
+		year >= 1370
+		has_landed_title = k_england
+
+		any_realm_province = {
+			region = custom_england
+			religion = catholic
+			held_under_PREV = yes
+		}
+
+		NOR = {
+			any_realm_province = {
+				region = custom_england
+				religion = lollard
+				held_under_PREV = yes
+			}
+
+			religion_authority = 0.60
+			any_independent_ruler = { religion = lollard }
+			has_global_flag = wycliff
+		}
+	}
+
+	major_trigger = {
+		OR = {
+			has_landed_title = k_england
+			religion = lollard
+
+			capital_scope = {
+				distance = {
+					where = c_middlesex
+					value < 600	# Same part of the world
+				}
+			}
+		}
+	}
+
+	immediate = {
+		random_realm_province = {
+			limit = {
+				region = custom_england
+				religion = catholic
+				held_under_PREV = yes
+			}
+
+			save_event_target_as = new_lollard_stronghold
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2015
+
+		trigger = { has_landed_title = k_england }
+
+		set_global_flag = wycliff
+		piety = -100
+
+		event_target:new_lollard_stronghold = {
+			show_scope_change = no
+
+			religion = lollard
+
+			add_province_modifier = {
+				name = heretic_stronghold
+				years = 10
+			}
+
+			hidden_effect = {
+				owner = {
+					create_character = {
+						name = "John"
+						random_traits = yes
+						dynasty = 1000124390 # Wycliff
+						religion = lollard
+						culture = PREV
+						female = no
+						age = 39
+						trait = mastermind_theologian
+						trait = humble
+						trait = zealous
+						trait = gregarious
+						trait = scholar
+						trait = monk
+
+						attributes = {
+							learning = 5
+							diplomacy = 5
+						}
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2015
+
+		trigger = {
+			religion = catholic
+			NOT = { has_landed_title = k_england }
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_2015
+
+		trigger = {
+			religion_group = christian
+
+			NOR = {
+				has_landed_title = k_england
+				religion = catholic
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTD_Plus_2015
+
+		trigger = {
+			NOR = {
+				has_landed_title = k_england
+				religion_group = christian
+			}
+		}
+	}
+}
+
+# Lollard/Paulician/Iconoclast wins siege over a Christian temple
+character_event = {
+	id = Plus.2016
+	desc = EVTDESC_Plus_2016
+	picture = GFX_evt_siege
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes # on_siege_over_winner (random_events)
+
+	trigger = {
+		OR = {
+			religion = lollard
+			religion = paulician
+			religion = iconoclast
+			religion = bogomilist
+		}
+
+		mercenary = no
+
+		FROM = {
+			holding_type = temple
+
+			owner = {
+				wealth >= 50
+				religion_group = christian
+
+				NOR = {
+					religion = lollard
+					religion = paulician
+					religion = iconoclast
+					religion = bogomilist
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2016
+
+		if = {
+			limit = { NOT = { trait = iconoclast_trait } }
+			add_trait = iconoclast_trait
+		}
+
+		wealth = 50
+		piety = -25
+
+		hidden_effect = {
+			FROM = {
+				owner = {
+					wealth = -50
+
+					opinion = {
+						name = opinion_outraged
+						who = ROOT
+						years = 20
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 2
+				religion = iconoclast
+			}
+
+			mult_modifier = {
+				factor = 5
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2016
+
+		piety = 10
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				piety > 0
+				NOT = { trait = iconoclast_trait }
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = kind
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = humble
+			}
+		}
+	}
+}
+
+# Bible translation is well-received
+narrative_event = {
+	id = Plus.2017
+	title = EVTNAME_Plus_2017
+	desc = EVTDESC_Plus_2017
+	picture = GFX_evt_lollard_heresy
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	has_character_flag = bible_translation_begun
+
+	trigger = {
+		OR = {
+			religion = lollard
+			religion = waldensian
+		}
+
+		higher_real_tier_than = DUKE
+		NOT = { has_global_flag = bible_translation_finished }
+	}
+
+	major_trigger = {
+		ai = no
+		religion_group = christian
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2017
+
+		trigger = { character = ROOT }
+
+		clr_character_flag = bible_translation_begun
+		set_global_flag = bible_translation_finished
+		piety = 500
+		prestige = 500
+
+		religion_authority = {
+			name = bible_translated_lollard
+			years = 25
+		}
+
+		if = {
+			limit = {
+				NOR = {
+					has_global_flag = great_schism_happened
+
+					has_game_rule = {
+						name = great_schism
+						value = disabled
+					}
+				}
+			}
+
+			chalcedonian = {
+				show_scope_change = no
+
+				religion_authority = {
+					name = bible_translated
+					years = 25
+				}
+			}
+		}
+		else = {
+			catholic = {
+				show_scope_change = no
+
+				religion_authority = {
+					name = bible_translated
+					years = 25
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2017
+
+		trigger = {
+			religion = ROOT
+			NOT = { character = ROOT }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2017
+
+		trigger = {
+			NOR = {
+				religion = ROOT
+				character = ROOT
+			}
+		}
+	}
+}
+
+# Bible translation is poorly-received
+narrative_event = {
+	id = Plus.2018
+	title = EVTNAME_Plus_2017
+	desc = EVTDESC_Plus_2018
+	picture = GFX_evt_lollard_heresy
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	has_character_flag = bible_translation_begun
+
+	trigger = {
+		OR = {
+			religion = lollard
+			religion = waldensian
+		}
+
+		higher_real_tier_than = DUKE
+		NOT = { has_global_flag = bible_translation_finished }
+	}
+
+	major_trigger = {
+		ai = no
+		religion_group = christian
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2018
+
+		trigger = { character = ROOT }
+
+		clr_character_flag = bible_translation_begun
+		set_global_flag = bible_translation_finished
+		piety = 250
+		prestige = -250
+
+		religion_authority = {
+			name = bible_translated_poor_lollard
+			years = 25
+		}
+
+		if = {
+			limit = {
+				OR = {
+					is_heresy_of = chalcedonian
+					is_parent_religion = chalcedonian
+				}
+			}
+
+			chalcedonian = {
+				show_scope_change = no
+
+				religion_authority = {
+					name = bible_translated_poor
+					years = 25
+				}
+			}
+
+			# In case the Schism occurs in the near future
+			hidden_effect = {
+				catholic = {
+					show_scope_change = no
+
+					religion_authority = {
+						name = bible_translated_poor
+						years = 25
+					}
+				}
+			}
+		}
+		else = {
+			catholic = {
+				show_scope_change = no
+
+				religion_authority = {
+					name = bible_translated_poor
+					years = 25
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2017
+
+		trigger = {
+			religion = ROOT
+			NOT = { character = ROOT }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2017
+
+		trigger = {
+			NOR = {
+				religion = ROOT
+				character = ROOT
+			}
+		}
+	}
+}
+
+# Ruler dies while Bible is being translated
+character_event = {
+	id = Plus.2019
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	has_character_flag = bible_translation_begun
+
+	trigger = {
+		NOT = { has_global_flag = bible_translation_finished }
+	}
+
+	immediate = {
+		current_heir = {
+			character_event = {
+				id = Plus.2020
+				days = 3
+			}
+		}
+	}
+}
+
+# Ruler's heir decides whether to continue work on Bible translation
+character_event = {
+	id = Plus.2020
+	desc = EVTDESC_Plus_2020
+	picture = GFX_evt_book_carolingian_script
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2020 # Continue his work
+
+		trigger = {
+			OR = {
+				religion = lollard
+				religion = waldensian
+			}
+
+			higher_tier_than = DUKE
+			has_regent = no
+			wealth >= 0
+		}
+
+		set_character_flag = bible_translation_begun
+		scaled_wealth = -0.5
+
+		random_list = {
+			50 = {
+				mult_modifier = {
+					factor = 1.1
+					learning >= 12
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					learning >= 14
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					learning >= 16
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					learning >= 18
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					learning >= 20
+				}
+
+				narrative_event = {
+					id = Plus.2017
+					days = 150
+					random = 250
+					tooltip = BIBLE_TRANSLATION_GOOD
+				}
+			}
+
+			50 = {
+				mult_modifier = {
+					factor = 0.8
+					learning < 8
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					learning < 6
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					learning < 4
+				}
+
+				narrative_event = {
+					id = Plus.2018
+					days = 150
+					random = 250
+					tooltip = BIBLE_TRANSLATION_POOR
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2020 # His efforts die with him
+
+		scaled_wealth = 1.5
+
+		if = {
+			limit = {
+				OR = {
+					religion = lollard
+					religion = waldensian
+				}
+			}
+
+			piety = -100
+		}
+	}
+}
+
+# Lollard ruler attempts to revoke/claim religious titles (fired from decision)
+letter_event = {
+	id = Plus.2021
+	border = GFX_event_letter_frame_religion
+
+	desc = {
+		text = EVTDESC_Plus_2021_not_lollard
+		trigger = {
+			NOT = { religion = lollard }
+		}
+	}
+	desc = {
+		text = EVTDESC_Plus_2021_wicked
+		trigger = {
+			religion = lollard
+			trait = bad_priest_christian
+		}
+	}
+	desc = {
+		text = EVTDESC_Plus_2021_high_tier
+		trigger = {
+			religion = lollard
+			higher_real_tier_than = COUNT
+			NOT = { trait = bad_priest_christian }
+		}
+	}
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_ruler = yes
+		vassal_of = FROMFROM
+		capital_holding = { holding_type = temple }
+		in_revolt = no
+		holy_order = no
+
+		NOR = {
+			reverse_has_truce = FROMFROM
+			has_non_aggression_pact_with = FROMFROM
+		}
+	}
+
+	immediate = {
+		clr_character_flag = lollard_revoking_titles
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2021 # I have no choice
+
+		prestige = -100
+
+		if = {
+			limit = {
+				religion = lollard
+				NOT = { trait = bad_priest_christian }
+			}
+
+			any_demesne_title = {
+				show_scope_change = no
+				limit = { higher_tier_than = COUNT }
+				tooltip = { add_claim = FROMFROM }
+			}
+
+			FROMFROM = {
+				letter_event = { id = Plus.2023 }
+			}
+		}
+		else = {
+			any_demesne_title = {
+				show_scope_change = no
+
+				limit = {
+					OR = {
+						higher_real_tier_than = BARON
+						holding_type = temple
+					}
+				}
+
+				usurp_title_plus_barony_if_unlanded = FROMFROM
+			}
+
+			set_defacto_liege = FROMFROM
+			pf_liege_change_effect = yes
+
+			FROMFROM = {
+				letter_event = { id = Plus.2022 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2021 # How dare he!
+
+		trigger = {
+			higher_real_tier_than = BARON
+
+			trigger_if = {
+				limit = { religion = lollard }
+				trait = bad_priest_christian
+			}
+		}
+
+		FROMFROM = {
+			show_scope_change = no
+
+			opinion = {
+				name = opinion_rebel_traitor
+				who = ROOT
+				years = 20
+			}
+
+			letter_event = { id = Plus.2024 }
+		}
+
+		tooltip = {
+			war = {
+				target = FROMFROM
+				casus_belli = overthrow_ruler
+			}
+		}
+	}
+}
+
+# Priest accepts titles being revoked
+letter_event = {
+	id = Plus.2022
+	desc = EVTDESC_Plus_2022
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		FROM = {
+			show_scope_change = no
+
+			any_demesne_title = {
+				show_scope_change = no
+
+				limit = {
+					OR = {
+						higher_real_tier_than = BARON
+						holding_type = temple
+					}
+				}
+
+				usurp_title_plus_barony_if_unlanded = ROOT
+			}
+
+			set_defacto_liege = FROM
+			pf_liege_change_effect = yes
+		}
+	}
+}
+
+# Lollard ruler gains claims to titles
+letter_event = {
+	id = Plus.2023
+	desc = EVTDESC_Plus_2023
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		FROM = {
+			show_scope_change = no
+
+			opinion = {
+				name = opinion_outraged
+				who = ROOT
+				years = 10
+			}
+
+			any_demesne_title = {
+				show_scope_change = no
+				limit = { higher_tier_than = COUNT }
+				add_claim = ROOT
+			}
+		}
+	}
+}
+
+# Priest refuses titles being revoked
+letter_event = {
+	id = Plus.2024
+	desc = EVTDESC_Plus_2024
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2024
+
+		FROM = {
+			show_scope_change = no
+
+			opinion = {
+				name = opinion_outraged
+				who = ROOT
+				years = 20
+			}
+
+			war = {
+				target = ROOT
+				casus_belli = overthrow_ruler
+			}
+		}
+	}
+}
+
+### FRATICELLI EVENTS
+
+# Brother Angelo criticizes the Pope
+narrative_event = {
+	id = Plus.2025
+	title = EVTNAME_Plus_2025
+	desc = EVTDESC_Plus_2025
+	picture = GFX_evt_lollard_heresy
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	only_playable = yes
+	religion = catholic
+
+	trigger = {
+		has_landed_title = k_papacy
+		war = no
+		year >= 1250
+
+		OR = {
+			trait = bad_priest_christian
+			NOT = { religion_authority = 0.60 }
+		}
+
+		NOT = { has_global_flag = fraticelli_reform }
+	}
+
+	major_trigger = {
+		religion_group = christian
+	}
+
+	option = {
+		name = EVTDESC_Plus_2025
+
+		trigger = { has_landed_title = k_papacy }
+
+		set_global_flag = fraticelli_reform
+		piety = -200
+
+		religion_authority = {
+			name = fraticelli_reforms
+			years = 15
+		}
+
+		hidden_effect = {
+			any_character = {
+				limit = {
+					religion = catholic
+					trait = mastermind_theologian
+					is_theocracy = yes
+					is_within_diplo_range = ROOT
+					ai = yes
+				}
+
+				character_event = {
+					id = Plus.2026
+					days = 7
+				}
+			}
+
+			create_character = {
+				name = "Angelo"
+				random_traits = yes
+				dynasty = random
+				religion = fraticelli
+				culture = capital_scope
+				female = no
+				age = 40
+				add_trait = monk
+				add_trait = mastermind_theologian
+				add_trait = zealous
+				add_trait = gregarious
+				add_trait = scholar
+
+				attributes = {
+					learning = 5
+					diplomacy = 5
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2025
+
+		trigger = {
+			is_heretic = yes
+			NOT = { has_landed_title = k_papacy }
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_2025
+
+		trigger = {
+			is_heretic = no
+			NOT = { has_landed_title = k_papacy }
+		}
+	}
+}
+
+# Catholic bishops react to the words of Brother Angelo
+character_event = {
+	id = Plus.2026
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		random = {
+			chance = 10
+			# Chance of converting
+			character_event = { id = Plus.2027 }
+		}
+	}
+}
+
+# The Catholic faithful consider the Fraticelli heresy
+character_event = {
+	id = Plus.2027
+	desc = EVTDESC_Plus_2027
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	religion = catholic
+	has_global_flag = fraticelli_reform
+
+	trigger = {
+		controls_religion = no
+
+		OR = {
+			trait = mastermind_theologian
+			has_focus = focus_theology
+			trait = monk
+			trait = nun
+			is_theocracy = yes
+		}
+
+		OR = {
+			trait = cynical
+			trait = humble
+			trait = temperate
+			trait = charitable
+		}
+
+		NOR = {
+			rightful_religious_head = ROOT
+			has_claim = k_papacy
+			religion_authority = 0.60
+			trait = zealous
+			trait = greedy
+			trait = gluttonous
+			trait = proud
+			trait = bad_priest_christian
+			has_character_flag = considered_fraticelli
+		}
+	}
+
+	immediate = {
+		set_character_flag = considered_fraticelli
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2027
+
+		if = {
+			limit = { trait = cynical }
+			remove_trait = cynical
+		}
+		else = {
+			random = {
+				chance = 50
+				add_trait = zealous
+			}
+		}
+
+		if = {
+			limit = { higher_real_tier_than = BARON }
+
+			religion_authority = {
+				name = ruler_converted_from
+			}
+		}
+
+		religion = fraticelli
+
+		add_character_modifier = {
+			name = recently_converted
+			years = 2
+		}
+
+		hidden_effect = {
+			religion_authority = {
+				name = ruler_converted_to
+			}
+		}
+
+		piety = 100
+
+		ai_chance = {
+			factor = 25
+
+			mult_modifier = {
+				factor = 3
+
+				OR = {
+					any_liege = { is_heretic = yes }
+
+					any_close_relative = {
+						is_heretic = yes
+
+						OR = {
+							is_parent_of = ROOT
+							sibling = ROOT
+							is_child_of = ROOT
+						}
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				is_ruler = yes
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				is_councillor = yes
+				NOT = { any_liege = { is_heretic = yes } }
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = trusting
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = slothful
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2027
+
+		ai_chance = { factor = 75 }
+	}
+}
+
+### WALDENSIAN EVENTS
+
+# The Poor of Lyons appear
+narrative_event = {
+	id = Plus.2030
+	title = EVTTITLE_Plus_2030
+	desc = EVTDESC_Plus_2030
+	picture = GFX_evt_heretic
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	only_playable = yes
+	religion = catholic
+	war = no
+
+	trigger = {
+		year >= 1150
+
+		c_lyon = {
+			holder = ROOT
+			location = { religion = catholic }
+		}
+
+		NOR = {
+			any_independent_ruler = { religion = waldensian }
+			religion_authority = 0.80
+			has_global_flag = poor_lyons
+		}
+	}
+
+	major_trigger = {
+		OR = {
+			has_landed_title = c_lyon
+			has_landed_title = d_susa
+			religion = waldensian
+
+			capital_scope = {
+				distance = {
+					where = c_lyon
+					value < 600	# Same part of the world
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2030
+
+		trigger = { has_landed_title = c_lyon }
+
+		set_global_flag = poor_lyons
+		piety = -100
+
+		c_lyon = {
+			show_scope_change = no
+
+			location = {
+				show_scope_change = no
+
+				save_event_target_as = pierre_culture
+				religion = waldensian
+
+				add_province_modifier = {
+					name = heretic_stronghold
+					years = 10
+				}
+			}
+		}
+
+		hidden_effect = {
+			create_character = {
+				name = "Pierre"
+				random_traits = yes
+				dynasty = 1000124391 # Valdes
+				religion = waldensian
+				culture = event_target:pierre_culture
+				female = no
+				age = 40
+				add_trait = grey_eminence
+				add_trait = possessed
+				add_trait = zealous
+				add_trait = gregarious
+				add_trait = charitable
+				add_trait = humble
+				add_trait = novellani
+
+				attributes = {
+					learning = 5
+					diplomacy = 5
+				}
+			}
+
+			new_character = {
+				add_character_modifier = {
+					name = voice_of_jesus
+					duration = -1
+				}
+			}
+
+			d_susa = {
+				holder_scope = {
+					random_realm_province = {
+						limit = {
+							duchy = { title = d_susa }
+							religion = catholic
+							held_under_PREV = yes
+						}
+
+						religion = waldensian
+
+						add_province_modifier = {
+							name = heretic_stronghold
+							years = 10
+						}
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2030
+
+		trigger = {
+			religion = catholic
+			NOT = { has_landed_title = c_lyon }
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_2030
+
+		trigger = {
+			NOR = {
+				religion = catholic
+				has_landed_title = c_lyon
+			}
+		}
+	}
+}
+
+# Waldensian chooses their path (fired from decision)
+character_event = {
+	id = Plus.2031
+	desc = EVTDESC_Plus_2031
+	picture = GFX_evt_heretic_pride
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2031
+
+		trigger = {
+			OR = {
+				is_ruler = yes
+				intrigue >= 7
+			}
+		}
+
+		add_trait = sandaliati
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2031
+
+		trigger = {
+			OR = {
+				is_priest = yes
+				learning >= 9
+			}
+		}
+
+		add_trait = doctores
+	}
+
+	option = {
+		name = EVTOPTC_Plus_2031
+
+		trigger = {
+			OR = {
+				is_ruler = no
+				real_tier = BARON
+			}
+		}
+
+		add_trait = novellani
+	}
+}
+
+# The first Waldensian king
+character_event = {
+	id = Plus.2032
+	desc = EVTDESC_Plus_2032
+	picture = GFX_evt_heretic_pride
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_independent = yes
+	religion = waldensian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		higher_real_tier_than = DUKE
+		piety >= 200
+		trait = charitable
+		NOT = { has_global_flag = waldensian_king }
+
+		any_realm_province = {
+			religion = waldensian
+			held_under_PREV = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2032
+
+		set_global_flag = waldensian_king
+
+		religion_authority = {
+			name = wald_king
+			years = 10
+		}
+	}
+}
+
+# Hospital removed from province if non-Waldensian
+character_event = {
+	id = Plus.2033
+
+	is_triggered_only = yes # on_character_convert_religion
+	hide_window = yes
+
+	trigger = {
+		FROM = { religion = waldensian }
+
+		any_demesne_province = {
+			has_province_modifier = wald_hospital
+			owned_by = PREV
+		}
+	}
+
+	immediate = {
+		any_demesne_province = {
+			limit = { owned_by = PREV }
+			remove_province_modifier = wald_hospital
+		}
+	}
+}
+
+# Christian temple is sacked
+character_event = {
+	id = Plus.2034
+	desc = EVTDESC_Plus_2034
+	picture = GFX_evt_siege
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	religion = waldensian
+
+	trigger = {
+		FROM = {
+			holding_type = temple
+			NOT = { title = b_roma }
+
+			owner = {
+				religion_group = christian
+				NOT = { religion = waldensian }
+			}
+
+			trigger_if = {
+				limit = {
+					OR = {
+						title = b_canterbury
+						title = b_santiago
+						title = b_koln
+					}
+				}
+
+				NOT = { has_global_flag = schism_happened }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2034
+
+		piety = 50
+
+		if = {
+			limit = { NOT = { trait = charitable } }
+
+			random = {
+				chance = 50
+				add_trait = charitable
+			}
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			owner = {
+				show_scope_change = no
+
+				religion_authority = {
+					name = relics_destroyed
+					years = 5
+				}
+
+				piety = -100
+			}
+		}
+
+		if = {
+			limit = { is_ruler = no }
+
+			liege = {
+				show_scope_change = no
+
+				random_realm_province = {
+					show_scope_change = no
+
+					limit = {
+						religion = waldensian
+						NOT = { has_province_modifier = wald_charity }
+						held_under_PREV = yes
+					}
+
+					add_province_modifier = {
+						name = wald_charity
+						duration = 1000
+					}
+				}
+			}
+		}
+		else = {
+			random_realm_province = {
+				show_scope_change = no
+
+				limit = {
+					religion = waldensian
+					NOT = { has_province_modifier = wald_charity }
+					held_under_PREV = yes
+				}
+
+				add_province_modifier = {
+					name = wald_charity
+					duration = 1000
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 75
+
+			trigger = {
+				NOT = { trait = greedy }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = envious
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = gluttonous
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = cynical
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2034
+
+		piety = -50
+		wealth = 50
+
+		if = {
+			limit = { NOT = { trait = greedy } }
+
+			random = {
+				chance = 50
+				add_trait = greedy
+			}
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			owner = {
+				show_scope_change = no
+
+				religion_authority = {
+					name = relics_destroyed
+					years = 5
+				}
+
+				piety = -100
+			}
+		}
+
+		ai_chance = {
+			factor = 25
+
+			trigger = {
+				NOT = { trait = charitable }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = temperate
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = zealous
+			}
+		}
+	}
+}
+
+# Christian holy site is sacked
+character_event = {
+	id = Plus.2035
+	picture = GFX_evt_heresy_defeated
+	border = GFX_event_normal_frame_war
+
+	desc = {
+		text = EVTDESC_Plus_2035_rome
+		trigger = { FROM = { title = b_roma } }
+	}
+	desc = {
+		text = EVTDESC_Plus_2035_canterbury
+		trigger = { FROM = { title = b_canterbury } }
+	}
+	desc = {
+		text = EVTDESC_Plus_2035_santiago
+		trigger = { FROM = { title = b_santiago } }
+	}
+	desc = {
+		text = EVTDESC_Plus_2035_koln
+		trigger = { FROM = { title = b_koln } }
+	}
+
+	is_triggered_only = yes
+
+	religion = waldensian
+
+	trigger = {
+		FROM = {
+			trigger_if = {
+				limit = { title = b_roma }
+				NOT = { has_global_flag = wald_roma }
+			}
+			trigger_else_if = {
+				limit = { title = b_canterbury }
+				has_global_flag = schism_happened
+				NOT = { has_global_flag = wald_canterbury }
+			}
+			trigger_else_if = {
+				limit = { title = b_santiago }
+				has_global_flag = schism_happened
+				NOT = { has_global_flag = wald_santiago }
+			}
+			trigger_else = {
+				title = b_koln
+				has_global_flag = schism_happened
+				NOT = { has_global_flag = wald_koln }
+			}
+
+			owner = {
+				religion_group = christian
+				NOT = { religion = waldensian }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2035
+
+		if = {
+			limit = { is_ruler = yes }
+			piety = 200
+		}
+		else = {
+			piety = 100
+
+			liege = {
+				show_scope_change = no
+				piety = 100
+			}
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			trigger_switch = {
+				on_trigger = title
+
+				b_roma = { set_global_flag = wald_roma }
+				b_canterbury = { set_global_flag = wald_canterbury }
+				b_santiago = { set_global_flag = wald_santiago }
+				b_koln = { set_global_flag = wald_koln }
+			}
+
+			owner = {
+				show_scope_change = no
+
+				religion_authority = {
+					name = wald_sack
+					years = 10
+				}
+
+				piety = -300
+
+				narrative_event = {
+					id = Plus.2036
+					days = 1
+				}
+			}
+		}
+
+		if = {
+			limit = { has_nickname = no }
+			give_nickname = nick_the_defiler
+		}
+
+		if = {
+			limit = { is_ruler = no }
+
+			liege = {
+				show_scope_change = no
+
+				random_realm_province = {
+					show_scope_change = no
+
+					limit = {
+						religion = waldensian
+						NOT = { has_province_modifier = wald_charity }
+						held_under_PREV = yes
+					}
+
+					add_province_modifier = {
+						name = wald_charity
+						duration = 1000
+					}
+				}
+			}
+		}
+		else = {
+			random_realm_province = {
+				show_scope_change = no
+
+				limit = {
+					religion = waldensian
+					NOT = { has_province_modifier = wald_charity }
+					held_under_PREV = yes
+				}
+
+				add_province_modifier = {
+					name = wald_charity
+					duration = 1000
+				}
+			}
+		}
+	}
+}
+
+# Christians informed that holy site was sacked
+narrative_event = {
+	id = Plus.2036
+	title = EVTNAME_Plus_2036
+	picture = GFX_evt_heresy_defeated
+	border = GFX_event_narrative_frame_war
+
+	desc = {
+		text = EVTDESC_Plus_2036_rome
+		trigger = { FROMFROM = { title = b_roma } }
+	}
+	desc = {
+		text = EVTDESC_Plus_2036_canterbury
+		trigger = { FROMFROM = { title = b_canterbury } }
+	}
+	desc = {
+		text = EVTDESC_Plus_2036_santiago
+		trigger = { FROMFROM = { title = b_santiago } }
+	}
+	desc = {
+		text = EVTDESC_Plus_2036_koln
+		trigger = { FROMFROM = { title = b_koln } }
+	}
+
+	is_triggered_only = yes
+	major = yes
+
+	major_trigger = {
+		ai = no
+		religion_group = christian
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2036
+
+		trigger = {
+			NOT = { religion = waldensian }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2036
+
+		trigger = { religion = waldensian }
+	}
+}
+
+# Refugees arrive at a Waldensian ruler's capital
+character_event = {
+	id = Plus.2037
+	desc = EVTDESC_Plus_2037
+	picture = GFX_evt_pilgrims_epic_journey
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_rulers = yes
+	religion = waldensian
+	war = yes
+
+	trigger = {
+		demesne_size >= 1
+
+		trigger_if = {
+			limit = { has_character_flag = wald_refugees }
+
+			had_character_flag = {
+				flag = wald_refugees
+				years >= 10
+			}
+		}
+	}
+
+	weight_multiplier = {
+		days = 1
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2037
+
+		set_character_flag = wald_refugees
+		piety = 50
+		scaled_wealth = -0.4
+
+		if = {
+			limit = { trait = greedy }
+			remove_trait = greedy
+		}
+		else = {
+			random = {
+				chance = 75
+				add_trait_charitable_effect = yes
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2037
+
+		set_character_flag = wald_refugees
+		piety = -50
+
+		if = {
+			limit = { trait = charitable }
+			remove_trait = charitable
+		}
+		else = {
+			random = {
+				chance = 40
+				add_trait_greedy_effect = yes
+			}
+		}
+	}
+}
+
+# Waldensian ruler is greedy
+character_event = {
+	id = Plus.2038
+	desc = EVTDESC_Plus_2038
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_rulers = yes
+	religion = waldensian
+
+	trigger = {
+		trait = greedy
+		NOT = { has_character_modifier = the_greedy }
+	}
+
+	weight_multiplier = {
+		factor = 1
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2038
+
+		piety = -50
+
+		add_character_modifier = {
+			name = the_greedy
+			years = 2
+		}
+	}
+}
+
+# Charitable Waldensian sees opportunity to help the poor
+character_event = {
+	id = Plus.2039
+	desc = EVTDESC_Plus_2039
+	picture = GFX_evt_busy_trading_dock_republic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_rulers = yes
+	religion = waldensian
+	war = no
+
+	trigger = {
+		trait = charitable
+
+		OR = {
+			trait = fortune_builder
+			trait = thrifty_clerk
+			trait = indulgent_wastrel
+		}
+
+		NOT = { has_character_flag = wald_steward }
+	}
+
+	weight_multiplier = {
+		factor = 1
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2039
+
+		set_character_flag = wald_steward
+		scaled_wealth = -0.5
+		upgrade_education_effect = yes
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2039
+
+		set_character_flag = wald_steward
+		piety = -20
+	}
+}
+
+# Waldensian child learns charity
+character_event = {
+	id = Plus.2040
+	desc = EVTDESC_Plus_2040
+	picture = GFX_evt_child_talking
+
+	is_triggered_only = yes
+
+	religion = waldensian
+	min_age = 6
+
+	trigger = {
+		personality_traits < 5
+
+		NOR = {
+			trait = charitable
+			trait = greedy
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.1
+			educator = { trait = greedy }
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			educator = { trait = charitable }
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2040
+
+		add_trait = charitable
+
+		hidden_effect = {
+			educator = {
+				character_event = {
+					id = 2030
+					days = 3
+				}
+			}
+		}
+	}
+}
+
+### MESSALIAN EVENTS
+
+# Attempting to drive out the demons
+character_event = {
+	id = Plus.2041
+	desc = EVTDESC_Plus_2041
+	picture = GFX_evt_ritual_scroll
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2041
+
+		set_character_flag = messalian_praying
+
+		hidden_effect = {
+			random_list = {
+				10 = {
+					trigger = {
+						OR = {
+							trait = lustful
+							trait = hedonist
+						}
+					}
+
+					set_character_flag = driving_out_lust
+					character_event = { id = Plus.2045 days = 600 random = 400 } # Check for success
+
+					random = {
+						chance = 75
+
+						if = {
+							limit = { trait = homosexual }
+							character_event = { id = Plus.2047 days = 300 random = 200 } # Homosexual temptation
+						}
+						else = {
+							character_event = { id = Plus.2046 days = 300 random = 200 } # Lustful temptation
+						}
+					}
+				}
+
+				10 = {
+					trigger = { trait = gluttonous  }
+
+					set_character_flag = driving_out_gluttony
+					character_event = { id = Plus.2045 days = 600 random = 400 } # Check for success
+
+					random = {
+						chance = 75
+						character_event = { id = Plus.2048 days = 300 random = 200 } # Gluttonous temptation
+					}
+				}
+
+				10 = {
+					trigger = { trait = greedy }
+
+					set_character_flag = driving_out_greed
+					character_event = { id = Plus.2045 days = 600 random = 400 } # Check for success
+
+					random = {
+						chance = 75
+						character_event = { id = Plus.2049 days = 300 random = 200 } # Greed temptation
+					}
+				}
+
+				10 = {
+					trigger = { trait = slothful }
+
+					set_character_flag = driving_out_sloth
+					character_event = { id = Plus.2045 days = 600 random = 400 } # Check for success
+
+					random = {
+						chance = 75
+						character_event = { id = Plus.2050 days = 300 random = 200 } # Slothful temptation
+					}
+				}
+
+				10 = {
+					trigger = { trait = wroth }
+
+					set_character_flag = driving_out_wrath
+					character_event = { id = Plus.2045 days = 600 random = 400 } # Check for success
+
+					random = {
+						chance = 75
+						character_event = { id = Plus.2051 days = 300 random = 200 } # Wrathful temptation
+					}
+				}
+
+				10 = {
+					trigger = { trait = envious }
+
+					set_character_flag = driving_out_envy
+					character_event = { id = Plus.2045 days = 600 random = 400 } # Check for success
+
+					random = {
+						chance = 75
+						character_event = { id = Plus.2052 days = 300 random = 200 } # Envious temptation
+					}
+				}
+
+				10 = {
+					trigger = { trait = proud }
+
+					set_character_flag = driving_out_pride
+					character_event = { id = Plus.2045 days = 600 random = 400 } # Check for success
+
+					random = {
+						chance = 75
+						character_event = { id = Plus.2053 days = 300 random = 200 } # Pride temptation
+					}
+				}
+
+				10 = {
+					trigger = { trait = cruel }
+
+					set_character_flag = driving_out_cruelty
+					character_event = { id = Plus.2045 days = 600 random = 400 } # Check for success
+
+					random = {
+						chance = 75
+						character_event = { id = Plus.2054 days = 300 random = 200 } # Cruelty temptation
+					}
+				}
+
+				10 = {
+					trigger = { trait = possessed }
+
+					set_character_flag = driving_out_possession
+					character_event = { id = Plus.2045 days = 600 random = 400 } # Check for success
+				}
+
+				10 = {
+					trigger = { trait = lunatic }
+
+					set_character_flag = driving_out_lunacy
+					character_event = { id = Plus.2045 days = 600 random = 400 } # Check for success
+				}
+			}
+
+			# Daily repeating event to check for incapable trait
+			character_event = {
+				id = Plus.2058
+				days = 1
+			}
+		}
+	}
+}
+
+character_event = {
+	id = Plus.2058
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	has_character_flag = messalian_prayer
+
+	immediate = {
+		if = {
+			limit = { trait = incapable }
+			character_event = { id = Plus.2044 }
+		}
+		else = {
+			repeat_event = {
+				id = Plus.2058
+				days = 1
+			}
+		}
+	}
+}
+
+# Failed to drive out the demons
+character_event = {
+	id = Plus.2042
+	picture = GFX_evt_messalian_sin
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_Plus_2042
+		trigger = {
+			NOR = {
+				has_character_flag = driving_out_lunacy
+				has_character_flag = driving_out_possession
+			}
+		}
+	}
+	desc = {
+		text = EVTDESC_Plus_2042_lunacy
+		trigger = { has_character_flag = driving_out_lunacy }
+	}
+	desc = {
+		text = EVTDESC_Plus_2042_possession
+		trigger = { has_character_flag = driving_out_possession }
+	}
+
+	is_triggered_only = yes
+
+	trigger = { has_character_modifier = messalian_prayer }
+
+	option = {
+		name = EVTOPTA_Plus_2042
+
+		prestige = -50
+		piety = -50
+		clr_character_flag = messalian_praying
+		remove_character_modifier = messalian_prayer
+
+		trigger_switch = {
+			on_trigger = has_character_flag
+
+			driving_out_lust = { add_trait = lustful }
+			driving_out_gluttony = { add_trait = gluttonous }
+			driving_out_greed = { add_trait = greedy }
+			driving_out_sloth = { add_trait = slothful }
+			driving_out_wrath = { add_trait = wroth }
+			driving_out_envy = { add_trait = envious }
+			driving_out_pride = { add_trait = proud }
+			driving_out_cruelty = { add_trait = cruel }
+			driving_out_lunacy = { add_trait = lunatic }
+
+			driving_out_possession = {
+				add_trait = possessed
+
+				add_character_modifier = {
+					name = voice_of_satan
+					duration = -1
+				}
+			}
+		}
+
+		clr_character_flag = driving_out_lust
+		clr_character_flag = driving_out_gluttony
+		clr_character_flag = driving_out_greed
+		clr_character_flag = driving_out_sloth
+		clr_character_flag = driving_out_wrath
+		clr_character_flag = driving_out_envy
+		clr_character_flag = driving_out_pride
+		clr_character_flag = driving_out_cruelty
+		clr_character_flag = driving_out_possession
+		clr_character_flag = driving_out_lunacy
+		clr_character_flag = messalian_temptation
+
+		random = {
+			chance = 25
+			add_trait_silently_depressed_effect = yes
+		}
+
+		add_character_modifier = {
+			name = messalian_prayer_timer
+			years = 3
+			hidden = yes
+		}
+	}
+}
+
+# Succeeded in driving out a demon
+character_event = {
+	id = Plus.2043
+	picture = GFX_evt_messalian_sin
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_Plus_2043_lust
+		trigger = { has_character_flag = driving_out_lust }
+	}
+	desc = {
+		text = EVTDESC_Plus_2043_gluttony
+		trigger = { has_character_flag = driving_out_gluttony }
+	}
+	desc = {
+		text = EVTDESC_Plus_2043_greed
+		trigger = { has_character_flag = driving_out_greed }
+	}
+	desc = {
+		text = EVTDESC_Plus_2043_sloth
+		trigger = { has_character_flag = driving_out_sloth }
+	}
+	desc = {
+		text = EVTDESC_Plus_2043_wrath
+		trigger = { has_character_flag = driving_out_wrath }
+	}
+	desc = {
+		text = EVTDESC_Plus_2043_envy
+		trigger = { has_character_flag = driving_out_envy }
+	}
+	desc = {
+		text = EVTDESC_Plus_2043_pride
+		trigger = { has_character_flag = driving_out_pride }
+	}
+	desc = {
+		text = EVTDESC_Plus_2043_cruelty
+		trigger = { has_character_flag = driving_out_cruelty }
+	}
+	desc = {
+		text = EVTDESC_Plus_2043_possession
+		trigger = { has_character_flag = driving_out_possession }
+	}
+	desc = {
+		text = EVTDESC_Plus_2043_lunacy
+		trigger = { has_character_flag = driving_out_lunacy }
+	}
+
+	is_triggered_only = yes
+
+	trigger = { has_character_modifier = messalian_prayer }
+
+	option = {
+		name = EVTOPTA_Plus_2043
+
+		prestige = 50
+		piety = 50
+
+		trigger_switch = {
+			on_trigger = has_character_flag
+
+			driving_out_lust = {
+				remove_trait = lustful
+				remove_trait = hedonist
+				random = {
+					chance = 20
+					add_trait = chaste
+				}
+			}
+
+			driving_out_gluttony = {
+				remove_trait = gluttonous
+				random = {
+					chance = 20
+					add_trait = temperate
+				}
+			}
+
+			driving_out_greed = {
+				remove_trait = greedy
+				random = {
+					chance = 20
+					add_trait = charitable
+				}
+			}
+
+			driving_out_sloth = {
+				remove_trait = slothful
+				random = {
+					chance = 20
+					add_trait = diligent
+				}
+			}
+
+			driving_out_wrath = {
+				remove_trait = wroth
+				random = {
+					chance = 20
+					add_trait = patient
+				}
+			}
+
+			driving_out_envy = {
+				remove_trait = envious
+				random = {
+					chance = 20
+					add_trait = kind
+				}
+			}
+
+			driving_out_pride = {
+				remove_trait = proud
+				random = {
+					chance = 20
+					add_trait = humble
+				}
+			}
+
+			driving_out_cruelty = {
+				remove_trait = cruel
+				random = {
+					chance = 20
+					add_trait = kind
+				}
+			}
+
+			driving_out_possession = {
+				remove_possessed_effect = yes
+			}
+
+			driving_out_lunacy = {
+				remove_trait = lunatic
+			}
+		}
+
+		clr_character_flag = driving_out_lust
+		clr_character_flag = driving_out_gluttony
+		clr_character_flag = driving_out_greed
+		clr_character_flag = driving_out_sloth
+		clr_character_flag = driving_out_wrath
+		clr_character_flag = driving_out_envy
+		clr_character_flag = driving_out_pride
+		clr_character_flag = driving_out_cruelty
+		clr_character_flag = driving_out_possession
+		clr_character_flag = driving_out_lunacy
+		clr_character_flag = messalian_temptation
+		clr_character_flag = messalian_praying
+		remove_character_modifier = messalian_prayer
+	}
+}
+
+# Forced to abandon prayers
+character_event = {
+	id = Plus.2044
+	picture = GFX_evt_ritual_scroll
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_Plus_2044_not_messalian
+		trigger = { NOT = { religion = messalian } }
+	}
+	desc = {
+		text = EVTDESC_Plus_2044_prisoner
+		trigger = { prisoner = yes }
+	}
+	desc = {
+		text = EVTDESC_Plus_2044_incapable
+		trigger = { trait = incapable }
+	}
+
+	is_triggered_only = yes # on_character_convert_religion, on_become_imprisoned_any_reason, Plus.2058
+
+	has_character_flag = messalian_praying
+
+	trigger = {
+		has_character_modifier = messalian_prayer
+
+		OR = {
+			NOT = { religion = messalian }
+			prisoner = yes
+			trait = incapable
+		}
+	}
+
+	option = {
+		name = OK
+
+		remove_character_modifier = messalian_prayer
+		clr_character_flag = driving_out_lust
+		clr_character_flag = driving_out_gluttony
+		clr_character_flag = driving_out_greed
+		clr_character_flag = driving_out_sloth
+		clr_character_flag = driving_out_wrath
+		clr_character_flag = driving_out_envy
+		clr_character_flag = driving_out_pride
+		clr_character_flag = driving_out_cruelty
+		clr_character_flag = driving_out_possession
+		clr_character_flag = driving_out_lunacy
+		clr_character_flag = messalian_temptation
+		clr_character_flag = messalian_praying
+
+		add_character_modifier = {
+			name = messalian_prayer_timer
+			years = 3
+			hidden = yes
+		}
+	}
+}
+
+# Bounce event to determine success
+character_event = {
+	id = Plus.2045
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { has_character_modifier = messalian_prayer }
+
+	immediate = {
+		random_list = {
+			60 = {
+				mult_modifier = {
+					factor = 0.25
+					has_character_flag = messalian_temptation
+				}
+
+				mult_modifier = {
+					factor = 0.15
+
+					OR = {
+						has_character_flag = driving_out_possession
+						has_character_flag = driving_out_lunacy
+					}
+				}
+
+				character_event = { id = Plus.2043 } # Success
+			}
+
+			40 = {
+				mult_modifier = {
+					factor = 2.125
+					has_character_flag = messalian_temptation
+				}
+
+				mult_modifier = {
+					factor = 2.25
+
+					OR = {
+						has_character_flag = driving_out_possession
+						has_character_flag = driving_out_lunacy
+					}
+				}
+
+				character_event = { id = Plus.2042 } # Failure
+			}
+		}
+	}
+}
+
+# Praying character receives lustful temptation
+character_event = {
+	id = Plus.2046
+	desc = EVTDESC_Plus_2046
+	picture = GFX_evt_lovers
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2046 # I will surround myself only with those of my gender!
+
+		any_lover = {
+			show_scope_change = no
+			tooltip = { remove_lover = ROOT }
+			character_event = { id = WoL.1103 }
+		}
+
+		character_event = {
+			id = Plus.2047
+			days = 10
+			random = 20
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2046 # I cannot resist the temptation
+
+		set_character_flag = messalian_temptation
+		piety = -25
+	}
+}
+
+# Praying character receives homosexual temptation
+character_event = {
+	id = Plus.2047
+	picture = GFX_evt_lovers
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_Plus_2047_male
+		trigger = { is_female = no }
+	}
+	desc = {
+		text = EVTDESC_Plus_2047_female
+		trigger = { is_female = yes }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2047 # I must resist!
+
+		trigger = { piety >= 50 }
+
+		any_lover = {
+			show_scope_change = no
+			tooltip = { remove_lover = ROOT }
+			character_event = { id = WoL.1103 }
+		}
+
+		piety = -50
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2047 # I have no choice but to give in
+
+		set_character_flag = messalian_temptation
+
+		if = {
+			limit = { NOT = { trait = homosexual } }
+			add_trait = homosexual
+			set_character_flag = revealed_homosexual@ROOT
+		}
+	}
+}
+
+# Praying character receives gluttonous temptation
+character_event = {
+	id = Plus.2048
+	desc = EVTDESC_Plus_2048
+	picture = GFX_evt_knight_kneeling
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2048 # I cannot surrender to the sins of the flesh!
+
+		trigger = { piety >= 50 }
+
+		piety = -50
+		health = -1
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2047 # I have no choice but to give in
+
+		set_character_flag = messalian_temptation
+	}
+}
+
+# Praying character receives greed temptation
+character_event = {
+	id = Plus.2049
+	desc = EVTDESC_Plus_2049
+	picture = GFX_evt_knight_kneeling
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2049 # No, gambling is sinful and greedy
+
+		trigger = { piety >= 50 }
+
+		piety = -50
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2049 # Perhaps just a few games won't hurt...
+
+		set_character_flag = messalian_temptation
+		scaled_wealth = 0.1
+	}
+}
+
+# Praying character receives slothful temptation
+character_event = {
+	id = Plus.2050
+	desc = EVTDESC_Plus_2050
+	picture = GFX_evt_knight_kneeling
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2050 # I will make a determined effort
+
+		trigger = {
+			NOT = { trait = content }
+
+			trigger_if = {
+				limit = { trait = stressed }
+				piety >= 50
+			}
+		}
+
+		if = {
+			limit = { trait = stressed }
+			piety = -50
+		}
+		else = {
+			add_trait = stressed
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2050 # Prayers can wait until tomorrow
+
+		set_character_flag = messalian_temptation
+
+		random = {
+			chance = 30
+			add_trait_fully_content_effect = yes
+		}
+	}
+}
+
+# Praying character receives wrathful temptation
+character_event = {
+	id = Plus.2051
+	desc = EVTDESC_Plus_2051
+	picture = GFX_evt_knight_kneeling
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2051 # Slowly count to ten...
+
+		trigger = { piety >= 50 }
+
+		piety = -50
+		prestige = -50
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2051 # Have that hat nailed to his head
+
+		set_character_flag = messalian_temptation
+		prestige = 50
+	}
+}
+
+# Praying character receives envious temptation
+character_event = {
+	id = Plus.2052
+	desc = EVTDESC_Plus_2052
+	picture = GFX_evt_knight_kneeling
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2052 # I can do without it
+
+		trigger = { piety >= 50 }
+
+		piety = -50
+
+		random = {
+			chance = 50
+			remove_trait_ambitious_effect = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2052 # I will take it for myself
+
+		set_character_flag = messalian_temptation
+		prestige = 50
+
+		random = {
+			chance = 50
+			add_trait_fully_ambitious_effect = yes
+		}
+	}
+}
+
+# Praying character receives pride temptation
+character_event = {
+	id = Plus.2053
+	desc = EVTDESC_Plus_2053
+	picture = GFX_evt_knight_kneeling
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2053 # Humbly ask him for help
+
+		trigger = { piety >= 50 }
+
+		prestige = -50
+		piety = -50
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2053 # No, that's ridiculous! What could he do?
+
+		set_character_flag = messalian_temptation
+		prestige = 50
+	}
+}
+
+# Praying character receives cruelty temptation
+character_event = {
+	id = Plus.2054
+	desc = EVTDESC_Plus_2054
+	picture = GFX_evt_knight_kneeling
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2054 # Let him go free
+
+		trigger = { piety >= 50 }
+
+		prestige = -50
+		piety = -50
+
+		random = {
+			chance = 30
+			add_trait_fully_arbitrary_effect = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2054 # Hang him as he deserves!
+
+		set_character_flag = messalian_temptation
+		prestige = 50
+	}
+}
+
+# Messalian chooses a patron saint
+character_event = {
+	id = Plus.2055
+	desc = EVTDESC_Plus_2055
+	picture = GFX_evt_knight_kneeling
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2055
+
+		add_character_modifier = {
+			name = patron_nestor
+			duration = -1
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2055
+
+		add_character_modifier = {
+			name = patron_addai
+			duration = -1
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_2055
+
+		add_character_modifier = {
+			name = patron_lucifer
+			duration = -1
+		}
+	}
+
+	option = {
+		name = EVTOPTD_Plus_2055
+
+		add_character_modifier = {
+			name = patron_adelphius
+			duration = -1
+		}
+	}
+}
+
+# Joining the Cult of Lucifer
+character_event = {
+	id = Plus.2056
+	desc = EVTDESC_Plus_2056
+	picture = GFX_evt_cult_initiation
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2056
+
+		add_trait = cult_of_lucifer
+	}
+}
+
+# The Army of Lucifer founded
+narrative_event = {
+	id = Plus.2057
+	title = EVTNAME_Plus_2057
+	desc = EVTDESC_Plus_2057
+	picture = GFX_evt_crusaders
+	border = GFX_event_narrative_frame_war
+
+	is_triggered_only = yes
+	major = yes
+	hide_from = yes
+
+	option = {
+		name = EVTOPTA_Plus_2057
+
+		trigger = { religion = manichaean }
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = {
+			NOT = { religion = manichaean }
+		}
+	}
+}
+
+### MONK/NUN EVENTS
+
+# Adult christian asks to become a monk/nun
+letter_event = {
+	id = Plus.2062
+	border = GFX_event_letter_frame_religion
+
+	desc = {
+		text = EVTDESC_Plus_2062_male
+		trigger = { FROM = { is_female = no } }
+	}
+	desc = {
+		text = EVTDESC_Plus_2062_female
+		trigger = { FROM = { is_female = yes } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_SoA_5218
+
+		FROM = {
+			show_scope_change = no
+
+			any_spouse = {
+				show_scope_change = no
+				remove_spouse = PREV
+			}
+
+			set_christian_ascetic_effect = yes
+
+			opinion = {
+				name = opinion_grateful
+				who = ROOT
+				years = 100
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_SoA_5218
+
+		FROM = {
+			show_scope_change = no
+
+			random_list = {
+				50 = { add_trait = stressed }
+				50 = { add_trait = depressed }
+				20 = { add_trait = cynical }
+			}
+
+			set_character_flag = monk_refused
+
+			opinion = {
+				name = opinion_angry
+				who = ROOT
+				years = 10
+			}
+		}
+	}
+}
+
+### MIAPHYSITE EVENTS
+
+# Birth of the Order of Saint Blaise
+narrative_event = {
+	id = Plus.2063
+	title = EVTNAME_Plus_2063
+	desc = EVTDESC_Plus_2063
+	picture = GFX_evt_knight_kneeling
+
+	is_triggered_only = yes
+	major = yes
+	hide_from = yes
+
+	only_playable = yes
+	religion_group = christian
+	has_global_flag = christian_crusades_unlocked
+
+	trigger = {
+		OR = {
+			religion = apostolic
+			religion = paulician
+			religion = tondrakian
+		}
+
+		is_heretic = no
+		NOT = { is_title_active = d_saint_blaise }
+
+		OR = {
+			year >= 1191 # Historical
+
+			c_dwin = {
+				holder_scope = { religion_group = christian }
+			}
+
+			k_jerusalem = {
+				holder_scope = { religion_group = christian }
+			}
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.1
+
+			k_jerusalem = {
+				holder_scope = { religion_group = christian }
+			}
+		}
+	}
+
+	immediate = {
+		activate_title = {
+			title = d_saint_blaise
+			status = yes
+		}
+
+		create_character = {
+			random_traits = yes
+			dynasty = random
+			religion = ROOT
+			culture = armenian
+			female = no
+			age = 35
+		}
+
+		new_character = {
+			wealth = 500
+			grant_title = d_saint_blaise
+
+			while = {
+				count = 4
+
+				create_random_soldier = {
+					random_traits = yes
+					dynasty = random
+					religion = ROOT
+					culture = armenian
+					female = no
+					age = 16
+				}
+
+				new_character = {
+					random_list = {
+						1 = { }
+						1 = { add_age = 1 }
+						1 = { add_age = 2 }
+						1 = { add_age = 3 }
+						1 = { add_age = 4 }
+					}
+				}
+			}
+
+			while = {
+				count = 2
+
+				create_random_priest = {
+					random_traits = yes
+					dynasty = random
+					religion = ROOT
+					culture = armenian
+					female = no
+					age = 25
+				}
+
+				new_character = {
+					random_list = {
+						1 = { }
+						1 = { add_age = 1 }
+					}
+				}
+			}
+
+			create_character = {
+				random_traits = yes
+				dynasty = random
+				religion = ROOT
+				culture = coptic
+				female = no
+				age = 28
+			}
+
+			create_character = {
+				random_traits = yes
+				dynasty = random
+				religion = ROOT
+				culture = armenian
+				female = yes
+				age = 25
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2063
+
+		trigger = { religion_group = christian }
+	}
+
+	option = {
+		name = EVTOPTB39100
+
+		trigger = {
+			NOT = { religion_group = christian }
+		}
+	}
+}
+
+# Birth of the Order of Saint Mark
+narrative_event = {
+	id = Plus.2064
+	title = EVTNAME_Plus_2064
+	desc = EVTDESC_Plus_2064
+	picture = GFX_evt_knight_kneeling
+
+	is_triggered_only = yes
+	hide_from = yes
+	major = yes
+
+	immediate = {
+		create_character = {
+			random_traits = yes
+			dynasty = random
+			religion = ROOT
+			culture = ROOT
+			female = no
+			age = 35
+		}
+
+		new_character = {
+			wealth = 500
+			grant_title = d_knights_saint_mark
+
+			while = {
+				count = 4
+
+				create_random_soldier = {
+					random_traits = yes
+					dynasty = random
+					religion = ROOT
+					culture = ROOT
+					female = no
+					age = 16
+				}
+
+				new_character = {
+					random_list = {
+						1 = { }
+						1 = { add_age = 1 }
+						1 = { add_age = 2 }
+						1 = { add_age = 3 }
+						1 = { add_age = 4 }
+					}
+				}
+			}
+
+			while = {
+				count = 2
+
+				create_random_priest = {
+					random_traits = yes
+					dynasty = random
+					religion = ROOT
+					culture = ROOT
+					female = no
+					age = 25
+				}
+
+				new_character = {
+					random_list = {
+						1 = { }
+						1 = { add_age = 1 }
+					}
+				}
+			}
+
+			create_character = {
+				random_traits = yes
+				dynasty = random
+				religion = ROOT
+				culture = ROOT
+				female = no
+				age = 28
+			}
+			create_character = {
+				random_traits = yes
+				dynasty = random
+				religion = ROOT
+				culture = ROOT
+				female = yes
+				age = 16
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2063
+
+		trigger = { religion_group = ROOT }
+	}
+
+	option = {
+		name = EVTOPTB39100
+		trigger = {
+			NOT = { religion_group = ROOT }
+		}
+	}
+}

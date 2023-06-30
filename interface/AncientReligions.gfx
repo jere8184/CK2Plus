@@ -1,0 +1,248 @@
+spriteTypes = {
+	# Traits
+	spriteType = {
+		name = "GFX_trait_bad_druid"
+		textureFile = "gfx/new_traits/bad_priest_druid.dds"
+		noOfFrames = 1
+		noRefCount = yes
+		effectFile = "gfx/FX/buttonstate_linear.lua"
+	}
+	spriteType = {
+		name = "GFX_trait_changeling"
+		textureFile = "gfx/new_traits/changeling.dds"
+		noOfFrames = 1
+		noRefCount = yes
+		effectFile = "gfx/FX/buttonstate_linear.lua"
+	}
+	spriteType = {
+		name = "GFX_trait_fian"
+		textureFile = "gfx/new_traits/fian.dds"
+		noOfFrames = 1
+		noRefCount = yes
+		effectFile = "gfx/FX/buttonstate_linear.lua"
+	}
+	spriteType = {
+		name = "GFX_trait_learning_druidic_arts"
+		textureFile = "gfx/new_traits/learning_druidic_arts.dds"
+		noOfFrames = 1
+		noRefCount = yes
+		effectFile = "gfx/FX/buttonstate_linear.lua"
+	}
+	spriteType = {
+		name = "GFX_trait_vestalis"
+		textureFile = "gfx/new_traits/vestalis.tga"
+		noOfFrames = 1
+		noRefCount = yes
+		effectFile = "gfx/FX/buttonstate_linear.lua"
+	}
+	spriteType = {
+		name = "GFX_trait_retired_vestalis"
+		textureFile = "gfx/new_traits/retired_vestalis.tga"
+		noOfFrames = 1
+		noRefCount = yes
+		effectFile = "gfx/FX/buttonstate_linear.lua"
+	}
+
+	# Event Pictures
+
+	spriteType = {
+		name = "GFX_evt_egyptian_marriage"
+		textureFile = "gfx\\new_events\egyptian_marriage.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_luxor"
+		textureFile = "gfx\\new_events\luxor.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_druidic_sacrifice"
+		textureFile = "gfx\\new_events\druidic_sacrifice.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_Pagan_dolmen"
+		textureFile = "gfx\\new_events\Pagan_dolmen.dds"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_Whispering_in_ear"
+		textureFile = "gfx\\new_events\Whispering_in_ear.dds"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_celtic_warriors"
+		textureFile = "gfx\\new_events\battle_gaul.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_bonfire_celtic"
+		textureFile = "gfx\\new_events\bonfire_celtic.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_ollamh_laws"
+		textureFile = "gfx\\new_events\ollamh_laws.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_nightmare"
+		textureFile = "gfx\\new_events\nightmare.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_craftsman"
+		textureFile = "gfx\\new_events\craftsman.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_athlete"
+		textureFile = "gfx\\new_events\athlete.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_funeral_pyre"
+		textureFile = "gfx\\new_events\funeral_pyre.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_banshee"
+		textureFile = "gfx\\new_events\banshee.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_boatcoast"
+		textureFile = "gfx\\new_events\boatcoast.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_thebard"
+		textureFile = "gfx\\new_events\thebard.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_lakeside"
+		textureFile = "gfx\\new_events\lakeside.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_nuada_mag_tuired"
+		textureFile = "gfx\\new_events\nuada_mag_tuired.dds"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_the_changeling_fuseli"
+		textureFile = "gfx\\new_events\the_changeling_fuseli.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_y_mab_darogan"
+		textureFile = "gfx\\new_events\y_mab_darogan.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_royal_court"
+		textureFile = "gfx\\new_events\royal_court.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_library"
+		textureFile = "gfx\\new_events\\druid_room.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_emissary"
+		textureFile = "gfx\\new_events\\Emissary_kneeling_before_throne.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_forest_warrior_alone"
+		textureFile = "gfx\\new_events\forest_warrior_alone.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_warrior_banners"
+		textureFile = "gfx\\new_events\warrior_banners.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_roman_temple"
+		textureFile = "gfx\\new_events\roman_great_temple.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_lightning_strike"
+		textureFile = "gfx\\new_events\lightning_strike.tga"
+		alwaysTransparent = yes
+	}
+
+	# Decision icons
+	spriteType = {
+		name = "GFX_reinstate_celtic_rites"
+		textureFile = "gfx\\interface\\decision_icon_convert_to_reformed.dds"
+	}
+	spriteType = {
+		name = "GFX_abdicate_gaelic"
+		textureFile = "gfx\\interface\\decision_icon_faction_lower_crown_authority_ultimatum.dds"
+	}
+	spriteType = {
+		name = "GFX_hold_divination"
+		textureFile = "gfx\\new_decisions\\decision_icon_hold_divination.dds"
+	}
+	spriteType = {
+		name = "GFX_invite_druid_to_court"
+		textureFile = "gfx\\new_decisions\\decision_icon_invite_druid_to_court.dds"
+	}
+	spriteType = {
+		name = "GFX_give_offerings_sidhe"
+		textureFile = "gfx\\new_decisions\\decision_icon_give_offerings_sidhe.dds"
+	}
+	spriteType = {
+		name = "GFX_organize_fianna"
+		textureFile = "gfx\\new_decisions\\decision_icon_organize_fianna.dds"
+	}
+	spriteType = {
+		name = "GFX_organize_gwydion"
+		textureFile = "gfx\\new_decisions\\decision_icon_organize_fianna.dds"
+	}
+	spriteType = {
+		name = "GFX_vassalize_fianna"
+		textureFile = "gfx\\interface\\decision_icon_vassalize_holy_order.dds"
+	}
+	spriteType = {
+		name = "GFX_hold_an_aonach_tailteann"
+		textureFile = "gfx\\new_decisions\\decision_icon_hold_an_aonach_tailteann.dds"
+	}
+	spriteType = {
+		name = "GFX_donate_money_to_fianna"
+		textureFile = "gfx\\interface\\decision_icon_donate_to_holy_order.dds"
+	}
+	spriteType = {
+		name = "GFX_donate_money_to_gwydion"
+		textureFile = "gfx\\interface\\decision_icon_donate_to_holy_order.dds"
+	}
+	spriteType = {
+		name = "GFX_nominate_vestalis_decision"
+		textureFile = "gfx\\new_decisions\\decision_icon_nominate_vestalis.dds"
+	}
+	spriteType = {
+		name = "GFX_restore_luxor"
+		textureFile = "gfx\\new_decisions\\decision_icon_restore_luxor.dds"
+	}
+	spriteType = {
+		name = "GFX_build_pyramid"
+		textureFile = "gfx\\new_decisions\\decision_icon_build_pyramid.dds"
+	}
+	spriteType = {
+		name = "GFX_restore_priesthood_egyptian_pagan"
+		textureFile = "gfx\\new_decisions\\decision_icon_restore_priesthood_egyptian_pagan.dds"
+	}
+	spriteType = {
+		name = "GFX_organize_anubis"
+		textureFile = "gfx\\new_decisions\\decision_icon_egyptian_pagan_holy_order.dds"
+	}
+	spriteType = {
+		name = "GFX_organize_horus"
+		textureFile = "gfx\\new_decisions\\decision_icon_egyptian_pagan_holy_order.dds"
+	}
+}

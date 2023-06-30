@@ -1,0 +1,828 @@
+decisions = {
+	hold_an_aonach_tailteann  = {
+		is_high_prio = yes
+		ai_check_interval = 24
+
+		only_independent = yes
+
+		potential = {
+			religion_openly_celtic_or_reformed_trigger = yes
+			independent = yes
+			higher_real_tier_than = COUNT
+
+			NOT = {
+				any_demesne_title = {
+					lower_real_tier_than = DUKE
+					is_occupied = yes
+				}
+
+				has_character_modifier = aonach_tailteann
+			}
+		}
+
+		allow = {
+			ruled_years >= 5
+			prestige >= 500
+			wealth >= 200
+
+			custom_tooltip = {
+				text = HAS_BARD_AVAILABLE
+
+				any_courtier_or_vassal = {
+					has_minor_title = title_court_bard
+					prisoner = no
+					is_incapable = no
+					is_inaccessible_trigger = no
+				}
+			}
+
+			war = no
+			is_ill = no
+			is_not_in_regency_trigger = yes
+			is_abroad = no
+			in_command_trigger = no
+			is_inaccessible_trigger = no
+		}
+
+		effect = {
+			add_character_modifier = {
+				name = aonach_tailteann
+				years = 100
+				hidden = yes
+			}
+
+			clr_character_flag = tailteann_has_ended
+			wealth = -200
+			prestige = 100
+
+			character_event = {
+				id = ancrel.1193
+				tooltip = tailteann_invite
+			}
+
+			hidden_effect = {
+				add_character_modifier = {
+					name = holding_aonach_tailteann
+					months = 7
+				}
+
+				add_character_modifier = {
+					name = do_not_disturb
+					months = 7
+					hidden = yes
+				}
+
+				character_event = {
+					id = ancrel.1191  # Aonach starts
+					months = 2
+				}
+
+				clr_character_flag = tailteann_has_ended
+
+				any_realm_character = {
+					limit = {
+						is_adult = yes
+						is_incapable = no
+						prisoner = no
+					}
+
+					clr_character_flag = tailteann_has_ended
+					character_event = { id = ancrel.1190 }
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				scaled_wealth = {
+					value = 3.0
+					max = 1000
+				}
+			}
+		}
+	}
+
+	hold_divination = {
+		ai_check_interval = 24
+
+		only_rulers = yes
+
+		potential = {
+			religion_openly_celtic_or_reformed_trigger = yes
+			has_dlc = "The Old Gods"
+
+			NOR = {
+				any_demesne_title = {
+					lower_real_tier_than = DUKE
+					is_occupied = yes
+				}
+
+				has_character_flag = planning_divination
+				has_character_modifier = held_divination_timer
+			}
+		}
+
+		allow = {
+			scaled_wealth = 0.20
+			war = no
+			has_regent = no
+			is_inaccessible_trigger = no
+
+			custom_tooltip = {
+				text = HAS_COURT_DRUID_AVAILABLE
+
+				job_spiritual = {
+					is_incapable = no
+					is_inaccessible_trigger = no
+				}
+			}
+		}
+
+		effect = {
+			scaled_wealth = -0.20
+			set_character_flag = planning_divination
+
+			character_event = {
+				id = Plus.817
+				tooltip = prepare_divination
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				scaled_wealth = 3.0
+				martial >= 8
+				month >= 5
+				month <= 10
+			}
+		}
+	}
+
+	organize_gwydion = {
+		is_high_prio = yes
+		ai_check_interval = 24
+
+		only_playable = yes
+
+		potential = {
+			religion_openly_celtic_or_reformed_trigger = yes
+			higher_real_tier_than = DUKE
+			NOT = { has_global_flag = gwydion_founded }
+		}
+
+		allow = {
+			# TODO: Generalise for custom kingdoms in the region?
+			OR = {
+				NOT = { is_title_active = d_keepers_tirnanog }
+				has_landed_title = k_wales
+				has_landed_title = k_brittany
+				real_tier = EMPEROR
+			}
+
+			prestige >= 300
+			wealth >= 300
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_global_flag = gwydion_founded
+			prestige = -300
+			wealth = -300
+
+			activate_title = {
+				title = d_gwydion
+				status = yes
+			}
+
+			hidden_effect = {
+				narrative_event = { id = ancrel.110 }
+
+				create_character = {
+					random_traits = yes
+					religion = ROOT
+					culture = ROOT
+					dynasty = none
+					female = no
+					age = 34
+					add_trait = skilled_tactician
+					add_trait = wolf_warrior
+				}
+
+				new_character = {
+					grant_title = d_gwydion
+					save_event_target_as = gwydion_leader
+				}
+
+				if = {
+					limit = { ai = no }
+
+					chronicle = {
+						entry = CHRONICLE_SONS_OF_GWYDION
+						portrait = [gwydion_leader.GetID]
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	expel_gwydion = {
+		ai = no
+
+		potential = {
+			independent = yes
+			higher_real_tier_than = DUKE
+			has_dlc = "Sons of Abraham"
+			is_title_active = d_gwydion
+			religion = d_gwydion
+			NOT = { has_character_modifier = expelled_d_gwydion }
+
+			any_realm_province = {
+				held_under_PREV = yes
+
+				any_province_lord = {
+					OR = {
+						character = d_gwydion
+						is_vassal_or_below_of = d_gwydion
+					}
+				}
+			}
+		}
+
+		allow = {
+			piety >= 1000
+
+			custom_tooltip = {
+				text = expelling_holy_order_decision_tooltip
+				NOT = { has_character_flag = expel_gwydion_check }
+			}
+		}
+
+		effect = {
+			set_character_flag = expel_gwydion_check
+
+			d_gwydion = {
+				save_event_target_as = target_holy_order
+
+				holder_scope = {
+					save_event_target_as = target_grandmaster
+				}
+			}
+
+			character_event = {
+				id = SoA.2990
+				tooltip = expelling_holy_order_decision_tooltip_b
+			}
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	donate_money_to_gwydion = {
+		ai_check_interval = 60
+
+		only_playable = yes
+
+		potential = {
+			has_dlc = "Sons of Abraham"
+			is_title_active = d_gwydion
+			religion = d_gwydion
+
+			d_gwydion = {
+				holder_scope = {
+					is_within_diplo_range = ROOT
+				}
+			}
+
+			NOR = {
+				government = order_government
+				has_character_modifier = expelled_d_gwydion
+				is_liege_of = d_gwydion
+				has_landed_title = d_gwydion
+			}
+		}
+
+		allow = {
+			wealth >= 300
+
+			custom_tooltip = {
+				text = holy_order_donate_cooldown_tt
+				NOT = { has_character_modifier = donate_to_holy_order_cooldown }
+			}
+		}
+
+		effect = {
+			wealth = -300
+			piety = 150
+
+			if = {
+				limit = {
+					NOT = { has_character_modifier = donated_to_holy_order }
+				}
+
+				add_character_modifier = {
+					name = donated_to_holy_order
+					duration = -1
+				}
+			}
+
+			d_gwydion = {
+				show_scope_change = no
+
+				save_event_target_as = target_holy_order
+
+				holder_scope = {
+					show_scope_change = no
+
+					save_event_target_as = target_grandmaster
+					wealth = 300
+				}
+			}
+
+			letter_event = { id = SoA.1141 }
+		}
+
+		ai_will_do = {
+			factor = 0.12
+
+			trigger = {
+				wealth >= 1000
+				piety < 1000
+
+				NOR = {
+					trait = cynical
+					trait = greedy
+					has_character_modifier = ai_austerity
+				}
+			}
+
+			mult_modifier = {
+				factor = 10
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 10
+				piety < 100
+			}
+		}
+	}
+
+	organize_tirnanog = {
+		is_high_prio = yes
+		ai_check_interval = 24
+
+		only_playable = yes
+
+		potential = {
+			religion_openly_celtic_or_reformed_trigger = yes
+			higher_real_tier_than = DUKE
+			NOT = { has_global_flag = tirnanog_founded }
+		}
+
+		allow = {
+			# TODO: Generalise for custom kingdoms in the region?
+			OR = {
+				NOT = { is_title_active = d_keepers_tirnanog }
+				has_landed_title = k_scotland
+				has_landed_title = k_ireland
+				real_tier = EMPEROR
+			}
+
+			prestige >= 300
+			wealth >= 300
+			is_not_in_regency_trigger = yes
+		}
+
+		effect = {
+			set_global_flag = tirnanog_founded
+			prestige = -300
+			wealth = -300
+
+			activate_title = {
+				title = d_keepers_tirnanog
+				status = yes
+			}
+
+			hidden_effect = {
+				narrative_event = { id = ancrel.1150 }
+
+				create_character = {
+					random_traits = yes
+					religion = ROOT
+					culture = ROOT
+					dynasty = none
+					female = no
+					age = 34
+					add_trait = skilled_tactician
+					add_trait = fian
+				}
+
+				new_character = {
+					grant_title = d_keepers_tirnanog
+					save_event_target_as = tirnanog_leader
+				}
+
+				if = {
+					limit = { ai = no }
+
+					chronicle = {
+						entry = CHRONICLE_SONS_OF_GWYDION
+						portrait = [tirnanog_leader.GetID]
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	expel_tirnanog = {
+		ai = no
+
+		potential = {
+			independent = yes
+			higher_real_tier_than = DUKE
+			has_dlc = "Sons of Abraham"
+			is_title_active = d_keepers_tirnanog
+			religion = d_keepers_tirnanog
+			NOT = { has_character_modifier = expelled_d_keepers_tirnanog }
+
+			any_realm_province = {
+				held_under_PREV = yes
+
+				any_province_lord = {
+					OR = {
+						character = d_keepers_tirnanog
+						is_vassal_or_below_of = d_keepers_tirnanog
+					}
+				}
+			}
+		}
+
+		allow = {
+			piety >= 1000
+
+			custom_tooltip = {
+				text = expelling_holy_order_decision_tooltip
+				NOT = { has_character_flag = expel_tirnanog_check }
+			}
+		}
+
+		effect = {
+			set_character_flag = expel_tirnanog_check
+
+			d_keepers_tirnanog = {
+				save_event_target_as = target_holy_order
+
+				holder_scope = {
+					save_event_target_as = target_grandmaster
+				}
+			}
+
+			character_event = {
+				id = SoA.2990
+				tooltip = expelling_holy_order_decision_tooltip_b
+			}
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	donate_money_to_tirnanog = {
+		ai_check_interval = 60
+
+		only_playable = yes
+
+		potential = {
+			has_dlc = "Sons of Abraham"
+			is_title_active = d_keepers_tirnanog
+			religion = d_keepers_tirnanog
+
+			d_keepers_tirnanog = {
+				holder_scope = {
+					is_within_diplo_range = ROOT
+				}
+			}
+
+			NOR = {
+				government = order_government
+				has_character_modifier = expelled_d_keepers_tirnanog
+				is_liege_of = d_keepers_tirnanog
+				has_landed_title = d_keepers_tirnanog
+			}
+		}
+
+		allow = {
+			wealth >= 300
+
+			custom_tooltip = {
+				text = holy_order_donate_cooldown_tt
+				NOT = { has_character_modifier = donate_to_holy_order_cooldown }
+			}
+		}
+
+		effect = {
+			wealth = -300
+			piety = 150
+
+			if = {
+				limit = {
+					NOT = { has_character_modifier = donated_to_holy_order }
+				}
+
+				add_character_modifier = {
+					name = donated_to_holy_order
+					duration = -1
+				}
+			}
+
+			d_keepers_tirnanog = {
+				show_scope_change = no
+
+				save_event_target_as = target_holy_order
+
+				holder_scope = {
+					show_scope_change = no
+
+					save_event_target_as = target_grandmaster
+					wealth = 300
+				}
+			}
+
+			letter_event = { id = SoA.1141 }
+		}
+
+		ai_will_do = {
+			factor = 0.12
+
+			trigger = {
+				wealth >= 1000
+				piety < 1000
+
+				NOR = {
+					trait = cynical
+					trait = greedy
+					has_character_modifier = ai_austerity
+				}
+			}
+
+			mult_modifier = {
+				factor = 10
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 10
+				piety < 100
+			}
+		}
+	}
+
+	assign_bard = { # For the AI, because they are dumb enough not to hand out minor titles
+		ai_check_interval = 12
+
+		only_playable = yes
+
+		potential = {
+			can_grant_title = title_court_bard
+			ai = yes
+		}
+
+		allow = {
+			any_courtier = {
+				can_hold_title = title_court_bard
+				prisoner = no
+			}
+		}
+
+		effect = {
+			random_courtier = {
+				limit = { can_hold_title = title_court_bard }
+				give_minor_title = title_court_bard
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	give_offerings_sidhe = {
+		ai_check_interval = 12
+
+		only_rulers = yes
+
+		potential = {
+			has_dlc = "The Old Gods"
+			religion_openly_celtic_or_reformed_trigger = yes
+			has_character_flag = calming_sidhe_failed
+			has_character_modifier = angry_sidhe
+
+			NOR = {
+				any_demesne_title = {
+					lower_real_tier_than = DUKE
+					is_occupied = yes
+				}
+
+				has_character_modifier = sidhe_offerings_bad
+			}
+		}
+
+		allow = {
+			scaled_wealth = 0.15
+			is_not_in_regency_trigger = yes
+			war = no
+
+			custom_tooltip = {
+				text = HAS_COURT_DRUID_AVAILABLE
+
+				job_spiritual = {
+					is_incapable = no
+					is_inaccessible_trigger = no
+				}
+			}
+		}
+
+		effect = {
+			scaled_wealth = -0.15
+			set_character_flag = sidhe_offerings_giving
+
+			character_event = {
+				id = ancrel.248
+				tooltip = prepare_offerings
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				scaled_wealth = 3.0
+
+				NOR = {
+					trait = cynical
+					trait = craven
+					trait = paranoid
+				}
+			}
+		}
+	}
+
+	expel_red_dragons = {
+		ai = no
+
+		potential = {
+			independent = yes
+			higher_real_tier_than = DUKE
+			has_dlc = "Sons of Abraham"
+			is_title_active = d_red_dragons
+			religion = d_red_dragons
+			NOT = { has_character_modifier = expelled_d_red_dragons }
+
+			any_realm_province = {
+				held_under_PREV = yes
+
+				any_province_lord = {
+					OR = {
+						character = d_red_dragons
+						is_vassal_or_below_of = d_red_dragons
+					}
+				}
+			}
+		}
+
+		allow = {
+			piety >= 1000
+
+			custom_tooltip = {
+				text = expelling_holy_order_decision_tooltip
+				NOT = { has_character_flag = expel_red_dragons_check }
+			}
+		}
+
+		effect = {
+			set_character_flag = expel_red_dragons_check
+
+			d_red_dragons = {
+				save_event_target_as = target_holy_order
+
+				holder_scope = {
+					save_event_target_as = target_grandmaster
+				}
+			}
+
+			character_event = {
+				id = SoA.2990
+				tooltip = expelling_holy_order_decision_tooltip_b
+			}
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	donate_money_to_red_dragons = {
+		ai_check_interval = 60
+
+		only_playable = yes
+
+		potential = {
+			has_dlc = "Sons of Abraham"
+			is_title_active = d_red_dragons
+			religion = d_red_dragons
+
+			d_red_dragons = {
+				holder_scope = {
+					is_within_diplo_range = ROOT
+				}
+			}
+
+			NOR = {
+				government = order_government
+				has_character_modifier = expelled_d_red_dragons
+				is_liege_of = d_red_dragons
+				has_landed_title = d_red_dragons
+			}
+		}
+
+		allow = {
+			wealth >= 300
+
+			custom_tooltip = {
+				text = holy_order_donate_cooldown_tt
+				NOT = { has_character_modifier = donate_to_holy_order_cooldown }
+			}
+		}
+
+		effect = {
+			wealth = -300
+			piety = 150
+
+			if = {
+				limit = {
+					NOT = { has_character_modifier = donated_to_holy_order }
+				}
+
+				add_character_modifier = {
+					name = donated_to_holy_order
+					duration = -1
+				}
+			}
+
+			d_red_dragons = {
+				show_scope_change = no
+
+				save_event_target_as = target_holy_order
+
+				holder_scope = {
+					show_scope_change = no
+
+					save_event_target_as = target_grandmaster
+					wealth = 300
+				}
+			}
+
+			letter_event = { id = SoA.1141 }
+		}
+
+		ai_will_do = {
+			factor = 0.12
+
+			trigger = {
+				wealth >= 1000
+				piety < 1000
+
+				NOR = {
+					trait = cynical
+					trait = greedy
+					has_character_modifier = ai_austerity
+				}
+			}
+
+			mult_modifier = {
+				factor = 10
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 10
+				piety < 100
+			}
+		}
+	}
+}

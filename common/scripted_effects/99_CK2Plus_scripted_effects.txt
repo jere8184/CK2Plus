@@ -1,0 +1,5401 @@
+#	Example:
+#
+#	example_effect = {
+#		treasury = 100
+#		prestige = 50
+#	}
+#
+#
+#	In a script file:
+#
+#	effect = {
+#		example_effect = yes
+#	}
+#
+# Naming convention:  xxxx_effect
+#
+
+# used in title scope (THIS)
+current_inheritance_laws_effect = {
+	log = "INFO: law changing for the [This.GetFullName] ([This.GetID]):"
+
+	trigger_switch = {
+		on_trigger = has_law
+
+		succ_gavelkind = { log = "---> current succession law for [This.GetID]: Gavelkind" }
+		succ_elective_gavelkind = { log = "---> current succession law for [This.GetID]: Elective Gavelkind" }
+		succ_seniority = { log = "---> current succession law for [This.GetID]: Seniority" }
+		succ_primogeniture = { log = "---> current succession law for [This.GetID]: Primogeniture" }
+		succ_feudal_elective = { log = "---> current succession law for [This.GetID]: Feudal Elective" }
+		succ_hre_elective = { log = "---> current succession law for [This.GetID]: Princely Elective" }
+		succ_byzantine_elective = { log = "---> current succession law for [This.GetID]: Imperial Elective" }
+		succ_tanistry = { log = "---> current succession law for [This.GetID]: Tanistry" }
+		succ_eldership = { log = "---> current succession law for [This.GetID]: Eldership" }
+		succ_ultimogeniture = { log = "---> current succession law for [This.GetID]: Ultimogeniture" }
+		succ_turkish_succession = { log = "---> current succession law for [This.GetID]: Turkish Succession" }
+		succ_papal_succession = { log = "---> current succession law for [This.GetID]: Papal Succession" }
+		succ_appointment = { log = "---> current succession law for [This.GetID]: Appointment" }
+		succ_open_elective = { log = "---> current succession law for [This.GetID]: Open Elective" }
+		succ_catholic_bishopric = { log = "---> current succession law for [This.GetID]: Bishopric" }
+		succ_patrician_elective = { log = "---> current succession law for [This.GetID]: Patrician Elective" }
+		succ_nomad_succession = { log = "---> current succession law for [This.GetID]: Nomadic" }
+	}
+
+	trigger_switch = {
+		on_trigger = has_law
+
+		agnatic_succession = { log = "---> current gender law for [This.GetID]: Agnatic" }
+		cognatic_succession = { log = "---> current gender law for [This.GetID]: Agnatic-Cognatic" }
+		true_cognatic_succession = { log = "---> current gender law for [This.GetID]: Absolute Cognatic" }
+		enatic_cognatic_succession = { log = "---> current gender law for [This.GetID]: Enatic-Cognatic" }
+		enatic_succession = { log = "---> current gender law for [This.GetID]: Enatic" }
+	}
+}
+
+escape_siege_effect = {
+	random_list = {
+		9 = {
+			mult_modifier = {
+				factor = 1.5
+				trait = genius
+			}
+
+			mult_modifier = {
+				factor = 1.25
+
+				OR = {
+					trait = quick
+					trait = shrewd
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = brave
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = wounded
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = infirm
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = maimed
+			}
+
+			mult_modifier = {
+				factor = 0.9
+
+				intrigue < 2
+				is_adult = yes
+				is_incapable = no
+			}
+
+			mult_modifier = {
+				factor = 0.9
+
+				intrigue < 4
+				is_adult = yes
+				is_incapable = no
+			}
+
+			mult_modifier = {
+				factor = 0.9
+
+				intrigue < 6
+				is_adult = yes
+				is_incapable = no
+			}
+
+			mult_modifier = {
+				factor = 0.9
+
+				intrigue < 8
+				is_adult = yes
+				is_incapable = no
+			}
+
+			mult_modifier = {
+				factor = 1.1
+
+				intrigue >= 10
+				is_adult = yes
+				is_incapable = no
+			}
+
+			mult_modifier = {
+				factor = 1.1
+
+				intrigue >= 12
+				is_adult = yes
+				is_incapable = no
+			}
+
+			mult_modifier = {
+				factor = 1.1
+
+				intrigue >= 14
+				is_adult = yes
+				is_incapable = no
+			}
+
+			mult_modifier = {
+				factor = 1.1
+
+				intrigue >= 16
+				is_adult = yes
+				is_incapable = no
+			}
+
+			mult_modifier = {
+				factor = 1.1
+
+				intrigue >= 18
+				is_adult = yes
+				is_incapable = no
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				has_character_flag = in_danger
+			}
+
+			custom_tooltip = {
+				text = EVTTOOLTIPsiegehide
+
+				add_trait = in_hiding
+				set_character_flag = in_hiding_siege
+			}
+		}
+
+		1 = {
+			mult_modifier = {
+				factor = 2.5
+				has_character_flag = in_danger
+			}
+
+			custom_tooltip = {
+				text = EVTTOOLTIPsiegeremain
+
+				set_character_flag = has_siege_effect
+
+				add_character_modifier = {
+					name = left_at_siege
+					months = 6
+				}
+			}
+		}
+	}
+}
+
+heresy_character_effect = {
+	# Search nearby first
+	if = {
+		limit = {
+			location = {
+				any_neighbor_province = {
+					has_owner = yes
+
+					trigger_if = {
+						limit = { is_heretic = yes }
+						is_heresy_of = ROOT
+					}
+					trigger_else = {
+						is_heretic = no
+						religion_group = ROOT
+
+						NOR = {
+							religion = ROOT
+							religion_group = pagan_group
+						}
+					}
+				}
+			}
+		}
+
+		location = {
+			random_neighbor_province = {
+				limit = {
+					has_owner = yes
+
+					trigger_if = {
+						limit = { is_heretic = yes }
+						is_heresy_of = ROOT
+					}
+					trigger_else = {
+						is_heretic = no
+						religion_group = ROOT
+
+						NOR = {
+							religion = ROOT
+							religion_group = pagan_group
+						}
+					}
+				}
+
+				# Prefer a neighboring heresy
+				preferred_limit = { is_heresy_of = ROOT }
+
+				# Prefer a neighboring member of the same religion group
+				preferred_limit = {
+					is_heretic = no
+					religion_group = ROOT
+
+					NOR = {
+						religion = ROOT
+						religion_group = pagan_group
+					}
+				}
+
+				reverse_religion = ROOT
+			}
+		}
+	}
+	# Prefer an existing heresy in the realm
+	else_if = {
+		limit = {
+			top_liege = {
+				any_realm_province = {
+					held_under_PREV = yes
+
+					trigger_if = {
+						limit = { is_heretic = yes }
+						is_heresy_of = ROOT
+					}
+					trigger_else = {
+						is_heretic = no
+						religion_group = ROOT
+
+						NOR = {
+							religion = ROOT
+							religion_group = pagan_group
+						}
+					}
+				}
+			}
+		}
+
+		# Prefer an existing heresy in the realm
+		top_liege = {
+			random_realm_province = {
+				limit = {
+					trigger_if = {
+						limit = { is_heretic = yes }
+						is_heresy_of = ROOT
+					}
+					trigger_else = {
+						is_heretic = no
+						religion_group = ROOT
+
+						NOR = {
+							religion = ROOT
+							religion_group = pagan_group
+						}
+					}
+
+					held_under_PREV = yes
+				}
+
+				# Prefer a heresy
+				preferred_limit = { is_heresy_of = ROOT }
+
+				# Prefer a member of the same religion group
+				preferred_limit = {
+					is_heretic = no
+					religion_group = ROOT
+
+					NOR = {
+						religion = ROOT
+						religion_group = pagan_group
+					}
+				}
+
+				reverse_religion = ROOT
+			}
+		}
+	}
+	# Or one not far away
+	else_if = {
+		limit = {
+			any_neighbor_independent_ruler = {
+				any_realm_province = {
+					held_under_PREV = yes
+
+					trigger_if = {
+						limit = { is_heretic = yes }
+						is_heresy_of = ROOT
+					}
+					trigger_else = {
+						is_heretic = no
+						religion_group = ROOT
+
+						NOR = {
+							religion = ROOT
+							religion_group = pagan_group
+						}
+					}
+
+					ROOT = {
+						location = {
+							distance = {
+								where = PREVPREV
+								value < 300
+							}
+						}
+					}
+				}
+			}
+		}
+
+		random_neighbor_independent_ruler = {
+			limit = {
+				any_realm_province = {
+					held_under_PREV = yes
+
+					trigger_if = {
+						limit = { is_heretic = yes }
+						is_heresy_of = ROOT
+					}
+					trigger_else = {
+						is_heretic = no
+						religion_group = ROOT
+
+						NOR = {
+							religion = ROOT
+							religion_group = pagan_group
+						}
+					}
+
+					ROOT = {
+						location = {
+							distance = {
+								where = PREVPREV
+								value < 300
+							}
+						}
+					}
+				}
+			}
+
+			random_realm_province = {
+				limit = {
+					trigger_if = {
+						limit = { is_heretic = yes }
+						is_heresy_of = ROOT
+					}
+					trigger_else = {
+						is_heretic = no
+						religion_group = ROOT
+
+						NOR = {
+							religion = ROOT
+							religion_group = pagan_group
+						}
+					}
+
+					held_under_PREV = yes
+
+					ROOT = {
+						location = {
+							distance = {
+								where = PREVPREV
+								value < 300
+							}
+						}
+					}
+				}
+
+				# Prefer a heresy
+				preferred_limit = { is_heresy_of = ROOT }
+
+				# Prefer a member of the same religion group
+				preferred_limit = {
+					is_heretic = no
+					religion_group = ROOT
+
+					NOR = {
+						religion = ROOT
+						religion_group = pagan_group
+					}
+				}
+
+				reverse_religion = ROOT
+			}
+		}
+	}
+
+	# ...otherwise, just pick a heresy
+	else_if = {
+		limit = { religion_group = christian }
+
+		if = {
+			limit = { religion = chalcedonian }
+
+			random_list = {
+				75 = {
+					trigger = {
+						location = {
+							OR = {
+								region = world_europe_west
+								region = world_europe_north
+								region = world_europe_south_italy
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.25
+
+						location = {
+							NOR = {
+								region = custom_aquitaine
+								region = custom_burgundy
+							}
+						}
+
+						NOT = { culture = occitan }
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						culture = occitan
+					}
+
+					religion = cathar
+				}
+
+				75 = {
+					trigger = {
+						location = {
+							OR = {
+								region = world_europe_west
+								region = world_europe_north
+								region = world_europe_south_italy
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.25
+						NOR = {
+							location = { region = custom_france }
+							culture = french
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						culture = french
+					}
+
+					religion = waldensian
+				}
+
+				75 = {
+					trigger = {
+						location = {
+							OR = {
+								region = world_europe_west
+								region = world_europe_north
+								region = world_europe_south_italy
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.25
+						NOT = { location = { region = world_europe_west_british_isles } }
+					}
+
+					religion = lollard
+				}
+
+				75 = {
+					trigger = {
+						location = {
+							OR = {
+								region = world_europe_west
+								region = world_europe_north
+								region = world_europe_south_italy
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.25
+						NOT = { location = { region = world_europe_west_iberia } }
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						culture_group = iberian
+					}
+
+					religion = adoptionist
+				}
+
+				75 = {
+					trigger = {
+						location = {
+							NOR = {
+								region = world_europe_west
+								region = world_europe_north
+								region = world_europe_south_italy
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.25
+
+						OR = {
+							culture_group = south_slavic
+
+							location = {
+								OR = {
+									region = custom_bulgaria
+									region = custom_croatia
+									region = custom_serbia
+								}
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						location = { region = custom_bulgaria }
+					}
+
+					religion = bogomilist
+				}
+
+				75 = {
+					trigger = {
+						location = {
+							NOR = {
+								region = world_europe_west
+								region = world_europe_north
+								region = world_europe_south_italy
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.25
+
+						NOT = { culture_group = arabic }
+
+						location = {
+							NOR = {
+								region = world_middle_east
+								region = custom_azerbaijan
+								region = custom_persia
+							}
+						}
+					}
+
+					religion = monothelite
+				}
+
+				75 = {
+					trigger = {
+						location = {
+							NOR = {
+								region = world_europe_west
+								region = world_europe_north
+								region = world_europe_south_italy
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.25
+						NOT = { location = { region = custom_byzantium } }
+					}
+
+					mult_modifier = {
+						factor = 1.5
+
+						OR = {
+							culture = greek
+							culture = pontic_greek
+						}
+					}
+
+					religion = iconoclast
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							culture = armenian
+
+							location = {
+								OR = {
+									region = custom_armenia
+									region = custom_georgia
+								}
+							}
+						}
+					}
+
+					religion = paulician
+				}
+
+				25 = {
+					mult_modifier = {
+						factor = 0.1
+
+						location = {
+							NOR = {
+								region = world_middle_east
+								region = world_africa
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						location = { region = world_africa_east }
+					}
+
+					religion = miaphysite
+				}
+
+				25 = {
+					trigger = {
+						location = {
+							OR = {
+								region = custom_armenia
+								region = custom_georgia
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						location = { region = custom_armenia }
+					}
+
+					religion = apostolic
+				}
+
+				25 = {
+					mult_modifier = {
+						factor = 0.1
+
+						location = {
+							NOR = {
+								region = world_india
+								region = world_steppe
+								region = world_middle_east
+								region = world_asia_minor
+								region = world_persia
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+
+						location = {
+							NOR = {
+								region = world_india
+								region = world_steppe
+								region = world_persia
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1200
+					}
+
+					religion = nestorian
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							trait = sympathy_zoroastrianism
+
+							location = {
+								OR = {
+									region = world_persia
+									region = world_steppe_east
+									region = world_steppe_tarim
+									region = world_middle_east_arabia
+								}
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 2
+						trait = sympathy_zoroastrianism
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1100
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1200
+					}
+
+					religion = manichaean
+				}
+
+				25 = {
+					mult_modifier = {
+						factor = 0.25
+
+						NOR = {
+							location = { region = world_middle_east_jerusalem }
+							culture_group = israelite
+							trait = sympathy_judaism
+						}
+					}
+
+					mult_modifier = {
+						factor = 2
+						trait = sympathy_judaism
+					}
+
+					religion = jewish
+				}
+
+				10 = {
+					become_heretic = yes
+				}
+			}
+		}
+		else_if = {
+			limit = { religion = catholic }
+
+			random_list = {
+				75 = {
+					trigger = {
+						OR = {
+							location = { region = world_europe_south_italy }
+							is_italian_trigger = yes
+						}
+					}
+
+					religion = fraticelli
+				}
+
+				75 = {
+					trigger = {
+						OR = {
+							culture = occitan
+
+							location = {
+								OR = {
+									region = custom_aquitaine
+									region = custom_burgundy
+								}
+							}
+						}
+					}
+
+					religion = cathar
+				}
+
+				75 = {
+					trigger = {
+						location = { region = world_europe_west_british_isles }
+					}
+
+					mult_modifier = {
+						factor = 0.5
+
+						NOR = {
+							location = { region = custom_england }
+							culture = english
+						}
+					}
+
+					religion = lollard
+				}
+
+				75 = {
+					trigger = {
+						OR = {
+							location = { region = custom_france }
+							culture = french
+						}
+					}
+
+					religion = waldensian
+				}
+
+				50 = {
+					trigger = {
+						location = { region = world_europe_west_iberia }
+					}
+
+					religion = adoptionist
+				}
+
+				75 = {
+					trigger = {
+						location = {
+							OR = {
+								region = world_europe_south_east
+								region = world_europe_east
+								region = world_asia_minor
+								region = world_middle_east_jerusalem
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.35
+
+						NOR = {
+							location = { region = custom_byzantium }
+							culture_group = byzantine
+							culture_group = east_slavic
+							culture_group = south_slavic
+						}
+					}
+
+					religion = orthodox
+				}
+
+				25 = {
+					trigger = {
+						location = {
+							OR = {
+								region = world_middle_east
+								region = world_africa
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						location = { region = world_africa_east }
+					}
+
+					religion = miaphysite
+				}
+
+				25 = {
+					trigger = {
+						location = {
+							OR = {
+								region = custom_armenia
+								region = custom_georgia
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						location = { region = custom_armenia }
+					}
+
+					religion = apostolic
+				}
+
+				25 = {
+					trigger = {
+						location = {
+							OR = {
+								region = world_india
+								region = world_steppe
+								region = world_middle_east
+								region = world_asia_minor
+								region = world_persia
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+
+						location = {
+							NOR = {
+								region = world_india
+								region = world_steppe
+								region = world_persia
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1200
+					}
+
+					religion = nestorian
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							trait = sympathy_zoroastrianism
+
+							location = {
+								OR = {
+									region = world_persia
+									region = world_steppe_east
+									region = world_steppe_tarim
+									region = world_middle_east_arabia
+								}
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 2
+						trait = sympathy_zoroastrianism
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1100
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1200
+					}
+
+					religion = manichaean
+				}
+
+				25 = {
+					mult_modifier = {
+						factor = 0.1
+
+						NOR = {
+							location = { region = world_middle_east_jerusalem }
+							culture_group = israelite
+							trait = sympathy_judaism
+						}
+					}
+
+					mult_modifier = {
+						factor = 2
+						trait = sympathy_judaism
+					}
+
+					religion = jewish
+				}
+
+				25 = {
+					become_heretic = yes
+				}
+			}
+		}
+
+		else_if = {
+			limit = { religion = orthodox }
+
+			random_list = {
+				50 = {
+					trigger = {
+						OR = {
+							culture_group = south_slavic
+
+							location = {
+								OR = {
+									region = custom_bulgaria
+									region = custom_croatia
+									region = custom_serbia
+								}
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						location = { region = custom_bulgaria }
+					}
+
+					religion = bogomilist
+				}
+
+				50 = {
+					trigger = {
+						location = { region = custom_byzantium }
+					}
+
+					religion = iconoclast
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							culture = armenian
+
+							location = {
+								OR = {
+									region = custom_armenia
+									region = custom_georgia
+								}
+							}
+						}
+					}
+
+					religion = paulician
+				}
+
+				50 = {
+					trigger = {
+						OR = {
+							culture_group = arabic
+
+							location = {
+								OR = {
+									region = world_middle_east
+									region = custom_azerbaijan
+									region = custom_persia
+								}
+							}
+						}
+					}
+
+					religion = monothelite
+				}
+
+				25 = {
+					trigger = {
+						location = {
+							OR = {
+								region = world_india
+								region = world_steppe
+								region = world_middle_east
+								region = world_asia_minor
+								region = world_persia
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+
+						location = {
+							NOR = {
+								region = world_india
+								region = world_steppe
+								region = world_persia
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1200
+					}
+
+					religion = nestorian
+				}
+
+				25 = {
+					trigger = {
+						location = {
+							OR = {
+								region = world_middle_east
+								region = world_africa
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						location = { region = world_africa_east }
+					}
+
+					religion = miaphysite
+				}
+
+				25 = {
+					trigger = {
+						location = {
+							OR = {
+								region = custom_armenia
+								region = custom_georgia
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						location = { region = custom_armenia }
+					}
+
+					religion = apostolic
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							trait = sympathy_zoroastrianism
+
+							location = {
+								OR = {
+									region = world_persia
+									region = world_steppe_east
+									region = world_steppe_tarim
+									region = world_middle_east_arabia
+								}
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 2
+						trait = sympathy_zoroastrianism
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1100
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1200
+					}
+
+					religion = manichaean
+				}
+
+				25 = {
+					trigger = {
+						location = {
+							OR = {
+								region = world_europe_west
+								region = world_europe_north
+								region = world_europe_south_italy
+								region = custom_croatia
+								region = custom_poland
+								region = custom_carpathia
+							}
+						}
+					}
+
+					religion = catholic
+				}
+
+				25 = {
+					mult_modifier = {
+						factor = 0.1
+
+						NOR = {
+							location = { region = world_middle_east_jerusalem }
+							culture_group = israelite
+							trait = sympathy_judaism
+						}
+					}
+
+					mult_modifier = {
+						factor = 2
+						trait = sympathy_judaism
+					}
+
+					religion = jewish
+				}
+
+				25 = {
+					become_heretic = yes
+				}
+			}
+		}
+		else_if = {
+			limit = { religion = nestorian }
+
+			random_list = {
+				25 = {
+					trigger = {
+						OR = {
+							trait = sympathy_zoroastrianism
+
+							location = {
+								OR = {
+									region = world_india
+									region = world_middle_east
+									region = world_steppe
+									region = world_persia
+								}
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 2
+						trait = sympathy_zoroastrianism
+					}
+
+					religion = manichaean
+				}
+
+				25 = {
+					trigger = {
+						location = {
+							OR = {
+								region = world_africa
+								region = world_middle_east
+							}
+						}
+					}
+
+					religion = miaphysite
+				}
+
+				25 = {
+					trigger = {
+						location = { region = world_asia_minor }
+					}
+
+					religion = apostolic
+				}
+
+				25 = {
+					trigger = {
+						location = { region = world_europe }
+					}
+
+					if = {
+						limit = { has_global_flag = schism_happened }
+						religion = orthodox
+					}
+					else = {
+						religion = chalcedonian
+					}
+				}
+
+				50 = {
+					become_heretic = yes
+				}
+			}
+		}
+		else_if = {
+			limit = { religion = miaphysite }
+
+			random_list = {
+				25 = {
+					trigger = {
+						trait = sympathy_zoroastrianism
+
+						location = {
+							OR = {
+								region = world_india
+								region = world_middle_east
+								region = world_steppe
+								region = world_persia
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 2
+						trait = sympathy_zoroastrianism
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1100
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1200
+					}
+
+					religion = manichaean
+				}
+
+				25 = {
+					trigger = {
+						location = {
+							OR = {
+								region = world_india
+								region = world_africa
+								region = world_steppe
+								region = world_middle_east
+								region = world_persia
+							}
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1200
+					}
+
+					religion = nestorian
+				}
+
+				25 = {
+					trigger = {
+						location = { region = world_asia_minor }
+					}
+
+					religion = apostolic
+				}
+
+				25 = {
+					trigger = {
+						location = {
+							OR = {
+								region = world_europe
+								region = world_middle_east
+							}
+						}
+					}
+
+					if = {
+						limit = { has_global_flag = schism_happened }
+						religion = orthodox
+					}
+					else = {
+						religion = chalcedonian
+					}
+				}
+
+				25 = {
+					religion = monophysite
+				}
+			}
+		}
+		else = {
+			become_heretic = yes
+		}
+	}
+	else_if = {
+		limit = { religion_group = muslim }
+
+		random_list = {
+			40 = {
+				trigger = {
+					NOT = { religion = sunni }
+				}
+
+				mult_modifier = {
+					factor = 0.25
+					religion = shiite
+				}
+
+				religion = sunni
+			}
+
+			20 = {
+				trigger = {
+					OR = {
+						culture = kurdish
+						trait = sympathy_zoroastrianism
+
+						location = {
+							OR = {
+								region = custom_armenia
+								region = custom_azerbaijan
+								region = custom_mesopotamia
+							}
+						}
+					}
+
+					NOT = { religion = yazidi }
+				}
+
+				mult_modifier = {
+					factor = 2
+					culture = kurdish
+				}
+
+				mult_modifier = {
+					factor = 0.25
+
+					location = { region = custom_mesopotamia }
+					NOT = { culture = kurdish }
+				}
+
+				religion = yazidi
+			}
+
+			20 = {
+				trigger = {
+					NOT = { religion = ibadi }
+				}
+
+				mult_modifier = {
+					factor = 0.5
+
+					NOT = { culture = bedouin_arabic }
+
+					location = {
+						NOR = {
+							region = world_africa
+							region = custom_arabia
+						}
+					}
+				}
+
+				mult_modifier = {
+					factor = 2
+					culture = bedouin_arabic
+				}
+
+				religion = ibadi
+			}
+
+			20 = {
+				trigger = {
+					OR = {
+						religion = ibadi
+						location = { region = world_middle_east_arabia }
+					}
+
+					NOT = { religion = kharijite }
+				}
+
+				religion = kharijite
+			}
+
+			40 = {
+				trigger = {
+					NOT = { religion = shiite }
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					religion = sunni
+				}
+
+				religion = shiite
+			}
+
+			20 = {
+				trigger = {
+					location = { region = world_europe_south_east }
+					NOT = { religion = bektashi }
+				}
+
+				religion = bektashi
+			}
+
+			20 = {
+				trigger = {
+					OR = {
+						location = { region = world_middle_east_jerusalem }
+						culture = levantine_arabic
+					}
+
+					NOT = { religion = druze }
+				}
+
+				mult_modifier = {
+					factor = 0.25
+
+					culture = levantine_arabic
+					NOT = { location = { region = world_middle_east_jerusalem } }
+				}
+
+				religion = druze
+			}
+
+			20 = {
+				trigger = {
+					NOT = { religion = hurufi }
+				}
+
+				religion = hurufi
+			}
+
+			10 = {
+				trigger = {
+					OR = {
+						culture = persian
+						trait = sympathy_zoroastrianism
+
+						location = {
+							OR = {
+								region = world_persia
+								region = custom_mesopotamia
+								region = custom_khwarizm
+							}
+						}
+					}
+				}
+
+				mult_modifier = {
+					factor = 2
+					location = { region = custom_persia }
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = sympathy_zoroastrianism
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					year >= 1200
+				}
+
+				religion = zoroastrian
+			}
+
+			10 = {
+				trigger = {
+					location = {
+						OR = {
+							region = world_india
+							region = world_middle_east
+							region = custom_azerbaijan
+							region = world_persia
+							region = world_steppe
+						}
+					}
+				}
+
+				mult_modifier = {
+					factor = 2
+					location = { region = world_steppe }
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					year >= 1100
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					year >= 1200
+				}
+
+				religion = manichaean
+			}
+
+			10 = {
+				trigger = {
+					OR = {
+						location = { region = custom_jerusalem }
+						trait = sympathy_judaism
+					}
+				}
+
+				religion = jewish
+			}
+
+			10 = {
+				trigger = {
+					location = { region = world_asia_minor }
+				}
+
+				mult_modifier = {
+					factor = 3
+					culture = armenian
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = sympathy_christendom
+				}
+
+				religion = apostolic
+			}
+
+			10 = {
+				trigger = {
+					OR = {
+						culture = egyptian_arabic
+						location = { region = world_africa }
+					}
+				}
+
+				mult_modifier = {
+					factor = 2.5
+					culture = egyptian_arabic
+				}
+
+				mult_modifier = {
+					factor = 0.5
+
+					location = {
+						NOR = {
+							region = custom_egypt
+							region = custom_abyssinia
+							region = custom_nubia
+						}
+					}
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = sympathy_christendom
+				}
+
+				religion = miaphysite
+			}
+
+			10 = {
+				trigger = {
+					location = {
+						OR = {
+							region = world_europe_south_east
+							region = world_europe_east
+						}
+					}
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = sympathy_christendom
+				}
+
+				mult_modifier = {
+					factor = 2.5
+
+					OR = {
+						culture_group = byzantine
+						culture_group = east_slavic
+						culture_group = south_slavic
+					}
+				}
+
+				mult_modifier = {
+					factor = 0.5
+
+					NOR = {
+						location = { region = custom_byzantium }
+						culture_group = byzantine
+						culture_group = east_slavic
+						culture_group = south_slavic
+					}
+				}
+
+				if = {
+					limit = { has_global_flag = schism_happened }
+					religion = orthodox
+				}
+				else = {
+					religion = chalcedonian
+				}
+			}
+
+			10 = {
+				trigger = {
+					location = {
+						OR = {
+							region = world_europe_west
+							region = world_europe_north
+							region = world_europe_south_italy
+						}
+					}
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = sympathy_christendom
+				}
+
+				if = {
+					limit = { has_global_flag = schism_happened }
+					religion = catholic
+				}
+				else = {
+					religion = chalcedonian
+				}
+			}
+
+			10 = {
+				become_heretic = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { religion_group = jewish_group }
+
+		random_list = {
+			75 = {
+				trigger = {
+					culture_group = altaic
+					NOT = { religion = karaite }
+				}
+
+				religion = karaite
+			}
+
+			25 = {
+				trigger = {
+					location = {
+						OR = {
+							region = world_europe_south_east
+							region = world_europe_east
+						}
+					}
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = sympathy_christendom
+				}
+
+				mult_modifier = {
+					factor = 0.5
+
+					NOR = {
+						location = { region = custom_byzantium }
+						culture_group = byzantine
+						culture_group = east_slavic
+						culture_group = south_slavic
+					}
+				}
+
+				if = {
+					limit = { has_global_flag = schism_happened }
+					religion = orthodox
+				}
+				else = {
+					religion = chalcedonian
+				}
+			}
+
+			25 = {
+				trigger = {
+					location = {
+						OR = {
+							region = world_europe_west
+							region = world_europe_north
+							region = world_europe_south_italy
+						}
+					}
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = sympathy_christendom
+				}
+
+				if = {
+					limit = { has_global_flag = schism_happened }
+					religion = catholic
+				}
+				else = {
+					religion = chalcedonian
+				}
+			}
+
+			25 = {
+				trigger = {
+					location = { region = world_asia_minor }
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = sympathy_christendom
+				}
+
+				religion = apostolic
+			}
+
+			25 = {
+				trigger = {
+					location = { region = world_africa }
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					trait = sympathy_christendom
+				}
+				religion = miaphysite
+			}
+
+			50 = {
+				mult_modifier = {
+					factor = 0.25
+					culture_group = altaic
+				}
+
+				become_heretic = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { religion_group = zoroastrian_group }
+
+		random_list = {
+			50 = {
+				trigger  = {
+					NOT = { religion = zoroastrian }
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					religion = manichaean
+				}
+
+				religion = zoroastrian
+			}
+
+			50 = {
+				trigger = {
+					NOT = { religion = manichaean }
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					religion = zoroastrian
+				}
+
+				religion = manichaean
+			}
+
+			50 = {
+				trigger = {
+					OR = {
+						culture = kurdish
+
+						location = {
+							OR = {
+								region = custom_armenia
+								region = custom_azerbaijan
+								region = custom_mesopotamia
+							}
+						}
+					}
+
+					NOT = { religion = yazidi }
+				}
+
+				mult_modifier = {
+					factor = 0.25
+
+					location = { region = custom_mesopotamia }
+					NOT = { culture = kurdish }
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = sympathy_islam
+				}
+
+				mult_modifier = {
+					factor = 2
+					culture = kurdish
+				}
+
+				religion = yazidi
+			}
+
+			50 = {
+				mult_modifier = {
+					factor = 2
+					trait = sympathy_islam
+				}
+
+				religion = shiite
+			}
+
+			50 = {
+				trigger = { religion = manichaean }
+
+				mult_modifier = {
+					factor = 2
+					trait = sympathy_christendom
+				}
+
+				religion = nestorian
+			}
+
+			20 = {
+				trigger = {
+					location = { region = world_asia_minor }
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = sympathy_christendom
+				}
+
+				religion = apostolic
+			}
+
+			20 = {
+				trigger = {
+					location = { region = world_africa }
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = sympathy_christendom
+				}
+
+				religion = miaphysite
+			}
+
+			50 = {
+				become_heretic = yes
+			}
+		}
+	}
+	else = {
+		become_heretic = yes
+	}
+}
+
+heresy_province_effect = {
+	# Search nearby first
+	if = {
+		limit = {
+			any_neighbor_province = {
+				has_owner = yes
+
+				trigger_if = {
+					limit = { is_heretic = yes }
+					is_heresy_of = ROOT
+				}
+				trigger_else = {
+					is_heretic = no
+					religion_group = ROOT
+
+					NOR = {
+						religion = ROOT
+						religion_group = pagan_group
+					}
+				}
+			}
+		}
+
+		random_neighbor_province = {
+			limit = {
+				has_owner = yes
+
+				trigger_if = {
+					limit = { is_heretic = yes }
+					is_heresy_of = ROOT
+				}
+				trigger_else = {
+					is_heretic = no
+					religion_group = ROOT
+
+					NOR = {
+						religion = ROOT
+						religion_group = pagan_group
+					}
+				}
+			}
+
+			# Prefer a neighboring heresy
+			preferred_limit = { is_heresy_of = ROOT }
+
+			# Prefer a neighboring member of the same religion group
+			preferred_limit = {
+				is_heretic = no
+				religion_group = ROOT
+
+				NOR = {
+					religion = ROOT
+					religion_group = pagan_group
+				}
+			}
+
+			reverse_religion = ROOT
+		}
+	}
+	# Prefer an existing heresy in the realm
+	else_if = {
+		limit = {
+			owner = {
+				top_liege = {
+					any_realm_province = {
+						held_under_PREV = yes
+
+						trigger_if = {
+							limit = { is_heretic = yes }
+							is_heresy_of = ROOT
+						}
+						trigger_else = {
+							is_heretic = no
+							religion_group = ROOT
+
+							NOR = {
+								religion = ROOT
+								religion_group = pagan_group
+							}
+						}
+					}
+				}
+			}
+		}
+
+		# Prefer an existing heresy in the realm
+		owner = {
+			top_liege = {
+				random_realm_province = {
+					limit = {
+						trigger_if = {
+							limit = { is_heretic = yes }
+							is_heresy_of = ROOT
+						}
+						trigger_else = {
+							is_heretic = no
+							religion_group = ROOT
+
+							NOR = {
+								religion = ROOT
+								religion_group = pagan_group
+							}
+						}
+
+						held_under_PREV = yes
+					}
+
+					# Prefer a heresy
+					preferred_limit = { is_heresy_of = ROOT }
+
+					# Prefer a member of the same religion group
+					preferred_limit = {
+						is_heretic = no
+						religion_group = ROOT
+
+						NOR = {
+							religion = ROOT
+							religion_group = pagan_group
+						}
+					}
+
+					reverse_religion = ROOT
+				}
+			}
+		}
+	}
+	# Or one not far away
+	else_if = {
+		limit = {
+			owner = {
+				any_neighbor_independent_ruler = {
+					any_realm_province = {
+						held_under_PREV = yes
+
+						trigger_if = {
+							limit = { is_heretic = yes }
+							is_heresy_of = ROOT
+						}
+						trigger_else = {
+							is_heretic = no
+							religion_group = ROOT
+
+							NOR = {
+								religion = ROOT
+								religion_group = pagan_group
+							}
+						}
+
+						ROOT = {
+							location = {
+								distance = {
+									where = PREVPREV
+									value < 300
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		owner = {
+			random_neighbor_independent_ruler = {
+				limit = {
+					any_realm_province = {
+						held_under_PREV = yes
+
+						trigger_if = {
+							limit = { is_heretic = yes }
+							is_heresy_of = ROOT
+						}
+						trigger_else = {
+							is_heretic = no
+							religion_group = ROOT
+
+							NOR = {
+								religion = ROOT
+								religion_group = pagan_group
+							}
+						}
+
+						ROOT = {
+							location = {
+								distance = {
+									where = PREVPREV
+									value < 300
+								}
+							}
+						}
+					}
+				}
+
+				random_realm_province = {
+					limit = {
+						trigger_if = {
+							limit = { is_heretic = yes }
+							is_heresy_of = ROOT
+						}
+						trigger_else = {
+							is_heretic = no
+							religion_group = ROOT
+
+							NOR = {
+								religion = ROOT
+								religion_group = pagan_group
+							}
+						}
+
+						held_under_PREV = yes
+
+						ROOT = {
+							location = {
+								distance = {
+									where = PREVPREV
+									value < 300
+								}
+							}
+						}
+					}
+
+					# Prefer a heresy
+					preferred_limit = { is_heresy_of = ROOT }
+
+					# Prefer a member of the same religion group
+					preferred_limit = {
+						is_heretic = no
+						religion_group = ROOT
+
+						NOR = {
+							religion = ROOT
+							religion_group = pagan_group
+						}
+					}
+
+					reverse_religion = ROOT
+				}
+			}
+		}
+	}
+
+	# ...otherwise, just pick a heresy
+	else_if = {
+		limit = { religion_group = christian }
+
+		if = {
+			limit = { religion = chalcedonian }
+
+			random_list = {
+				75 = {
+					trigger = {
+						OR = {
+							region = world_europe_west
+							region = world_europe_north
+							region = world_europe_south_italy
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.25
+
+						NOR = {
+							region = custom_aquitaine
+							region = custom_burgundy
+							culture = occitan
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						culture = occitan
+					}
+
+					religion = cathar
+				}
+
+				75 = {
+					trigger = {
+						OR = {
+							region = world_europe_west
+							region = world_europe_north
+							region = world_europe_south_italy
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.25
+
+						NOR = {
+							region = custom_france
+							culture = french
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						culture = french
+					}
+
+					religion = waldensian
+				}
+
+				75 = {
+					trigger = {
+						OR = {
+							region = world_europe_west
+							region = world_europe_north
+							region = world_europe_south_italy
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.25
+						NOT = { region = world_europe_west_british_isles }
+					}
+
+					religion = lollard
+				}
+
+				75 = {
+					trigger = {
+						OR = {
+							region = world_europe_west
+							region = world_europe_north
+							region = world_europe_south_italy
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.25
+						NOT = { region = world_europe_west_iberia }
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						culture_group = iberian
+					}
+
+					religion = adoptionist
+				}
+
+				75 = {
+					trigger = {
+						NOR = {
+							region = world_europe_west
+							region = world_europe_north
+							region = world_europe_south_italy
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.25
+
+						NOR = {
+							region = custom_bulgaria
+							region = custom_croatia
+							region = custom_serbia
+							culture_group = south_slavic
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						region = custom_bulgaria
+					}
+
+					religion = bogomilist
+				}
+
+				75 = {
+					trigger = {
+						NOR = {
+							region = world_europe_west
+							region = world_europe_north
+							region = world_europe_south_italy
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.25
+
+						NOR = {
+							region = world_middle_east
+							region = custom_azerbaijan
+							region = custom_persia
+							culture_group = arabic
+						}
+					}
+
+					religion = monothelite
+				}
+
+				75 = {
+					trigger = {
+						NOR = {
+							region = world_europe_west
+							region = world_europe_north
+							region = world_europe_south_italy
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.25
+						NOT = { region = custom_byzantium }
+					}
+
+					mult_modifier = {
+						factor = 1.5
+
+						OR = {
+							culture = greek
+							culture = pontic_greek
+						}
+					}
+
+					religion = iconoclast
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							region = custom_armenia
+							region = custom_georgia
+							culture = armenian
+						}
+					}
+
+					religion = paulician
+				}
+
+				25 = {
+					mult_modifier = {
+						factor = 0.1
+
+						NOR = {
+							region = world_middle_east
+							region = world_africa
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						region = world_africa_east
+					}
+
+					religion = miaphysite
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							region = custom_armenia
+							region = custom_georgia
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						region = custom_armenia
+					}
+
+					religion = apostolic
+				}
+
+				25 = {
+					mult_modifier = {
+						factor = 0.1
+
+						NOR = {
+							region = world_india
+							region = world_steppe
+							region = world_middle_east
+							region = world_asia_minor
+							region = world_persia
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+
+						NOR = {
+							region = world_india
+							region = world_steppe
+							region = world_persia
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1200
+					}
+
+					religion = nestorian
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							region = world_persia
+							region = world_steppe_east
+							region = world_steppe_tarim
+							region = world_middle_east_arabia
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1100
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1200
+					}
+
+					religion = manichaean
+				}
+
+				25 = {
+					mult_modifier = {
+						factor = 0.25
+
+						NOR = {
+							region = world_middle_east_jerusalem
+							culture_group = israelite
+						}
+					}
+
+					religion = jewish
+				}
+
+				10 = {
+					become_heretic = yes
+				}
+			}
+		}
+		else_if = {
+			limit = { religion = catholic }
+
+			random_list = {
+				75 = {
+					trigger = {
+						OR = {
+							region = world_europe_south_italy
+							is_italian_trigger = yes
+						}
+					}
+
+					religion = fraticelli
+				}
+
+				75 = {
+					trigger = {
+						OR = {
+							region = custom_aquitaine
+							region = custom_burgundy
+							culture = occitan
+						}
+					}
+
+					religion = cathar
+				}
+
+				75 = {
+					trigger = { region = world_europe_west_british_isles }
+
+					mult_modifier = {
+						factor = 0.5
+
+						NOR = {
+							region = custom_england
+							culture = english
+						}
+					}
+
+					religion = lollard
+				}
+
+				75 = {
+					trigger = {
+						OR = {
+							region = custom_france
+							culture = french
+						}
+					}
+
+					religion = waldensian
+				}
+
+				50 = {
+					trigger = { region = world_europe_west_iberia }
+					religion = adoptionist
+				}
+
+				75 = {
+					trigger = {
+						OR = {
+							region = world_europe_south_east
+							region = world_europe_east
+							region = world_asia_minor
+							region = world_middle_east_jerusalem
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.35
+
+						NOR = {
+							region = custom_byzantium
+							culture_group = byzantine
+							culture_group = east_slavic
+							culture_group = south_slavic
+						}
+					}
+
+					religion = orthodox
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							region = world_middle_east
+							region = world_africa
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						region = world_africa_east
+					}
+
+					religion = miaphysite
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							region = custom_armenia
+							region = custom_georgia
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						region = custom_armenia
+					}
+
+					religion = apostolic
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							region = world_india
+							region = world_steppe
+							region = world_middle_east
+							region = world_asia_minor
+							region = world_persia
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+
+						NOR = {
+							region = world_india
+							region = world_steppe
+							region = world_persia
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1200
+					}
+
+					religion = nestorian
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							region = world_persia
+							region = world_steppe_east
+							region = world_steppe_tarim
+							region = world_middle_east_arabia
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1100
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1200
+					}
+
+					religion = manichaean
+				}
+
+				25 = {
+					mult_modifier = {
+						factor = 0.1
+
+						NOR = {
+							region = world_middle_east_jerusalem
+							culture_group = israelite
+						}
+					}
+
+					religion = jewish
+				}
+
+				25 = {
+					become_heretic = yes
+				}
+			}
+		}
+		else_if = {
+			limit = { religion = orthodox }
+
+			random_list = {
+				50 = {
+					trigger = {
+						OR = {
+							region = custom_bulgaria
+							region = custom_croatia
+							region = custom_serbia
+							culture_group = south_slavic
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						region = custom_bulgaria
+					}
+
+					religion = bogomilist
+				}
+
+				50 = {
+					trigger = { region = custom_byzantium }
+					religion = iconoclast
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							region = custom_armenia
+							region = custom_georgia
+							culture = armenian
+						}
+					}
+
+					religion = paulician
+				}
+
+				50 = {
+					trigger = {
+						OR = {
+							region = world_middle_east
+							region = custom_azerbaijan
+							region = custom_persia
+							culture_group = arabic
+						}
+					}
+
+					religion = monothelite
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							region = world_india
+							region = world_steppe
+							region = world_middle_east
+							region = world_asia_minor
+							region = world_persia
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+
+						NOR = {
+							region = world_india
+							region = world_steppe
+							region = world_persia
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1200
+					}
+
+					religion = nestorian
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							region = world_middle_east
+							region = world_africa
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						region = world_africa_east
+					}
+
+					religion = miaphysite
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							region = custom_armenia
+							region = custom_georgia
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						region = custom_armenia
+					}
+
+					religion = apostolic
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							region = world_persia
+							region = world_steppe_east
+							region = world_steppe_tarim
+							region = world_middle_east_arabia
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1100
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1200
+					}
+
+					religion = manichaean
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							region = world_europe_west
+							region = world_europe_north
+							region = world_europe_south_italy
+							region = custom_croatia
+							region = custom_poland
+							region = custom_carpathia
+						}
+					}
+
+					religion = catholic
+				}
+
+				25 = {
+					mult_modifier = {
+						factor = 0.1
+
+						NOR = {
+							region = world_middle_east_jerusalem
+							culture_group = israelite
+						}
+					}
+
+					religion = jewish
+				}
+
+				25 = {
+					become_heretic = yes
+				}
+			}
+		}
+		else_if = {
+			limit = { religion = nestorian }
+
+			random_list = {
+				25 = {
+					trigger = {
+						OR = {
+							region = world_india
+							region = world_middle_east
+							region = world_steppe
+							region = world_persia
+						}
+					}
+
+					religion = manichaean
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							region = world_africa
+							region = world_middle_east
+						}
+					}
+
+					religion = miaphysite
+				}
+
+				25 = {
+					trigger = { region = world_asia_minor }
+					religion = apostolic
+				}
+
+				25 = {
+					trigger = { region = world_europe }
+
+					if = {
+						limit = { has_global_flag = schism_happened }
+						religion = orthodox
+					}
+					else = {
+						religion = chalcedonian
+					}
+				}
+
+				50 = {
+					become_heretic = yes
+				}
+			}
+		}
+		else_if = {
+			limit = { religion = miaphysite }
+
+			random_list = {
+				25 = {
+					trigger = {
+						OR = {
+							region = world_india
+							region = world_middle_east
+							region = world_steppe
+							region = world_persia
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1100
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1200
+					}
+
+					religion = manichaean
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							region = world_india
+							region = world_africa
+							region = world_steppe
+							region = world_middle_east
+							region = world_persia
+						}
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						year >= 1200
+					}
+
+					religion = nestorian
+				}
+
+				25 = {
+					trigger = { region = world_asia_minor }
+					religion = apostolic
+				}
+
+				25 = {
+					trigger = {
+						OR = {
+							region = world_europe
+							region = world_middle_east
+						}
+					}
+
+					if = {
+						limit = { has_global_flag = schism_happened }
+						religion = orthodox
+					}
+					else = {
+						religion = chalcedonian
+					}
+				}
+
+				25 = {
+					religion = monophysite
+				}
+			}
+		}
+		else = {
+			become_heretic = yes
+		}
+	}
+	else_if = {
+		limit = { religion_group = muslim }
+
+		random_list = {
+			40 = {
+				trigger = {
+					NOT = { religion = sunni }
+				}
+
+				mult_modifier = {
+					factor = 0.25
+					religion = shiite
+				}
+
+				religion = sunni
+			}
+
+			20 = {
+				trigger = {
+					OR = {
+						culture = kurdish
+						region = custom_armenia
+						region = custom_azerbaijan
+						region = custom_mesopotamia
+					}
+
+					NOT = { religion = yazidi }
+				}
+
+				mult_modifier = {
+					factor = 2
+					culture = kurdish
+				}
+
+				mult_modifier = {
+					factor = 0.25
+
+					region = custom_mesopotamia
+					NOT = { culture = kurdish }
+				}
+
+				religion = yazidi
+			}
+
+			20 = {
+				trigger = {
+					NOT = { religion = ibadi }
+				}
+
+				mult_modifier = {
+					factor = 0.5
+
+					NOR = {
+						region = world_africa
+						region = custom_arabia
+						culture = bedouin_arabic
+					}
+				}
+
+				mult_modifier = {
+					factor = 2
+					culture = bedouin_arabic
+				}
+
+				religion = ibadi
+			}
+
+			20 = {
+				trigger = {
+					OR = {
+						religion = ibadi
+						region = world_middle_east_arabia
+					}
+
+					NOT = { religion = kharijite }
+				}
+
+				religion = kharijite
+			}
+
+			40 = {
+				trigger = {
+					NOT = { religion = shiite }
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					religion = sunni
+				}
+
+				religion = shiite
+			}
+
+			20 = {
+				trigger = {
+					region = world_europe_south_east
+					NOT = { religion = bektashi }
+				}
+
+				religion = bektashi
+			}
+
+			20 = {
+				trigger = {
+					OR = {
+						region = world_middle_east_jerusalem
+						culture = levantine_arabic
+					}
+
+					NOT = { religion = druze }
+				}
+
+				mult_modifier = {
+					factor = 0.25
+
+					culture = levantine_arabic
+					NOT = { region = world_middle_east_jerusalem }
+				}
+
+				religion = druze
+			}
+
+			20 = {
+				trigger = {
+					NOT = { religion = hurufi }
+				}
+
+				religion = hurufi
+			}
+
+			10 = {
+				trigger = {
+					OR = {
+						region = world_persia
+						region = custom_mesopotamia
+						region = custom_khwarizm
+						culture = persian
+					}
+				}
+
+				mult_modifier = {
+					factor = 2
+					region = custom_persia
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					year >= 1200
+				}
+
+				religion = zoroastrian
+			}
+
+			10 = {
+				trigger = {
+					OR = {
+						region = world_india
+						region = world_middle_east
+						region = custom_azerbaijan
+						region = world_persia
+						region = world_steppe
+					}
+				}
+
+				mult_modifier = {
+					factor = 2
+					region = world_steppe
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					year >= 1100
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					year >= 1200
+				}
+
+				religion = manichaean
+			}
+
+			10 = {
+				trigger = { region = custom_jerusalem }
+				religion = jewish
+			}
+			10 = {
+				trigger = { region = world_asia_minor }
+
+				mult_modifier = {
+					factor = 3
+					culture = armenian
+				}
+				religion = apostolic
+			}
+
+			10 = {
+				trigger = { region = world_africa }
+
+				mult_modifier = {
+					factor = 2.5
+					culture = egyptian_arabic
+				}
+
+				mult_modifier = {
+					factor = 0.5
+
+					location = {
+						NOR = {
+							region = custom_egypt
+							region = custom_abyssinia
+							region = custom_nubia
+						}
+					}
+				}
+
+				religion = miaphysite
+			}
+
+			10 = {
+				trigger = {
+					OR = {
+						region = world_europe_south_east
+						region = world_europe_east
+					}
+				}
+
+				mult_modifier = {
+					factor = 2.5
+
+					OR = {
+						culture_group = byzantine
+						culture_group = east_slavic
+						culture_group = south_slavic
+					}
+				}
+
+				mult_modifier = {
+					factor = 0.5
+
+					NOR = {
+						region = custom_byzantium
+						culture_group = byzantine
+						culture_group = east_slavic
+						culture_group = south_slavic
+					}
+				}
+
+				if = {
+					limit = { has_global_flag = schism_happened }
+					religion = orthodox
+				}
+				else = {
+					religion = chalcedonian
+				}
+			}
+
+			10 = {
+				trigger = {
+					OR = {
+						region = world_europe_west
+						region = world_europe_north
+						region = world_europe_south_italy
+					}
+				}
+
+				if = {
+					limit = { has_global_flag = schism_happened }
+					religion = catholic
+				}
+				else = {
+					religion = chalcedonian
+				}
+			}
+
+			10 = {
+				become_heretic = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { religion_group = jewish_group }
+
+		random_list = {
+			75 = {
+				trigger = {
+					culture_group = altaic
+					NOT = { religion = karaite }
+				}
+
+				religion = karaite
+			}
+
+			25 = {
+				trigger = {
+					OR = {
+						region = world_europe_south_east
+						region = world_europe_east
+					}
+				}
+
+				mult_modifier = {
+					factor = 0.5
+
+					NOR = {
+						region = custom_byzantium
+						culture_group = byzantine
+						culture_group = east_slavic
+						culture_group = south_slavic
+					}
+				}
+
+				if = {
+					limit = { has_global_flag = schism_happened }
+					religion = orthodox
+				}
+				else = {
+					religion = chalcedonian
+				}
+			}
+
+			25 = {
+				trigger = {
+					OR = {
+						region = world_europe_west
+						region = world_europe_north
+						region = world_europe_south_italy
+					}
+				}
+
+				if = {
+					limit = { has_global_flag = schism_happened }
+					religion = catholic
+				}
+				else = {
+					religion = chalcedonian
+				}
+			}
+
+			25 = {
+				trigger = { region = world_asia_minor }
+				religion = apostolic
+			}
+
+			25 = {
+				trigger = { region = world_africa }
+				religion = miaphysite
+			}
+
+			50 = {
+				mult_modifier = {
+					factor = 0.25
+					culture_group = altaic
+				}
+
+				become_heretic = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { religion_group = zoroastrian_group }
+
+		random_list = {
+			50 = {
+				trigger = {
+					NOT = { religion = zoroastrian }
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					religion = manichaean
+				}
+
+				religion = zoroastrian
+			}
+
+			50 = {
+				trigger = {
+					NOT = { religion = manichaean }
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					religion = zoroastrian
+				}
+
+				religion = manichaean
+			}
+
+			50 = {
+				trigger = {
+					OR = {
+						culture = kurdish
+						region = custom_armenia
+						region = custom_azerbaijan
+						region = custom_mesopotamia
+					}
+
+					NOT = { religion = yazidi }
+				}
+
+				mult_modifier = {
+					factor = 0.25
+
+					region = custom_mesopotamia
+					NOT = { culture = kurdish }
+				}
+
+				mult_modifier = {
+					factor = 2
+					culture = kurdish
+				}
+
+				religion = yazidi
+			}
+
+			50 = {
+				religion = shiite
+			}
+
+			50 = {
+				trigger = { religion = manichaean }
+				religion = nestorian
+			}
+
+			25 = {
+				trigger = { region = world_asia_minor }
+				religion = apostolic
+			}
+
+			25 = {
+				trigger = { region = world_africa }
+				religion = miaphysite
+			}
+
+			50 = {
+				become_heretic = yes
+			}
+		}
+	}
+	else = {
+		become_heretic = yes
+	}
+}
+
+
+# used in scope of revolter who was previously-landed, to verify government type
+landless_government_check_effect = {
+	if = {
+		limit = {
+			OR = {
+				is_theocracy = yes
+				is_republic = yes
+
+				AND = {
+					is_feudal = yes
+					num_of_demesne_castles == 0
+				}
+
+				AND = {
+					is_tribal = yes
+					num_of_demesne_tribes == 0
+				}
+
+				AND = {
+					is_nomadic = yes
+
+					NOT = {
+						any_demesne_title = {
+							real_tier = BARON
+							holding_type = nomad
+						}
+					}
+				}
+			}
+		}
+
+		# First priority: Feudal
+		if = {
+			limit = {
+				any_demesne_title = {
+					real_tier = BARON
+					holding_type = castle
+					location = { culture = ROOT }
+				}
+			}
+
+			if = {
+				limit = { religion_group = muslim }
+				log = "----> [Root.GetBestName] has been set to iqta government (Liberation Revolt)"
+				set_government_type = muslim_government
+			}
+			else = {
+				log = "----> [Root.GetBestName] has been set to feudal government (Liberation Revolt)"
+				set_government_type = feudal_government
+			}
+		}
+
+		# Second priority: Nomadic
+		else_if = {
+			limit = {
+				OR = {
+					any_demesne_title = {
+						real_tier = BARON
+						holding_type = nomad
+						location = { culture = ROOT }
+					}
+
+					any_demesne_province = {
+						culture = ROOT
+						num_of_settlements < 1
+						owned_by = PREV
+					}
+				}
+			}
+
+			log = "----> [Root.GetBestName] has been set to nomadic government (Liberation Revolt)"
+			set_government_type = nomadic_government
+		}
+
+		# Third priority: Tribal
+		else_if = {
+			limit = {
+				any_demesne_title = {
+					real_tier = BARON
+					holding_type = tribal
+					location = { culture = ROOT }
+				}
+			}
+
+			log = "----> [Root.GetBestName] has been set to tribal government (Liberation Revolt)"
+			set_government_type = tribal_government
+		}
+	}
+}
+
+marry_to_ROOT_effect = {
+	if = {
+		limit = { ROOT = { father_even_if_dead = { always = yes } } }
+		ROOT = { father_even_if_dead = { save_event_target_as = father_rank } }
+	}
+
+	if = {
+		limit = { ROOT = { mother_even_if_dead = { always = yes } } }
+		ROOT = { mother_even_if_dead = { save_event_target_as = mother_rank } }
+	}
+
+	if = {
+		limit = {
+			ROOT = {
+				wants_matrilineal_marriage_trigger = yes
+				can_marry_matrilineally_trigger = yes
+			}
+
+			NOT = { dynasty = ROOT }
+			can_marry_matrilineally_trigger = yes
+
+			OR = {
+				AND = {
+					ROOT = { is_ruler = yes }
+
+					NOR = {
+						higher_real_tier_than = ROOT
+						higher_real_tier_than = event_target:father_rank
+						higher_real_tier_than = event_target:mother_rank
+
+						father_even_if_dead = {
+							OR = {
+								higher_real_tier_than = ROOT
+								higher_real_tier_than = event_target:father_rank
+								higher_real_tier_than = event_target:mother_rank
+							}
+						}
+
+						mother_even_if_dead = {
+							OR = {
+								higher_real_tier_than = ROOT
+								higher_real_tier_than = event_target:father_rank
+								higher_real_tier_than = event_target:mother_rank
+							}
+						}
+					}
+				}
+
+				AND = {
+					ROOT = {
+						is_ruler = no
+						father_even_if_dead = { is_ruler = yes }
+					}
+
+					NOR = {
+						higher_real_tier_than = event_target:father_rank
+						father_even_if_dead = { higher_real_tier_than = event_target:father_rank }
+						mother_even_if_dead = { higher_real_tier_than = event_target:father_rank }
+					}
+				}
+
+				AND = {
+					ROOT = {
+						is_ruler = no
+						mother_even_if_dead = { is_ruler = yes }
+					}
+
+					NOR = {
+						higher_real_tier_than = event_target:mother_rank
+						father_even_if_dead = { higher_real_tier_than = event_target:mother_rank }
+						mother_even_if_dead = { higher_real_tier_than = event_target:mother_rank }
+					}
+				}
+			}
+		}
+
+		log = "---> the above marriage is matrilineal"
+		add_spouse_matrilineal = ROOT
+	}
+	else = {
+		add_spouse = ROOT
+	}
+}
+
+pardon_effect = {
+	hidden_effect = {
+		reverse_remove_opinion = { who = FROM name = opinion_dishonorable }
+		reverse_remove_opinion = { who = FROM name = opinion_traitor }
+		reverse_remove_opinion = { who = FROM name = opinion_rebel_traitor }
+		reverse_remove_opinion = { who = FROM name = opinion_regicide_traitor }
+		reverse_remove_opinion = { who = FROM name = opinion_targeted_by_adventurer }
+		reverse_remove_opinion = { who = FROM name = slut_seductress }
+		reverse_remove_opinion = { who = FROM name = attempted_murder_of_spouse }
+		reverse_remove_opinion = { who = FROM name = attempted_murder_of_child }
+		reverse_remove_opinion = { who = FROM name = attempted_murder_of_parent }
+		reverse_remove_opinion = { who = FROM name = attempted_murder_of_sibling }
+		reverse_remove_opinion = { who = FROM name = attempted_murder_of_vassal }
+		reverse_remove_opinion = { who = FROM name = attempted_murder }
+		reverse_remove_opinion = { who = FROM name = opinion_spouse_slayer }
+		reverse_remove_opinion = { who = FROM name = opinion_murder_attempt }
+		reverse_remove_opinion = { who = FROM name = opinion_killed_close_kin }
+		reverse_remove_opinion = { who = FROM name = opinion_fatwa_target }
+		reverse_remove_opinion = { who = FROM name = opinion_refused_order }
+		reverse_remove_opinion = { who = FROM name = opinion_witch }
+		reverse_remove_opinion = { who = FROM name = opinion_takfir }
+		reverse_remove_opinion = { who = FROM name = opinion_unfaithful_wife }
+		reverse_remove_opinion = { who = FROM name = opinion_unfaithful_husband }
+		reverse_remove_opinion = { who = FROM name = opinion_cuckolded }
+		reverse_remove_opinion = { who = FROM name = opinion_charge_heresiarch }
+		reverse_remove_opinion = { who = FROM name = opinion_charge_infidel }
+		reverse_remove_opinion = { who = FROM name = opinion_charge_deviant }
+		reverse_remove_opinion = { who = FROM name = opinion_charge_illegitimate }
+		reverse_remove_opinion = { who = FROM name = opinion_charge_traitor }
+		reverse_remove_opinion = { who = FROM name = opinion_charge_slanderer }
+		reverse_remove_opinion = { who = FROM name = abuse_of_office }
+		reverse_remove_opinion = { who = FROM name = opinion_charge_traitor }
+		reverse_remove_opinion = { who = FROM name = attempted_kidnapping }
+		reverse_remove_opinion = { who = FROM name = attempted_kidnapping_of_kin }
+		reverse_remove_opinion = { who = FROM name = attempted_kidnapping_of_vassal }
+		reverse_remove_opinion = { who = FROM name = attempted_murder_of_close_kin }
+		reverse_remove_opinion = { who = FROM name = devious_plotter }
+		reverse_remove_opinion = { who = FROM name = killed_vassal }
+		reverse_remove_opinion = { who = FROM name = mad_heretic }
+		reverse_remove_opinion = { who = FROM name = opinion_civil_war_loser }
+		reverse_remove_opinion = { who = FROM name = opinion_independent }
+		reverse_remove_opinion = { who = FROM name = opinion_kidnapped_kin }
+		reverse_remove_opinion = { who = FROM name = opinion_eloped_target }
+	}
+}
+
+remove_possessed_effect = {
+	remove_trait = possessed
+
+	hidden_effect = {
+		remove_character_modifier = voice_of_satan
+		remove_character_modifier = voice_of_jesus
+		remove_character_modifier = speaking_in_tounges
+		remove_character_modifier = holy_comet
+		remove_character_modifier = lycanthropy
+		clr_character_flag = demon_child
+		clr_character_flag = demon_child_fake
+		clr_character_flag = child_exorcism
+		clr_character_flag = changeling_child
+		clr_character_flag = changeling_child_fake
+		clr_character_flag = changeling_trade
+		clr_character_flag = seelie
+		clr_character_flag = unseelie
+	}
+}
+
+# ROOT = liege who originally sent relative away, FROM = relative
+return_home_effect = {
+	if = {
+		limit = { is_ruler = yes }
+
+		FROM = {
+			show_scope_change = no
+			move_character = ROOT
+		}
+	}
+	else = {
+		random_dynasty_member = {
+			show_scope_change = no
+
+			limit = { is_ruler = yes }
+
+			FROM = {
+				show_scope_change = no
+				move_character = PREV
+			}
+		}
+	}
+}
+
+save_viceroy_pick_effect = {
+	if = {
+		limit = {
+			NOT = { event_target:council_first_pick = { always = yes } }
+		}
+		save_event_target_as = council_first_pick
+	}
+	else_if = {
+		limit = {
+			NOT = { event_target:council_second_pick = { always = yes } }
+		}
+		save_event_target_as = council_second_pick
+	}
+	else_if = {
+		limit = {
+			NOT = { event_target:council_third_pick = { always = yes } }
+		}
+		save_event_target_as = council_third_pick
+	}
+}
+
+sell_estates_effect = {
+	if = {
+		limit = { has_minor_title = title_lord }
+		remove_title = title_lord
+	}
+
+	if = {
+		limit = { has_character_modifier = estates_1 }
+		remove_character_modifier = estates_1
+		wealth = 40
+	}
+}
+
+siege_capture_check_effect = {
+	random_list = {
+		30 = {
+			mult_modifier = {
+				factor = 1.2
+
+				OR = {
+					higher_real_tier_than = BARON
+					father = { higher_real_tier_than = BARON }
+					mother = { higher_real_tier_than = BARON }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+
+				OR = {
+					higher_real_tier_than = COUNT
+					father = { higher_real_tier_than = COUNT }
+					mother = { higher_real_tier_than = COUNT }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+
+				OR = {
+					higher_real_tier_than = DUKE
+					father = { higher_real_tier_than = DUKE }
+					mother = { higher_real_tier_than = DUKE }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+
+				OR = {
+					higher_real_tier_than = KING
+					father = { higher_real_tier_than = KING }
+					mother = { higher_real_tier_than = KING }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				is_adult = no
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = infirm
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = wounded
+			}
+
+			mult_modifier = {
+				factor = 0.25
+				trait = maimed
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 12
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 13
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 14
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 15
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 16
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 17
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 18
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 19
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 20
+			}
+
+			mult_modifier = {
+				factor = 4
+				is_inaccessible_trigger = yes
+			}
+
+			custom_tooltip = { text = siege_escaped }
+		}
+
+		20 = {
+			mult_modifier = {
+				factor = 2
+				trait = brave
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = craven
+			}
+
+			character_event = {
+				id = Plus.1032
+				tooltip = siege_injured
+			}
+		}
+
+		20 = {
+			mult_modifier = {
+				factor = 0.5
+				is_inaccessible_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 3
+
+				event_target:siege_attacker = {
+					is_member_of_any_warrior_lodge_trigger = yes
+					society_rank > 1
+				}
+			}
+
+			mult_modifier = {
+				factor = 3 # if the sieger has a particular Legendary bloodline
+
+				event_target:siege_attacker = {
+					any_owned_bloodline = {
+						has_bloodline_flag = bloodline_reaver
+						bloodline_is_active_for = PREV
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue < 12
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue < 11
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue < 10
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue < 9
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue < 8
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue < 7
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue < 6
+			}
+
+			character_event = {
+				id = Plus.1027
+				tooltip = siege_captured
+			}
+		}
+	}
+}
+
+siege_kill_check_effect = {
+	random_list = {
+		30 = {
+			mult_modifier = {
+				factor = 0.5
+				trait = brave
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 1.2
+
+				OR = {
+					higher_real_tier_than = BARON
+					father = { higher_real_tier_than = BARON }
+					mother = { higher_real_tier_than = BARON }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+
+				OR = {
+					higher_real_tier_than = COUNT
+					father = { higher_real_tier_than = COUNT }
+					mother = { higher_real_tier_than = COUNT }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+
+				OR = {
+					higher_real_tier_than = DUKE
+					father = { higher_real_tier_than = DUKE }
+					mother = { higher_real_tier_than = DUKE }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+
+				OR = {
+					higher_real_tier_than = KING
+					father = { higher_real_tier_than = KING }
+					mother = { higher_real_tier_than = KING }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				is_adult = no
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = infirm
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = wounded
+			}
+
+			mult_modifier = {
+				factor = 0.25
+				trait = maimed
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				intrigue < 12
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				intrigue < 11
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				intrigue < 10
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				intrigue < 9
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				intrigue < 8
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				intrigue < 7
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				intrigue < 6
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 12
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 13
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 14
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 15
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 16
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 17
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 18
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 19
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				intrigue >= 20
+			}
+
+			mult_modifier = {
+				factor = 4
+				is_inaccessible_trigger = yes
+			}
+
+			custom_tooltip = { text = siege_escaped }
+		}
+
+		40 = {
+			character_event = {
+				id = Plus.1032
+				tooltip = siege_injured
+			}
+		}
+
+		20 = {
+			mult_modifier = {
+				factor = 0.5
+				is_inaccessible_trigger = yes
+			}
+
+			character_event = {
+				id = Plus.1026
+				tooltip = siege_killed
+			}
+		}
+	}
+}
+
+siege_pagan_capture_check_effect = {
+	random_list = {
+		40 = {
+			mult_modifier = {
+				factor = 1.2
+
+				OR = {
+					higher_real_tier_than = BARON
+					father = { higher_real_tier_than = BARON }
+					mother = { higher_real_tier_than = BARON }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+
+				OR = {
+					higher_real_tier_than = COUNT
+					father = { higher_real_tier_than = COUNT }
+					mother = { higher_real_tier_than = COUNT }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+
+				OR = {
+					higher_real_tier_than = DUKE
+					father = { higher_real_tier_than = DUKE }
+					mother = { higher_real_tier_than = DUKE }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+
+				OR = {
+					higher_real_tier_than = KING
+					father = { higher_real_tier_than = KING }
+					mother = { higher_real_tier_than = KING }
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = brave
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				is_adult = no
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = infirm
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = wounded
+			}
+
+			mult_modifier = {
+				factor = 0.25
+				trait = maimed
+			}
+
+			mult_modifier = {
+				factor = 0.8
+
+				event_target:siege_attacker = {
+					is_member_of_any_warrior_lodge_trigger = yes
+					society_rank > 1
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.8
+
+				event_target:siege_attacker = {
+					any_owned_bloodline = {
+						has_bloodline_flag = bloodline_reaver
+						bloodline_is_active_for = PREV
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 3
+				is_inaccessible_trigger = yes
+				intrigue >= 12
+			}
+
+			mult_modifier = {
+				factor = 2.5
+
+				is_inaccessible_trigger = yes
+				intrigue >= 6
+				intrigue < 12
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				is_inaccessible_trigger = yes
+				intrigue < 6
+			}
+
+			mult_modifier = {
+				factor = 2.5
+				is_inaccessible_trigger = no
+				intrigue >= 18
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				is_inaccessible_trigger = no
+				intrigue >= 12
+				intrigue < 18
+			}
+
+			mult_modifier = {
+				factor = 1.5
+
+				is_inaccessible_trigger = no
+				intrigue >= 6
+				intrigue < 12
+			}
+
+			custom_tooltip = { text = siege_escaped }
+		}
+
+		20 = {
+			mult_modifier = {
+				factor = 0.1
+
+				is_inaccessible_trigger = yes
+				intrigue >= 12
+			}
+
+			mult_modifier = {
+				factor = 0.25
+
+				is_inaccessible_trigger = yes
+				intrigue >= 6
+				intrigue < 12
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				is_inaccessible_trigger = yes
+				intrigue < 6
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				is_inaccessible_trigger = no
+				intrigue >= 12
+				intrigue < 18
+			}
+
+			mult_modifier = {
+				factor = 0.25
+
+				is_inaccessible_trigger = no
+				intrigue >= 18
+			}
+
+			character_event = {
+				id = Plus.1032
+				tooltip = siege_injured
+			}
+		}
+
+		20 = {
+			mult_modifier = {
+				factor = 3
+
+				event_target:siege_attacker = {
+					is_member_of_any_warrior_lodge_trigger = yes
+					society_rank > 1
+				}
+			}
+
+			mult_modifier = {
+				factor = 3 # if the sieger has a particular Legendary bloodline
+
+				event_target:siege_attacker = {
+					any_owned_bloodline = {
+						has_bloodline_flag = bloodline_reaver
+						bloodline_is_active_for = PREV
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.08
+
+				is_inaccessible_trigger = yes
+				intrigue >= 12
+			}
+
+			mult_modifier = {
+				factor = 0.15
+
+				is_inaccessible_trigger = yes
+				intrigue >= 6
+				intrigue < 12
+			}
+
+			mult_modifier = {
+				factor = 0.25
+
+				is_inaccessible_trigger = yes
+				intrigue < 6
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				is_inaccessible_trigger = no
+				intrigue >= 6
+				intrigue < 12
+			}
+
+			mult_modifier = {
+				factor = 0.25
+
+				is_inaccessible_trigger = no
+				intrigue >= 12
+				intrigue < 18
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				is_inaccessible_trigger = no
+				intrigue >= 18
+			}
+
+			character_event = {
+				id = Plus.1027
+				tooltip = siege_captured
+			}
+		}
+
+		20 = {
+			trigger = {
+				trigger_if = {
+					limit = { is_inaccessible_trigger = yes }
+					intrigue < 12
+				}
+				trigger_else = {
+					intrigue >= 18
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				is_inaccessible_trigger = yes
+				intrigue >= 6
+				intrigue < 12
+			}
+
+			mult_modifier = {
+				factor = 0.25
+
+				is_inaccessible_trigger = yes
+				intrigue < 6
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				is_inaccessible_trigger = no
+				intrigue >= 6
+				intrigue < 12
+			}
+
+			mult_modifier = {
+				factor = 0.25
+
+				is_inaccessible_trigger = no
+				intrigue >= 12
+				intrigue < 18
+			}
+
+			character_event = {
+				id = Plus.1026
+				tooltip = siege_killed
+			}
+		}
+	}
+}
+
+siege_pagan_sacrifice_check_effect = {
+	random_list = {
+		30 = {
+			mult_modifier = {
+				factor = 1.2
+
+				OR = {
+					higher_real_tier_than = BARON
+					father = { higher_real_tier_than = BARON }
+					mother = { higher_real_tier_than = BARON }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+
+				OR = {
+					higher_real_tier_than = COUNT
+					father = { higher_real_tier_than = COUNT }
+					mother = { higher_real_tier_than = COUNT }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+
+				OR = {
+					higher_real_tier_than = DUKE
+					father = { higher_real_tier_than = DUKE }
+					mother = { higher_real_tier_than = DUKE }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+
+				OR = {
+					higher_real_tier_than = KING
+					father = { higher_real_tier_than = KING }
+					mother = { higher_real_tier_than = KING }
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				is_adult = no
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = infirm
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = wounded
+			}
+
+			mult_modifier = {
+				factor = 0.25
+				trait = maimed
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 12
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 13
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 14
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 15
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 16
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 17
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 18
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 19
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue >= 20
+			}
+
+			mult_modifier = {
+				factor = 4
+				is_inaccessible_trigger = yes
+			}
+
+			custom_tooltip = { text = siege_escaped }
+		}
+
+		20 = {
+			mult_modifier = {
+				factor = 2
+				trait = brave
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = craven
+			}
+
+			character_event = {
+				id = Plus.1032
+				tooltip = siege_injured
+			}
+		}
+
+		20 = {
+			mult_modifier = {
+				factor = 0.5
+				is_inaccessible_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue < 12
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue < 11
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue < 10
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue < 9
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue < 8
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue < 7
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				intrigue < 6
+			}
+
+			character_event = {
+				id = Plus.1033
+				tooltip = siege_sacrificed
+			}
+		}
+	}
+}
+
+stop_hiding_effect = {
+	if = {
+		limit = { is_inaccessible_trigger = yes }
+		end_inaccessibility_effect = yes
+	}
+}
+
+title_reduce_CA_effect = {
+	if = {
+		limit = {
+			higher_real_tier_than = DUKE
+
+			OR = {
+				has_law = crown_authority_1
+				has_law = crown_authority_2
+				has_law = crown_authority_3
+				has_law = crown_authority_4
+			}
+		}
+
+		set_title_flag = non_manual_law_change # No prestige loss
+
+		custom_tooltip = {
+			text = CA_LOWERED
+
+			trigger_switch = {
+				on_trigger = has_law
+
+				crown_authority_1 = { add_law_w_cooldown = crown_authority_0 }
+				crown_authority_2 = { add_law_w_cooldown = crown_authority_1 }
+				crown_authority_3 = { add_law_w_cooldown = crown_authority_2 }
+				crown_authority_4 = { add_law_w_cooldown = crown_authority_3 }
+			}
+		}
+
+		clr_title_flag = non_manual_law_change # No prestige loss
+	}
+}
+
+title_reduce_TO_effect = {
+	if = {
+		limit = {
+			OR = {
+				has_law = tribal_organization_1
+				has_law = tribal_organization_2
+				has_law = tribal_organization_3
+				has_law = tribal_organization_4
+			}
+		}
+
+		set_title_flag = non_manual_law_change # No prestige loss
+
+		custom_tooltip = {
+			text = TO_LOWERED
+
+			trigger_switch = {
+				on_trigger = has_law
+
+				tribal_organization_1 = { add_law_w_cooldown = tribal_organization_0 }
+				tribal_organization_2 = { add_law_w_cooldown = tribal_organization_1 }
+				tribal_organization_3 = { add_law_w_cooldown = tribal_organization_2 }
+				tribal_organization_4 = { add_law_w_cooldown = tribal_organization_3 }
+			}
+		}
+
+		clr_title_flag = non_manual_law_change # No prestige loss
+	}
+}
+
+german_culture_spread_effect_province = {
+	if = {
+		limit = {
+			culture = frankish
+			german_culture_region_trigger = yes
+		}
+		culture = franconian
+	}
+	else_if = {
+		limit = { culture = german }
+
+		if = {
+			limit = { region = custom_swiss }
+			culture = swiss
+		}
+		else_if = {
+			limit = { german_culture_region_trigger = yes }
+			culture = swabian
+		}
+	}
+}
+
+late_german_culture_spread_effect_province = {
+	if = {
+		limit = {
+			region = custom_prussian
+			OR = {
+				culture = saxon
+				culture = prussian
+			}
+		}
+		culture = teutonic
+	}
+	else_if = {
+		limit = {
+			region = custom_austrian
+			culture = bavarian
+		}
+		culture = austrian
+	}
+}
+
+german_culture_spread_from_ROOT_effect = {
+	any_courtier = {
+		show_scope_change = no
+
+		limit = {
+			dynasty = ROOT
+			is_ruler = no
+			prisoner = no
+
+			OR = {
+				culture = german
+				culture = frankish
+			}
+		}
+
+		culture = ROOT
+	}
+
+	event_target:melting_pot_province = {
+		show_scope_change = no
+
+		culture = ROOT
+		set_province_flag = melting_pot
+
+		add_province_modifier = {
+			name = recent_culture_change
+			duration = -1
+		}
+	}
+}
+
+austrian_culture_spread_effect = {
+	any_courtier = {
+		show_scope_change = no
+
+		limit = {
+			dynasty = ROOT
+			culture = bavarian
+			is_ruler = no
+			prisoner = no
+		}
+
+		culture = austrian
+	}
+
+	event_target:melting_pot_province = {
+		show_scope_change = no
+
+		culture = austrian
+		set_province_flag = melting_pot
+
+		add_province_modifier = {
+			name = recent_culture_change
+			duration = -1
+		}
+	}
+}
+
+teutonic_culture_spread_effect = {
+	any_courtier = {
+		show_scope_change = no
+
+		limit = {
+			dynasty = ROOT
+			is_ruler = no
+			prisoner = no
+
+			OR = {
+				culture = saxon
+				culture = prussian
+			}
+		}
+
+		culture = teutonic
+	}
+
+	event_target:melting_pot_province = {
+		show_scope_change = no
+
+		culture = teutonic
+		set_province_flag = melting_pot
+
+		add_province_modifier = {
+			name = recent_culture_change
+			duration = -1
+		}
+	}
+}
+
+adjust_gender_law_effect = {
+	set_title_flag = non_manual_law_change # No prestige loss
+
+	if = {
+		limit = { has_gender_equal_game_rule_trigger = yes }
+		add_law = true_cognatic_succession
+	}
+	else_if = {
+		limit = { event_target:liege_primary_title = { has_law = cognatic_succession } }
+		add_law = cognatic_succession
+	}
+	else_if = {
+		limit = { event_target:liege_primary_title = { has_law = true_cognatic_succession } }
+		add_law = true_cognatic_succession
+	}
+	else_if = {
+		limit = { event_target:liege_primary_title = { has_law = agnatic_succession } }
+		add_law = agnatic_succession
+	}
+	else_if = {
+		limit = { event_target:liege_primary_title = { has_law = enatic_succession } }
+		add_law = enatic_succession
+	}
+	else_if = {
+		limit = { event_target:liege_primary_title = { has_law = enatic_cognatic_succession } }
+		add_law = enatic_cognatic_succession
+	}
+
+	clr_title_flag = non_manual_law_change # No prestige loss
+}
+
+start_reformed_effect = {
+	if = {
+		limit = { religion = baltic_pagan }
+		religion = baltic_pagan_reformed
+	}
+	else_if = {
+		limit = { religion = finnish_pagan }
+		religion = finnish_pagan_reformed
+	}
+	else_if = {
+		limit = { religion = slavic_pagan }
+		religion = slavic_pagan_reformed
+	}
+	else_if = {
+		limit = { religion = norse_pagan }
+		religion = norse_pagan_reformed
+	}
+	else_if = {
+		limit = { religion = tengri_pagan }
+		religion = tengri_pagan_reformed
+	}
+	else_if = {
+		limit = { religion = west_african_pagan }
+		religion = west_african_pagan_reformed
+	}
+	else_if = {
+		limit = { religion = zun_pagan }
+		religion = zun_pagan_reformed
+	}
+	else_if = {
+		limit = { religion = bon_pagan }
+		religion = bon_pagan_reformed
+	}
+	else_if = {
+		limit = { religion = hellenic_pagan }
+		religion = hellenic_pagan_oreformed
+	}
+	else_if = {
+		limit = { religion = egyptian_pagan }
+		religion = egyptian_pagan_oreformed
+	}
+	else_if = {
+		limit = { religion = celtic_pagan }
+		religion = celtic_pagan_reformed
+	}
+	else_if = {
+		limit = { religion = german_pagan }
+		religion = german_pagan_reformed
+	}
+}
+
+select_regnal_name_effect = {
+	if = {
+		limit = { culture = norse }
+		character_event = { id = Plus.3751 }
+	}
+	else_if = {
+		limit = { culture = swedish }
+		character_event = { id = Plus.3755 }
+	}
+	else_if = {
+		limit = {
+			culture = norwegian
+			is_female = no
+		}
+		character_event = { id = Plus.3758 }
+	}
+	else_if = {
+		limit = {
+			culture = norwegian
+			is_female = yes
+		}
+		character_event = { id = Plus.3760 }
+	}
+	else_if = {
+		limit = {
+			culture = danish
+			is_female = no
+		}
+		character_event = { id = Plus.3761 }
+	}
+	else_if = {
+		limit = {
+			culture = danish
+			is_female = yes
+		}
+		character_event = { id = Plus.3763 }
+	}
+	else_if = {
+		limit = { culture = icelandic }
+		character_event = { id = Plus.3764 }
+	}
+	else_if = {
+		limit = { culture = english_norse }
+		character_event = { id = Plus.3767 }
+	}
+	else_if = {
+		limit = { german_cultures_trigger = yes }
+		character_event = { id = Plus.3770 }
+	}
+	else_if = {
+		limit = { culture = polish }
+		character_event = { id = Plus.3774 }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				culture = scottish
+				culture = scots
+			}
+		}
+		character_event = { id = Plus.3777 }
+	}
+	else_if = {
+		limit = { culture = english }
+		character_event = { id = Plus.3780 }
+	}
+	else_if = {
+		limit = { culture = anglo-saxon }
+		character_event = { id = Plus.3783 }
+	}
+	else_if = {
+		limit = { culture = bohemian }
+		character_event = { id = Plus.3785 }
+	}
+	else_if = {
+		limit = { culture = hungarian }
+		character_event = { id = Plus.3788 }
+	}
+	else_if = {
+		limit = { culture = croatian }
+		character_event = { id = Plus.3791 }
+	}
+	else_if = {
+		limit = { culture = serbian }
+		character_event = { id = Plus.3794 }
+	}
+	else_if = {
+		limit = { culture = bulgarian }
+		character_event = { id = Plus.3797 }
+	}
+	else_if = {
+		limit = { culture = vlach }
+		character_event = { id = Plus.3800 }
+	}
+	else_if = {
+		limit = { culture = french }
+		character_event = { id = Plus.3801 }
+	}
+	else_if = {
+		limit = {
+			culture = basque
+			is_female = no
+		}
+		character_event = { id = Plus.3804 }
+	}
+	else_if = {
+		limit = {
+			culture = basque
+			is_female = yes
+		}
+		character_event = { id = Plus.3831 }
+	}
+	else_if = {
+		limit = {
+			culture = castilian
+			is_female = no
+		}
+		character_event = { id = Plus.3805 }
+	}
+	else_if = {
+		limit = {
+			culture = castilian
+			is_female = yes
+		}
+		character_event = { id = Plus.3806 }
+	}
+	else_if = {
+		limit = { culture = catalan }
+		character_event = { id = Plus.3807 }
+	}
+	else_if = {
+		limit = { culture = frankish }
+		character_event = { id = Plus.3809 }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				culture = greek
+				culture = pontic_greek
+			}
+			is_female = no
+		}
+		character_event = { id = Plus.3811 }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				culture = greek
+				culture = pontic_greek
+			}
+			is_female = yes
+		}
+		character_event = { id = Plus.3813 }
+	}
+	else_if = {
+		limit = { culture = russian }
+		character_event = { id = Plus.3814 }
+	}
+	else_if = {
+		limit = { is_italian_trigger = yes }
+		character_event = { id = Plus.3818 }
+	}
+	else_if = {
+		limit = {
+			culture = portuguese
+			is_female = no
+		}
+		character_event = { id = Plus.3820 }
+	}
+	else_if = {
+		limit = {
+			culture = portuguese
+			is_female = yes
+		}
+		character_event = { id = Plus.3822 }
+	}
+	else_if = {
+		limit = { culture = armenian }
+		character_event = { id = Plus.3823 }
+	}
+	else_if = {
+		limit = {
+			culture = georgian
+			is_female = no
+		}
+		character_event = { id = Plus.3826 }
+	}
+	else_if = {
+		limit = {
+			culture = georgian
+			is_female = yes
+		}
+		character_event = { id = Plus.3828 }
+	}
+	else_if = {
+		limit = { culture = lithuanian }
+		character_event = { id = Plus.3829 }
+	}
+	else_if = {
+		limit = { culture = welsh }
+		character_event = { id = Plus.3832 }
+	}
+	else_if = {
+		limit = { culture = cornish }
+		character_event = { id = Plus.3834 }
+	}
+	else_if = {
+		limit = { culture = breton }
+		character_event = { id = Plus.3835 }
+	}
+	else_if = {
+		limit = { culture = norman }
+		character_event = { id = Plus.3836}
+	}
+	else_if = {
+		limit = {
+			culture = persian
+			is_female = no
+		}
+		character_event = { id = Plus.3837}
+	}
+}
+
+# Roll a random congenital trait. If it succeeds repeat until it fails
+generate_potential_congenital_trait = {
+	random_list = {
+		95 = {}
+
+		5 = {
+			random_list = {
+				 5 = { add_trait = genius }
+				15 = { add_trait = quick }
+				15 = { add_trait = slow }
+				 5 = { add_trait = imbecile }
+				10 = { add_trait = attractive }
+				10 = { add_trait = ugly }
+				15 = { add_trait = tall }
+				 5 = { add_trait = dwarf }
+				10 = { add_trait = strong }
+				10 = { add_trait = weak }
+			}
+
+			generate_potential_congenital_trait = yes
+		}
+	}
+}
+
+out_homosexual_effect = {
+	if = {
+		limit = {
+			trait = homosexual
+
+			NOR = {
+				has_character_modifier = known_lesbian
+				has_character_modifier = known_lesbian_pagan
+				has_character_modifier = known_sodomite
+				has_character_modifier = known_sodomite_pagan
+			}
+		}
+
+		if = {
+			limit = { is_female = yes }
+
+			if = {
+				limit = { religion_group = pagan_group }
+
+				add_character_modifier = {
+					name = known_lesbian_pagan
+					duration = -1
+				}
+			}
+			else = {
+				add_character_modifier = {
+					name = known_lesbian
+					duration = -1
+				}
+			}
+		}
+		else = {
+			if = {
+				limit = { religion_group = pagan_group }
+
+				add_character_modifier = {
+					name = known_sodomite_pagan
+					duration = -1
+				}
+			}
+			else = {
+				add_character_modifier = {
+					name = known_sodomite
+					duration = -1
+				}
+			}
+		}
+	}
+}
+
+# Convert to ROOT's religion and a culture based on FROM's origin
+israel_culture_religion_effect = {
+	religion = ROOT
+
+	if = { # Culture depends on Origin
+		limit = { # Ashkenazi
+			FROM = {
+				location = {
+					OR = {
+						region = world_europe_west_germania
+						region = world_europe_east
+						region = world_europe_west_british_isles
+						region = world_europe_south_east
+					}
+				}
+			}
+		}
+		culture = ashkenazi
+	}
+	else_if = { # Sephardi
+		limit = {
+			FROM = {
+				location = {
+					OR = {
+						region = world_europe_west_iberia
+						region = world_africa_north
+						region = world_europe_west_francia
+						region = custom_roman_italia
+						region = world_africa_west
+						region = world_africa_central
+					}
+				}
+			}
+		}
+		culture = sephardi
+	}
+	else = { # Mizrahim
+		culture = mizrahim
+	}
+}
+
+israel_culture_effect = { # ROOT's religion to a culture based on THIS region
+	if = { # Culture depends on Origin
+		limit = { # Ashkenazi
+			OR = {
+				region = world_europe_west_germania
+				region = world_europe_east
+				region = world_europe_west_british_isles
+				region = world_europe_south_east
+			}
+		}
+		ROOT = { culture = ashkenazi }
+	}
+	else_if = { # Sephardi
+		limit = {
+			OR = {
+				region = world_europe_west_iberia
+				region = world_africa_north
+				region = world_europe_west_francia
+				region = custom_roman_italia
+				region = world_africa_west
+				region = world_africa_central
+			}
+		}
+		ROOT = { culture = sephardi }
+	}
+	else = { # Mizrahim
+		ROOT = { culture = mizrahim }
+	}
+}
+
+remove_do_not_disturb_effect = {
+	hidden_effect = {
+		remove_character_modifier = do_not_disturb
+		clr_character_flag = do_not_disturb
+	}
+}
+
+make_court_educator_effect = {
+	if = {
+		limit = { has_dlc = "Conclave"}
+		give_minor_title = title_teacher
+	}
+	else = {
+		give_minor_title = title_court_educator
+	}
+}
+
+remove_court_educator_effect = {
+	if = {
+		limit = { has_dlc = "Conclave"}
+		remove_title = title_teacher
+	}
+	else = {
+		remove_title = title_court_educator
+	}
+}
+
+# Used in feast planner's scope (THIS)
+clear_jd_feast_flags_effect = {
+	clr_character_flag = jd_feast_salmon
+	clr_character_flag = jd_feast_cheese_eggs
+	clr_character_flag = jd_feast_roasted_milk
+	clr_character_flag = jd_feast_balls
+	clr_character_flag = jd_feast_poultry
+	clr_character_flag = jd_feast_cattle
+	clr_character_flag = jd_feast_pig
+	clr_character_flag = jd_feast_horse
+	clr_character_flag = jd_feast_good
+	clr_character_flag = jd_feast_neutral
+	clr_character_flag = jd_feast_bad
+}
+
+destroy_tradeposts_effect = { # Destroys all de Jure vassal tradeposts. Used in devastating wars
+	any_de_jure_vassal_title = {
+		limit = { real_tier = COUNT }
+
+		location = {
+			FROM = {
+				destroy_tradepost = PREV
+			}
+		}
+	}
+}
+
+copy_prev_gender_law_effect = {
+	set_title_flag = non_manual_law_change # No prestige loss
+
+	if = {
+		limit = { has_gender_equal_game_rule_trigger = yes }
+		add_law = true_cognatic_succession
+	}
+	else_if = {
+		limit = { PREV = { has_law = cognatic_succession } }
+		add_law = cognatic_succession
+	}
+	else_if = {
+		limit = { PREV = { has_law = true_cognatic_succession } }
+		add_law = true_cognatic_succession
+	}
+	else_if = {
+		limit = { PREV = { has_law = agnatic_succession } }
+		add_law = agnatic_succession
+	}
+	else_if = {
+		limit = { PREV = { has_law = enatic_succession } }
+		add_law = enatic_succession
+	}
+	else_if = {
+		limit = { PREV = { has_law = enatic_cognatic_succession } }
+		add_law = enatic_cognatic_succession
+	}
+
+	clr_title_flag = non_manual_law_change # No prestige loss
+}
+
+debutante_cleanup_effect = {
+	if = {
+		limit = {
+			had_character_flag = {
+				flag = debutante
+				years >= 3
+			}
+		}
+		clr_character_flag = debutante
+	}
+}
+
+dead_ruler_claim_effect = {
+	if = {
+		limit = {
+			FROMFROM = {
+				has_claim = ROOT_FROM
+				is_alive = no
+			}
+		}
+
+		FROM = {
+			remove_claim = FROMFROM
+		}
+	}
+}
+
+religion_head_loses_claims_effect = {
+	if = {
+		limit = {
+			FROM = {
+				controls_religion = yes
+				is_primary_holder_title = yes
+			}
+
+			is_theocracy = yes
+			num_of_claims >= 1
+		}
+
+		any_claim = { remove_claim = ROOT }
+	}
+}
+
+remove_austerity_modifier_effect = {
+	if = {
+		limit = {
+			ai = no
+			has_character_modifier = ai_austerity
+		}
+
+		remove_character_modifier = ai_austerity
+	}
+}
+
+restore_title_secular_name_effect = {
+	if = {
+		limit = {
+			FROMFROM = { is_offmap_trigger = no }
+			is_theocracy = no
+
+			FROM = {
+				OR = {
+					title = k_papacy
+					title = d_apostolic
+					title = d_egyptian_pagan_reformed
+					title = d_fraticelli
+					title = d_iconoclast
+					title = d_messalian
+					title = d_miaphysite
+					title = d_monophysite
+					title = d_monothelite
+					title = d_nestorian
+					title = d_paulician
+					title = k_orthodox
+				}
+			}
+		}
+
+		set_name = ""
+	}
+}

@@ -1,0 +1,2412 @@
+namespace = Plus
+
+# TODO: Find out where these are fired from, adapt event targets to connection with WoL.60
+
+#reserved: Plus.1500 to Plus.1549
+
+#######################################
+# SPYING EVENTS
+# Written by Rylock
+#######################################
+
+### PLOT ASSISTED
+
+# Spying assists the plot
+character_event = {
+	id = Plus.1500
+	picture = GFX_evt_shadowy_cabal
+	border = GFX_event_normal_frame_intrigue
+
+	desc = {
+		text = EVTDESC_Plus_1500_A
+		trigger = {
+			has_plot = yes
+			plot_target_char = { character = FROMFROMFROM }
+		}
+	}
+	desc = {
+		text = EVTDESC_Plus_1500_B
+		trigger = {
+			any_backed_character = {
+				plot_target_char = {
+					character = FROMFROMFROM
+					NOT = { is_plot_target_of = ROOT }
+				}
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		if = {
+			limit = {
+				has_plot = yes
+				plot_target_char = { character = FROMFROMFROM }
+
+				NOR = {
+					has_character_modifier = plot_assisted_spying
+					has_character_modifier = plot_assisted_spying2
+					has_character_modifier = plot_assisted_spying3
+					has_character_modifier = plot_assisted_spying4
+					has_character_modifier = plot_assisted_spying5
+				}
+			}
+
+			add_character_modifier = {
+				name = plot_assisted_spying
+				years = 1
+			}
+		}
+
+		if = {
+			limit = {
+				any_backed_character = {
+					plot_target_char = { character = FROMFROMFROM }
+
+					NOR = {
+						has_character_modifier = plot_assisted_spying
+						has_character_modifier = plot_assisted_spying2
+						has_character_modifier = plot_assisted_spying3
+						has_character_modifier = plot_assisted_spying4
+						has_character_modifier = plot_assisted_spying5
+					}
+				}
+			}
+
+			random_backed_character = {
+				show_scope_change = no
+
+				limit = { plot_target_char = { character = FROMFROMFROM } }
+
+				letter_event = {
+					id = Plus.1501
+					tooltip = EVTTOOLTIP_INFORM_PLOTTER
+				}
+			}
+		}
+	}
+}
+
+# Letter sent to plotter to inform of assistance
+letter_event = {
+	id = Plus.1501
+	desc = EVTDESC_Plus_1501
+	border = GFX_event_letter_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		opinion = {
+			name = opinion_grateful
+			who = FROM
+			years = 5
+		}
+
+		add_character_modifier = {
+			name = plot_assisted_spying
+			years = 1
+		}
+	}
+}
+
+### DISCOVERS REAL FATHER
+
+# Initial discovery of true father's identity
+character_event = {
+	id = Plus.1505
+	desc = EVTDESC_Plus_1505
+	picture = GFX_evt_shadowy_cabal
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	immediate = {
+		opinion = {
+			name = opinion_spy_discovered_father
+			who = event_target:target_spy_on
+			years = 50
+		}
+
+		event_target:target_spy_on = {
+			real_father = {
+				save_event_target_as = target_true_father
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1505 # Blackmail the father
+
+		trigger = {
+			event_target:target_true_father = {
+				is_alive = yes
+				is_ruler = yes
+				is_incapable = no
+			}
+		}
+
+		event_target:target_true_father = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.1506
+				days = 1
+				tooltip = EVTTOOLTIP_BLACKMAIL_FATHER
+			}
+		}
+
+		if = {
+			limit = { trait = honest }
+			remove_trait = honest
+		}
+		else_if = {
+			limit = { NOT = { trait = deceitful } }
+
+			random = {
+				chance = 50
+				add_trait_deceitful_effect = yes
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				event_target:target_spy_on = {
+					wealth >= 100
+
+					real_father = {
+						reverse_opinion = {
+							who = ROOT
+							value < 25
+						}
+
+						NOT = { is_liege_of = ROOT }
+					}
+				}
+
+				NOR = {
+					trait = kind
+					trait = honest
+					trait = just
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				OR = {
+					trait = greedy
+					trait = deceitful
+					trait = cruel
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				event_target:target_true_father = { is_married = no }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1505 # Reveal the truth
+
+		custom_tooltip = {
+			text = EVTTOOLTIP_BLACKMAIL_REVEAL
+
+			hidden_effect = {
+				event_target:target_spy_on = {
+					character_event = {
+						id = Plus.1509
+						days = 1
+					}
+
+					mother_even_if_dead = { save_event_target_as = target_adulterer }
+
+					real_father = {
+						prestige = -100
+						character_event = { id = 20 }
+						character_event = { id = Plus.1510 }
+
+						top_liege = {
+							any_realm_character = {
+								limit = {
+									is_close_relative = event_target:target_spy_on
+									NOT = { character = event_target:target_spy_on }
+								}
+
+								character_event = { id = Plus.1510 }
+							}
+						}
+
+						any_vassal = {
+							limit = {
+								NOR = {
+									is_close_relative = event_target:target_spy_on
+									character = event_target:target_spy_on
+								}
+							}
+
+							character_event = { id = Plus.1510 }
+						}
+					}
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				event_target:target_true_father = { is_alive = yes }
+
+				opinion = {
+					who = event_target:target_true_father
+					value < 50
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				OR = {
+					trait = zealous
+					trait = honest
+					trait = just
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				OR = {
+					trait = greedy
+					trait = deceitful
+					trait = cruel
+					trait = kind
+					trait = arbitrary
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_1505 # I don't care about this
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2
+				trait = kind
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				OR = {
+					trait = bastard
+					trait = legit_bastard
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:target_spy_on value < -25 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:target_spy_on value < -50 }
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				event_target:target_true_father = { is_alive = yes }
+				opinion = { who = event_target:target_true_father value >= 0 }
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				event_target:target_true_father = { is_alive = yes }
+				opinion = { who = event_target:target_true_father value >= 25 }
+			}
+		}
+	}
+}
+
+# Real father receives blackmail demand
+letter_event = {
+	id = Plus.1506
+	desc = EVTDESC_Plus_1506
+	border = GFX_event_letter_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA7260 # Give in
+
+		tooltip = {
+			transfer_scaled_wealth = {
+				to = FROM
+				value = 1
+				min = 100
+				max = 100
+			}
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.1507
+				days = 1
+				tooltip = EVTTOOLTIP_BLACKMAIL_AGREED
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 0.25
+				is_married = no
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				wealth < 100
+			}
+
+			mult_modifier = {
+				factor = 2
+				wealth >= 250
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = deceitful
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB7260 # I won't tolerate blackmail!
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2
+				has_any_opinion_modifier = opinion_blackmailed
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = brave
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.1508
+				days = 1
+				tooltip = EVTTOOLTIP_BLACKMAIL_REFUSED
+			}
+		}
+	}
+}
+
+# Real father agrees to the blackmail
+letter_event = {
+	id = Plus.1507
+	desc = EVTDESC_Plus_1507
+	border = GFX_event_letter_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		transfer_scaled_wealth = {
+			from = FROM
+			value = 1
+			min = 100
+			max = 100
+		}
+
+		reverse_opinion = {
+			name = opinion_blackmailed
+			who = FROM
+			years = 10
+		}
+	}
+}
+
+# Real father refuses the blackmail demand
+letter_event = {
+	id = Plus.1508
+	desc = EVTDESC_Plus_1508
+	border = GFX_event_letter_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1508 # Tell everyone
+
+		reverse_opinion = {
+			name = opinion_failed_blackmail
+			who = FROM
+			years = 20
+			multiplier = 2
+		}
+
+		custom_tooltip = {
+			text = EVTTOOLTIP_BLACKMAIL_REVEAL
+
+			hidden_effect = {
+				event_target:target_spy_on = {
+					character_event = {
+						id = Plus.1509
+						days = 1
+					}
+
+					mother_even_if_dead = { save_event_target_as = target_adulterer }
+
+					FROM = {
+						prestige = -100
+						character_event = { id = 20 }
+
+						top_liege = {
+							any_realm_character = {
+								limit = {
+									is_close_relative = event_target:target_spy_on
+									NOT = { character = event_target:target_spy_on }
+								}
+
+								character_event = { id = Plus.1510 }
+							}
+						}
+
+						any_vassal = {
+							limit = {
+								NOR = {
+									is_close_relative = event_target:target_spy_on
+									character = event_target:target_spy_on
+								}
+							}
+
+							character_event = { id = Plus.1510 }
+						}
+					}
+				}
+			}
+		}
+
+		ai_chance = { factor = 1 }
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1508 # Let the matter drop
+
+		reverse_opinion = {
+			name = opinion_failed_blackmail
+			who = FROM
+			years = 10
+		}
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Target is informed he is a bastard
+character_event = {
+	id = Plus.1509
+	desc = EVTDESC_Plus_1509
+	picture = GFX_evt_shadowy_cabal
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	option = {
+		name = EVTOPTA_Plus_1509
+
+		prestige = -100
+		add_trait = bastard
+
+		hidden_effect = {
+			set_real_father = 0
+			set_father = event_target:target_true_father
+		}
+	}
+}
+
+# Others are informed about the bastard
+character_event = {
+	id = Plus.1510
+	desc = EVTDESC_Plus_1510
+	picture = GFX_evt_shadowy_cabal
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	option = {
+		name = EVTOPTA_Plus_1510
+
+		if = {
+			limit = {
+				NOT = { character = event_target:target_true_father }
+			}
+
+			opinion = {
+				name = opinion_scandal
+				who = event_target:target_spy_on
+				years = 5
+			}
+		}
+	}
+}
+
+### DISCOVERS LOVER
+
+# Initial discovery of lover
+character_event = {
+	id = Plus.1515
+	desc = EVTDESC_Plus_1515
+	picture = GFX_evt_shadowy_cabal
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	immediate = {
+		event_target:target_spy_on = {
+			random_lover = {
+				limit = {
+					NOR = {
+						is_married = event_target:target_spy_on
+						is_consort = event_target:target_spy_on
+						event_target:target_spy_on = { is_consort = PREV }
+					}
+				}
+
+				save_event_target_as = target_revealed_lover
+			}
+
+			reverse_opinion = {
+				who = ROOT
+				name = opinion_spy_discovered_lover
+				years = 10
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					is_married = event_target:target_spy_on
+					is_consort = event_target:target_spy_on
+					event_target:target_spy_on = { is_consort = ROOT }
+				}
+			}
+
+			if = {
+				limit = { is_female = no }
+
+				opinion = {
+					name = opinion_unfaithful_wife
+					who = event_target:target_spy_on
+				}
+
+				if = {
+					limit = { event_target:target_revealed_lover = { is_female = no } }
+
+					opinion = {
+						name = opinion_cuckolded
+						who = event_target:target_revealed_lover
+					}
+				}
+			}
+			else = {
+				opinion = {
+					name = opinion_unfaithful_husband
+					who = event_target:target_spy_on
+				}
+
+				if = {
+					limit = { event_target:target_revealed_lover = { is_female = yes } }
+
+					add_rival = event_target:target_revealed_lover
+
+					opinion = {
+						name = slut_seductress
+						who = event_target:target_revealed_lover
+					}
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					is_married = event_target:target_revealed_lover
+					is_consort = event_target:target_revealed_lover
+					event_target:target_revealed_lover = { is_consort = ROOT }
+				}
+			}
+
+			if = {
+				limit = { is_female = no }
+
+				opinion = {
+					name = opinion_unfaithful_wife
+					who = event_target:target_revealed_lover
+				}
+
+				if = {
+					limit = { event_target:target_spy_on = { is_female = no } }
+
+					opinion = {
+						name = opinion_cuckolded
+						who = event_target:target_spy_on
+					}
+				}
+			}
+			else = {
+				opinion = {
+					name = opinion_unfaithful_husband
+					who = event_target:target_revealed_lover
+				}
+
+				if = {
+					limit = { event_target:target_spy_on = { is_female = yes } }
+
+					add_rival = event_target:target_spy_on
+
+					opinion = {
+						name = slut_seductress
+						who = event_target:target_spy_on
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1515 # Blackmail him
+
+		trigger = {
+			event_target:target_spy_on = { wealth >= 50 }
+
+			NOR = {
+				is_parent_of = event_target:target_spy_on
+				is_consort = event_target:target_spy_on
+				is_consort = event_target:target_revealed_lover
+				is_married = event_target:target_spy_on
+				is_married = event_target:target_revealed_lover
+				event_target:target_spy_on = { is_consort = ROOT }
+				event_target:target_revealed_lover = { is_consort = ROOT }
+			}
+		}
+
+		if = {
+			limit = { is_lover = event_target:target_spy_on }
+			remove_lover = event_target:target_spy_on
+		}
+
+		if = {
+			limit = { is_lover = event_target:target_revealed_lover }
+			remove_lover = event_target:target_revealed_lover
+		}
+
+		event_target:target_spy_on = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.1516
+				days = 1
+				tooltip = EVTTOOLTIP_BLACKMAIL_LOVER
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				event_target:target_spy_on = {
+					wealth >= 100
+				}
+
+				NOR = {
+					trait = kind
+					trait = honest
+					trait = just
+					vassal_of = event_target:target_revealed_lover
+				}
+
+				opinion = {
+					who = event_target:target_revealed_lover
+					value < 25
+				}
+
+				# If I can bribe both, bribe whoever I like least
+				trigger_if = {
+					limit = {
+						event_target:target_revealed_lover = { wealth >= 50 }
+						event_target:target_spy_on = { wealth >= 50 }
+					}
+
+					likes_better_than = {
+						than = event_target:target_revealed_lover
+						who = event_target:target_spy_on
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				OR = {
+					trait = greedy
+					trait = deceitful
+					trait = cruel
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1515 # Blackmail the lover
+
+		trigger = {
+			event_target:target_revealed_lover = { wealth >= 50 }
+
+			NOR = {
+				is_parent_of = event_target:target_spy_on
+				is_married = event_target:target_spy_on
+				is_married = event_target:target_revealed_lover
+				is_consort = event_target:target_spy_on
+				is_consort = event_target:target_revealed_lover
+				event_target:target_spy_on = { is_consort = ROOT }
+				event_target:target_revealed_lover = { is_consort = ROOT }
+			}
+		}
+
+		if = {
+			limit = { is_lover = event_target:target_spy_on }
+			remove_lover = event_target:target_spy_on
+		}
+
+		if = {
+			limit = { is_lover = event_target:target_revealed_lover }
+			remove_lover = event_target:target_revealed_lover
+		}
+
+		event_target:target_revealed_lover = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.1516
+				days = 1
+				tooltip = EVTTOOLTIP_BLACKMAIL_LOVER
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				event_target:target_revealed_lover = { wealth >= 100 }
+
+				NOR = {
+					trait = kind
+					trait = honest
+					trait = just
+					vassal_of = event_target:target_revealed_lover
+				}
+
+				opinion = {
+					who = event_target:target_revealed_lover
+					value < 25
+				}
+
+				# If I can bribe both, bribe whoever I like least
+				trigger_if = {
+					limit = {
+						event_target:target_revealed_lover = { wealth >= 50 }
+						event_target:target_spy_on = { wealth >= 50 }
+					}
+
+					likes_better_than = {
+						than = event_target:target_revealed_lover
+						who = event_target:target_spy_on
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				OR = {
+					trait = greedy
+					trait = deceitful
+					trait = cruel
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_1515 # Reveal it
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				opinion = {
+					who = event_target:target_revealed_lover
+					value < 50
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				OR = {
+					trait = zealous
+					trait = honest
+					trait = just
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				OR = {
+					trait = greedy
+					trait = deceitful
+					trait = cruel
+					trait = kind
+					trait = arbitrary
+				}
+			}
+		}
+
+		if = {
+			limit = { is_lover = event_target:target_spy_on }
+			remove_lover = event_target:target_spy_on
+		}
+
+		if = {
+			limit = { is_lover = event_target:target_revealed_lover }
+			remove_lover = event_target:target_revealed_lover
+		}
+
+		event_target:target_spy_on = {
+			show_scope_change = no
+
+			custom_tooltip = { text = EVTTOOLTIP_WoL_60 }
+		}
+
+		hidden_effect = {
+			event_target:target_revealed_lover = {
+				set_character_flag = second_ping_needed
+				character_event = { id = Plus.1518 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTD_Plus_1515 # I am not interested in this
+
+		if = {
+			limit = { is_lover = event_target:target_spy_on }
+			remove_lover = event_target:target_spy_on
+		}
+
+		if = {
+			limit = { is_lover = event_target:target_revealed_lover }
+			remove_lover = event_target:target_revealed_lover
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2
+				trait = kind
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:target_spy_on value < -25 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:target_spy_on value < -50 }
+			}
+
+			mult_modifier = {
+				factor = 2
+				opinion = { who = event_target:target_revealed_lover value >= 0 }
+			}
+
+			mult_modifier = {
+				factor = 2
+				opinion = { who = event_target:target_revealed_lover value >= 25 }
+			}
+		}
+	}
+}
+
+# Blackmailed character receives demand
+letter_event = {
+	id = Plus.1516
+	border = GFX_event_letter_frame_intrigue
+
+	desc = {
+		text = EVTDESC_Plus_1516
+		trigger = { character = event_target:target_spy_on }
+	}
+	desc = {
+		text = EVTDESC_Plus_1516_B
+		trigger = { character = event_target:target_revealed_lover }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1516 # Give in
+
+		wealth = -100
+
+		if = {
+			limit = {
+				event_target:target_revealed_lover = { same_sex = event_target:target_spy_on }
+			}
+
+			event_target:target_revealed_lover = { set_character_flag = gay_blackmailed_by_@FROM }
+			event_target:target_spy_on = { set_character_flag = gay_blackmailed_by_@FROM }
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.1517
+				days = 1
+				tooltip = EVTTOOLTIP_BLACKMAIL_AGREED
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 5
+
+				religion_group = christian
+				NOT = { has_character_modifier = adulterous_priest }
+
+				OR = {
+					trait = monk
+					trait = nun
+
+					AND = {
+						is_ruler = yes
+						is_theocracy = yes
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				event_target:target_revealed_lover = {
+					same_sex = event_target:target_spy_on
+				}
+
+				NOR = {
+					has_character_modifier = known_sodomite
+					has_character_modifier = known_sodomite_pagan
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				event_target:target_revealed_lover = {
+					is_close_relative = event_target:target_spy_on
+					NOT = { is_married = event_target:target_spy_on }
+				}
+
+				NOR = {
+					has_character_modifier = incestuous_adulteress
+					has_character_modifier = incestuous_adulterer
+				}
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				is_married = yes
+
+				NOR = {
+					has_character_modifier = adulteress
+					has_character_modifier = adulterer
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				religion_group = christian
+				has_character_modifier = adulterous_priest
+
+				OR = {
+					trait = monk
+					trait = nun
+
+					AND = {
+						is_ruler = yes
+						is_theocracy = yes
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				event_target:target_revealed_lover = {
+					same_sex = event_target:target_spy_on
+				}
+
+				OR = {
+					has_character_modifier = known_sodomite
+					has_character_modifier = known_sodomite_pagan
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				event_target:target_revealed_lover = {
+					is_close_relative = event_target:target_spy_on
+					NOT = { is_married = event_target:target_spy_on }
+				}
+
+				OR = {
+					has_character_modifier = incestuous_adulteress
+					has_character_modifier = incestuous_adulterer
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				is_married = yes
+
+				OR = {
+					has_character_modifier = adulteress
+					has_character_modifier = adulterer
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.25
+				is_married = no
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				wealth < 100
+			}
+
+			mult_modifier = {
+				factor = 2
+				wealth >= 250
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = deceitful
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1516 # Refuse
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 2
+				has_any_opinion_modifier = opinion_blackmailed
+			}
+
+			mult_modifier = {
+				factor = 0.1
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = brave
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			custom_tooltip = { text = EVTTOOLTIP_BLACKMAIL_REFUSED }
+		}
+
+		hidden_effect = {
+			if = {
+				limit = { character = event_target:target_spy_on }
+				event_target:target_revealed_lover = { character_event = { id = Plus.1518 } }
+			}
+			else = {
+				event_target:target_spy_on = { character_event = { id = Plus.1518 } }
+			}
+		}
+	}
+}
+
+# Blackmailed character agrees to the demand
+letter_event = {
+	id = Plus.1517
+	desc = EVTDESC_Plus_1517
+	border = GFX_event_letter_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		wealth = 100
+
+		reverse_opinion = {
+			name = opinion_blackmailed
+			who = FROM
+			years = 10
+		}
+	}
+}
+
+# Ping event for the lover
+character_event = {
+	id = Plus.1518
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		if = {
+			limit = { has_character_flag = second_ping_needed }
+			clr_character_flag = second_ping_needed
+			FROM = { character_event = { id = Plus.1520 } }
+		}
+		else = {
+			FROMFROM = { letter_event = { id = Plus.1519 days = 3 } }
+		}
+	}
+}
+
+# Blackmailed character refuses the demand
+letter_event = {
+	id = Plus.1519
+	desc = EVTDESC_Plus_1519
+	border = GFX_event_letter_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1519 # Reveal them
+
+		FROMFROM = {
+			show_scope_change = no
+
+			opinion = {
+				name = opinion_failed_blackmail
+				who = ROOT
+				years = 20
+				multiplier = 2
+			}
+
+			character_event = {
+				id = WoL.60
+				tooltip = EVTTOOLTIP_WoL_60
+			}
+		}
+
+		ai_chance = { factor = 100 }
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1519 # Then forget about it
+
+		reverse_opinion = {
+			name = opinion_failed_blackmail
+			who = FROMFROM
+			years = 10
+		}
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Second ping for immediate reveal
+character_event = {
+	id = Plus.1520
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		event_target:target_spy_on = {
+			character_event = { id = WoL.60 }
+		}
+	}
+}
+
+### ENFLAME RIVALRY
+
+# Discovers chance to enflame rivalry between two rulers
+character_event = {
+	id = Plus.1525
+	desc = EVTDESC_Plus_1525
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	immediate = {
+		event_target:target_spy_on = {
+			top_liege = {
+				random_realm_lord = {
+					limit = {
+						has_regent = no
+
+						OR = {
+							real_tier = event_target:target_spy_on
+							vassal_of = event_target:target_spy_on
+						}
+
+						reverse_opinion = { who = event_target:target_spy_on value < 0 }
+						opinion = { who = event_target:target_spy_on value < 0 }
+
+						NOR = {
+							character = ROOT
+							character = event_target:target_spy_on
+							is_rival = event_target:target_spy_on
+						}
+					}
+
+					save_event_target_as = target_new_rival
+				}
+			}
+
+			reverse_opinion = {
+				name = opinion_spy_enflamed_rivalry
+				who = ROOT
+				years = 10
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1525 # Make the attempt
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				NOR = {
+					trait = kind
+					trait = honest
+					trait = humble
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				event_target:target_spy_on = { intrigue >= ROOT }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				event_target:target_new_rival = { always = yes }
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				OR = {
+					trait = deceitful
+					trait = cruel
+					trait = envious
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:target_new_rival value >= 25 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:target_new_rival value >= 50 }
+			}
+		}
+
+		random_list = {
+			40 = { # Attempt Succeeds
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value >= 3 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value >= 6 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value < 1 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value <= -3 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value <= -6 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value >= 3 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value >= 6 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value < 1 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value <= -3 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value <= -6 }
+				}
+
+				character_event = {
+					id = Plus.1526
+					days = 7
+					tooltip = EVTTOOLTIP_ENFLAME_SUCCEED
+				}
+			}
+
+			30 = { # Attempt Fails
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value >= 3 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value >= 6 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value < 1 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value <= -3 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value <= -6 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value >= 3 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value >= 6 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value < 1 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value <= -3 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value <= -6 }
+				}
+
+				character_event = {
+					id = Plus.1529
+					days = 7
+					tooltip = EVTTOOLTIP_ENFLAME_FAIL
+				}
+			}
+
+			30 = { # Attempt Fails & Is Revealed
+				mult_modifier = {
+					factor = 0.8
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value >= 3 }
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value >= 6 }
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value < 1 }
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value <= -3 }
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value <= -6 }
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value >= 3 }
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value >= 6 }
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value < 1 }
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value <= -3 }
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value <= -6 }
+				}
+
+				character_event = {
+					id = Plus.1532
+					days = 7
+					tooltip = EVTTOOLTIP_ENFLAME_REVEAL
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1525 # It's not worth the effort
+
+		ai_chance = { factor = 100 }
+	}
+}
+
+# Attempt to enflame rivary succeeds
+character_event = {
+	id = Plus.1526
+	desc = EVTDESC_Plus_1526
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		event_target:target_spy_on = {
+			show_scope_change = no
+
+			character_event = { id = Plus.1527 }
+			add_rival = event_target:target_new_rival
+			event_target:target_new_rival = { character_event = { id = Plus.1528 } }
+		}
+	}
+}
+
+# Inform the spy target
+character_event = {
+	id = Plus.1527
+	desc = EVTDESC_Plus_1527
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_Plus_1527
+		tooltip = { add_rival = event_target:target_new_rival }
+	}
+}
+
+# Inform the new rival
+character_event = {
+	id = Plus.1528
+	desc = EVTDESC_Plus_1528
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	ai = no
+
+	option = {
+		name = EVTOPTA_Plus_1528
+		tooltip = { add_rival = event_target:target_spy_on }
+	}
+}
+
+# Attempt to enflame rivary fails
+character_event = {
+	id = Plus.1529
+	desc = EVTDESC_Plus_1529
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+
+		prestige = -25
+
+		hidden_effect = {
+			event_target:target_spy_on = { character_event = { id = Plus.1530 } }
+			event_target:target_new_rival = { character_event = { id = Plus.1531 } }
+		}
+	}
+}
+
+# Inform the spy target
+character_event = {
+	id = Plus.1530
+	desc = EVTDESC_Plus_1530
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	option = {
+		name = EVTOPTA_Plus_1530
+
+		opinion = {
+			who = event_target:target_new_rival
+			name = opinion_irritated
+			years = 5
+		}
+	}
+}
+
+# Inform the new rival
+character_event = {
+	id = Plus.1531
+	desc = EVTDESC_Plus_1531
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	option = {
+		name = EVTOPTA_Plus_1530
+
+		opinion = {
+			who = event_target:target_spy_on
+			name = opinion_irritated
+			years = 5
+		}
+	}
+}
+
+# Attempt to enflame rivary fails & is perhaps revealed
+character_event = {
+	id = Plus.1532
+	desc = EVTDESC_Plus_1532
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+
+		prestige = -50
+
+		random = {
+			chance = 50
+
+			mult_modifier = {
+				factor = 0.5
+				attribute_diff = { character = event_target:target_spy_on attribute = intrigue value >= 3 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				attribute_diff = { character = event_target:target_spy_on attribute = intrigue value <= -3 }
+			}
+
+			event_target:target_spy_on = {
+				show_scope_change = no
+
+				character_event = {
+					id = Plus.1533
+					tooltip = EVTTOOLTIP_ENFLAME_DISCOVER
+				}
+			}
+		}
+
+		random = {
+			chance = 50
+
+			mult_modifier = {
+				factor = 0.5
+				attribute_diff = { character = event_target:target_new_rival attribute = intrigue value >= 3 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				attribute_diff = { character = event_target:target_new_rival attribute = intrigue value <= -3 }
+			}
+
+			event_target:target_new_rival = {
+				show_scope_change = no
+
+				character_event = {
+					id = Plus.1534
+					tooltip = EVTTOOLTIP_ENFLAME_DISCOVER
+				}
+			}
+		}
+
+		character_event = {
+			id = WoL.2069 # Clear out flags and end spying
+			tooltip = EVTTOOLTIP_STOP_SPYING
+		}
+	}
+}
+
+# Inform the spy target
+character_event = {
+	id = Plus.1533
+	desc = EVTDESC_Plus_1533
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				opinion = {
+					who = FROM
+					value < -25
+				}
+			}
+
+			set_character_flag = needs_rivalry
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1533
+
+		if = {
+			limit = { has_character_flag = needs_rivalry }
+			clr_character_flag = needs_rivalry
+			add_rival = FROM
+		}
+		else = {
+			opinion = {
+				name = opinion_outraged
+				who = FROM
+				years = 10
+			}
+		}
+	}
+}
+
+# Inform the new rival
+character_event = {
+	id = Plus.1534
+	desc = EVTDESC_Plus_1534
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				opinion = {
+					who = FROM
+					value < -25
+				}
+			}
+
+			set_character_flag = needs_rivalry
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1533
+
+		if = {
+			limit = { has_character_flag = needs_rivalry }
+			clr_character_flag = needs_rivalry
+			add_rival = FROM
+		}
+		else = {
+			opinion = {
+				name = opinion_outraged
+				who = FROM
+				years = 10
+			}
+		}
+	}
+}
+
+### REDUCE RELATIONS WITH LIEGE
+
+# Discovers chance to reduce relations with liege
+character_event = {
+	id = Plus.1540
+	desc = EVTDESC_Plus_1540
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	immediate = {
+		event_target:target_spy_on = {
+			liege = { save_event_target_as = target_new_rival }
+
+			reverse_opinion = {
+				name = opinion_spy_enflamed_rivalry
+				who = ROOT
+				years = 10
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1525 # Make the attempt
+
+		ai_chance = {
+			factor = 100
+
+			trigger = {
+				NOR = {
+					trait = kind
+					trait = honest
+					trait = humble
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				intrigue <= event_target:target_spy_on
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				intrigue <= event_target:target_new_rival
+			}
+
+			mult_modifier = {
+				factor = 2
+
+				OR = {
+					trait = deceitful
+					trait = cruel
+					trait = envious
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:target_new_rival value >= 25 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:target_new_rival value >= 50 }
+			}
+		}
+
+		random_list = {
+			40 = { # Attempt Succeeds
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value >= 3 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value >= 6 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value < 1 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value <= -3 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value <= -6 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value >= 3 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value >= 6 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value < 1 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value <= -3 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value <= -6 }
+				}
+
+				event_target:target_spy_on = {
+					show_scope_change = no
+
+					character_event = {
+						id = Plus.1541
+						days = 7
+						tooltip = EVTTOOLTIP_REDUCE_SUCCEED
+					}
+				}
+			}
+
+			30 = { # Attempt Fails
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value >= 3 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value >= 6 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value < 1 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value <= -3 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value <= -6 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value >= 3 }
+				}
+
+				mult_modifier = {
+					factor = 0.9
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value >= 6 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value < 1 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value <= -3 }
+				}
+
+				mult_modifier = {
+					factor = 1.1
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value <= -6 }
+				}
+
+				event_target:target_spy_on = {
+					show_scope_change = no
+
+					character_event = {
+						id = Plus.1544
+						days = 7
+						tooltip = EVTTOOLTIP_REDUCE_FAIL
+					}
+				}
+			}
+
+			30 = { # Attempt Fails & Is Revealed
+				mult_modifier = {
+					factor = 0.8
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value >= 3 }
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value >= 6 }
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value < 1 }
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value <= -3 }
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					attribute_diff = { character = event_target:target_spy_on attribute = intrigue value <= -6 }
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value >= 3 }
+				}
+
+				mult_modifier = {
+					factor = 0.8
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value >= 6 }
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value < 1 }
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value <= -3 }
+				}
+
+				mult_modifier = {
+					factor = 1.2
+					attribute_diff = { character = event_target:target_new_rival attribute = intrigue value <= -6 }
+				}
+
+				event_target:target_spy_on = {
+					show_scope_change = no
+
+					character_event = {
+						id = Plus.1545
+						days = 7
+						tooltip = EVTTOOLTIP_REDUCE_REVEAL
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1525 # It's not worth the effort
+
+		ai_chance = { factor = 100 }
+	}
+}
+
+# Attempt to reduce relations succeeds
+character_event = {
+	id = Plus.1541
+	desc = EVTDESC_Plus_1541
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+	portrait = event_target:target_new_rival
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		prestige = 50
+
+		hidden_effect = {
+			event_target:target_spy_on = { character_event = { id = Plus.1542 } }
+			event_target:target_new_rival = { character_event = { id = Plus.1543 } }
+		}
+	}
+}
+
+# Inform the spy target
+character_event = {
+	id = Plus.1542
+	desc = EVTDESC_Plus_1542
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+	portrait = event_target:target_new_rival
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	immediate = {
+		if = {
+			limit = {
+				opinion = {
+					who = event_target:target_new_rival
+					value < -50
+				}
+			}
+
+			set_character_flag = needs_rivalry
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1542
+
+		if = {
+			limit = { has_character_flag = needs_rivalry }
+			clr_character_flag = needs_rivalry
+			add_rival = event_target:target_new_rival
+		}
+		else = {
+			opinion = {
+				name = opinion_outraged
+				who = event_target:target_new_rival
+				years = 10
+			}
+		}
+	}
+}
+
+# Inform the liege
+character_event = {
+	id = Plus.1543
+	desc = EVTDESC_Plus_1543
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+	portrait = event_target:target_spy_on
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	immediate = {
+		if = {
+			limit = {
+				opinion = {
+					who = event_target:target_spy_on
+					value < -50
+				}
+			}
+
+			set_character_flag = needs_rivalry
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1542
+
+		if = {
+			limit = { has_character_flag = needs_rivalry }
+			clr_character_flag = needs_rivalry
+			add_rival = event_target:target_spy_on
+		}
+		else = {
+			opinion = {
+				name = opinion_outraged
+				who = event_target:target_spy_on
+				years = 10
+			}
+		}
+	}
+}
+
+# Attempt to reduce relations fails
+character_event = {
+	id = Plus.1544
+	desc = EVTDESC_Plus_1544
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+		prestige = -25
+	}
+}
+
+# Attempt to reduce relations fails & is perhaps revealed
+character_event = {
+	id = Plus.1545
+	desc = EVTDESC_Plus_1545
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+
+		prestige = -50
+
+		random = {
+			chance = 50
+
+			mult_modifier = {
+				factor = 0.5
+				attribute_diff = { character = event_target:target_spy_on attribute = intrigue value >= 3 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				attribute_diff = { character = event_target:target_spy_on attribute = intrigue value <= -3 }
+			}
+
+			event_target:target_spy_on = {
+				show_scope_change = no
+
+				character_event = {
+					id = Plus.1546
+					tooltip = EVTTOOLTIP_ENFLAME_DISCOVER
+				}
+			}
+		}
+
+		random = {
+			chance = 50
+
+			mult_modifier = {
+				factor = 0.5
+				attribute_diff = { character = event_target:target_new_rival attribute = intrigue value >= 3 }
+			}
+
+			mult_modifier = {
+				attribute_diff = { character = event_target:target_new_rival attribute = intrigue value <= -3 }
+				factor = 1.5
+			}
+
+			event_target:target_new_rival = {
+				show_scope_change = no
+
+				character_event = {
+					id = Plus.1547
+					tooltip = EVTTOOLTIP_ENFLAME_DISCOVER
+				}
+			}
+		}
+
+		character_event = {
+			id = WoL.2069 # Clear out flags and end spying
+			tooltip = EVTTOOLTIP_STOP_SPYING
+		}
+	}
+}
+
+# Inform the spy target
+character_event = {
+	id = Plus.1546
+	desc = EVTDESC_Plus_1546
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				opinion = {
+					who = FROM
+					value < -25
+				}
+			}
+
+			set_character_flag = needs_rivalry
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1546
+
+		if = {
+			limit = { has_character_flag = needs_rivalry }
+			clr_character_flag = needs_rivalry
+			add_rival = FROM
+		}
+		else = {
+			opinion = {
+				name = opinion_outraged
+				who = FROM
+				years = 10
+			}
+		}
+	}
+}
+
+# Inform the liege
+character_event = {
+	id = Plus.1547
+	desc = EVTDESC_Plus_1547
+	picture = GFX_evt_whispers
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				opinion = {
+					who = FROM
+					value < -25
+				}
+			}
+
+			set_character_flag = needs_rivalry
+		}
+	}
+
+	option = {
+		name = EVTDESC_Plus_1546
+
+		if = {
+			limit = { has_character_flag = needs_rivalry }
+			clr_character_flag = needs_rivalry
+			add_rival = FROM
+		}
+		else = {
+			opinion = {
+				name = opinion_outraged
+				who = FROM
+				years = 10
+			}
+		}
+	}
+}

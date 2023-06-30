@@ -1,0 +1,1004 @@
+namespace = realmPlus
+
+#######################################
+#
+# CK2Plus Realm Events
+#
+#######################################
+#
+# CATALOG
+#
+# 100 - 199: Imperial Events
+# 200 - 299: Kingdom Events
+# 300 - 399: Ducal Events
+# 400 - 499: County Events
+# 500 - 500: Patrician (Baron) Events
+# 600 - 699: General Realm Events
+#
+#######################################
+
+#######################################
+#
+# 100 - 199: Imperial Events
+#
+#######################################
+#
+# INDEX
+#
+# 100: Imperial Destruction
+# 101: Emperor picks between two held empires
+# 102: Copy imperial laws to held kingdoms
+# 103: Special Destruction Mechanic for HRE, Byzantium, and Latin Empire
+#
+#######################################
+
+# 100: Imperial Destruction
+character_event = {
+	id = realmPlus.100
+	desc = EVTDESC_Plus_303
+	picture = GFX_evt_council
+
+	is_triggered_only = yes
+
+	only_independent = yes
+	war = no
+
+	trigger = {
+		real_tier = EMPEROR
+		num_of_emperor_titles == 1
+		is_nomadic = no
+		is_offmap_trigger = no
+		realm_size < 100
+		num_of_count_titles_in_realm < 35
+
+		# Exceptions
+		primary_title = {
+			is_landless_type_title = no
+
+			NOR = {
+				title = e_byzantium
+				title = e_hre
+				title = e_latin_empire
+				title = e_nicaea
+			}
+		}
+	}
+
+	immediate = {
+		# Emergency Kingdom for dumb emperors (usually AI)
+		if = {
+			limit = { num_of_king_titles == 0 }
+
+			if = {
+				limit = {
+					capital_scope = {
+						kingdom = { has_holder = no }
+					}
+				}
+
+				capital_scope = {
+					kingdom = { gain_title = ROOT }
+				}
+			}
+			else_if = {
+				limit = {
+					primary_title = {
+						any_direct_de_jure_vassal_title = {
+							has_holder = no
+						}
+					}
+				}
+
+				primary_title = {
+					random_direct_de_jure_vassal_title = {
+						limit = { has_holder = no }
+						gain_title = ROOT
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					any_realm_province = {
+						kingdom = { has_holder = no }
+						held_under_PREV = yes
+					}
+				}
+
+				random_realm_province = {
+					limit = {
+						kingdom = { has_holder = no }
+						held_under_PREV = yes
+					}
+
+					kingdom = { gain_title = ROOT }
+				}
+			}
+			else = {
+				log = "Unable to create emergency kingdom when shattering empire. Ruler rank demoted."
+			}
+		}
+
+		# You are the weakest link, goodbye
+		destroy_landed_title = primary_title
+	}
+
+	option = {
+		name = EVTOPTA_Plus_303
+
+		prestige = -1000
+	}
+}
+
+# 101: Emperor picks between two held empires
+character_event = {
+	id = realmPlus.101
+	desc = EVTDESC_Plus_1854
+	picture = GFX_evt_coronation
+
+	is_triggered_only = yes
+
+	only_independent = yes
+
+	trigger = {
+		num_of_emperor_titles >= 2
+		is_nomadic = no
+		NOT = { has_character_flag = receiving_special_empire }
+	}
+
+	weight_multiplier = { days = 1 }
+
+	immediate = {
+		primary_title = { save_event_target_as = current_title }
+
+		random_demesne_title = {
+			limit = {
+				real_tier = EMPEROR
+				NOT = { title = event_target:current_title }
+			}
+			save_event_target_as = new_title
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1854 # I will assume the new title
+
+		hidden_effect = {
+			event_target:new_title = { make_primary_title = yes }
+
+			event_target:current_title = {
+				any_vassal = { set_defacto_liege = ROOT }
+			}
+
+			clr_character_flag = must_grant_empire_flag
+		}
+
+		unsafe_destroy_landed_title = event_target:current_title
+
+		ai_chance = {
+			factor = 20
+
+			trigger = {
+				NOR = {
+					event_target:current_title = { culture = ROOT }
+
+					AND = {
+						event_target:current_title = { is_titular = no }
+						event_target:new_title = { is_titular = yes }
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				event_target:current_title = {
+					capital_scope = { culture = ROOT }
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1854 # I will keep my current title
+
+		hidden_effect = {
+			event_target:new_title = {
+				any_vassal = { set_defacto_liege = ROOT }
+			}
+
+			clr_character_flag = must_grant_empire_flag
+		}
+
+		unsafe_destroy_landed_title = event_target:new_title
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				NOR = {
+					event_target:new_title = { culture = ROOT }
+
+					AND = {
+						event_target:current_title = { is_titular = yes }
+						event_target:new_title = { is_titular = no }
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				event_target:new_title = {
+					capital_scope = { culture = ROOT }
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_1854 # I will give the second title to someone else
+
+		trigger = {
+			is_tributary = no
+			NOT = { has_character_flag = must_grant_empire_flag }
+			event_target:new_title = { is_titular = no }
+			event_target:current_title = { is_titular = no }
+		}
+
+		set_character_flag = must_grant_empire_flag
+
+		repeat_event = {
+			id = realmPlus.101
+			months = 1
+			tooltip = GRANT_EMPIRE_WITHIN_30_DAYS
+		}
+
+		ai_chance = { factor = 0 }
+	}
+
+	after = {
+		clear_event_target = current_title
+		clear_event_target = new_title
+
+		# In case the ruler somehow had more than two empires
+		if = {
+			limit = {
+				num_of_emperor_titles >= 2
+				NOT = { has_character_flag = must_grant_empire_flag }
+			}
+
+			character_event = {
+				id = realmPlus.101
+				days = 1
+			}
+		}
+	}
+}
+
+# 102: Copy imperial laws to held kingdoms
+# TODO: Find out the original intent of this event, consider getting rid of it
+# Used to be Plus.310, see commit 'continued reduction of maintenance events' (15 July 2020)
+# Only used to changed crown laws (Investiture, Out-of-Realm-Inheritance, Crown Authority, Kings's Peace)
+character_event = {
+	id = realmPlus.102
+
+	is_triggered_only = yes # on_yearly_pulse, on_new_holder(_inheritance/usurpation)
+	hide_window = yes
+
+	only_independent = yes
+
+	trigger = {
+		always = no # Disabled for now, causing issues when creating first empire title - copies new empire's default laws to all held kingdom titles
+		real_tier = EMPEROR
+		num_of_king_titles >= 1
+	}
+
+	weight_multiplier = { days = 1 }
+
+	immediate = {
+		primary_title = { save_event_target_as = primaryTitle }
+
+		any_demesne_title = {
+			limit = { real_tier = KING }
+
+			set_title_flag = non_manual_law_change # No prestige loss
+			copy_title_laws = event_target:primaryTitle
+			clr_title_flag = non_manual_law_change # No prestige loss
+		}
+	}
+}
+
+# 103: Special Destruction Mechanic for HRE, Byzantium, and Latin Empire
+character_event = {
+	id = realmPlus.103
+	picture = GFX_evt_council
+
+	desc = {
+		text = EVTDESC_Plus_328
+		trigger = { has_landed_title = e_byzantium }
+	}
+	desc = {
+		text = EVTDESC_Plus_338
+		trigger = { has_landed_title = e_hre }
+	}
+	desc = {
+		text = EVTDESC_Plus_327
+		trigger = { has_landed_title = e_latin_empire }
+	}
+
+	is_triggered_only = yes # on_yearly_pulse, on_new_holder(_inheritance/usurpation), on_character_convert_religion
+
+	only_independent = yes
+
+	trigger = {
+		num_of_emperor_titles == 1
+		is_nomadic = no
+
+		trigger_if = {
+			limit = { has_landed_title = e_byzantium }
+
+			is_orthodox_branch = no
+			NOT = { religion = chalcedonian } # Have to pick rites by on_character_convert_religion event
+			religion_openly_hellenic_or_reformed_trigger = no
+		}
+		trigger_else_if = {
+			limit = { has_landed_title = e_hre }
+			is_catholic_branch = no
+		}
+		trigger_else_if = {
+			limit = { has_landed_title = e_latin_empire }
+
+			is_catholic_branch = no
+			num_of_count_titles_in_realm >= 35
+			realm_size >= 100
+		}
+		trigger_else = {
+			always = no
+		}
+	}
+
+	immediate = {
+		primary_title = { save_event_target_as = current_title }
+
+		if = {
+			limit = {
+				num_of_count_titles_in_realm >= 35
+				realm_size >= 100
+			}
+
+			if = {
+				limit = {
+					has_landed_title = e_byzantium
+					is_catholic_branch = yes
+				}
+				e_latin_empire = { save_event_target_as = emergency_title }
+			}
+			else_if = {
+				limit = { has_landed_title = e_hre }
+				e_germania = { save_event_target_as = emergency_title }
+			}
+			else_if = {
+				limit = {
+					has_landed_title = e_latin_empire
+					is_orthodox_branch = yes
+				}
+				e_byzantium = { save_event_target_as = emergency_title }
+			}
+			else = {
+				set_character_flag = needs_emergency_empire
+			}
+
+			if = {
+				limit = {
+					event_target:emergency_title = { has_holder = yes }
+				}
+				set_character_flag = needs_emergency_empire
+				clear_event_target = emergency_title
+			}
+		}
+		else = {
+			set_character_flag = too_small_for_emergency_empire
+		}
+	}
+
+	option = {
+		name = I_WILL_CONVERT
+
+		trigger = {
+			NOT = { trait = zealous }
+		}
+
+		trigger_switch = {
+			on_trigger = has_landed_title
+
+			e_byzantium = {
+				if = {
+					limit = {
+						c_constantinopolis = {
+							location = {
+								culture = roman
+								religion_group = pagan_group
+							}
+						}
+					}
+					religion = roman_pagan
+				}
+				else_if = {
+					limit = {
+						c_constantinopolis = {
+							location = { religion_group = pagan_group }
+						}
+						hellenic_pagan = { has_flag = has_been_reformed }
+					}
+					religion = hellenic_pagan_reformed
+				}
+				else_if = {
+					limit = {
+						c_constantinopolis = {
+							location = { religion_group = pagan_group }
+						}
+					}
+					religion = hellenic_pagan
+				}
+				else = {
+					random_character = {
+						limit = {
+							is_orthodox_branch = yes
+							is_heretic = no
+						}
+						reverse_religion = ROOT
+					}
+				}
+			}
+
+			e_hre = {
+				random_character = {
+					show_scope_change = no
+
+					limit = {
+						is_catholic_branch = yes
+						is_heretic = no
+					}
+
+					reverse_religion = ROOT
+				}
+			}
+
+			e_latin_empire = {
+				random_character = {
+					show_scope_change = no
+
+					limit = {
+						is_catholic_branch = yes
+						is_heretic = no
+					}
+
+					reverse_religion = ROOT
+				}
+			}
+		}
+
+		add_character_modifier = {
+			name = recently_converted
+			years = 2
+		}
+
+		ai_chance = {
+			factor = 5
+
+			trigger = {
+				NOT = { trait = content }
+			}
+		}
+	}
+
+	option = {
+		name = OK
+
+		trigger = { has_character_flag = too_small_for_emergency_empire }
+
+		# Emergency Kingdom for dumb emperors (usually AI)
+		if = {
+			limit = { num_of_king_titles == 0 }
+
+			if = {
+				limit = {
+					capital_scope = {
+						kingdom = { has_holder = no }
+					}
+				}
+
+				capital_scope = {
+					show_scope_change = no
+
+					kingdom = {
+						show_scope_change = no
+
+						gain_title = ROOT
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					primary_title = {
+						any_direct_de_jure_vassal_title = {
+							has_holder = no
+						}
+					}
+				}
+
+				primary_title = {
+					show_scope_change = no
+
+					random_direct_de_jure_vassal_title = {
+						show_scope_change = no
+
+						limit = { has_holder = no }
+
+						gain_title = ROOT
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					any_realm_province = {
+						kingdom = { has_holder = no }
+						held_under_PREV = yes
+					}
+				}
+
+				random_realm_province = {
+					show_scope_change = no
+
+					limit = {
+						kingdom = { has_holder = no }
+						held_under_PREV = yes
+					}
+
+					kingdom = {
+						show_scope_change = no
+
+						gain_title = ROOT
+					}
+				}
+			}
+			else = {
+				log = "Unable to create emergency kingdom when shattering empire. Ruler rank demoted."
+			}
+		}
+
+		# You are the weakest link, goodbye
+		destroy_landed_title = primary_title
+
+		ai_chance = { factor = 2 }
+	}
+
+	option = {
+		name = OK
+
+		trigger = {
+			NOT = { has_character_flag = too_small_for_emergency_empire }
+		}
+
+		set_character_flag = centralize_without_penalties
+
+		if = {
+			limit = { has_character_flag = needs_emergency_empire }
+
+			capital_scope = {
+				kingdom = {
+					create_title = {
+						base_title = THIS
+						culture = ROOT
+						custom_created = yes
+						holder = ROOT
+						landless = no
+						temporary = no
+						tier = EMPEROR
+					}
+					new_title = {
+						save_event_target_as = emergency_title
+					}
+				}
+			}
+
+			clr_character_flag = needs_emergency_empire
+		}
+
+		event_target:emergency_title = {
+			show_scope_change = no
+
+			gain_title = ROOT
+
+			hidden_effect = {
+				set_title_flag = non_manual_law_change # No prestige loss
+				copy_title_laws = event_target:current_title
+				copy_title_history = event_target:current_title
+				clr_title_flag = non_manual_law_change # No prestige loss
+			}
+		}
+
+		hidden_effect = {
+			event_target:current_title = {
+				any_claimant = {
+					if = {
+						limit = { has_strong_pressed_claim = PREV }
+						add_pressed_claim = event_target:emergency_title
+					}
+					else_if = {
+						limit = { has_strong_claim = PREV }
+						add_claim = event_target:emergency_title
+					}
+					else_if = {
+						limit = { has_weak_pressed_claim = PREV }
+						add_weak_pressed_claim = event_target:emergency_title
+					}
+					else = {
+						add_weak_claim = event_target:emergency_title
+					}
+
+					remove_claim = PREV
+				}
+
+				destroy_landed_title = THIS
+			}
+
+			any_vassal = {
+				limit = {
+					NOT = { has_character_flag = considered_for_independence }
+					primary_title = {
+						de_jure_liege_or_above = event_target:current_title
+					}
+				}
+
+				character_event = {
+					id = Plus.430
+					days = 3
+				}
+			}
+		}
+
+		ai_chance = { factor = 2 }
+	}
+
+	after = {
+		clear_event_target = current_title
+		clear_event_target = emergency_title
+		clr_character_flag = too_small_for_emergency_empire
+	}
+}
+
+#######################################
+#
+# 600 - 699: General Realm Events
+#
+#######################################
+#
+# INDEX
+#
+# 600: AI Abandon Baronies orphaned in another realm
+# 601: Family members inherit half of previous ruler's Dishonorable or Tyrant
+# 602: Dishonorable Trait Degredation
+# 603: Tyrant Trait Degredation
+#
+#######################################
+
+# 600: AI Abandon Baronies orphaned in another realm
+character_event = {
+	id = realmPlus.600
+
+	is_triggered_only = yes # on_five_year_pulse
+	hide_window = yes
+
+	only_rulers = yes
+	ai = yes
+	is_patrician = no
+	war = no
+
+	trigger = {
+		mercenary = no
+
+		any_demesne_title = {
+			real_tier = BARON
+
+			dejure_liege_title = {
+				holder_scope = {
+					NOT = { same_realm = ROOT }
+				}
+			}
+		}
+
+		NOR = {
+			any_liege = { ai = no }
+			government = order_government
+			rightful_religious_head = ROOT
+		}
+	}
+
+	weight_multiplier = { days = 1 }
+
+	immediate = {
+		any_demesne_title = {
+			limit = {
+				real_tier = BARON
+
+				dejure_liege_title = {
+					holder_scope = {
+						NOT = { same_realm = ROOT }
+					}
+				}
+			}
+
+			save_event_target_as = orphaned_barony
+
+			dejure_liege_title = {
+				holder_scope = {
+					gain_title = event_target:orphaned_barony
+				}
+			}
+		}
+	}
+}
+
+# 601: Family members inherit half of previous ruler's Dishonorable or Tyrant
+# Fires only on succession, to avoid silly situations
+# TODO: Add event to inform ruler of what just happened?
+character_event = {
+	id = realmPlus.601
+
+	is_triggered_only = yes # on_new_holder_inheritance
+	hide_window = yes
+
+	trigger = {
+		is_close_relative = FROMFROM
+		NOT = { has_character_flag = inherited_tyranny_dishonorable_from@FROMFROM }
+	}
+
+	immediate = {
+		set_character_flag = inherited_tyranny_dishonorable_from@FROMFROM
+
+		FROMFROM = {
+			# Dishonorable Trait
+			if = {
+				limit = {
+					check_variable = {
+						which = dishonorable
+						value >= 2
+					}
+
+					dishonorable_trait_trigger = yes # Dynastic stain is not inherited
+				}
+
+				if = {
+					limit = {
+						ROOT = { # New title holder isn't dishonorable scum yet
+							check_variable = {
+								which = dishonorable
+								value == 0
+							}
+						}
+					}
+
+					# Give dynastic stain only, equal to dishonorable of FROMFROM
+					ROOT = {
+						change_variable = {
+							which = dishonorable
+							which = PREV
+						}
+
+						dynastic_stain_trait_effect = yes
+					}
+				}
+				else_if = { # Inherit half the difference
+					limit = {
+						check_variable = {
+							which = dishonorable
+							which >= ROOT
+						}
+					}
+
+					# Calculate difference
+					set_variable = {
+						which = local_dishonor_difference
+						which = dishonorable
+					}
+
+					ROOT = {
+						subtract_variable = {
+							which = local_dishonor_difference
+							which = dishonorable
+						}
+					}
+
+					# Take half of it
+					divide_variable = {
+						which = local_dishonor_difference
+						value = 2
+					}
+
+					# And give it to the new guy
+					ROOT = {
+						change_variable = {
+							which = dishonorable
+							which = local_dishonor_difference
+						}
+
+						# Update trait
+						dishonorable_trait_effect = yes
+					}
+				}
+			}
+
+			# Tyrant Trait
+			if = {
+				limit = {
+					check_variable = {
+						which = tyrant
+						value >= 2
+					}
+				}
+
+				if = {
+					limit = {
+						ROOT = { # New title holder isn't tyrannical scum yet
+							check_variable = {
+								which = tyrant
+								value == 0
+							}
+						}
+					}
+
+					# Transfer tyranny
+					ROOT = {
+						change_variable = {
+							which = tyrant
+							which = PREV
+						}
+
+						tyrant_trait_effect = yes
+					}
+				}
+				else_if = {
+					limit = {
+						check_variable = {
+							which = tyrant
+							which >= ROOT
+						}
+					}
+
+					# Calculate difference
+					set_variable = {
+						which = local_tyrant_difference
+						which = tyrant
+					}
+
+					ROOT = {
+						subtract_variable = {
+							which = local_tyrant_difference
+							which = tyrant
+						}
+					}
+
+					# Take half of it
+					divide_variable = {
+						which = local_tyrant_difference
+						value = 2
+					}
+
+					# And give it to the new guy
+					ROOT = {
+						change_variable = {
+							which = tyrant
+							which = local_tyrant_difference
+						}
+
+						# Update trait
+						tyrant_trait_effect = yes
+					}
+				}
+			}
+		}
+	}
+}
+
+# TODO: Track variable on character, use on_new_holder(_inheritance/usurpation)
+# 604: Tributary Maintenance
+character_event = {
+	id = realmPlus.604
+
+	is_triggered_only = yes # on_yearly_pulse
+	hide_window = yes
+
+	trigger = {
+		trigger_if = {
+			limit = { is_tributary = no }
+
+			primary_title = {
+				check_variable = {
+					which = tributary_years
+					value > 0
+				}
+			}
+		}
+	}
+
+	immediate = {
+		# Remove tributary status if either tributary or overlord vassalized
+		if = {
+			limit = {
+				is_tributary = yes
+
+				OR = {
+					independent = no
+					suzerain = { independent = no }
+				}
+			}
+
+			# TODO: Add notification event, maybe transfer tributaries to suzerain's top liege?
+			suzerain = {
+				log = "---> [This.GetBestName] was removed as suzerain of [Root.GetBestName], as they are no longer both independent"
+				remove_tributary = ROOT
+			}
+		}
+
+		# Clear tributary years if no longer a tributary
+		if = {
+			limit = { is_tributary = no }
+
+			primary_title = {
+				set_variable = {
+					which = tributary_years
+					value = 0
+				}
+			}
+		}
+		else = {
+			# Transfer tributary years to another title
+			if = {
+				limit = {
+					any_demesne_title = {
+						is_primary_holder_title = no
+
+						check_variable = {
+							which = tributary_years
+							value > 0
+						}
+					}
+				}
+
+				random_demesne_title = {
+					limit = {
+						is_primary_holder_title = no
+
+						check_variable = {
+							which = tributary_years
+							value > 0
+						}
+					}
+
+					holder_scope = {
+						primary_title = {
+							change_variable = {
+								which = tributary_years
+								which = PREVPREV
+							}
+						}
+					}
+
+					set_variable = {
+						which = tributary_years
+						value = 0
+					}
+				}
+			}
+
+			# Increment Years
+			primary_title = {
+				change_variable = {
+					which = tributary_years
+					value = 1
+				}
+			}
+		}
+	}
+}

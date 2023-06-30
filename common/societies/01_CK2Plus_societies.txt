@@ -1,0 +1,3087 @@
+###MONASTIC ORDER###
+monastic_order_apostolic = {
+	primary_attribute = learning
+	opinion_to_other_members = +10
+	opinion_per_rank_above = +5
+	sound = monastic_orders_interface
+	society_ranks_gfx = monk_ranks
+
+	is_religious = yes
+	indestructible = yes
+	society_influence = no
+
+	non_interference = {
+		always = yes
+	}
+
+	active = {
+		has_dlc = "Mystics"
+	}
+
+	show_society = {
+		OR = {
+			religion = apostolic
+
+			AND = {
+				is_heretic = no
+				religion = paulician
+			}
+		}
+
+		trigger_if = {
+			limit = { is_female = yes }
+			has_gender_equal_game_rule_trigger = yes
+		}
+	}
+
+	can_join_society = {
+		trigger_if = {
+			limit = { ai = yes }
+
+			NOT = {
+				is_society_rank_full = {
+					society = monastic_order_apostolic
+					rank = 1
+				}
+			}
+		}
+
+		trigger_if = {
+			limit = { has_character_flag = betrayed_monastic_order_benedictine }
+
+			custom_tooltip = {
+				text = did_not_betray_society
+				NOT = { has_character_flag = betrayed_monastic_order_benedictine }
+			}
+		}
+		trigger_else_if = {
+			limit = { has_character_flag = society_join_block }
+			always = no
+		}
+		trigger_else = {
+			is_apostolic_branch = yes
+			is_adult = yes
+			prisoner = no
+			is_heretic = no
+			NOT = { trait = excommunicated }
+
+			trigger_if = {
+				limit = { is_female = yes }
+				has_gender_equal_game_rule_trigger = yes
+			}
+		}
+	}
+
+	potential = {
+		is_apostolic_branch = yes
+		is_heretic = no
+
+		trigger_if = {
+			limit = { is_female = yes }
+			has_gender_equal_game_rule_trigger = yes
+		}
+	}
+
+	society_rank = {
+		level = 1
+		limit = 50
+		startup_limit = 10
+
+		modifier = {
+			monthly_character_piety = 0.05
+			fertility = -0.15
+		}
+
+		custom_tooltip = monastic_order_education_power_tt
+	}
+
+	society_rank = {
+		level = 2
+		limit = 20
+		startup_limit = 6
+
+		modifier = {
+			monthly_character_piety = 0.1
+			learning = 1
+			fertility = -0.15
+		}
+
+		decisions = {
+			monastic_orders_go_celibate # Power: toggle celibacy
+			monastic_orders_stop_celibate
+		}
+	}
+
+	society_rank = {
+		level = 3
+		limit = 10
+		startup_limit = 3
+
+		modifier = {
+			monthly_character_piety = 0.2
+			learning = 2
+			build_cost_temple_modifier = -0.25
+			fertility = -0.15
+		}
+
+		decisions = {
+			monastic_orders_invite_ascetic
+		}
+	}
+
+	society_rank = { # TODO: Add counseling power
+		level = 4
+		limit = 5
+		startup_limit = 1
+
+		modifier = {
+			monthly_character_piety = 0.5
+			temple_vassal_tax_modifier = 0.1
+			build_cost_temple_modifier = -0.5
+			learning = 3
+			fertility = -0.15
+		}
+	}
+
+	monthly_currency_gain = {
+		name = currency_name_monastic_order_apostolic
+
+		per_attribute = {
+			name = learning
+			value = 0.5
+		}
+
+		has_trait = {
+			trait = paragon
+			value = 5
+		}
+
+		has_trait = {
+			trait = monk
+			value = 5
+		}
+
+		has_trait = {
+			trait = nun
+			value = 5
+		}
+
+		has_trait = {
+			trait = celibate
+			value = 2
+		}
+
+		has_trait = {
+			trait = diligent
+			value = 1
+		}
+
+		has_trait = {
+			trait = chaste
+			value = 1
+		}
+
+		has_trait = {
+			trait = temperate
+			value = 1
+		}
+
+		has_trait = {
+			trait = charitable
+			value = 1
+		}
+
+		has_trait = {
+			trait = kind
+			value = 1
+		}
+
+		has_trait = {
+			trait = patient
+			value = 1
+		}
+
+		has_trait = {
+			trait = humble
+			value = 1
+		}
+
+		has_trait = {
+			trait = honest
+			value = 1
+		}
+
+		has_trait = {
+			trait = erudite
+			value = 1
+		}
+
+		has_trait = {
+			trait = pilgrim
+			value = 1
+		}
+
+		has_trait = {
+			trait = scholar
+			value = 1
+		}
+
+		has_trait = {
+			trait = theologian
+			value = 1
+		}
+
+		has_trait = {
+			trait = zealous
+			value = 1
+		}
+
+		triggered_gain = {
+			desc = saintly_monastic_gain
+			value = 3
+
+			trigger = {
+				any_owned_bloodline = {
+					has_bloodline_flag = monastic_saintly_bloodline
+					bloodline_is_active_for = PREV
+				}
+			}
+		}
+	}
+
+	member_score_per_attribute = 3
+	member_score_per_rank = 100
+
+	member_score = {
+		value = 10
+
+		mult_modifier = {
+			factor = 10
+			is_priest = yes
+		}
+
+		mult_modifier = {
+			factor = 5
+			trait = monk
+		}
+
+		mult_modifier = {
+			factor = 5
+			trait = nun
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			trait = scholar
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			trait = theologian
+		}
+
+		mult_modifier = {
+			factor = 1.2
+			trait = celibate
+		}
+
+		mult_modifier = {
+			factor = 1.2
+			trait = diligent
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = chaste
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = temperate
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = charitable
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = kind
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = patient
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = honest
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = erudite
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = pilgrim
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = zealous
+		}
+	}
+
+	startup_populate = {
+		trigger = {
+			religion = apostolic
+			is_adult = yes
+			lower_real_tier_than = KING
+			ai = yes
+			is_heretic = no
+			controls_religion = no
+			holy_order = no
+			mercenary = no
+			has_secret_religion = no
+			is_in_society = no
+
+			OR = {
+				trait = zealous
+				trait = scholar
+				trait = theologian
+				trait = monk
+				trait = nun
+				learning >= 16
+				is_priest = yes
+			}
+
+			trigger_if = {
+				limit = { is_female = yes }
+				has_gender_equal_game_rule_trigger = yes
+			}
+
+			NOR = {
+				trait = cynical
+				trait = excommunicated
+			}
+		}
+	}
+}
+
+monastic_order_bon = {
+	primary_attribute = diplomacy
+	opinion_to_other_members = +10
+	opinion_per_rank_above = +5
+	sound = monastic_orders_indian_interface
+	society_ranks_gfx = monk_ranks
+
+	is_religious = yes
+	indestructible = yes
+	society_influence = no
+
+	non_interference = {
+		always = yes
+	}
+
+	active = {
+		has_dlc = "Mystics"
+	}
+
+	can_join_society = {
+		trigger_if = {
+			limit = { ai = yes }
+
+			NOT = {
+				is_society_rank_full = {
+					society = monastic_order_bon
+					rank = 1
+				}
+			}
+		}
+
+		trigger_if = {
+			limit = { has_character_flag = betrayed_monastic_order_bon }
+
+			custom_tooltip = {
+				text = did_not_betray_society
+				NOT = { has_character_flag = betrayed_monastic_order_bon }
+			}
+		}
+		trigger_else_if = {
+			limit = { has_character_flag = society_join_block }
+			always = no
+		}
+		trigger_else = {
+			religion = bon_pagan
+			is_adult = yes
+			prisoner = no
+			NOT = { trait = excommunicated }
+			scaled_wealth >= 0.25
+		}
+
+		custom_tooltip = {
+			text = did_not_betray_society
+		}
+	}
+
+	show_society = {
+		OR = {
+			religion = bon_pagan
+			society_member_of = monastic_order_bon
+		}
+	}
+
+	potential = {
+		religion = bon_pagan
+	}
+
+	society_rank = {
+		level = 1
+		limit = 50
+		startup_limit = 10
+
+		modifier = {
+			monthly_character_piety = 0.05
+			fertility = -0.15
+		}
+
+		custom_tooltip = dharmic_good_trait_power_tt
+	}
+
+	society_rank = {
+		level = 2
+		limit = 20
+		startup_limit = 6
+
+		modifier = {
+			monthly_character_piety = 0.1
+			diplomacy = 1
+			fertility = -0.15
+		}
+
+		decisions = {
+			monastic_orders_go_celibate # Power: toggle celibacy
+			monastic_orders_stop_celibate
+			monastic_orders_spiritual_guidance
+		}
+	}
+
+	society_rank = {
+		level = 3
+		limit = 10
+		startup_limit = 3
+
+		modifier = {
+			monthly_character_piety = 0.2
+			diplomacy = 2
+			build_cost_temple_modifier = -0.25
+			fertility = -0.15
+		}
+
+		decisions = {
+			monastic_orders_invite_ascetic
+			monastic_orders_teach_virtue
+		}
+	}
+
+	society_rank = {
+		level = 4
+		limit = 5
+		startup_limit = 1
+
+		modifier = {
+			monthly_character_piety = 0.5
+			diplomacy = 3
+			build_cost_temple_modifier = -0.5
+			global_revolt_risk = -0.08
+			fertility = -0.15
+		}
+
+		decisions = {
+			monastic_order_convert_county
+		}
+	}
+
+	monthly_currency_gain = {
+		name = currency_name_monastic_order_bon
+
+		per_attribute = {
+			name = diplomacy
+			value = 0.5
+		}
+
+		has_trait = {
+			trait = content
+			value = 3
+		}
+
+		has_trait = {
+			trait = kind
+			value = 3
+		}
+
+		has_trait = {
+			trait = patient
+			value = 3
+		}
+
+		has_trait = {
+			trait = diligent
+			value = 1
+		}
+
+		has_trait = {
+			trait = temperate
+			value = 1
+		}
+
+		has_trait = {
+			trait = charitable
+			value = 1
+		}
+
+		has_trait = {
+			trait = humble
+			value = 1
+		}
+
+		has_trait = {
+			trait = chaste
+			value = 1
+		}
+
+		has_trait = {
+			trait = celibate
+			value = 1
+		}
+
+		has_trait = {
+			trait = honest
+			value = 1
+		}
+
+		has_trait = {
+			trait = theologian
+			value = 1
+		}
+
+		society_rank = {
+			rank = 4
+			value = 10
+		}
+	}
+
+	member_score_per_attribute = 3
+	member_score_per_rank = 100
+
+	member_score = {
+		value = 10
+
+		mult_modifier = {
+			factor = 10
+			is_priest = yes
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			trait = kind
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			trait = patient
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = diligent
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = temperate
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = charitable
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = chaste
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = celibate
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = honest
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = theologian
+		}
+	}
+
+	startup_populate = {
+		trigger = {
+		   	religion = bon_pagan
+			is_adult = yes
+			lower_real_tier_than = KING
+			ai = yes
+			controls_religion = no
+			holy_order = no
+			mercenary = no
+			has_secret_religion = no
+			is_in_society = no
+			NOT = { trait = cynical }
+
+			OR = {
+				trait = zealous
+				trait = scholar
+				trait = theologian
+				learning >= 16
+				is_priest = yes
+			}
+		}
+	}
+}
+
+### DEVIL WORSHIPERS ###
+the_cult_of_balor = {
+	primary_attribute = intrigue
+	opinion_to_other_members = +5
+	opinion_to_pretenders = -40			# Pretenders is the opinion you have of people perceived/discovered to be in your society.
+	opinion_to_perceived_members = -40	# Perceived is the opinion you have of people perceived/discovered to be of a society you're not part of
+	opinion_per_rank_above = +10
+	sound = devil_worshippers_interface
+	society_ranks_gfx = devil_ranks
+
+	criminal = yes
+	devil_worshipper = yes
+	indestructible = yes
+	is_secret = yes
+	society_influence = no
+
+	active = {
+		has_dlc = "Mystics"
+
+		NOT = {
+			has_game_rule = {
+				name = devil_worshipers
+				value = none
+			}
+		}
+	}
+
+	show_society = {
+		is_adult = yes
+
+		trigger_if = {
+			limit = {
+				NOT = { society_member_of = the_cult_of_balor }
+			}
+
+			OR = {
+				religion_openly_celtic_or_reformed_trigger = yes
+				religion_secretly_celtic_or_reformed_trigger = yes
+			}
+		}
+	}
+
+	can_join_society = {
+		trigger_if = {
+			limit = { ai = yes }
+
+			NOT = {
+				is_society_rank_full = {
+					society = the_cult_of_balor
+					rank = 1
+				}
+			}
+		}
+
+		trigger_if = {
+			limit = { has_character_flag = society_join_block }
+			always = no
+		}
+		trigger_else = {
+			has_cult_of_balor_prerequisites = yes
+		}
+	}
+
+	society_rank = {
+		level = 1
+		limit = 30
+		startup_limit = 6
+
+		decisions = {
+			decision_abduct
+			prisoner_dark_sacrifice # Available Decision: Sacrifice Prisoner
+			# Over time, lose virtues, gain vices. A Soul Corruption-effect is on a yearly pulse (with a chance to do nothing)
+		}
+
+		#custom_tooltip = unlockable_DW_powers_at_rank_2;
+	}
+
+	society_rank = {
+		level = 2
+		limit = 15
+		startup_limit = 4
+
+		modifier = {
+			is_visible = {
+				OR = {
+					society_member_of = the_cult_of_balor
+					FROM = { is_society_discovered = yes }
+				}
+			}
+
+			intrigue = 1
+		}
+
+		decisions = {
+			devil_worshipers_summon_familiar	# Available Power: Summon Familiar
+			the_devil_worshipers_tainted_touch	# Available Power: Curse people with disease
+			devil_worshipers_demonic_possession	# Available Power: Possess someone to make fanatically loyal
+			# Available Power: Abduction plot
+			# Unlock new options in Seduction and Spy On?
+		}
+	}
+
+	society_rank = {
+		level = 3
+		limit = 5
+		startup_limit = 2
+
+		modifier = {
+			is_visible = {
+				OR = {
+					society_member_of = the_cult_of_balor
+					FROM = { is_society_discovered = yes }
+				}
+			}
+
+			intrigue = 2
+		}
+
+		decisions = {
+			devil_worshipers_dark_divorce				# Available Power: Dark Divorce
+			devil_worshipers_dark_healing				# Available Power: Demonic Healing. Sacrifice a prisoner to heal a random illness or maiming.
+			devil_worshipers_invite_disciple_of_devil	# Available Decision: Invite a witch to court
+			# Available Power: Love Potion
+		}
+	}
+
+	society_rank = {
+		level = 4
+		limit = 1
+		startup_limit = 1
+
+		modifier = {
+			is_visible = {
+				OR = {
+					society_member_of = the_cult_of_balor
+					FROM = { is_society_discovered = yes }
+				}
+			}
+
+			intrigue = 3
+		}
+
+		decisions = {
+			DW_prolong_life			# Available Power: Prolong Life
+			DW_demonic_impregnation	# Available power: Unholy Impregnation
+		}
+
+		obedience_tooltip = obedience_tooltip
+
+		obedient = {
+		}
+	}
+
+	plots = {
+		plot1_tag
+		plot2_tag
+	}
+
+	ambitions = {
+		ambition1_tag
+		ambition2_tag
+	}
+
+	monthly_currency_gain = {
+		name = currency_name_the_cult_of_balor
+
+		per_attribute = {
+			name = intrigue
+			value = 0.5
+		}
+
+		has_trait = {
+			trait = ambitious
+			value = 5
+		}
+
+		has_trait = {
+			trait = genius
+			value = 4
+		}
+
+		has_trait = {
+			trait = quick
+			value = 3
+		}
+
+		has_trait = {
+			trait = shrewd
+			value = 3
+		}
+
+		has_trait = {
+			trait = hedonist
+			value = 3
+		}
+
+		has_trait = {
+			trait = mystic
+			value = 3
+		}
+
+		has_trait = {
+			trait = master_seducer
+			value = 3
+		}
+
+		has_trait = {
+			trait = master_seductress
+			value = 3
+		}
+
+		has_trait = {
+			trait = master_schemer
+			value = 3
+		}
+
+		has_trait = {
+			trait = impaler
+			value = 3
+		}
+
+		has_trait = {
+			trait = lustful
+			value = 1
+		}
+
+		has_trait = {
+			trait = proud
+			value = 1
+		}
+
+		has_trait = {
+			trait = greedy
+			value = 1
+		}
+
+		has_trait = {
+			trait = deceitful
+			value = 1
+		}
+
+		has_trait = {
+			trait = arbitrary
+			value = 1
+		}
+
+		society_rank = {
+			rank = 4
+			value = 10
+		}
+	}
+
+	member_score_per_attribute = 3
+	member_score_per_rank = 100
+
+	member_score = {
+		value = 10
+		devil_worshipper_member_score = yes
+	}
+
+	startup_populate = {
+		trigger = {
+			has_cult_of_balor_prerequisites = yes
+			lower_real_tier_than = KING
+			ai = yes
+			controls_religion = no
+			is_in_society = no
+			mercenary = no
+			holy_order = no
+		}
+	}
+}
+
+cult_of_angra_mainyu = { # Aka Cult of the Destroyer
+	primary_attribute = intrigue
+	opinion_to_other_members = +5
+	opinion_to_pretenders = -40			# Pretenders is the opinion you have of people perceived/discovered to be in your society.
+	opinion_to_perceived_members = -40	# Perceived is the opinion you have of people perceived/discovered to be of a society you're not part of
+	opinion_per_rank_above = +10
+	sound = devil_worshippers_interface
+	society_ranks_gfx = devil_ranks
+
+	criminal = yes
+	devil_worshipper = yes
+	indestructible = yes
+	is_secret = yes
+	society_influence = no
+
+	active = {
+		has_dlc = "Mystics"
+
+		NOT = {
+			has_game_rule = {
+				name = devil_worshipers
+				value = none
+			}
+		}
+	}
+
+	show_society = {
+		is_adult = yes
+
+		trigger_if = {
+			limit = {
+				NOT = { society_member_of = cult_of_angra_mainyu }
+			}
+
+			true_religion_group = zoroastrian_group
+			NOT = { true_religion = yazidi }
+		}
+	}
+
+	can_join_society = {
+		trigger_if = {
+			limit = { ai = yes }
+
+			NOT = {
+				is_society_rank_full = {
+					society = cult_of_angra_mainyu
+					rank = 1
+				}
+			}
+		}
+
+		trigger_if = {
+			limit = { has_character_flag = society_join_block }
+			always = no
+		}
+		trigger_else = {
+			has_cult_of_angra_mainyu_prerequisites = yes
+		}
+	}
+
+	society_rank = {
+		level = 1
+		limit = 30
+		startup_limit = 6
+
+		decisions = {
+			decision_abduct
+			prisoner_dark_sacrifice # Available Decision: Sacrifice Prisoner
+			# Over time, lose virtues, gain vices. A Soul Corruption-effect is on a yearly pulse (with a chance to do nothing)
+		}
+	}
+
+	society_rank = {
+		level = 2
+		limit = 15
+		startup_limit = 4
+
+		modifier = {
+			is_visible = {
+				OR = {
+					society_member_of = cult_of_angra_mainyu
+					FROM = { is_society_discovered = yes }
+				}
+			}
+
+			intrigue = 1
+		}
+
+		decisions = {
+			devil_worshipers_summon_familiar	# Available Power: Summon Familiar
+			the_devil_worshipers_tainted_touch	# Available Power: Curse people with disease
+			devil_worshipers_demonic_possession	# Available Power: Possess someone to make fanatically loyal
+			# Available Power: Abduction plot
+			# Unlock new options in Seduction and Spy On?
+		}
+	}
+
+	society_rank = {
+		level = 3
+		limit = 5
+		startup_limit = 2
+
+		modifier = {
+			is_visible = {
+				OR = {
+					society_member_of = cult_of_angra_mainyu
+					FROM = { is_society_discovered = yes }
+				}
+			}
+
+			intrigue = 2
+		}
+
+		decisions = {
+			devil_worshipers_dark_divorce				# Available Power: Dark Divorce
+			devil_worshipers_dark_healing				# Available Power: Demonic Healing. Sacrifice a prisoner to heal a random illness or maiming.
+			devil_worshipers_invite_disciple_of_devil	# Available Decision: Invite a witch to court
+			# Available Power: Love Potion
+		}
+	}
+
+	society_rank = {
+		level = 4
+		limit = 1
+		startup_limit = 1
+
+		modifier = {
+			is_visible = {
+				OR = {
+					society_member_of = cult_of_angra_mainyu
+					FROM = { is_society_discovered = yes }
+				}
+			}
+
+			intrigue = 3
+		}
+
+		decisions = {
+			DW_prolong_life			# Available Power: Prolong Life
+			DW_demonic_impregnation	# Available power: Unholy Impregnation
+		}
+
+		obedience_tooltip = obedience_tooltip
+
+		obedient = {
+		}
+	}
+
+	plots = {
+		plot1_tag
+		plot2_tag
+	}
+
+	ambitions = {
+		ambition1_tag
+		ambition2_tag
+	}
+
+	monthly_currency_gain = {
+		name = currency_name_cult_of_angra_mainyu
+
+		per_attribute = {
+			name = intrigue
+			value = 0.5
+		}
+
+		has_trait = {
+			trait = ambitious
+			value = 5
+		}
+
+		has_trait = {
+			trait = genius
+			value = 4
+		}
+
+		has_trait = {
+			trait = quick
+			value = 3
+		}
+
+		has_trait = {
+			trait = shrewd
+			value = 3
+		}
+
+		has_trait = {
+			trait = hedonist
+			value = 3
+		}
+
+		has_trait = {
+			trait = mystic
+			value = 3
+		}
+
+		has_trait = {
+			trait = master_seducer
+			value = 3
+		}
+
+		has_trait = {
+			trait = master_seductress
+			value = 3
+		}
+
+		has_trait = {
+			trait = master_schemer
+			value = 3
+		}
+
+		has_trait = {
+			trait = impaler
+			value = 3
+		}
+
+		has_trait = {
+			trait = lustful
+			value = 1
+		}
+
+		has_trait = {
+			trait = proud
+			value = 1
+		}
+
+		has_trait = {
+			trait = greedy
+			value = 1
+		}
+
+		has_trait = {
+			trait = deceitful
+			value = 1
+		}
+
+		has_trait = {
+			trait = arbitrary
+			value = 1
+		}
+
+		society_rank = {
+			rank = 4
+			value = 10
+		}
+	}
+
+	member_score_per_attribute = 3
+	member_score_per_rank = 100
+
+	member_score = {
+		value = 10
+
+		mult_modifier = {
+			factor = 1.5
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			trait = genius
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			trait = quick
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			trait = shrewd
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			trait = hedonist
+		}
+
+		mult_modifier = {
+			trait = mystic
+			factor = 1.3
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			trait = master_seducer
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			trait = master_seductress
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			trait = master_schemer
+		}
+
+		mult_modifier = {
+			factor = 1.3
+			trait = impaler
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = lustful
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = proud
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = deceitful
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			trait = arbitrary
+		}
+	}
+
+	startup_populate = {
+		trigger = {
+			has_cult_of_angra_mainyu_prerequisites = yes
+			lower_real_tier_than = KING
+			ai = yes
+			controls_religion = no
+			holy_order = no
+			mercenary = no
+			is_in_society = no
+		}
+	}
+}
+
+arab_jinn_sorcerers = {
+	primary_attribute = intrigue
+	opinion_to_other_members = +5
+	opinion_to_pretenders = -40			# Pretenders is the opinion you have of people perceived/discovered to be in your society.
+	opinion_to_perceived_members = -40	# Perceived is the opinion you have of people perceived/discovered to be of a society you're not part of
+	opinion_per_rank_above = +10
+	sound = devil_worshippers_interface
+	society_ranks_gfx = devil_ranks
+
+	criminal = yes
+	devil_worshipper = yes
+	indestructible = yes
+	is_secret = yes
+	society_influence = no
+
+	active = {
+		has_dlc = "Mystics"
+
+		NOT = {
+			has_game_rule = {
+				name = devil_worshipers
+				value = none
+			}
+		}
+	}
+
+	show_society = {
+		trigger_if = {
+			limit = {
+				NOT = { society_member_of = arab_jinn_sorcerers }
+			}
+
+			is_adult = yes
+
+			OR = {
+				religion_group = muslim
+				religion = arabic_pagan
+			}
+		}
+	}
+
+	can_join_society = {
+		trigger_if = {
+			limit = { ai = yes }
+
+			NOT = {
+				is_society_rank_full = {
+					society = arab_jinn_sorcerers
+					rank = 1
+				}
+			}
+		}
+
+		trigger_if = {
+			limit = { has_character_flag = society_join_block }
+			always = no
+		}
+		trigger_else = {
+			has_jinn_sorceror_prerequisites = yes
+		}
+	}
+
+	potential = { # To remain in society
+	}
+
+	society_rank = {
+		level = 1
+		limit = 30
+		startup_limit = 10
+
+		decisions = {
+			decision_abduct
+			prisoner_dark_sacrifice # Available Decision: Sacrifice Prisoner
+			# Over time, lose virtues, gain vices. A Soul Corruption-effect is on a yearly pulse (with a chance to do nothing)
+		}
+	}
+
+	society_rank = {
+		level = 2
+		limit = 15
+		startup_limit = 6
+
+		modifier = {
+			is_visible = {
+				OR = {
+					society_member_of = arab_jinn_sorcerers
+					FROM = { is_society_discovered = yes }
+				}
+			}
+
+			intrigue = 1
+		}
+
+		decisions = {
+			devil_worshipers_summon_familiar	# Available Power: Summon Familiar
+			the_devil_worshipers_tainted_touch	# Available Power: Curse people with disease
+			devil_worshipers_demonic_possession	# Available Power: Possess someone to make fanatically loyal
+			# Available Power: Abduction plot
+			# Unlock new options in Seduction and Spy On?
+		}
+	}
+
+	society_rank = {
+		level = 3
+		limit = 5
+		startup_limit = 3
+
+		modifier = {
+			is_visible = {
+				OR = {
+					society_member_of = arab_jinn_sorcerers
+					FROM = { is_society_discovered = yes }
+				}
+			}
+
+			intrigue = 2
+		}
+
+		decisions = {
+			devil_worshipers_dark_divorce				# Available Power: Dark Divorce
+			devil_worshipers_dark_healing				# Available Power: Demonic Healing. Sacrifice a prisoner to heal a random illness or maiming.
+			devil_worshipers_invite_disciple_of_devil	# Available Decision: Invite a witch to court
+			# Available Power: Love Potion
+		}
+	}
+
+	society_rank = {
+		level = 4
+		limit = 1
+		startup_limit = 1
+
+		modifier = {
+			is_visible = {
+				OR = {
+					society_member_of = arab_jinn_sorcerers
+					FROM = { is_society_discovered = yes }
+				}
+			}
+			intrigue = 3
+		}
+
+		decisions = {
+			DW_prolong_life			# Available Power: Prolong Life
+			DW_demonic_impregnation	# Available power: Unholy Impregnation
+		}
+
+		obedience_tooltip = obedience_tooltip
+
+		obedient = {
+		}
+	}
+
+	plots = {
+		plot1_tag
+		plot2_tag
+	}
+
+	ambitions = {
+		ambition1_tag
+		ambition2_tag
+	}
+
+	monthly_currency_gain = {
+		name = currency_name_arab_jinn_sorcerers
+
+		per_attribute = {
+			name = intrigue
+			value = 0.5
+		}
+
+		has_trait = {
+			trait = ambitious
+			value = 5
+		}
+
+		has_trait = {
+			trait = genius
+			value = 4
+		}
+
+		has_trait = {
+			trait = quick
+			value = 3
+		}
+
+		has_trait = {
+			trait = shrewd
+			value = 3
+		}
+
+		has_trait = {
+			trait = hedonist
+			value = 3
+		}
+
+		has_trait = {
+			trait = mystic
+			value = 3
+		}
+
+		has_trait = {
+			trait = master_seducer
+			value = 3
+		}
+
+		has_trait = {
+			trait = master_seductress
+			value = 3
+		}
+
+		has_trait = {
+			trait = master_schemer
+			value = 3
+		}
+
+		has_trait = {
+			trait = impaler
+			value = 3
+		}
+
+		has_trait = {
+			trait = lustful
+			value = 1
+		}
+
+		has_trait = {
+			trait = proud
+			value = 1
+		}
+
+		has_trait = {
+			trait = greedy
+			value = 1
+		}
+
+		has_trait = {
+			trait = deceitful
+			value = 1
+		}
+
+		has_trait = {
+			trait = arbitrary
+			value = 1
+		}
+
+		society_rank = {
+			rank = 4
+			value = 10
+		}
+	}
+
+	member_score_per_attribute = 3
+	member_score_per_rank = 100
+
+	member_score = {
+		value = 10
+
+		devil_worshipper_member_score = yes
+	}
+
+	startup_populate = {
+		trigger = {
+			has_jinn_sorceror_prerequisites = yes
+			lower_real_tier_than = KING
+			ai = yes
+			controls_religion = no
+			holy_order = no
+			mercenary = no
+			is_in_society = no
+		}
+	}
+}
+
+cult_of_titan = {
+	primary_attribute = intrigue
+	opinion_to_other_members = +5
+	opinion_to_pretenders = -40			# Pretenders is the opinion you have of people perceived/discovered to be in your society.
+	opinion_to_perceived_members = -40	# Perceived is the opinion you have of people perceived/discovered to be of a society you're not part of
+	opinion_per_rank_above = +10
+	sound = devil_worshippers_interface
+	society_ranks_gfx = devil_ranks
+
+	criminal = yes
+	devil_worshipper = yes
+	indestructible = yes
+	is_secret = yes
+	society_influence = no
+
+	active = {
+		has_dlc = "Mystics"
+
+		NOT = {
+			has_game_rule = {
+				name = devil_worshipers
+				value = none
+			}
+		}
+	}
+
+	show_society = {
+		trigger_if = {
+			limit = {
+				NOT = { society_member_of = cult_of_titan }
+			}
+
+			is_adult = yes
+			religion_openly_hellenic_or_reformed_trigger = yes
+		}
+	}
+
+	can_join_society = {
+		trigger_if = {
+			limit = { ai = yes }
+
+			NOT = {
+				is_society_rank_full = {
+					society = cult_of_titan
+					rank = 1
+				}
+			}
+		}
+
+		trigger_if = {
+			limit = { has_character_flag = society_join_block }
+			always = no
+		}
+		trigger_else = {
+			has_cult_of_titan_prerequisites = yes
+		}
+	}
+
+	potential = { # To stay in society
+	}
+
+	society_rank = {
+		level = 1
+		limit = 30
+		startup_limit = 10
+
+		decisions = {
+			decision_abduct
+			prisoner_dark_sacrifice # Available Decision: Sacrifice Prisoner
+			# Over time, lose virtues, gain vices. A Soul Corruption-effect is on a yearly pulse (with a chance to do nothing)
+		}
+	}
+
+	society_rank = {
+		level = 2
+		limit = 15
+		startup_limit = 6
+
+		modifier = {
+			is_visible = {
+				OR = {
+					society_member_of = cult_of_titan
+					FROM = { is_society_discovered = yes }
+				}
+			}
+
+			intrigue = 1
+		}
+
+		decisions = {
+			devil_worshipers_summon_familiar	# Available Power: Summon Familiar
+			the_devil_worshipers_tainted_touch	# Available Power: Curse people with disease
+			devil_worshipers_demonic_possession	# Available Power: Possess someone to make fanatically loyal
+			# Available Power: Abduction plot
+			# Unlock new options in Seduction and Spy On?
+		}
+	}
+
+	society_rank = {
+		level = 3
+		limit = 5
+		startup_limit = 3
+
+		modifier = {
+			is_visible = {
+				OR = {
+					society_member_of = cult_of_titan
+					FROM = { is_society_discovered = yes }
+				}
+			}
+
+			intrigue = 2
+		}
+
+		decisions = {
+			devil_worshipers_dark_divorce				# Available Power: Dark Divorce
+			devil_worshipers_dark_healing				# Available Power: Demonic Healing. Sacrifice a prisoner to heal a random illness or maiming.
+			devil_worshipers_invite_disciple_of_devil	# Available Decision: Invite a witch to court
+			# Available Power: Love Potion
+		}
+	}
+
+	society_rank = {
+		level = 4
+		limit = 1
+		startup_limit = 1
+
+		modifier = {
+			is_visible = {
+				OR = {
+					society_member_of = cult_of_titan
+					FROM = { is_society_discovered = yes }
+				}
+			}
+
+			intrigue = 3
+		}
+
+		decisions = {
+			DW_prolong_life			# Available Power: Prolong Life
+			DW_demonic_impregnation	# Available power: Unholy Impregnation
+		}
+
+		obedience_tooltip = obedience_tooltip
+
+		obedient = {
+		}
+	}
+
+	plots = {
+		plot1_tag
+		plot2_tag
+	}
+
+	ambitions = {
+		ambition1_tag
+		ambition2_tag
+	}
+
+	monthly_currency_gain = {
+		name = currency_name_cult_of_titan
+
+		per_attribute = {
+			name = intrigue
+			value = 0.5
+		}
+
+		has_trait = {
+			trait = ambitious
+			value = 5
+		}
+
+		has_trait = {
+			trait = genius
+			value = 4
+		}
+
+		has_trait = {
+			trait = quick
+			value = 3
+		}
+
+		has_trait = {
+			trait = shrewd
+			value = 3
+		}
+
+		has_trait = {
+			trait = hedonist
+			value = 3
+		}
+
+		has_trait = {
+			trait = mystic
+			value = 3
+		}
+
+		has_trait = {
+			trait = master_seducer
+			value = 3
+		}
+
+		has_trait = {
+			trait = master_seductress
+			value = 3
+		}
+
+		has_trait = {
+			trait = master_schemer
+			value = 3
+		}
+
+		has_trait = {
+			trait = impaler
+			value = 3
+		}
+
+		has_trait = {
+			trait = lustful
+			value = 1
+		}
+
+		has_trait = {
+			trait = proud
+			value = 1
+		}
+
+		has_trait = {
+			trait = greedy
+			value = 1
+		}
+
+		has_trait = {
+			trait = deceitful
+			value = 1
+		}
+
+		has_trait = {
+			trait = arbitrary
+			value = 1
+		}
+
+		society_rank = {
+			rank = 4
+			value = 10
+		}
+	}
+
+	member_score_per_attribute = 3
+	member_score_per_rank = 100
+
+	member_score = {
+		value = 10
+
+		devil_worshipper_member_score = yes
+	}
+
+	startup_populate = {
+		trigger = {
+			has_cult_of_titan_prerequisites = yes
+			lower_real_tier_than = KING
+			ai = yes
+			controls_religion = no
+			holy_order = no
+			mercenary = no
+			is_in_society = no
+		}
+	}
+}
+
+cult_of_apep = { # God of Chaos, tries to devour Ra.
+	primary_attribute = intrigue
+	opinion_to_other_members = +5
+	opinion_to_pretenders = -40			# Pretenders is the opinion you have of people perceived/discovered to be in your society.
+	opinion_to_perceived_members = -40	# Perceived is the opinion you have of people perceived/discovered to be of a society you're not part of
+	opinion_per_rank_above = +10
+	sound = devil_worshippers_interface
+	society_ranks_gfx = devil_ranks
+
+	criminal = yes
+	devil_worshipper = yes
+	indestructible = yes
+	is_secret = yes
+	society_influence = no
+
+	active = {
+		# Is this meant as a devil worshiper cult?
+		has_dlc = "Mystics"
+
+		NOT = {
+			has_game_rule = {
+				name = devil_worshipers
+				value = none
+			}
+		}
+	}
+
+	show_society = {
+		trigger_if = {
+			limit = {
+				NOT = { society_member_of = cult_of_apep }
+			}
+
+			is_adult = yes
+			true_egyptian_religion_trigger = yes
+		}
+	}
+
+	can_join_society = {
+		trigger_if = {
+			limit = { ai = yes }
+
+			NOT = {
+				is_society_rank_full = {
+					society = cult_of_apep
+					rank = 1
+				}
+			}
+		}
+
+		trigger_if = {
+			limit = { has_character_flag = society_join_block }
+			always = no
+		}
+		trigger_else = {
+			has_cult_of_apep_prerequisites = yes
+		}
+	}
+
+	society_rank = {
+		level = 1
+		limit = 100
+		startup_limit = 6
+
+		decisions = {
+			prisoner_dark_sacrifice # Available Decision: Sacrifice Prisoner
+			# Over time, lose virtues, gain vices. A Soul Corruption-effect is on a yearly pulse (with a chance to do nothing)
+		}
+	}
+
+	society_rank = {
+		level = 2
+		limit = 50
+		startup_limit = 4
+
+		modifier = {
+			is_visible = {
+				OR = {
+					society_member_of = cult_of_apep
+					FROM = { is_society_discovered = yes }
+				}
+			}
+
+			intrigue = 1
+		}
+
+		decisions = {
+			devil_worshipers_summon_familiar	# Available Power: Summon Familiar
+			the_devil_worshipers_tainted_touch	# Available Power: Curse people with disease
+			devil_worshipers_demonic_possession	# Available Power: Possess someone to make fanatically loyal
+			# Available Power: Abduction plot
+			# Unlock new options in Seduction and Spy On?
+		}
+	}
+
+	society_rank = {
+		level = 3
+		limit = 25
+		startup_limit = 2
+
+		modifier = {
+			is_visible = {
+				OR = {
+					society_member_of = cult_of_apep
+					FROM = { is_society_discovered = yes }
+				}
+			}
+
+			intrigue = 2
+		}
+
+		decisions = {
+			devil_worshipers_dark_divorce				# Available Power: Dark Divorce
+			devil_worshipers_dark_healing				# Available Power: Demonic Healing. Sacrifice a prisoner to heal a random illness or maiming.
+			devil_worshipers_invite_disciple_of_devil	# Available Decision: Invite a witch to court
+			# Available Power: Love Potion
+		}
+	}
+
+	society_rank = {
+		level = 4
+		limit = 1
+		startup_limit = 1
+
+		modifier = {
+			is_visible = {
+				OR = {
+					society_member_of = cult_of_apep
+					FROM = { is_society_discovered = yes }
+				}
+			}
+
+			intrigue = 3
+		}
+
+		decisions = {
+			DW_prolong_life			# Available Power: Prolong Life
+			DW_demonic_impregnation	# Available power: Unholy Impregnation
+		}
+
+		obedience_tooltip = obedience_tooltip
+
+		obedient = {
+		}
+	}
+
+	plots = {
+		plot1_tag
+		plot2_tag
+	}
+
+	ambitions = {
+		ambition1_tag
+		ambition2_tag
+	}
+
+	monthly_currency_gain = {
+		name = currency_name_cult_of_apep
+
+		per_attribute = {
+			name = intrigue
+			value = 0.5
+		}
+
+		has_trait = {
+			trait = ambitious
+			value = 5
+		}
+
+		has_trait = {
+			trait = genius
+			value = 4
+		}
+
+		has_trait = {
+			trait = quick
+			value = 3
+		}
+
+		has_trait = {
+			trait = shrewd
+			value = 3
+		}
+
+		has_trait = {
+			trait = hedonist
+			value = 3
+		}
+
+		has_trait = {
+			trait = mystic
+			value = 3
+		}
+
+		has_trait = {
+			trait = master_seducer
+			value = 3
+		}
+
+		has_trait = {
+			trait = master_seductress
+			value = 3
+		}
+
+		has_trait = {
+			trait = master_schemer
+			value = 3
+		}
+
+		has_trait = {
+			trait = impaler
+			value = 3
+		}
+
+		has_trait = {
+			trait = lustful
+			value = 1
+		}
+
+		has_trait = {
+			trait = proud
+			value = 1
+		}
+
+		has_trait = {
+			trait = greedy
+			value = 1
+		}
+
+		has_trait = {
+			trait = deceitful
+			value = 1
+		}
+
+		has_trait = {
+			trait = arbitrary
+			value = 1
+		}
+
+		society_rank = {
+			rank = 4
+			value = 10
+		}
+	}
+
+	member_score_per_attribute = 3
+	member_score_per_rank = 100
+
+	member_score = {
+		value = 10
+
+		devil_worshipper_member_score = yes
+	}
+
+	startup_populate = {
+		trigger = {
+			has_cult_of_apep_prerequisites = yes
+			lower_real_tier_than = KING
+			ai = yes
+			controls_religion = no
+			holy_order = no
+			mercenary = no
+			is_in_society = no
+		}
+	}
+}
+
+### WARRIOR LODGES ###
+
+#####
+# The Fianna
+warrior_lodge_celtic = {
+	primary_attribute = martial
+	opinion_to_other_members = +10
+	opinion_per_rank_above = +5
+	sound = warrior_lodge_ambient_01
+	society_ranks_gfx = warriors_ranks
+	associated_religion = celtic_pagan
+
+	indestructible = yes
+	society_influence = no
+
+	non_interference = {
+		always = yes
+	}
+
+	active = {
+		has_dlc = "Holy Fury"
+	}
+
+	show_society = {
+		trigger_if = {
+			limit = { NOT = { society_member_of = warrior_lodge_celtic } }
+
+			trigger_if = {
+				limit = { has_religion_matching_available_warrior_lodge_trigger = yes }
+				religion_openly_celtic_or_reformed_trigger = yes
+			}
+			trigger_else = {
+				OR = {
+					# You have neighbors, etc, of the correct religion...
+					any_vassal = { religion_openly_celtic_or_reformed_trigger = yes }
+					any_liege = { religion_openly_celtic_or_reformed_trigger = yes }
+					any_neighbor_independent_ruler = { religion_openly_celtic_or_reformed_trigger = yes }
+
+					# Show for the culture if tribal
+					AND = {
+						culture = irish
+						is_tribal = yes
+					}
+				}
+			}
+		}
+	}
+
+	can_join_society = {
+		trigger_if = {
+			limit = { ai = yes }
+
+			NOT = {
+				is_society_rank_full = {
+					society = warrior_lodge_celtic
+					rank = 1
+				}
+			}
+		}
+
+		trigger_if = {
+			limit = { has_character_modifier = warrior_lodge_failed_joining_cd }
+
+			custom_tooltip = {
+				text = has_not_angered_society_tt
+				always = no
+			}
+		}
+		trigger_else_if = {
+			limit = { has_character_flag = society_join_block }
+			always = no
+		}
+		trigger_else = {
+			is_adult = yes
+			prisoner = no
+
+			trigger_if = {
+				limit = { religion_openly_celtic_or_reformed_trigger = no }
+
+				NOT = { trait = zealous }
+
+				OR = {
+					AND = {
+						culture = irish
+						is_tribal = yes
+					}
+
+					AND = {
+						has_tribal_or_nomadic_government_trigger = yes
+
+						custom_tooltip = {
+							text = society_has_at_least_10_members_tt
+							FROM = { num_of_society_members >= 10 }
+						}
+
+						custom_tooltip = {
+							text = special_join_warrior_lodge_trigger_tt
+							special_join_warrior_lodge_trigger = yes
+						}
+					}
+				}
+			}
+			trigger_else = {
+				# Just here for the tooltip
+				religion_openly_celtic_or_reformed_trigger = yes
+			}
+		}
+	}
+
+	potential = { #if you change religion or become zealous while NOT pagan, you are kicked out
+		trigger_if = {
+			limit = { religion_openly_celtic_or_reformed_trigger = no }
+			NOT = { trait = zealous }
+		}
+	}
+
+	society_rank = { # "Fledling"
+		level = 1
+		limit = 50
+		startup_limit = 10
+
+		modifier = {
+			monthly_character_prestige = 0.25
+		}
+
+		powers = {
+			warrior_lodge_duel						# Passive Power: Unlocks Duel
+			warrior_lodge_shieldmaiden				# Passive Power: Unlocks Shieldmaidens
+			warrior_lodge_survivor					# Passive Power: Survivor
+			warrior_lodge_lifetime_of_war			# Passive Power: A Lifetime of War
+		}
+	}
+
+	society_rank = { # "Warrior"
+		level = 2
+		limit = 20
+		startup_limit = 6
+
+		modifier = {
+			monthly_character_prestige = 0.5
+			combat_rating = 5
+			martial = 1
+		}
+
+		powers = {
+			warrior_lodge_reaver					# Passive Power: Reaver
+			warrior_lodge_warrior_training			# Power: Warrior Training
+			warrior_lodge_summon_commander			# Power: Summon Commander
+		}
+	}
+
+	society_rank = {  #"Veteran"
+		level = 3
+		limit = 10
+		startup_limit = 4
+
+		modifier = {
+			monthly_character_prestige = 0.75
+			combat_rating = 10
+			martial = 2
+		}
+
+		powers = {
+			warrior_lodge_inspire_warriors			# Power: Inspire Warriors
+			warrior_lodge_war_sacrifice				# Power: War Sacrifice
+		}
+	}
+
+	society_rank = { # "Hero"
+		level = 4
+		limit = 4
+		startup_limit = 3
+
+		modifier = {
+			monthly_character_prestige = 1
+			combat_rating = 15
+			martial = 3
+		}
+
+		powers = {
+			warrior_lodge_indomitable				# Passive Power: Indomitable
+			warrior_lodge_call_to_glory				# Power: Call to Glory
+			warrior_lodge_choose_military_aspect	# Power: Choose Military Aspect
+			warrior_lodge_celtic_battle_cry			# Power: Activate Battle Cry
+		}
+	}
+
+	plots = {
+	}
+
+	monthly_currency_gain = {
+		name = currency_name_warrior_lodge_celtic
+
+		# Positive modifiers
+		per_attribute = {
+    		name = martial
+    		value = 0.25
+    	}
+
+		has_trait = {
+			trait = hunter
+			value = 1
+		}
+
+		has_trait = {
+			trait = strategist
+			value = 1
+		}
+
+		has_trait = {
+			trait = duelist
+			value = 1
+		}
+
+		has_trait = {
+			trait = scarred
+			value = 1
+		}
+
+		has_trait = {
+			trait = scarred_mid
+			value = 2
+		}
+
+		has_trait = {
+			trait = scarred_high
+			value = 3
+		}
+
+		has_trait = {
+			trait = genius
+			value = 1
+		}
+
+		has_trait = {
+			trait = quick
+			value = 1
+		}
+
+		has_trait = {
+			trait = shrewd
+			value = 1
+		}
+
+		has_trait = {
+			trait = strong
+			value = 3
+		}
+
+		has_trait = {
+			trait = brawny
+			value = 2
+		}
+
+		has_trait = {
+			trait = giant
+			value = 2
+		}
+
+		has_trait = {
+			trait = impaler
+			value = 1
+		}
+
+		has_trait = {
+			trait = falconer
+			value = 1
+		}
+
+		has_trait = {
+			trait = wroth
+			value = 1
+		}
+
+		has_trait = {
+			trait = proud
+			value = 1
+		}
+
+		has_trait = {
+			trait = patient
+			value = 1
+		}
+
+		has_trait = {
+			trait = diligent
+			value = 1
+		}
+
+		has_trait = {
+			trait = humble
+			value = 1
+		}
+
+		has_trait = {
+			trait = brave
+			value = 2
+		}
+
+		has_trait = {
+			trait = ambitious
+			value = 1
+		}
+
+		has_trait = {
+			trait = cruel
+			value = 1
+		}
+
+		has_trait = {
+			trait = stubborn
+			value = 1
+		}
+
+		has_trait = {
+			trait = adventurer
+			value = 1
+		}
+
+		has_trait = {
+			trait = viking
+			value = 1
+		}
+
+		has_trait = {
+			trait = pirate
+			value = 1
+		}
+
+		has_trait = {
+			trait = ravager
+			value = 2
+		}
+
+		has_trait = {
+			trait = sea_king
+			value = 3
+		}
+
+		has_trait = {
+			trait = sea_queen
+			value = 3
+		}
+
+		has_trait = {
+			trait = shieldmaiden
+			value = 1
+		}
+
+		has_trait = {
+			trait = berserker
+			value = 1
+		}
+
+		has_trait = {
+			trait = varangian
+			value = 1
+		}
+
+		has_trait = {
+			trait = valhalla_bound
+			value = 1
+		}
+
+		has_trait = {
+			trait = eagle_knight
+			value = 1
+		}
+
+		has_trait = {
+			trait = sun_warrior
+			value = 1
+		}
+
+		has_trait = {
+			trait = ukkos_hammer
+			value = 1
+		}
+
+		has_trait = {
+			trait = nyames_shield
+			value = 1
+		}
+
+		has_trait = {
+			trait = peruns_chosen
+			value = 1
+		}
+
+		has_trait = {
+			trait = hound_of_dievas
+			value = 1
+		}
+
+		has_trait = {
+			trait = ares_own
+			value = 1
+		}
+
+		has_trait = {
+			trait = skylord
+			value = 1
+		}
+
+		has_trait = {
+			trait = kailash_guardian
+			value = 1
+		}
+
+		# CK2Plus
+		has_trait = {
+			trait = machas_javelin
+			value = 1
+		}
+
+		has_trait = {
+			trait = montu
+			value = 1
+		}
+
+		# Negative modifiers
+		has_trait = {
+			trait = craven
+			value = -3
+		}
+
+		has_trait = {
+			trait = weak
+			value = -2
+		}
+
+		has_trait = {
+			trait = frail
+			value = -1
+		}
+
+		has_trait = {
+			trait = slothful
+			value = -1
+		}
+
+		has_trait = {
+			trait = content
+			value = -1
+		}
+
+		has_trait = {
+			trait = dwarf
+			value = -1
+		}
+
+		has_trait = {
+			trait = clubfooted
+			value = -1
+		}
+
+		has_trait = {
+			trait = hunchback
+			value = -1
+		}
+	}
+
+	member_score_per_attribute = 3
+	member_score_per_rank = 100
+
+	member_score = {
+		value = 10
+
+		warrior_lodge_member_score = yes
+
+		mult_modifier = {
+			trait = machas_javelin
+			factor = 1.1
+		}
+	}
+
+	startup_populate = {
+	    trigger = {
+		   	trigger_if = {
+				limit = { religion_openly_celtic_or_reformed_trigger = no }
+
+				is_tribal = yes
+				culture = irish
+				NOT = { trait = zealous }
+			}
+
+			ai = yes
+			is_adult = yes
+	    	controls_religion = no
+			is_in_society = no
+
+			OR = {
+				trait = zealous
+				martial >= 12
+				has_lifestyle_martial_trigger = yes
+				has_education_martial_trigger = yes
+				duelist_skill_is_medium_group_trigger = yes
+				duelist_skill_is_high_group_trigger = yes
+			}
+		}
+	}
+}
+
+# The Champions of the Sun
+warrior_lodge_egyptian = {
+	primary_attribute = martial
+	opinion_to_other_members = +10
+	opinion_per_rank_above = +5
+	sound = warrior_lodge_ambient_01
+	society_ranks_gfx = warriors_ranks
+	associated_religion = egyptian_pagan
+
+	indestructible = yes
+	society_influence = no
+
+	non_interference = {
+		always = yes
+	}
+
+	active = {
+		has_dlc = "Holy Fury"
+
+		trigger_if = {
+            limit = {
+                has_alternate_start_parameter = {
+					key = religion
+					value = historical
+				}
+            }
+
+            has_global_flag = flag_restored_warrior_lodge_egyptian
+        }
+	}
+
+	show_society = {
+		trigger_if = {
+			limit = { NOT = { society_member_of = warrior_lodge_egyptian } }
+
+			trigger_if = {
+				limit = { has_religion_matching_available_warrior_lodge_trigger = yes }
+				religion_openly_egyptian_or_reformed_trigger = yes
+			}
+			trigger_else = {
+				OR = {
+					# You have neighbors, etc, of the correct religion...
+					any_vassal = { religion_openly_egyptian_or_reformed_trigger = yes }
+					any_liege = { religion_openly_egyptian_or_reformed_trigger = yes }
+					any_neighbor_independent_ruler = { religion_openly_egyptian_or_reformed_trigger = yes }
+				}
+			}
+		}
+	}
+
+	can_join_society = {
+		trigger_if = {
+			limit = { ai = yes }
+
+			NOT = {
+				is_society_rank_full = {
+					society = warrior_lodge_egyptian
+					rank = 1
+				}
+			}
+		}
+
+		trigger_if = {
+			limit = { has_character_modifier = warrior_lodge_failed_joining_cd }
+
+			custom_tooltip = {
+				text = has_not_angered_society_tt
+				always = no
+			}
+		}
+		trigger_else_if = {
+			limit = { has_character_flag = society_join_block }
+			always = no
+		}
+		trigger_else = {
+			is_adult = yes
+			prisoner = no
+
+			trigger_if = {
+				limit = { religion_openly_egyptian_or_reformed_trigger = no }
+
+				NOT = { trait = zealous }
+				has_tribal_or_nomadic_government_trigger = yes
+
+				custom_tooltip = {
+					text = society_has_at_least_10_members_tt
+					FROM = { num_of_society_members >= 10 }
+				}
+
+				custom_tooltip = {
+					text = special_join_warrior_lodge_trigger_tt
+					special_join_warrior_lodge_trigger = yes
+				}
+			}
+			trigger_else = {
+				# Just here for the tooltip
+				religion_openly_egyptian_or_reformed_trigger = yes
+			}
+		}
+	}
+
+	potential = { #if you change religion or become zealous while NOT pagan, you are kicked out
+		trigger_if = {
+			limit = { religion_openly_egyptian_or_reformed_trigger = no }
+			NOT = { trait = zealous }
+		}
+	}
+
+	society_rank = { # "Fledling"
+		level = 1
+		limit = 50
+		startup_limit = 10
+
+		modifier = {
+			monthly_character_prestige = 0.25
+		}
+
+		powers = {
+			warrior_lodge_duel						# Passive Power: Unlocks Duel
+			warrior_lodge_shieldmaiden				# Passive Power: Unlocks Shieldmaidens
+			warrior_lodge_survivor					# Passive Power: Survivor
+			warrior_lodge_lifetime_of_war			# Passive Power: A Lifetime of War
+		}
+	}
+
+	society_rank = { # "Warrior"
+		level = 2
+		limit = 20
+		startup_limit = 6
+
+		modifier = {
+			monthly_character_prestige = 0.5
+			combat_rating = 5
+			martial = 1
+		}
+
+		powers = {
+			warrior_lodge_reaver					# Passive Power: Reaver
+			warrior_lodge_warrior_training			# Power: Warrior Training
+			warrior_lodge_summon_commander			# Power: Summon Commander
+		}
+	}
+
+	society_rank = { # "Veteran"
+		level = 3
+		limit = 10
+		startup_limit = 4
+
+		modifier = {
+			monthly_character_prestige = 0.75
+			combat_rating = 10
+			martial = 2
+		}
+
+		powers = {
+			warrior_lodge_inspire_warriors			# Power: Inspire Warriors
+			warrior_lodge_war_sacrifice				# Power: War Sacrifice
+		}
+	}
+
+	society_rank = { # "Hero"
+		level = 4
+		limit = 4
+		startup_limit = 3
+
+		modifier = {
+			monthly_character_prestige = 1
+			combat_rating = 15
+			martial = 3
+		}
+
+		powers = {
+			warrior_lodge_indomitable				# Passive Power: Indomitable
+			warrior_lodge_call_to_glory				# Power: Call to Glory
+			warrior_lodge_choose_military_aspect	# Power: Choose Military Aspect
+		}
+	}
+
+	plots = {
+	}
+
+	monthly_currency_gain = {
+		name = currency_name_warrior_lodge_norse
+
+		# Positive modifiers
+		per_attribute = {
+    		name = martial
+    		value = 0.25
+    	}
+
+		has_trait = {
+			trait = hunter
+			value = 1
+
+		}
+		has_trait = {
+			trait = strategist
+			value = 1
+		}
+
+		has_trait = {
+			trait = duelist
+			value = 1
+		}
+
+		has_trait = {
+			trait = scarred
+			value = 1
+		}
+
+		has_trait = {
+			trait = scarred_mid
+			value = 2
+		}
+
+		has_trait = {
+			trait = scarred_high
+			value = 3
+		}
+
+		has_trait = {
+			trait = genius
+			value = 1
+		}
+
+		has_trait = {
+			trait = quick
+			value = 1
+		}
+
+		has_trait = {
+			trait = shrewd
+			value = 1
+		}
+
+		has_trait = {
+			trait = strong
+			value = 3
+		}
+
+		has_trait = {
+			trait = brawny
+			value = 2
+		}
+
+		has_trait = {
+			trait = giant
+			value = 2
+		}
+
+		has_trait = {
+			trait = impaler
+			value = 1
+		}
+
+		has_trait = {
+			trait = falconer
+			value = 1
+		}
+
+		has_trait = {
+			trait = wroth
+			value = 1
+		}
+
+		has_trait = {
+			trait = proud
+			value = 1
+		}
+
+		has_trait = {
+			trait = patient
+			value = 1
+		}
+
+		has_trait = {
+			trait = diligent
+			value = 1
+		}
+
+		has_trait = {
+			trait = humble
+			value = 1
+		}
+
+		has_trait = {
+			trait = brave
+			value = 2
+		}
+
+		has_trait = {
+			trait = ambitious
+			value = 1
+		}
+
+		has_trait = {
+			trait = cruel
+			value = 1
+		}
+
+		has_trait = {
+			trait = stubborn
+			value = 1
+		}
+
+		has_trait = {
+			trait = adventurer
+			value = 1
+		}
+
+		has_trait = {
+			trait = viking
+			value = 1
+		}
+
+		has_trait = {
+			trait = pirate
+			value = 1
+		}
+
+		has_trait = {
+			trait = ravager
+			value = 2
+		}
+
+		has_trait = {
+			trait = sea_king
+			value = 3
+		}
+
+		has_trait = {
+			trait = sea_queen
+			value = 3
+		}
+
+		has_trait = {
+			trait = shieldmaiden
+			value = 1
+		}
+
+		has_trait = {
+			trait = berserker
+			value = 1
+		}
+
+		has_trait = {
+			trait = varangian
+			value = 1
+		}
+
+		has_trait = {
+			trait = valhalla_bound
+			value = 1
+		}
+
+		has_trait = {
+			trait = eagle_knight
+			value = 1
+		}
+
+		has_trait = {
+			trait = sun_warrior
+			value = 1
+		}
+
+		has_trait = {
+			trait = ukkos_hammer
+			value = 1
+		}
+
+		has_trait = {
+			trait = nyames_shield
+			value = 1
+		}
+
+		has_trait = {
+			trait = peruns_chosen
+			value = 1
+		}
+
+		has_trait = {
+			trait = hound_of_dievas
+			value = 1
+		}
+
+		has_trait = {
+			trait = ares_own
+			value = 1
+		}
+
+		has_trait = {
+			trait = skylord
+			value = 1
+		}
+
+		has_trait = {
+			trait = kailash_guardian
+			value = 1
+		}
+
+		# CK2Plus
+		has_trait = {
+			trait = machas_javelin
+			value = 1
+		}
+
+		has_trait = {
+			trait = montu
+			value = 1
+		}
+
+		# Negative modifiers
+		has_trait = {
+			trait = craven
+			value = -3
+		}
+
+		has_trait = {
+			trait = weak
+			value = -2
+		}
+
+		has_trait = {
+			trait = frail
+			value = -1
+		}
+
+		has_trait = {
+			trait = slothful
+			value = -1
+		}
+
+		has_trait = {
+			trait = content
+			value = -1
+		}
+
+		has_trait = {
+			trait = dwarf
+			value = -1
+		}
+
+		has_trait = {
+			trait = clubfooted
+			value = -1
+		}
+
+		has_trait = {
+			trait = hunchback
+			value = -1
+		}
+	}
+
+	member_score_per_attribute = 3
+	member_score_per_rank = 100
+
+	member_score = {
+		value = 10
+
+		warrior_lodge_member_score = yes
+
+		mult_modifier = {
+			trait = montu
+			factor = 1.1
+		}
+	}
+
+	startup_populate = {
+	    trigger = {
+		   	religion_openly_egyptian_or_reformed_trigger = yes
+			is_adult = yes
+			ai = yes
+	    	controls_religion = no
+			is_in_society = no
+
+			OR = {
+				trait = zealous
+				martial >= 12
+				has_lifestyle_martial_trigger = yes
+				has_education_martial_trigger = yes
+				duelist_skill_is_medium_group_trigger = yes
+				duelist_skill_is_high_group_trigger = yes
+			}
+		}
+	}
+}

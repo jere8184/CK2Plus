@@ -1,0 +1,377 @@
+namespace = Plus
+
+#reserved: Plus.3600 to Plus.3650
+
+#############################################
+# NESTORIAN EVENTS
+# Adapted from Bad Copt, Good Copt by Rylock edited by Daniloy
+#############################################
+
+## ASSYRIAN CULTURE
+
+# Nestorian Levant becomes Assyrian
+character_event = {
+	id = Plus.3600
+	desc = EVTDESC_Plus_3600
+	picture = GFX_evt_courtiers_talking
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	culture = levantine_arabic
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		is_nestorian_branch = yes
+		should_evolve_cultures_trigger = yes
+
+		trigger_if = {
+			limit = { independent = no }
+
+			liege = {
+				culture = levantine_arabic
+				is_nestorian_branch = yes
+			}
+		}
+
+		is_nomadic = no
+		mercenary = no
+		NOT = { has_character_flag = no_melting_pot }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			liege = { culture = assyrian }
+		}
+
+		mult_modifier = {
+			factor = 2
+			location = { culture = assyrian }
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			location = { NOT = { region = world_middle_east } }
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_3600
+
+		culture = assyrian
+
+		if = {
+			limit = { is_ruler = no }
+
+			any_spouse = {
+				show_scope_change = no
+
+				limit = {
+					religion = ROOT
+					culture = levantine_arabic
+					is_adult = yes
+					is_ruler = no
+				}
+
+				culture = assyrian
+			}
+
+			any_child = {
+				show_scope_change = no
+
+				limit = {
+					religion = ROOT
+					culture = levantine_arabic
+					is_adult = no
+					is_ruler = no
+				}
+
+				culture = assyrian
+			}
+
+			set_character_flag = converted_culture
+		}
+		else = {
+			hidden_effect = {
+				any_courtier = {
+					limit = {
+						dynasty = ROOT
+						religion = ROOT
+						culture = levantine_arabic
+						is_ruler = no
+					}
+
+					culture = assyrian
+				}
+			}
+
+			set_character_flag = converted_culture
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_3600
+
+		set_character_flag = no_melting_pot
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Nestorian Levant province becomes Assyrian
+province_event = {
+	id = Plus.3601
+	desc = EVTDESC_Plus_3601
+	picture = GFX_evt_courtiers_talking
+	border = GFX_event_normal_frame_religion
+
+	trigger = {
+		culture = levantine_arabic
+		is_nestorian_branch = yes
+		should_evolve_cultures_trigger = yes
+
+		OR = {
+			region = world_middle_east
+			any_neighbor_province = { culture = assyrian }
+		}
+
+		owner = {
+			is_nestorian_branch = yes
+			NOT = { has_character_flag = no_melting_pot }
+
+			OR = {
+				culture = assyrian
+				culture = levantine_arabic
+			}
+
+			trigger_if = {
+				limit = { independent = no }
+
+				top_liege = {
+					is_nestorian_branch = yes
+					NOT = { has_character_flag = no_melting_pot }
+
+					OR = {
+						culture = assyrian
+						culture = levantine_arabic
+					}
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		years = 50
+
+		mult_modifier = {
+			factor = 0.5
+			any_neighbor_province = { culture = assyrian }
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			owner = { culture = assyrian }
+		}
+	}
+
+	option = {
+		name = OK
+
+		culture = assyrian
+
+		add_province_modifier = {
+			name = recent_culture_change
+			duration = -1
+		}
+	}
+}
+
+# Assyrian character stops being Nestorian
+character_event = {
+	id = Plus.3602
+	desc = EVTDESC_Plus_3602
+	picture = GFX_evt_courtiers_talking
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	culture = assyrian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		is_nestorian_branch = no
+		should_evolve_cultures_trigger = yes
+
+		trigger_if = {
+			limit = { independent = no }
+
+			liege = {
+				is_nestorian_branch = no
+				NOT = { culture = assyrian }
+			}
+		}
+
+		is_nomadic = no
+		mercenary = no
+		NOT = { has_character_flag = no_melting_pot }
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 0.5
+			liege = { culture = assyrian }
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			location = { culture = assyrian }
+		}
+
+		mult_modifier = {
+			factor = 2
+			liege = { NOT = { culture = assyrian } }
+		}
+
+		mult_modifier = {
+			factor = 2
+			location = { NOT = { culture = assyrian } }
+		}
+
+		mult_modifier = {
+			factor = 2
+			location = { NOT = { region = world_middle_east } }
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_3602
+
+		culture = levantine_arabic
+
+		if = {
+			limit = { is_ruler = no }
+
+			any_spouse = {
+				show_scope_change = no
+
+				limit = {
+					religion = ROOT
+					culture = assyrian
+					is_adult = yes
+					is_ruler = no
+				}
+
+				culture = levantine_arabic
+			}
+
+			any_child = {
+				show_scope_change = no
+
+				limit = {
+					religion = ROOT
+					culture = assyrian
+					is_adult = no
+					is_ruler = no
+				}
+
+				culture = levantine_arabic
+			}
+
+			set_character_flag = converted_culture
+		}
+		else = {
+			hidden_effect = {
+				any_courtier = {
+					limit = {
+						dynasty = ROOT
+						religion = ROOT
+						culture = assyrian
+						is_ruler = no
+					}
+
+					culture = levantine_arabic
+				}
+			}
+
+			set_character_flag = converted_culture
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_3602
+
+		set_character_flag = no_melting_pot
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Assyrian province stops being Nestorian
+province_event = {
+	id = Plus.3603
+	desc = EVTDESC_Plus_3603
+	picture = GFX_evt_courtiers_talking
+	border = GFX_event_normal_frame_religion
+
+	trigger = {
+		culture = assyrian
+		is_nestorian_branch = no
+		should_evolve_cultures_trigger = yes
+
+		any_neighbor_province = {
+			NOT = { culture = assyrian }
+		}
+
+		owner = {
+			is_nestorian_branch = no
+
+			NOR = {
+				culture = assyrian
+				has_character_flag = no_melting_pot
+			}
+
+			trigger_if = {
+				limit = { independent = no }
+
+				top_liege = {
+					is_nestorian_branch = no
+
+					NOR = {
+						culture = assyrian
+						has_character_flag = no_melting_pot
+					}
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 450
+
+		mult_modifier = {
+			factor = 0.5
+			NOT = { any_neighbor_province = { culture = assyrian } }
+		}
+	}
+
+	option = {
+		name = OK
+
+		culture = levantine_arabic
+
+		add_province_modifier = {
+			name = recent_culture_change
+			duration = -1
+		}
+	}
+}

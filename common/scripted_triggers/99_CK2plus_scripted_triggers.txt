@@ -1,0 +1,202 @@
+# Various triggers, not categorised
+
+is_feminist_trigger = {
+	OR = {
+		is_egalitarian_culture = yes
+		is_egalitarian_religion = yes
+		has_religion_feature = religion_matriarchal
+		has_law = status_of_women_4
+	}
+}
+
+is_egalitarian_culture = {
+	OR = {
+		culture = basque
+		culture = sumpa
+		culture = zhangzhung
+	}
+}
+
+is_egalitarian_religion = {
+	OR = {
+		religion = berber_pagan
+		religion = bogomilist
+		religion = buddhist
+		religion = cathar
+		religion = druze
+		religion = egyptian_pagan
+		religion = mazdaki
+		religion = messalian
+		religion = promethean_pagan
+		religion = tondrakian
+		has_religion_feature = religion_equal
+		has_religion_feature = religion_feature_bon
+	}
+}
+
+uses_imperial_decadence_trigger = {
+	real_tier = EMPEROR
+	is_feudal = yes
+	uses_decadence = no
+}
+
+regnal_name_culture_trigger = {
+	trigger_if = {
+		limit = { is_female = yes }
+
+		OR = {
+			culture = basque
+			culture = portuguese
+			culture = georgian
+			culture = danish
+			culture = greek
+			culture = pontic_greek
+			culture = norman
+			culture = castilian
+			culture = norwegian
+		}
+	}
+	trigger_else = {
+		OR = {
+			culture = norse
+			culture = swedish
+			culture = norwegian
+			culture = danish
+			culture = icelandic
+			culture = english_norse
+			german_cultures_trigger = yes
+			culture = polish
+			culture = scottish
+			culture = scots
+			culture = english
+			culture = anglo-saxon
+			culture = bohemian
+			culture = hungarian
+			culture = croatian
+			culture = serbian
+			culture = bulgarian
+			culture = vlach
+			culture = french
+			culture = norman
+			culture = basque
+			culture = castilian
+			culture = catalan
+			culture = frankish
+			culture = greek
+			culture = pontic_greek
+			culture = russian
+			is_italian_trigger = yes
+			culture = portuguese
+			culture = armenian
+			culture = georgian
+			culture = lithuanian
+			culture = welsh
+			culture = cornish
+			culture = breton
+			culture = persian
+		}
+	}
+}
+
+regnal_dynastic_name_trigger = {
+	any_dynasty_member_even_if_dead = {
+		same_sex = ROOT
+		is_alive = no
+		compare_cultures_ROOT_trigger = yes
+		NOT = { lower_real_tier_than = ROOT }
+	}
+}
+
+regnal_name_trigger = {
+	OR = {
+		regnal_name_culture_trigger = yes
+		regnal_dynastic_name_trigger = yes
+	}
+}
+
+# requires event target capital_province set
+is_capital_province = {
+	province = event_target:capital_province
+}
+
+# TODO: Utilize this in CB files
+has_gender_equal_game_rule_trigger = {
+	OR = {
+		has_game_rule = {
+			name = gender
+			value = plus
+		}
+		has_game_rule = {
+			name = gender
+			value = all
+		}
+	}
+}
+
+holding_is_at_peace = {
+	FROMFROM = {
+		show_scope_change = no
+
+		NOR = {
+			show_only_failed_conditions  = yes
+
+			has_siege = yes
+			is_occupied = yes
+			has_holding_modifier = looted_modifier
+			has_holding_modifier = recently_conquered
+		}
+	}
+}
+
+nomad_holding_is_at_peace = {
+	capital_holding = {
+		show_scope_change = no
+
+		NOR = {
+			has_siege = yes
+			is_occupied = yes
+			has_holding_modifier = looted_modifier
+			has_holding_modifier = recently_conquered
+		}
+	}
+}
+
+trade_post_is_at_peace = {
+	trade_post_owner = { # has_siege does not work in trade post scopes
+		show_scope_change = no
+
+		custom_tooltip = {
+			text = no_hostile_armies_present_tt
+
+			NOT = {
+				any_current_enemy = {
+					any_army = {
+						location = {
+							province = PREVPREVPREVPREV
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+fort_hospital_is_at_peace = {
+	owner = {
+		show_scope_change = no
+
+		custom_tooltip = {
+			text = no_hostile_armies_present_tt
+
+			NOT = {
+				any_current_enemy = {
+					any_army = {
+						location = {
+							province = PREVPREVPREVPREV
+						}
+					}
+				}
+			}
+		}
+	}
+}

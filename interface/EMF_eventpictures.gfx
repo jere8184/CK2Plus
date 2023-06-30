@@ -1,0 +1,30 @@
+spriteTypes =
+{
+	# GFX_evt_apocalypto
+	spriteType = {
+		name = "GFX_evt_apocalypto"
+		textureFile = "gfx/event_pictures/apocalypto.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_apocalypto_finno_ugric"
+		textureFile = "gfx/event_pictures/apocalypto_finno_ugric.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_apocalypto_north_germanic"
+		textureFile = "gfx/event_pictures/apocalypto_finno_ugric.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_apocalypto_east_slavic"
+		textureFile = "gfx/event_pictures/apocalypto_finno_ugric.tga"
+		alwaysTransparent = yes
+	}
+	spriteType = {
+		name = "GFX_evt_apocalypto_altaic"
+		textureFile = "gfx/event_pictures/apocalypto_finno_ugric.tga"
+		alwaysTransparent = yes
+	}
+}
+

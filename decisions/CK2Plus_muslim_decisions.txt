@@ -1,0 +1,1410 @@
+targeted_decisions = {
+	declare_as_kafir = {
+		filter = sub_realm
+		ai_target_filter = sub_realm
+		ai_check_interval = 12
+
+		only_rulers = yes
+
+		from_potential = {
+			religion = kharijite
+			has_regent = no
+
+			NOR = {
+				trait = kharijite_kafir
+				trait = decadent
+			}
+
+		}
+
+		potential = {
+			religion = kharijite
+			trait = decadent
+			NOT = { trait = kharijite_kafir }
+		}
+
+		allow = {
+			FROM = { piety >= 50 }
+		}
+
+		effect = {
+			tooltip = { add_trait = kharijite_kafir }
+			letter_event = { id = Plus.1915 }
+
+			FROM = {
+				show_scope_change = no
+
+				piety = -50
+
+				opinion = {
+					name = opinion_takfir
+					who = ROOT
+					years = 20
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				OR = {
+					dynasty = FROM
+					is_close_relative = FROM
+					vassal_of = FROM
+				}
+
+				reverse_opinion = {
+					who = FROM
+					value < 0
+				}
+
+				FROM = {
+					NOR = {
+						trait = drunkard
+						trait = hedonist
+						trait = cynical
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				FROM = { trait = greedy }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				FROM = { trait = slothful }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				FROM = { trait = gluttonous }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				FROM = { trait = arbitrary }
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				FROM = { trait = just }
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				FROM = { trait = diligent }
+			}
+
+			mult_modifier = {
+				factor = 4.0
+				FROM = { trait = zealous }
+			}
+		}
+	}
+
+	accuse_as_kafir = {
+		filter = liege
+		ai_target_filter = liege
+		ai_check_interval = 12
+
+		only_rulers = yes
+
+		from_potential = {
+			religion = kharijite
+			is_adult = yes
+			prisoner = no
+			is_incapable = no
+
+			NOR = {
+				trait = kharijite_kafir
+				trait = decadent
+			}
+		}
+
+		potential = {
+			is_adult = yes
+			prisoner = no
+			is_incapable = no
+			NOT = { trait = kharijite_kafir }
+
+			OR = {
+				trait = decadent
+				trait = drunkard
+				trait = hedonist
+
+				AND = {
+					piety < 0
+
+					OR = {
+						trait = greedy
+						trait = slothful
+						trait = cynical
+						trait = gluttonous
+						trait = arbitrary
+					}
+				}
+			}
+		}
+
+		allow = {
+			FROM = { piety >= 100 }
+		}
+
+		effect = {
+			FROM = {
+				show_scope_change = no
+
+				piety = -100
+				add_claim = ROOT
+			}
+
+			tooltip = { add_trait = kharijite_kafir }
+			letter_event = { id = Plus.1916 }
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				FROM = {
+					OR = {
+						dynasty = ROOT
+						is_close_relative = ROOT
+						trait = zealous
+					}
+
+					NOR = {
+						trait = drunkard
+						trait = hedonist
+						trait = cynical
+						is_primary_heir = ROOT
+					}
+
+					opinion = {
+						who = ROOT
+						value < 0
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				FROM = { trait = greedy }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				FROM = { trait = slothful }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				FROM = { trait = gluttonous }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				FROM = { trait = arbitrary }
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				FROM = { trait = just }
+			}
+
+			mult_modifier = {
+				factor = 2.0
+				FROM = { trait = diligent }
+			}
+
+			mult_modifier = {
+				factor = 4.0
+				FROM = { trait = zealous }
+			}
+		}
+	}
+
+	public_execution = {
+		filter = court
+		ai_target_filter = court
+		ai_check_interval = 12
+
+		only_rulers = yes
+
+		from_potential = {
+			religion = kharijite
+			has_regent = no
+		}
+
+		potential = {
+			prisoner = yes
+			host = { character = FROM }
+			is_adult = yes
+			is_incapable = no
+		}
+
+		allow = {
+			trigger_if = {
+				limit = { religion = kharijite }
+				trait = kharijite_kafir
+			}
+		}
+
+		effect = {
+			save_event_target_as = kinslayer_target
+
+			FROM = {
+				show_scope_change = no
+
+				add_kinslayer_trait_effect = yes
+
+				if = {
+					limit = { is_married = ROOT }
+
+					remove_trait_silently_kind_effect = yes
+					add_trait = cruel
+				}
+
+				character_event = { id = Plus.1918 }
+			}
+
+			hidden_effect = {
+				any_close_relative = {
+					limit = { NOT = { character = FROM } }
+
+					opinion = {
+						name = executed_kin
+						who = FROM
+						years = 10
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				trigger_if = {
+					limit = {
+						OR = {
+							sibling = FROM
+							is_father = FROM
+							is_mother = FROM
+							is_married = FROM
+							is_child_of = FROM
+							dynasty = FROM
+						}
+					}
+				}
+
+				FROM = {
+					OR = {
+						trait = zealous
+						trait = cruel
+						is_kinslayer_trigger = yes
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 10
+				controls_religion = yes
+			}
+
+			mult_modifier = {
+				factor = 5
+				FROM = { trait = zealous }
+			}
+
+			mult_modifier = {
+				factor = 2
+				FROM = { trait = cruel }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				FROM = { trait = cynical }
+			}
+
+			mult_modifier = {
+				factor = 0.25
+				FROM = { trait = kind }
+			}
+		}
+	}
+
+	banish_takfir = {
+		filter = dynasty
+		ai_target_filter = dynasty
+		ai_check_interval = 3
+
+		only_playable = yes
+
+		from_potential = {
+			religion_group = muslim
+
+			OR = {
+ 				independent = yes
+ 				NOT = { any_dynasty_member = { is_liege_or_above_of = FROM } }
+ 			}
+		}
+
+		potential = {
+			prisoner = yes
+			host = { character = FROM }
+			employer = { NOT = { character = FROM } }
+
+			reverse_has_opinion_modifier = {
+				name = opinion_takfir
+				who = FROM
+			}
+		}
+
+		effect = {
+			hidden_effect = {
+				imprison = no
+
+				opinion = {
+					name = opinion_hate
+					who = FROM
+					years = 100
+				}
+
+				any_close_relative = {
+					limit = {
+						dynasty = ROOT
+						is_ruler = yes
+						is_feudal = yes
+
+						OR = {
+							character = FROM
+							is_vassal_or_below_of = FROM
+						}
+					}
+
+					ROOT = {
+						if = {
+							limit = { NOT = { has_strong_claim = PREV } }
+							add_claim = PREV
+						}
+					}
+				}
+			}
+
+			if = {
+				limit = { is_ruler = yes }
+				abdicate = yes
+			}
+
+			random_playable_ruler = {
+				show_scope_change = no
+
+				preferred_limit = {
+					dynasty = ROOT
+					trait = decadent
+					NOT = { is_vassal_or_below_of = FROM }
+				}
+
+				preferred_limit = {
+					same_realm = ROOT
+					vassal_of = top_liege
+					religion = ROOT
+					NOT = { is_vassal_or_below_of = FROM }
+				}
+
+				preferred_limit = {
+					same_realm = ROOT
+					religion = ROOT
+					NOT = { is_vassal_or_below_of = FROM }
+				}
+
+				preferred_limit = {
+					trait = decadent
+					religion = ROOT
+					NOT = { character = FROM }
+				}
+
+				preferred_limit = {
+					religion = ROOT
+					distance = {
+						who = ROOT
+						value < 300
+					}
+					NOT = { same_realm = FROM }
+				}
+
+				preferred_limit = {
+					religion = ROOT
+					NOT = { same_realm = FROM }
+				}
+
+				preferred_limit = {
+					NOT = { same_realm = FROM }
+				}
+
+				ROOT = {
+					show_scope_change = no
+
+					banish = PREV
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+}
+
+decisions = {
+	restore_court_order = {
+		is_high_prio = yes
+		ai_check_interval = 3
+
+		only_playable = yes
+
+		potential = {
+			trait = court_anarchy
+			has_global_flag = anarchy_at_samarra
+
+			trigger_if = {
+				limit = { ai = yes }
+
+				had_global_flag = {
+					flag = anarchy_at_samarra
+					years >= 1
+				}
+			}
+		}
+
+		allow = {
+			OR = {
+				diplomacy >= 12
+				intrigue >= 12
+				martial >= 12
+			}
+
+			war = no
+			prisoner = no
+			is_incapable = no
+		}
+
+		effect = {
+			piety = 100
+
+			hidden_effect = {
+				any_courtier = {
+					limit = {
+						is_councillor = yes
+						NOT = { has_minor_title = title_regent }
+					}
+
+					reverse_opinion = {
+						name = opinion_traitor
+						who = ROOT
+						years = 20
+					}
+
+					opinion = {
+						name = opinion_hate
+						who = ROOT
+						years = 20
+					}
+				}
+			}
+
+			regent = {
+				show_scope_change = no
+
+				hidden_effect = {
+					save_event_target_as = imprisoned_regent
+
+					reverse_opinion = {
+						name = opinion_traitor
+						who = ROOT
+						years = 20
+					}
+				}
+
+				imprison = ROOT
+
+				hidden_effect = {
+					opinion = {
+						name = opinion_hate
+						who = ROOT
+						years = 20
+					}
+				}
+			}
+
+			remove_trait = court_anarchy
+			narrative_event = { id = Plus.1902 }
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	kafir_clear_gluttonous = {
+		is_high_prio = yes
+		icon_religion = kharijite
+		ai_check_interval = 3
+
+		potential = {
+			trait = kharijite_kafir
+			trait = gluttonous
+			religion = kharijite
+		}
+
+		allow = {
+			piety >= 250
+			is_inaccessible_trigger = no
+		}
+
+		effect = {
+			piety = -250
+
+			character_event = {
+				id = Plus.1920
+				tooltip = BEGIN_FASTING
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	kafir_clear_greed = {
+		is_high_prio = yes
+		icon_religion = kharijite
+		ai_check_interval = 3
+
+		potential = {
+			trait = kharijite_kafir
+			trait = greedy
+			religion = kharijite
+		}
+
+		allow = {
+			piety >= 250
+			scaled_wealth = 1.0
+			is_inaccessible_trigger = no
+		}
+
+		effect = {
+			piety = -250
+			scaled_wealth = -1.0
+
+			character_event = {
+				id = Plus.1922
+				tooltip = ATTEMPT_REMOVE_GREED
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	kafir_clear_slothful = {
+		is_high_prio = yes
+		icon_religion = kharijite
+		ai_check_interval = 3
+
+		potential = {
+			trait = kharijite_kafir
+			trait = slothful
+			religion = kharijite
+		}
+
+		allow = {
+			piety >= 250
+			NOT = { trait = stressed }
+			is_inaccessible_trigger = no
+		}
+
+		effect = {
+			piety = -250
+
+			character_event = {
+				id = Plus.1923
+				tooltip = ATTEMPT_REMOVE_SLOTH
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	kafir_clear_arbitrary = {
+		is_high_prio = yes
+		icon_religion = kharijite
+		ai_check_interval = 3
+
+		potential = {
+			trait = kharijite_kafir
+			trait = arbitrary
+			religion = kharijite
+		}
+
+		allow = {
+			piety >= 250
+			prestige >= 250
+			is_inaccessible_trigger = no
+		}
+
+		effect = {
+			piety = -250
+			prestige = -250
+
+			character_event = {
+				id = Plus.1924
+				tooltip = ATTEMPT_REMOVE_ARBITRARY
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	kafir_clear_cynical = {
+		is_high_prio = yes
+		icon_religion = kharijite
+		ai_check_interval = 3
+
+		potential = {
+			trait = kharijite_kafir
+			trait = cynical
+			religion = kharijite
+		}
+
+		allow = {
+			piety >= 250
+			prestige >= 500
+			is_inaccessible_trigger = no
+		}
+
+		effect = {
+			piety = -250
+			prestige = -500
+
+			character_event = {
+				id = Plus.1925
+				tooltip = ATTEMPT_REMOVE_CYNICAL
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	kafir_clear_drunkard = {
+		is_high_prio = yes
+		icon_religion = kharijite
+		ai_check_interval = 3
+
+		potential = {
+			trait = kharijite_kafir
+			trait = drunkard
+			religion = kharijite
+		}
+
+		allow = {
+			piety >= 250
+			prestige >= 500
+			is_inaccessible_trigger = no
+		}
+
+		effect = {
+			piety = -250
+			prestige = -500
+
+			character_event = {
+				id = Plus.1926
+				tooltip = ATTEMPT_REMOVE_DRUNKARD
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	kafir_clear_hedonist = {
+		is_high_prio = yes
+		icon_religion = kharijite
+		ai_check_interval = 3
+
+		potential = {
+			trait = kharijite_kafir
+			trait = hedonist
+			religion = kharijite
+		}
+
+		allow = {
+			piety >= 250
+			prestige >= 500
+			is_inaccessible_trigger = no
+		}
+
+		effect = {
+			piety = -250
+			prestige = -500
+
+			character_event = {
+				id = Plus.1927
+				tooltip = ATTEMPT_REMOVE_HEDONIST
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	kafir_clear_decadent = {
+		is_high_prio = yes
+		icon_religion = kharijite
+		ai_check_interval = 3
+
+		potential = {
+			trait = kharijite_kafir
+			trait = decadent
+			religion = kharijite
+		}
+
+		allow = {
+			piety >= 500
+			prestige >= 500
+			is_inaccessible_trigger = no
+		}
+
+		effect = {
+			piety = -500
+			prestige = -500
+
+			character_event = {
+				id = Plus.1928
+				tooltip = ATTEMPT_REMOVE_DECADENT
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	kafir_clear_name = {
+		is_high_prio = yes
+		icon_religion = kharijite
+		ai_check_interval = 3
+
+		potential = {
+			trait = kharijite_kafir
+			religion = kharijite
+		}
+
+		allow = {
+			piety >= 100
+
+			NOR = {
+				trait = decadent
+				trait = hedonist
+				trait = drunkard
+				trait = slothful
+				trait = greedy
+				trait = arbitrary
+				trait = cynical
+				trait = gluttonous
+			}
+		}
+
+		effect = {
+			piety = -100
+
+			character_event = {
+				id = Plus.1929
+				tooltip = ATTEMPT_CLEAR_NAME
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	raise_zealot_units = {
+		is_high_prio = yes
+		is_mercenary = yes
+
+		only_rulers = yes
+
+		potential = {
+			war = yes
+
+			trigger_if = {
+				limit = { religion = kharijite }
+				NOT = { trait = kharijite_kafir }
+			}
+			trigger_else = {
+				religion = paulician
+				NOT = { trait = excommunicated }
+			}
+
+			is_tribal = no
+		}
+
+		allow = {
+			piety >= 250
+			wealth >= 0
+
+			custom_tooltip = {
+				text = NOT_RECENTLY_RAISE_ZEALOTS
+				NOT = { has_character_modifier = raise_tribal_units_timer }
+			}
+		}
+
+		effect = {
+			piety = -250
+
+			custom_tooltip = {
+				text = ZEALOT_ARMY_RAISED
+
+				spawn_unit = {
+					owner = ROOT
+					province = capital_scope
+					home = capital_scope
+					match_character = ROOT
+					match_mult = 0.2
+					match_min = 500
+					match_max = 5000
+					attrition = 1.0
+					maintenance_multiplier = 0.5
+					disband_on_peace = yes
+				}
+			}
+
+			add_character_modifier = {
+				name = raise_tribal_units_timer
+				months = 1
+				hidden = yes
+			}
+		}
+
+		ai_will_do = {
+			factor = 0 # decisions with the "is_mercenary" will not be calculated from the script
+		}
+	}
+
+	hurufi_study1 = {
+		ai_check_interval = 12
+
+		potential = {
+            religion = hurufi
+			is_adult = yes
+			is_female = no
+			prisoner = no
+			is_dumb_trigger = no
+
+			NOR = {
+				trait = inbred
+				trait = blinded
+				trait = incapable
+				trait = hurufi_mystic_a
+				trait = hurufi_mystic_b
+				trait = hurufi_mystic_c
+				has_character_modifier = writing_epic_poem
+				has_character_modifier = hurufi_studying
+			}
+		}
+
+		allow = {
+			trigger_if = {
+				limit = { is_playable = yes }
+				has_focus = focus_theology
+			}
+
+			piety >= 100
+			war = no
+			in_command_trigger = no
+			is_ill = no
+			is_inaccessible_trigger = no
+		}
+
+		effect = {
+			set_character_flag = hurufy_studying_1
+			piety = -100
+
+			add_character_modifier = {
+				name = hurufi_studying
+				duration = -1
+			}
+
+			add_character_modifier = {
+				name = do_not_disturb
+				days = 300
+				hidden = yes
+			}
+
+			character_event = {
+				id = Plus.1943
+				days = 200
+				random = 100
+				tooltip = BEGIN_HURUFI_STUDIES
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				age > 30
+				NOT = { trait = slothful }
+
+				trigger_if = {
+					limit = { is_playable = yes }
+
+					OR = {
+						is_priest = yes
+						trait = scholar
+						trait = theologian
+						trait = mystic
+					}
+				}
+
+			}
+
+			mult_modifier = {
+				factor = 10
+				is_priest = yes
+			}
+
+			mult_modifier = {
+				factor = 20
+
+				OR = {
+					trait = scholar
+					trait = theologian
+					trait = mystic
+				}
+			}
+		}
+	}
+
+	hurufi_study2 = {
+		ai_check_interval = 12
+
+		potential = {
+            religion = hurufi
+			trait = hurufi_mystic_a
+			is_adult = yes
+			is_female = no
+			prisoner = no
+			is_dumb_trigger = no
+
+			NOR = {
+				trait = inbred
+				trait = blinded
+				trait = incapable
+				trait = hurufi_mystic_b
+				trait = hurufi_mystic_c
+				has_character_modifier = writing_epic_poem
+				has_character_modifier = hurufi_studying
+			}
+		}
+
+		allow = {
+			piety >= 200
+			war = no
+			in_command_trigger = no
+			is_ill = no
+			is_inaccessible_trigger = no
+		}
+
+		effect = {
+			set_character_flag = hurufy_studying_2
+			piety = -200
+
+			add_character_modifier = {
+				name = hurufi_studying
+				duration = -1
+			}
+
+			add_character_modifier = {
+				name = do_not_disturb
+				days = 300
+				hidden = yes
+			}
+
+			character_event = {
+				id = Plus.1943
+				days = 200
+				random = 100
+				tooltip = BEGIN_HURUFI_STUDIES
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				age > 30
+				NOT = { trait = slothful }
+
+				trigger_if = {
+					limit = { is_playable = yes }
+
+					OR = {
+						is_priest = yes
+						trait = scholar
+						trait = theologian
+						trait = mystic
+					}
+				}
+
+			}
+
+			mult_modifier = {
+				factor = 5
+				is_priest = yes
+			}
+
+			mult_modifier = {
+				factor = 10
+
+				OR = {
+					trait = scholar
+					trait = theologian
+					trait = mystic
+				}
+			}
+		}
+	}
+
+	hurufi_study3 = {
+		ai_check_interval = 12
+
+		potential = {
+            religion = hurufi
+			is_adult = yes
+			is_female = no
+			prisoner = no
+			trait = hurufi_mystic_b
+			is_dumb_trigger = no
+
+			NOR = {
+				trait = inbred
+				trait = blinded
+				trait = incapable
+				trait = hurufi_mystic_c
+				has_character_modifier = writing_epic_poem
+				has_character_modifier = hurufi_studying
+			}
+		}
+
+		allow = {
+			piety >= 400
+			war = no
+			in_command_trigger = no
+			is_ill = no
+			is_inaccessible_trigger = no
+		}
+
+		effect = {
+			set_character_flag = hurufy_studying_3
+			piety = -400
+
+			add_character_modifier = {
+				name = hurufi_studying
+				duration = -1
+			}
+
+			add_character_modifier = {
+				name = do_not_disturb
+				days = 300
+				hidden = yes
+			}
+
+			character_event = {
+				id = Plus.1943
+				days = 200
+				random = 100
+				tooltip = BEGIN_HURUFI_STUDIES
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = {
+				age > 30
+				NOT = { trait = slothful }
+
+				trigger_if = {
+					limit = { is_playable = yes }
+
+					OR = {
+						is_priest = yes
+						trait = scholar
+						trait = theologian
+						trait = mystic
+					}
+				}
+
+			}
+
+			mult_modifier = {
+				factor = 5
+				is_priest = yes
+			}
+
+			mult_modifier = {
+				factor = 10
+
+				OR = {
+					trait = scholar
+					trait = theologian
+					trait = mystic
+				}
+			}
+		}
+	}
+
+	hurufi_omens = {
+		ai_check_interval = 12
+
+		potential = {
+            religion = hurufi
+			trait = hurufi_mystic_c
+			is_adult = yes
+			is_female = no
+			prisoner = no
+			is_incapable = no
+
+			NOR = {
+				has_character_modifier = hurufi_prediction
+				has_character_modifier = writing_epic_poem
+			}
+		}
+
+		allow = {
+			piety >= 50
+			war = no
+			is_inaccessible_trigger = no
+		}
+
+		effect = {
+			piety = -50
+
+			add_character_modifier = {
+				name = do_not_disturb
+				months = 5
+				hidden = yes
+			}
+
+			character_event = {
+				id = Plus.1958
+				days = 100
+				random = 50
+				tooltip = GET_HURUFI_OMENS
+			}
+		}
+
+		ai_will_do = {
+			factor = 0.5
+
+			trigger = {
+				age >= 30
+
+				NOR = {
+					trait = paranoid
+					trait = slothful
+					trait = cynical
+				}
+			}
+
+			mult_modifier = {
+				factor = 10
+
+				OR = {
+					trait = zealous
+					trait = mystic
+					trait = diligent
+				}
+			}
+		}
+	}
+
+	hurufi_write_epic_poem = {
+		ai_check_interval = 120
+
+		potential = {
+			religion = hurufi
+			trait = hurufi_diwan
+			is_incapable = no
+
+			NOR = {
+				has_character_modifier = writing_epic_poem
+				has_character_modifier = wrote_epic_poem
+				has_character_modifier = hurufi_studying
+			}
+		}
+
+		allow = {
+			OR = {
+				has_focus = focus_scholarship
+				diplomacy >= 15
+				learning >= 15
+			}
+
+			NOR = {
+				trait = depressed
+				trait = stressed
+			}
+
+			war = no
+			prisoner = no
+			is_ill = no
+			is_inaccessible_trigger = no
+		}
+
+		effect = {
+			add_character_modifier = {
+				name = writing_epic_poem
+				duration = -1
+			}
+
+			hidden_effect = {
+				set_variable = {
+					which = poem_completeness
+					value = 0
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 0.1
+
+			trigger = {
+				age >= 40
+
+				NOR = {
+					trait = slothful
+					trait = content
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				OR = {
+					diplomacy >= 15
+					learning >= 15
+				}
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				OR = {
+					diplomacy >= 20
+					learning >= 20
+				}
+			}
+
+			mult_modifier = {
+				factor = 10
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 10
+				trait = diligent
+			}
+
+			mult_modifier = {
+				factor = 2.5
+				trait = shrewd
+			}
+
+			mult_modifier = {
+				factor = 5
+				trait = quick
+			}
+
+			mult_modifier = {
+				factor = 10
+				trait = genius
+			}
+		}
+	}
+
+	druze_pact_of_time = {
+		is_high_prio = yes
+		ai_check_interval = 3
+
+		potential = {
+			religion = druze
+			prisoner = no
+			is_incapable = no
+
+			NOR = {
+				trait = druze_juhhal
+				trait = druze_uqqal
+				trait = druze_ajawid
+			}
+		}
+
+		allow = {
+			is_adult = yes
+		}
+
+		effect = {
+			piety = 10
+			add_trait = druze_juhhal
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	claim_imamah = {
+		is_high_prio = yes
+		icon_religion = shiite
+		ai_check_interval = 3
+
+		potential = {
+			dynasty = 589 # Fatimid
+			NOR = {
+				trait = shiite_claimant
+				shiite_claimant = { is_alive = yes }
+				has_global_flag = shia_caliphate_revolt
+				has_global_flag = shia_caliphate_revolt_ongoing
+			}
+		}
+
+		allow = {
+			dynasty_head = { character = ROOT }
+		}
+
+		effect = {
+			set_character_flag = is_shiite_claimant
+			add_trait = shiite_claimant
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+}

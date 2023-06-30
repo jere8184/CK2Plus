@@ -1,0 +1,206 @@
+amber_road = {
+	wealth = 10			# Total base wealth of the Amber Road
+
+	modifier = {			# How the trade route modifies the provinces it passes
+		castle_tax_modifier = 0.05
+		city_tax_modifier = 0.10
+		temple_tax_modifier = 0.05
+		trade_route_value = 1
+		local_movement_speed = 0.10
+		tech_growth_modifier = 0.05
+		icon = 98
+	}
+
+	start = { # Start provinces of trade route
+		787 # Kalevan
+		738 # Danzig
+		848 # Polotsk
+		776 # Zemgale
+	}
+
+	path = { # Connects from Rus trade
+		776 # Zemgale
+		772 # Samogitia
+		764 # Memel
+		765 # Scalovia
+	}
+	path = {
+		765 # Scalovia
+		763 # Sambia
+		762 # Marienburg
+		738 # Danzig
+	}
+	path = { # Connects from Rus trade
+		776 # Zemgale
+		774 # Vanema
+		773 # Kurzeme
+	}
+	path = {
+		738 # Danzig
+		737 # Bytow
+		736 # Slupsk
+		735 # Stettin
+		733 # Wolgast
+		725 # Brandenburg
+		723 # Zerbst
+		722 # Merseburg
+	}
+	path = {
+		718 # Praha
+		715 # South Bohemia
+		210 # Freistadt
+		212 # Medelike
+		213 # Wien
+		708 # Sopron
+	}
+	path = {
+		718 # Praha
+		714 # Hradec
+		711 # Brno
+	}
+	path = {
+		708 # Sopron
+		687 # Vas
+		216 # Graz
+	}
+	path = {
+		216 # Graz
+		217 # Friesach
+		218 # Villach
+		223 # Udine
+		224 # Treviso
+	}
+	path = {
+		224 # Treviso
+		450 # Venezia
+	}
+	path = {
+		738 # Danzig
+		755 # Dobrzyn
+		756 # Plock
+		758 # Liw
+	}
+	path = {
+		758 # Liw
+		751 # Sandomierz
+	}
+	path = {
+		751 # Sandomierz
+		747 # Krakow
+	}
+	path = {
+		751 # Sandomierz
+		748 # Sacz
+		878 # Peremyshl
+		869 # Zvenyhorod
+		868 # Galich
+	}
+	path = {
+		868 # Galich
+		870 # Terebovl
+		866 # Medjybij
+		863 # Kiev
+	}
+	path = {
+		868 # Galich
+		658 # Iasi
+		657 # Peresechen
+		661 # Belgorod
+		1889 # Coast of Taurida
+	}
+	path = {
+		758 # Liw
+		757 # Gostynin
+		754 # Kujawy
+		740 # Kalisz
+		744 # Wroclaw
+	}
+	path = {
+		747 # Krakow
+		746 # Cieszyn
+		745 # Upper Silesia
+		744 # Wroclaw
+	}
+	path = {
+		224 # Treviso
+		448 # Verona
+	}
+	path = {
+		448 # Verona
+		447 # Mantua
+		453 # Bologna
+	}
+	path = {
+		453 # Bologna
+		454 # Modena
+		455 # Parma
+		441 # Pavia
+		435 # Genoa
+	}
+	path = {
+		744 # Wroclaw
+		720 # Gorlitz
+		721 # Meissen
+	}
+	path = {
+		721 # Meissen
+		717 # Zatec
+		718 # Praha
+	}
+	path = {
+		721 # Meissen
+		722 # Merseburg
+	}
+	path = {
+		453 # Bologna
+		452 # Ravenna
+		468 # Rimini
+		469 # Ancona
+		470 # Aquila
+		471 # Chieti
+		476 # Foggia
+		477 # Apulia
+		478 # Bari
+	}
+	path = {
+		453 # Bologna
+		457 # Firenze
+	}
+	path = {
+		457 # Firenze
+		459 # Siena
+		463 # Orvieto
+		464 # Roma
+		472 # Capua
+		473 # Napoli
+		474 # Amalfi
+	}
+	path = {
+		457 # Firenze
+		460 # Pisa
+	}
+	path = {
+		863 # Kiev
+		652 # Korsun
+		651 # Lower Dniepr
+		1889 # Coast of Taurida
+	}
+	path = {
+		1889 # Coast of Taurida
+		1890 # Gulf of Varna
+	}
+	path = {
+		1890 # Gulf of Varna
+		541 # Constantinopolis
+	}
+	path = {
+		747 # Krakow
+		712 # Olomouc
+		711 # Brno
+	}
+	path = {
+		711 # Brno
+		709 # Pressburg
+		708 # Sopron
+	}
+}

@@ -1,0 +1,58 @@
+
+
+
+
+herbalist = {
+	potential = {
+		religion_group = pagan_group
+	}
+
+	opposites =  {
+		loremaster
+	}
+
+	lifestyle = yes
+
+	intrigue = 2
+	learning = 2
+
+	same_opinion = 10
+	tribal_opinion = 10
+
+	command_modifier = {
+		speed = 0.02
+	}
+}
+
+
+
+loremaster = {
+	potential = {
+		religion_group = pagan_group
+	}
+
+	opposites =  {
+		herbalist
+	}
+
+	lifestyle = yes
+
+	diplomacy = 2
+	learning = 2
+
+	same_opinion = 10
+	tribal_opinion = 10
+
+	command_modifier = {
+		morale_defence = 0.01
+		morale_offence = 0.01
+	}
+}
+
+
+
+
+
+
+
+

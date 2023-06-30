@@ -1,0 +1,1653 @@
+namespace = ancrel
+#reserved: ancrel.2000- ancrel.3999
+
+### RESTORE THE PONTIFEX MAXIMUS
+
+narrative_event = {
+	id = ancrel.2102
+	title = EVTNAME_ancrel_2102
+	desc = EVTDESC_ancrel_2102
+	picture = GFX_evt_roman_temple
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	show_root = yes
+	hide_from = yes
+	major = yes
+
+	major_trigger = {
+		religion_openly_roman_or_reformed_trigger = yes
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_2102
+	}
+}
+
+### FLAMINES MAIORES
+# Written by Jon Severinsson
+
+# The Flamen Dialis must resign
+character_event = {
+	id = ancrel.2110
+	desc = EVTDESC_ancrel_2110
+	picture = GFX_evt_council
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # lose/retire/death_effect (title_flamen_dialis)
+
+	trigger = {
+		religion_openly_roman_or_reformed_trigger = yes
+		has_minor_title = title_flamen_dialis
+
+		NOT = {
+			any_spouse = {
+				is_alive = yes
+				has_minor_title = title_flaminica_dialis
+			}
+		}
+	}
+
+	option = {
+		name = OK
+
+		remove_title = title_flamen_dialis
+		remove_character_modifier = modifier_flamen_dialis
+	}
+}
+
+# The Flamen Martialis must resign
+character_event = {
+	id = ancrel.2111
+	desc = EVTDESC_ancrel_2111
+	picture = GFX_evt_council
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # lose/retire/death_effect (title_flamen_martialis)
+
+	trigger = {
+		religion_openly_roman_or_reformed_trigger = yes
+		has_minor_title = title_flamen_martialis
+
+		NOT = {
+			any_spouse = {
+				is_alive = yes
+				has_minor_title = title_flaminica_martialis
+			}
+		}
+	}
+
+	option = {
+		name = OK
+
+		remove_title = title_flamen_martialis
+		remove_character_modifier = modifier_flamen_martialis
+	}
+}
+
+# The Flamen Quirinalis must resign
+character_event = {
+	id = ancrel.2112
+	desc = EVTDESC_ancrel_2112
+	picture = GFX_evt_council
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # lose/retire/death_effect (title_flamen_quirinalis)
+
+	trigger = {
+		religion_openly_roman_or_reformed_trigger = yes
+		has_minor_title = title_flamen_quirinalis
+
+		NOT = {
+			any_spouse = {
+				is_alive = yes
+				has_minor_title = title_flaminica_quirinalis
+			}
+		}
+	}
+
+	option = {
+		name = OK
+
+		remove_title = title_flamen_quirinalis
+		remove_character_modifier = modifier_flamen_quirinalis
+	}
+}
+
+# Cleanup when a Flamines lost his title some other way
+character_event = {
+	id = ancrel.2113
+
+	is_triggered_only = yes # on_yearly_pulse
+	hide_window = yes
+
+	trigger = {
+		OR = {
+			AND = {
+				has_character_modifier = modifier_flamen_dialis
+				NOT = { has_minor_title = title_flamen_dialis }
+			}
+			AND = {
+				has_character_modifier = modifier_flamen_martialis
+				NOT = { has_minor_title = title_flamen_martialis }
+			}
+			AND = {
+				has_character_modifier = modifier_flamen_quirinalis
+				NOT = { has_minor_title = title_flamen_quirinalis }
+			}
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				has_character_modifier = modifier_flamen_dialis
+				NOT = { has_minor_title = title_flamen_dialis }
+			}
+			remove_character_modifier = modifier_flamen_dialis
+		}
+		if = {
+			limit = {
+				has_character_modifier = modifier_flamen_martialis
+				NOT = { has_minor_title = title_flamen_martialis }
+			}
+			remove_character_modifier = modifier_flamen_martialis
+		}
+		if = {
+			limit = {
+				has_character_modifier = modifier_flamen_quirinalis
+				NOT = { has_minor_title = title_flamen_quirinalis }
+			}
+			remove_character_modifier = modifier_flamen_quirinalis
+		}
+	}
+}
+
+### HELLENIC FLAVOUR EVENTS
+# Written by Patrick Marchand
+
+# Augur hit by lightning
+character_event = {
+	id = ancrel.2240
+	desc = EVTDESC_ancrel_2240
+	picture = GFX_evt_lightning_strike
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_decade_pulse, random_events
+
+	only_rulers = yes
+
+	trigger = {
+		religion_openly_roman_or_reformed_trigger = yes
+		is_landed = yes
+		is_abroad = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = cynical
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = paranoid
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = mystic
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = content
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_2240
+
+		trigger = {
+			NOT = { trait = paranoid }
+		}
+
+		piety = 25
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_2240
+		tooltip_info = paranoid
+
+		trigger = { trait = paranoid }
+
+		piety = 50
+
+		random_list = {
+			50 = { piety = 25 }
+			15 = { add_trait_stressed_effect = yes }
+			35 = {}
+		}
+	}
+}
+
+# Drunken Actors
+character_event = {
+	id = ancrel.2241
+	desc = EVTDESC_ancrel_2241
+	picture = GFX_evt_jugglers
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_decade_pulse, random_events
+
+	only_rulers = yes
+
+	trigger = {
+		religion_openly_hellenic_or_reformed_trigger = yes
+		is_landed = yes
+		is_abroad = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2.5
+			trait = poet
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = cynical
+		}
+
+		mult_modifier = {
+			factor = 3.3
+			trait = wroth
+		}
+
+		mult_modifier = {
+			factor = 1.67
+			trait = brave
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = proud
+		}
+
+		mult_modifier = {
+			factor = 0.56
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = drunkard
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_2241
+
+		prestige = -50
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_2241
+
+		change_learning  = 1
+
+		random_list = {
+			70 = {}
+			20 = { add_trait = drunkard }
+			10 = { add_trait_slothful_effect = yes }
+		}
+	}
+}
+
+### VESTALES
+# Written by Jon Severinsson
+
+# The Vestalis Maxima should be the guardian of all underage Vestalis
+character_event = {
+	id = ancrel.2120
+
+	is_triggered_only = yes # on_yearly_childhood_pulse
+	hide_window = yes
+
+	only_women = yes
+
+	trigger = {
+		religion_openly_hellenic_or_reformed_trigger = yes
+		has_minor_title = title_vestalis_maxima
+
+		top_liege = {
+			any_realm_character = {
+				has_minor_title = title_vestalis
+				age >= 6
+				is_adult = no
+				NOT = { educator = { character = ROOT } }
+			}
+		}
+	}
+
+	immediate = {
+		top_liege = {
+			random_realm_character = {
+				limit = {
+					has_minor_title = title_vestalis
+					age >= 6
+					is_adult = no
+					NOT = { educator = { character = ROOT } }
+				}
+
+				set_guardian = ROOT
+			}
+		}
+	}
+}
+
+# A vestalis must retire after 30 years
+character_event = {
+	id = ancrel.2121
+	desc = EVTDESC_ancrel_2121
+	picture = GFX_evt_princess_byzantine
+
+	is_triggered_only = yes # on_yearly_pulse
+
+	has_character_flag = flag_vestalis
+
+	trigger = {
+		had_character_flag = {
+			flag = flag_vestalis
+			years >= 30
+		}
+
+		OR = {
+			has_minor_title = title_vestalis
+			has_minor_title = title_vestalis_maxima
+		}
+	}
+
+	option = {
+		name = OK
+
+		if = {
+			limit = { has_minor_title = title_vestalis }
+			remove_title = title_vestalis
+		}
+
+		if = {
+			limit = { has_minor_title = title_vestalis_maxima }
+			remove_title = title_vestalis_maxima
+		}
+
+		remove_trait = celibate
+		remove_trait = vestalis
+		add_trait = retired_vestalis
+		recalc_succession = yes
+		clr_character_flag = flag_vestalis
+
+		change_variable = {
+			which = global_num_vestales
+			value = -1
+		}
+	}
+}
+
+# Cleanup when a Vestalis lost her title by some way other than retireing
+character_event = {
+	id = ancrel.2122
+
+	is_triggered_only = yes # on_yearly_pulse
+	hide_window = yes
+
+	has_character_flag = flag_vestalis
+
+	trigger = {
+		NOR = {
+			has_minor_title = title_vestalis
+			has_minor_title = title_vestalis_maxima
+		}
+	}
+
+	immediate = {
+		remove_trait = celibate
+		remove_trait = vestalis
+		recalc_succession = yes
+		clr_character_flag = flag_vestalis
+
+		change_variable = {
+			which = global_num_vestales
+			value = -1
+		}
+	}
+}
+
+#[on_death] Cleanup when a Vestalis dies
+character_event = {
+	id = ancrel.2123
+
+	is_triggered_only = yes # on_death
+	hide_window = yes
+
+	has_character_flag = flag_vestalis
+
+	immediate = {
+		clr_character_flag = flag_vestalis
+
+		change_variable = {
+			which = global_num_vestales
+			value = -1
+		}
+	}
+}
+
+# A vassal has nominated a vestalis
+character_event = {
+	id = ancrel.2124
+	desc = EVTDESC_ancrel_2124
+	picture = GFX_evt_princess_byzantine
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_2124
+
+		trigger = {
+			check_variable = { which = global_num_vestales value >= 5 }
+		}
+
+		ai_chance = {
+			factor = 60
+
+			trigger = {
+				FROM = {
+					NOR = {
+						any_heir_title = { always = yes }
+						any_pretender_title = { always = yes }
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				dynasty = FROM
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				NOT = { FROM = { host = { reverse_opinion = { who = ROOT value = -40 } } } }
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				FROM = { host = { reverse_opinion = { who = ROOT value = 40 } } }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				check_variable = { which = global_num_vestales value >= 4 }
+			}
+
+			mult_modifier = {
+				factor = 2
+				check_variable = { which = global_num_vestales value < 2 }
+			}
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			clr_character_flag = flag_nominated_as_vestalis
+
+			host = {
+				show_scope_change = no
+
+				prestige = 50
+				piety = 50
+
+				opinion = {
+					name = opinion_nominated_vestalis
+					who = ROOT
+					years = 10
+				}
+			}
+
+			move_character = ROOT # Move FROM to ROOT's court
+			give_minor_title = title_vestalis
+
+			hidden_effect = {
+				remove_trait = hedonist
+				add_trait = celibate
+				add_trait = vestalis
+				recalc_succession = yes
+				set_character_flag = flag_vestalis
+				change_variable = { which = global_num_vestales value = 1 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_2124
+
+		trigger = {
+			check_variable = { which = global_num_vestales value < 5 }
+		}
+
+		FROM = {
+			show_scope_change = no
+
+			host = {
+				show_scope_change = no
+
+				prestige = -10
+			}
+		}
+
+		ai_chance = { factor = 40 }
+	}
+
+	option = {
+		name = EVTOPTC_ancrel_2124
+
+		trigger = {
+			check_variable = { which = global_num_vestales value >= 5 }
+		}
+	}
+}
+
+### HOLY ORDERS
+
+# The Herculeans founded
+narrative_event = {
+	id = ancrel.2565
+	title = EVTNAME_ancrel_2565
+	desc = EVTDESC_ancrel_2565
+	picture = GFX_evt_roman_temple
+	border = GFX_event_narrative_frame_war
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	option = {
+		name = EVTOPTA_ancrel_2565
+
+		hidden_effect = {
+			any_player = {
+				narrative_event = { id = ancrel.2566 }
+			}
+		}
+	}
+}
+
+# The player is informed of the Herculeans
+narrative_event = {
+	id = ancrel.2566
+	title = EVTNAME_ancrel_2566
+	desc = EVTDESC_ancrel_2566
+	picture = GFX_evt_roman_temple
+	border = GFX_event_narrative_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = {
+			text = EVTOPTA_ancrel_2566
+			trigger = { religion_openly_hellenic_or_reformed_trigger = yes }
+		}
+		name = {
+			text = EVTOPTB_ancrel_2566
+			trigger = { religion_openly_hellenic_or_reformed_trigger = no }
+		}
+	}
+}
+
+# The Sacred Band founded
+narrative_event = {
+	id = ancrel.2567
+	title = EVTNAME_ancrel_2567
+	desc = EVTDESC_ancrel_2567
+	picture = GFX_evt_roman_temple
+	border = GFX_event_narrative_frame_war
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	option = {
+		name = EVTOPTA_ancrel_2567
+
+		hidden_effect = {
+			any_player = {
+				narrative_event = { id = ancrel.2568 }
+			}
+		}
+	}
+}
+
+# The player is informed of the Sacred Band
+narrative_event = {
+	id = ancrel.2568
+	title = EVTNAME_ancrel_2568
+	desc = EVTDESC_ancrel_2568
+	picture = GFX_evt_roman_temple
+	border = GFX_event_narrative_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = {
+			text = EVTOPTA_ancrel_2566
+			trigger = { religion_openly_hellenic_or_reformed_trigger = yes }
+		}
+		name = {
+			text = EVTOPTB_ancrel_2566
+			trigger = { religion_openly_hellenic_or_reformed_trigger = no }
+		}
+	}
+}
+
+# The Herculeans ask for land in Achaia
+character_event = {
+	id = ancrel.2573
+	title = EVTNAME_ancrel_2573
+	desc = EVTDESC_ancrel_2573
+	picture = GFX_evt_roman_temple
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	trigger = {
+		c_achaia = {
+			holder = ROOT
+			location = { has_empty_holding = yes }
+		}
+
+		is_title_active = d_herculean
+		religion = d_herculean
+		religion = top_liege
+		NOT = { has_character_flag = no_land_to_herculeans }
+	}
+
+	weight_multiplier = {
+		days = 1
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_2573
+
+		d_herculean = {
+			show_scope_change = no
+
+			holder_scope = {
+				show_scope_change = no
+
+				opinion = {
+					name = opinion_granted_barony_to_holy_order
+					who = ROOT
+					years = 100
+				}
+			}
+		}
+
+		piety = 100
+
+		c_achaia = {
+			location = {
+				province_event = {
+					id = ancrel.2574
+					days = 10
+				}
+			}
+		}
+
+		random = {
+			chance = 50
+			add_trait_fully_zealous_effect = yes
+		}
+
+		random = {
+			chance = 50
+			add_trait = holy_warrior
+		}
+
+		random = {
+			chance = 25
+			add_trait_fully_charitable_effect = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_2573
+
+		set_character_flag = no_land_to_herculeans
+		piety = -50
+		remove_trait_silently_zealous_effect = yes
+	}
+}
+
+province_event = {
+	id = ancrel.2574
+	title = EVTNAME_ancrel_2574
+	desc = EVTDESC_ancrel_2574
+	picture = GFX_evt_roman_temple
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	immediate = {
+		build_holding = {
+			title = b_kalavryta
+			type = castle
+			holder = FROM
+		}
+
+		d_herculean = {
+			holder_scope = {
+				b_kalavryta = {
+					set_name = "Olympus Mons"
+					gain_title = PREV
+				}
+			}
+		}
+	}
+
+	option = {
+		name = OK
+	}
+}
+
+### HELLENIC CULT EVENTS
+
+# Approached by the Cult of Orpheus
+narrative_event = {
+	id = ancrel.2575
+	title = EVTNAME_ancrel_2580
+	desc = EVTDESC_ancrel_2575
+	picture = GFX_evt_roman_temple
+
+	is_triggered_only = yes
+
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		religion_openly_hellenic_or_reformed_trigger = yes
+		is_adult = yes
+
+		NOR = {
+			trait = cult_of_orpheus
+			trait = cult_of_cybele
+			trait = cult_of_serapis
+			trait = cult_of_despoina
+			trait = cult_of_trophonius
+			trait = mystery_mithras_corax
+			trait = mystery_mithras_nymphus
+			trait = mystery_mithras_miles
+			trait = mystery_mithras_leo
+			trait = mystery_mithras_perses
+			trait = mystery_mithras_heliodromus
+			trait = mystery_mithras_pater
+		}
+
+		trigger_if = {
+			limit = {
+				NOR = {
+					mother = { trait = cult_of_orpheus }
+					father = { trait = cult_of_orpheus }
+				}
+			}
+
+			diplomacy >= 8
+
+			OR = {
+				is_female = no
+				is_ruler = yes
+			}
+		}
+
+		NOR = {
+			has_character_flag = refused_orpheus
+			has_character_flag = joined_hellenic_cult
+		}
+
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier  = {
+		days = 1
+
+		mult_modifier = {
+			factor = 0.5
+			diplomacy < 8
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			diplomacy >= 10
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			diplomacy >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			diplomacy >= 14
+		}
+	}
+
+	immediate = {
+		set_character_flag = joined_hellenic_cult
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_2575 # Joins
+
+		add_trait = cult_of_orpheus
+
+		narrative_event = {
+			id = ancrel.2580
+			days = 3
+			tooltip = initiation_rites
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_2575 # Refuses
+
+		set_character_flag = refused_orpheus
+		clr_character_flag = joined_hellenic_cult
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Approached by the Cult of Cybele
+narrative_event = {
+	id = ancrel.2576
+	title = EVTNAME_ancrel_2580
+	desc = EVTDESC_ancrel_2576
+	picture = GFX_evt_roman_temple
+
+	is_triggered_only = yes
+
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		religion_openly_hellenic_or_reformed_trigger = yes
+		is_adult = yes
+
+		NOR = {
+			trait = cult_of_orpheus
+			trait = cult_of_cybele
+			trait = cult_of_serapis
+			trait = cult_of_despoina
+			trait = cult_of_trophonius
+			trait = mystery_mithras_corax
+			trait = mystery_mithras_nymphus
+			trait = mystery_mithras_miles
+			trait = mystery_mithras_leo
+			trait = mystery_mithras_perses
+			trait = mystery_mithras_heliodromus
+			trait = mystery_mithras_pater
+		}
+
+		trigger_if = {
+			limit = {
+				NOR = {
+					mother = { trait = cult_of_cybele }
+					father = { trait = cult_of_cybele }
+				}
+			}
+
+			stewardship >= 8
+
+			OR = {
+				is_female = no
+				is_ruler = yes
+			}
+		}
+
+		NOR = {
+			has_character_flag = refused_cybele
+			has_character_flag = joined_hellenic_cult
+		}
+
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		days = 1
+
+		mult_modifier = {
+			factor = 0.5
+			stewardship < 8
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			stewardship >= 10
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			stewardship >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			stewardship >= 14
+		}
+	}
+
+	immediate = {
+		set_character_flag = joined_hellenic_cult
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_2575 # Joins
+
+		add_trait = cult_of_cybele
+
+		narrative_event = {
+			id = ancrel.2580
+			days = 3
+			tooltip = initiation_rites
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_2575 # Refuses
+
+		set_character_flag = refused_cybele
+		clr_character_flag = joined_hellenic_cult
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Approached by the Cult of Serapis
+narrative_event = {
+	id = ancrel.2577
+	title = EVTNAME_ancrel_2580
+	desc = EVTDESC_ancrel_2577
+	picture = GFX_evt_roman_temple
+
+	is_triggered_only = yes
+
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		religion_openly_hellenic_or_reformed_trigger = yes
+		is_adult = yes
+
+		NOR = {
+			trait = cult_of_orpheus
+			trait = cult_of_cybele
+			trait = cult_of_serapis
+			trait = cult_of_despoina
+			trait = cult_of_trophonius
+			trait = mystery_mithras_corax
+			trait = mystery_mithras_nymphus
+			trait = mystery_mithras_miles
+			trait = mystery_mithras_leo
+			trait = mystery_mithras_perses
+			trait = mystery_mithras_heliodromus
+			trait = mystery_mithras_pater
+		}
+
+		trigger_if = {
+			limit = {
+				NOR = {
+					mother = { trait = cult_of_serapis }
+					father = { trait = cult_of_serapis }
+				}
+			}
+
+			martial >= 8
+
+			OR = {
+				is_female = no
+				is_ruler = yes
+			}
+		}
+
+		NOR = {
+			has_character_flag = refused_serapis
+			has_character_flag = joined_hellenic_cult
+		}
+
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		days = 1
+
+		mult_modifier = {
+			factor = 0.5
+			martial < 8
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			martial >= 10
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			martial >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			martial >= 14
+		}
+	}
+
+	immediate = {
+		set_character_flag = joined_hellenic_cult
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_2575 # Joins
+
+		add_trait = cult_of_serapis
+
+		narrative_event = {
+			id = ancrel.2580
+			days = 3
+			tooltip = initiation_rites
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_2575 # Refuses
+
+		set_character_flag = refused_serapis
+		clr_character_flag = joined_hellenic_cult
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Approached by the Cult of Despoina
+narrative_event = {
+	id = ancrel.2578
+	title = EVTNAME_ancrel_2580
+	desc = EVTDESC_ancrel_2578
+	picture = GFX_evt_roman_temple
+
+	is_triggered_only = yes
+
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		religion_openly_hellenic_or_reformed_trigger = yes
+		is_adult = yes
+
+		NOR = {
+			trait = cult_of_orpheus
+			trait = cult_of_cybele
+			trait = cult_of_serapis
+			trait = cult_of_despoina
+			trait = cult_of_trophonius
+			trait = mystery_mithras_corax
+			trait = mystery_mithras_nymphus
+			trait = mystery_mithras_miles
+			trait = mystery_mithras_leo
+			trait = mystery_mithras_perses
+			trait = mystery_mithras_heliodromus
+			trait = mystery_mithras_pater
+		}
+
+		trigger_if = {
+			limit = {
+				NOR = {
+					mother = { trait = cult_of_despoina }
+					father = { trait = cult_of_despoina }
+				}
+			}
+
+			intrigue >= 8
+
+			OR = {
+				is_female = no
+				is_ruler = yes
+			}
+		}
+
+		NOR = {
+			has_character_flag = refused_despoina
+			has_character_flag = joined_hellenic_cult
+		}
+
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		days = 1
+
+		mult_modifier = {
+			factor = 0.5
+			intrigue < 8
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			intrigue >= 10
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			intrigue >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			intrigue >= 14
+		}
+	}
+
+	immediate = {
+		set_character_flag = joined_hellenic_cult
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_2575 # Joins
+
+		add_trait = cult_of_despoina
+
+		narrative_event = {
+			id = ancrel.2580
+			days = 3
+			tooltip = initiation_rites
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_2575 # Refuses
+
+		set_character_flag = refused_despoina
+		clr_character_flag = joined_hellenic_cult
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Approached by the Cult of Trophonius
+narrative_event = {
+	id = ancrel.2579
+	title = EVTNAME_ancrel_2580
+	desc = EVTDESC_ancrel_2579
+	picture = GFX_evt_roman_temple
+
+	is_triggered_only = yes
+
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		religion_openly_hellenic_or_reformed_trigger = yes
+		is_adult = yes
+		NOR = {
+			trait = cult_of_orpheus
+			trait = cult_of_cybele
+			trait = cult_of_serapis
+			trait = cult_of_despoina
+			trait = cult_of_trophonius
+			trait = mystery_mithras_corax
+			trait = mystery_mithras_nymphus
+			trait = mystery_mithras_miles
+			trait = mystery_mithras_leo
+			trait = mystery_mithras_perses
+			trait = mystery_mithras_heliodromus
+			trait = mystery_mithras_pater
+		}
+
+		trigger_if = {
+			limit = {
+				NOR = {
+					mother = { trait = cult_of_trophonius }
+					father = { trait = cult_of_trophonius }
+				}
+			}
+
+			learning >= 8
+
+			OR = {
+				is_female = no
+				is_ruler = yes
+			}
+		}
+
+		NOR = {
+			has_character_flag = refused_trophonius
+			has_character_flag = joined_hellenic_cult
+		}
+
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		days = 1
+
+		mult_modifier = {
+			factor = 0.5
+			learning < 8
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			learning >= 10
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			learning >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			learning >= 14
+		}
+	}
+
+	immediate = {
+		set_character_flag = joined_hellenic_cult
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_2575 # Joins
+
+		add_trait = cult_of_trophonius
+
+		narrative_event = {
+			id = ancrel.2580
+			days = 3
+			tooltip = initiation_rites
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_2575 # Refuses
+
+		set_character_flag = refused_trophonius
+		clr_character_flag = joined_hellenic_cult
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Initiation event into the cult (players only)
+narrative_event = {
+	id = ancrel.2580
+	title = EVTNAME_ancrel_2580
+	desc = EVTDESC_ancrel_2580
+	picture = GFX_evt_roman_temple
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		piety = 25
+
+		add_character_modifier = {
+			name = recent_mithras_promotion
+			years = 1
+			hidden = yes
+		}
+	}
+}
+
+# Character is approached by the Mithraic Mysteries
+narrative_event = {
+	id = ancrel.2581
+	title = EVTNAME_ancrel_2581
+	desc = EVTDESC_ancrel_2581
+	picture = GFX_evt_cult_initiation
+
+	is_triggered_only = yes
+
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		religion_openly_hellenic_or_reformed_trigger = yes
+		is_adult = yes
+		is_title_active = d_roman_pagan
+
+		trigger_if = {
+			limit = {
+				NOT = {
+					any_close_relative = {
+						is_parent_of = ROOT
+
+						OR = {
+							trait = mystery_mithras_miles
+							trait = mystery_mithras_heliodromus
+							trait = mystery_mithras_pater
+						}
+					}
+				}
+			}
+
+			OR = {
+				is_female = no
+				is_ruler = yes
+			}
+		}
+
+		trigger_if = {
+			limit = {
+				NOT = {
+					any_close_relative = {
+						is_parent_of = ROOT
+
+						OR = {
+							trait = mystery_mithras_leo
+							trait = mystery_mithras_perses
+							trait = mystery_mithras_miles
+							trait = mystery_mithras_heliodromus
+							trait = mystery_mithras_pater
+						}
+					}
+				}
+			}
+
+			OR = {
+				diplomacy >= 12
+				stewardship >= 12
+				martial >= 12
+				intrigue >= 12
+				learning >= 12
+			}
+
+			OR = {
+				trait = cult_of_orpheus
+				trait = cult_of_cybele
+				trait = cult_of_serapis
+				trait = cult_of_despoina
+				trait = cult_of_trophonius
+			}
+		}
+
+		is_inaccessible_trigger = no
+		is_maimed_trigger = no
+		is_dumb_trigger = no
+		is_weak_trigger = no
+
+		NOR = {
+			trait = wounded
+			trait = inbred
+			has_character_flag = approached_by_mithras
+			has_character_modifier = recent_mithras_promotion
+		}
+	}
+
+	immediate = {
+		set_character_flag = approached_by_mithras
+	}
+
+	option = {
+		name = EVTOPTA_ancrel_2581
+
+		narrative_event = {
+			id = ancrel.2582
+			tooltip = what_happens_now
+		}
+	}
+}
+
+# Mithraic Mysteries initiation ceremony (also, chance to decline joining)
+narrative_event = {
+	id = ancrel.2582
+	title = EVTNAME_ancrel_2581
+	desc = EVTDESC_ancrel_2582
+	picture = GFX_evt_cult_initiation
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_2582 # Accept
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 0.5
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = paranoid
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = cynical
+			}
+		}
+
+		add_trait = mystery_mithras_corax
+
+		trigger_switch = {
+			on_trigger = trait
+
+			cult_of_orpheus = { remove_trait = cult_of_orpheus }
+			cult_of_cybele = { remove_trait = cult_of_cybele }
+			cult_of_trophonius = { remove_trait = cult_of_trophonius }
+			cult_of_serapis = { remove_trait = cult_of_serapis }
+			cult_of_despoina = { remove_trait = cult_of_despoina }
+		}
+
+		add_character_modifier = {
+			name = recent_mithras_promotion
+			years = 5
+			hidden = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_2582 # Run away!
+
+		random_list = {
+			65 = { custom_tooltip = { text = get_away } }
+			30 = { add_trait_wounded_effect = yes }
+			5 = { add_maimed_trait_effect = yes }
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				OR = {
+					trait = craven
+					trait = paranoid
+					trait = cynical
+				}
+			}
+		}
+	}
+}
+
+# Mithraic Mysteries promotion
+narrative_event = {
+	id = ancrel.2583
+	title = EVTNAME_ancrel_2581
+	desc = EVTDESC_ancrel_2583
+	picture = GFX_evt_cult_initiation
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_ancrel_2583 # Approved
+
+		trigger = {
+			trigger_if = {
+				limit = { trait = mystery_mithras_corax }
+
+				OR = {
+					prestige >= 100
+					piety >= 100
+				}
+			}
+			trigger_else_if = {
+				limit = { trait = mystery_mithras_nymphus }
+
+				OR = {
+					prestige >= 200
+					piety >= 200
+				}
+			}
+			trigger_else_if = {
+				limit = { trait = mystery_mithras_miles }
+
+				OR = {
+					prestige >= 300
+					piety >= 300
+				}
+			}
+			trigger_else_if = {
+				limit = { trait = mystery_mithras_leo }
+
+				OR = {
+					prestige >= 400
+					piety >= 400
+				}
+			}
+			trigger_else_if = {
+				limit = { trait = mystery_mithras_perses }
+
+				OR = {
+					prestige >= 500
+					piety >= 500
+				}
+			}
+			trigger_else = {
+				trait = mystery_mithras_heliodromus
+
+				OR = {
+					prestige >= 600
+					piety >= 600
+				}
+			}
+		}
+
+		trigger_switch = {
+			on_trigger = trait
+
+			mystery_mithras_heliodromus = {
+				remove_trait = mystery_mithras_heliodromus
+				add_trait = mystery_mithras_pater
+			}
+
+			mystery_mithras_perses = {
+				remove_trait = mystery_mithras_perses
+				add_trait = mystery_mithras_heliodromus
+			}
+
+			mystery_mithras_leo = {
+				remove_trait = mystery_mithras_leo
+				add_trait = mystery_mithras_perses
+			}
+
+			mystery_mithras_miles = {
+				remove_trait = mystery_mithras_miles
+				add_trait = mystery_mithras_leo
+			}
+
+			mystery_mithras_nymphus = {
+				remove_trait = mystery_mithras_nymphus
+				add_trait = mystery_mithras_leo
+			}
+
+			mystery_mithras_corax = {
+				remove_trait = mystery_mithras_corax
+				add_trait = mystery_mithras_nymphus
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ancrel_2583 # Denied
+
+		trigger = {
+			NOT = {
+				trigger_if = {
+					limit = { trait = mystery_mithras_corax }
+
+					OR = {
+						prestige >= 100
+						piety >= 100
+					}
+				}
+				trigger_else_if = {
+					limit = { trait = mystery_mithras_nymphus }
+
+					OR = {
+						prestige >= 200
+						piety >= 200
+					}
+				}
+				trigger_else_if = {
+					limit = { trait = mystery_mithras_miles }
+
+					OR = {
+						prestige >= 300
+						piety >= 300
+					}
+				}
+				trigger_else_if = {
+					limit = { trait = mystery_mithras_leo }
+
+					OR = {
+						prestige >= 400
+						piety >= 400
+					}
+				}
+				trigger_else_if = {
+					limit = { trait = mystery_mithras_perses }
+
+					OR = {
+						prestige >= 500
+						piety >= 500
+					}
+				}
+				trigger_else = {
+					trait = mystery_mithras_heliodromus
+
+					OR = {
+						prestige >= 600
+						piety >= 600
+					}
+				}
+			}
+		}
+	}
+}

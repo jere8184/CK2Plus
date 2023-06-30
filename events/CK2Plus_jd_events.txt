@@ -1,0 +1,381 @@
+namespace = Plus
+
+#reserved: Plus.4600 to Plus 4699
+
+#######################################
+# JADE DRAGON EVENTS
+# Written by Zeress
+#######################################
+
+# Event Plus.4600-4605 are an event chain to send a feast to the Jade Emperor.
+
+character_event = {
+	id = Plus.4600
+	picture = GFX_evt_feast
+
+	desc = {
+		text = EVTDESCA_PLUS_4600
+		trigger = { trait = lunatic }
+	}
+	desc = {
+		text = EVTDESCB_PLUS_4600
+		trigger = { NOT = { trait = lunatic } }
+	}
+
+	is_triggered_only = yes
+
+	only_independent = yes
+	has_dlc = "Jade Dragon"
+	min_age = 16
+	only_capable = yes
+	war = no
+	prisoner = no
+
+	trigger = {
+		offmap_china = {
+			governor = {
+				is_within_diplo_range = ROOT
+			}
+		}
+
+		NOT = { has_character_flag = held_jd_feast }
+		wealth >= 150 # A bit more than the minimum required
+	}
+
+	immediate = {
+		set_character_flag = held_jd_feast
+	}
+
+	option = { # Good thinking me!
+		name = EVTOPTA_PLUS_4600
+
+		character_event = { id = Plus.4601 } # Plan the appetizers
+	}
+}
+
+character_event = { # Plan the appetizers
+	id = Plus.4601
+	desc = EVTDESC_PLUS_4601
+	picture = GFX_evt_feast
+
+	is_triggered_only = yes
+
+	option = { # Smoked Salmon
+		name = EVTOPTA_PLUS_4601
+
+		custom_tooltip = {
+			text = PLUS_4601A_hover_ctt
+
+			set_character_flag = jd_feast_salmon
+			character_event = { id = Plus.4602 }
+		}
+
+		scaled_wealth = { value = -0.2 max = -40 }
+	}
+
+	option = { # Cheese Stuffed Eggs
+		name = EVTOPTB_PLUS_4601
+
+		custom_tooltip = {
+			text = PLUS_4601B_hover_ctt
+
+			set_character_flag = jd_feast_cheese_eggs
+			character_event = { id = Plus.4602 }
+		}
+
+		scaled_wealth = { value = -0.15 max = -30 }
+	}
+
+	option = { # Roasted Milk
+		name = EVTOPTC_PLUS_4601
+
+		custom_tooltip = {
+			text = PLUS_4601C_hover_ctt
+
+			set_character_flag = jd_feast_roasted_milk
+			character_event = { id = Plus.4602 }
+		}
+
+		scaled_wealth = { value = -0.25 max = -50 }
+	}
+
+	option = { # Meat 'Balls', actually testicles
+		name = EVTOPTD_PLUS_4601
+		tooltip_info = lunatic
+
+		trigger = { trait = lunatic }
+
+		custom_tooltip = {
+			text = PLUS_4601D_hover_ctt
+
+			set_character_flag = jd_feast_balls
+			character_event = { id = Plus.4602 }
+		}
+
+		scaled_wealth = { value = -0.05 max = -10 }
+	}
+}
+
+character_event = { # Plan the primary dish
+	id = Plus.4602
+	desc = EVTDESC_PLUS_4602
+	picture = GFX_evt_feast
+
+	is_triggered_only = yes
+
+	option = { # Poultry
+		name = EVTOPTA_PLUS_4602
+
+		custom_tooltip = {
+			text = PLUS_4602A_hover_ctt
+
+			set_character_flag = jd_feast_poultry
+			character_event = { id = Plus.4603 }
+		}
+
+		scaled_wealth = { value = -0.3 max = -60 }
+	}
+
+	option = { # Cattle
+		name = EVTOPTB_PLUS_4602
+
+		custom_tooltip = {
+			text = PLUS_4602B_hover_ctt
+
+			set_character_flag = jd_feast_cattle
+			character_event = { id = Plus.4603 }
+		}
+
+		scaled_wealth = { value = -0.4 max = -80 }
+	}
+
+	option = { # Pig
+		name = EVTOPTC_PLUS_4602
+
+		custom_tooltip = {
+			text = PLUS_4602C_hover_ctt
+
+			set_character_flag = jd_feast_pig
+			character_event = { id = Plus.4603 }
+		}
+
+		scaled_wealth = { value = -0.35 max = -70 }
+	}
+
+	option = { # Horse-on-the-spit
+		name = EVTOPTD_PLUS_4602
+		tooltip_info = lunatic
+
+		trigger = { trait = lunatic }
+
+		custom_tooltip = {
+			text = PLUS_4602D_hover_ctt
+
+			set_character_flag = jd_feast_horse
+			character_event = { id = Plus.4603 }
+		}
+
+		scaled_wealth = { value = -0.1 max = -20 }
+	}
+}
+
+# Send off the feast and wait for the reaction
+character_event = {
+	id = Plus.4603
+	desc = EVTDESC_PLUS_4603
+	picture = GFX_evt_feast
+
+	is_triggered_only = yes
+
+	option = { # Send the feast off
+		name = EVTOPTA_PLUS_4603
+
+		custom_tooltip = {
+			text = PLUS_4603A_hover_ctt
+
+			save_event_target_as = jd_feast_holder
+
+			offmap_china = {
+				governor = {
+					character_event = { id = Plus.4604 } # Hidden bounce event
+				}
+			}
+		}
+	}
+
+	option = {	# This would allow a player to back out into a regular feast if they'd rather do that.
+		name = EVTOPTB_PLUS_4603
+
+		custom_tooltip = {
+			text = PLUS_4603B_hover_ctt
+
+			# Not a part of clear_jd_feast_flags_effect as you don't
+			# normally want to clear it unless backing out
+			clr_character_flag = held_jd_feast
+			clear_jd_feast_flags_effect = yes
+
+			# Clone of 0_feast in minor_decisions.txt, effect portion
+			set_character_flag = planning_feast
+			character_event = { id = 72109 }
+		}
+
+		if = {
+			limit = { has_dlc = "Reapers" }
+
+			custom_tooltip = {
+				text = capital_prospers_custom_tooltip
+
+				capital_scope = {
+					change_variable = {
+						which = prosperity_value
+						value = 8
+					}
+				}
+			}
+		}
+	}
+}
+
+# The reaction to the menu as a hidden bounce event
+# ROOT is, in this event, the Jade Emperor
+# jd_feast_holder is the original character
+character_event = {
+	id = Plus.4604
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		event_target:jd_feast_holder = {
+			random_list = {
+				30 = { # Good Outcome
+					mult_modifier = {
+						factor = 1.1
+
+						OR = { # These are fairly standard fares
+							has_character_flag = jd_feast_pig
+							has_character_flag = jd_feast_poultry
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.2
+						has_character_flag = jd_feast_salmon
+					}
+
+					mult_modifier = {
+						factor = 1.3
+						has_character_flag = jd_feast_cattle
+					}
+
+					set_character_flag = jd_feast_good
+				}
+
+				40 = { # Neutral Outcome
+					set_character_flag = jd_feast_neutral
+				}
+
+				30 = { # Bad Outcome
+					mult_modifier = {
+						factor = 1.1
+
+						OR = { # Dairy products are probably not ideal for East Asians
+							has_character_flag = jd_feast_roasted_milk
+							has_character_flag = jd_feast_cheese_eggs
+						}
+					}
+
+					mult_modifier = {
+						factor = 1.3
+						has_character_flag = jd_feast_horse
+					}
+
+					mult_modifier = {
+						factor = 1.2
+						has_character_flag = jd_feast_balls
+					}
+
+					set_character_flag = jd_feast_bad
+				}
+			}
+
+			event_target:jd_feast_holder = {
+				narrative_event = {
+					id = Plus.4605
+					days = 30
+				}
+			}
+		}
+	}
+}
+
+narrative_event = {
+	id = Plus.4605
+	title = EVTNAME_PLUS_4605
+	picture = GFX_evt_feast
+
+	desc = { # Great Response
+		text = EVTDESCA_PLUS_4605
+		trigger = { has_character_flag = jd_feast_good }
+	}
+	desc = { # Lukewarm response
+		text = EVTDESCB_PLUS_4605
+		trigger = { has_character_flag = jd_feast_neutral }
+	}
+	desc = { # Picky emperor to blame
+		text = EVTDESCC_PLUS_4605
+		trigger = {
+			has_character_flag = jd_feast_bad
+			NOR = {
+				has_character_flag = jd_feast_balls
+				has_character_flag = jd_feast_horse
+			}
+		}
+	}
+	desc = { # Disgusting menu option to blame
+		text = EVTDESCD_PLUS_4605
+		trigger = {
+			has_character_flag = jd_feast_bad
+			OR = {
+				has_character_flag = jd_feast_balls
+				has_character_flag = jd_feast_horse
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { # Good
+		name = EVTOPTA_PLUS_4605
+
+		trigger = { has_character_flag = jd_feast_good }
+
+		sound_effect = china_grace_gain
+
+		add_offmap_currency = {
+			offmap = offmap_china
+			value = 250
+		}
+	}
+
+	option = { # Neutral
+		name = EVTOPTB_PLUS_4605
+
+		trigger = { has_character_flag = jd_feast_neutral }
+	}
+
+	option = { # Bad
+		name = EVTOPTC_PLUS_4605
+
+		trigger = { has_character_flag = jd_feast_bad }
+
+		add_offmap_currency = {
+			offmap = offmap_china
+			value = -100
+		}
+	}
+
+	after = {
+		clear_jd_feast_flags_effect = yes
+	}
+}

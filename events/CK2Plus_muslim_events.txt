@@ -1,0 +1,5207 @@
+namespace = Plus
+
+#reserved: Plus.1900 to Plus.1999
+
+#######################################
+# MUSLIM HERESY EVENTS
+# Adapted from Heretic Pride by Rylock
+#######################################
+
+### ANARCHY AT SAMARRA EVENTS
+
+# Caliphate administration seized from a weak caliph
+narrative_event = {
+	id = Plus.1900
+	title = EVTNAME_Plus_1900
+	desc = EVTDESC_Plus_1900
+	picture = GFX_evt_throne_room_arabic
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	major = yes
+	hide_from = yes
+	show_root = yes
+
+	only_playable = yes
+	only_men = yes
+	prisoner = no
+	ai = yes
+
+	trigger = {
+		has_landed_title = d_sunni
+		year >= 800
+		realm_size >= 200
+		diplomacy < 10
+		martial < 10
+		stewardship < 10
+		intrigue < 10
+
+		NOR = {
+			has_global_flag = anarchy_at_samarra
+			has_global_flag = anarchy_at_samarra_happened
+		}
+	}
+
+	major_trigger = {
+		OR = {
+			religion_group = muslim
+
+			capital_scope = {
+				ROOT = {
+					capital_scope = {
+						distance = {
+							where = PREVPREV
+							value < 600	# Same part of the world
+						}
+					}
+				}
+			}
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+
+			diplomacy < 5
+			martial < 5
+			stewardship < 5
+			intrigue < 5
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1900
+
+		trigger = { has_landed_title = d_sunni }
+
+		set_global_flag = anarchy_at_samarra
+		set_global_flag = anarchy_at_samarra_happened
+		add_trait = court_anarchy
+
+		hidden_effect = {
+			crownlaw_title = {
+				set_title_flag = non_manual_law_change # No prestige loss
+				add_law = infighting_0
+				clr_title_flag = non_manual_law_change # No prestige loss
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1900
+
+		trigger = {
+			religion_group = muslim
+			NOT = { has_landed_title = d_sunni }
+		}
+
+		tooltip = {
+			ROOT = {
+				show_scope_change = no
+				add_trait = court_anarchy
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_1900
+
+		trigger = {
+			NOR = {
+				religion_group = muslim
+				has_landed_title = d_sunni
+			}
+		}
+
+		tooltip = {
+			ROOT = {
+				show_scope_change = no
+				add_trait = court_anarchy
+			}
+		}
+	}
+}
+
+# Succeeding Caliph remains a prisoner
+character_event = {
+	id = Plus.1901
+	desc = EVTDESC_Plus_1901
+	picture = GFX_evt_throne_room_arabic
+
+	is_triggered_only = yes # on_new_holder_inheritance/usurpation
+
+	has_global_flag = anarchy_at_samarra
+
+	trigger = {
+		FROM = { title = d_sunni }
+		NOT = { trait = court_anarchy }
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1901
+
+		add_trait = court_anarchy
+
+		hidden_effect = {
+			FROMFROM = { remove_trait = court_anarchy }
+		}
+	}
+}
+
+# Caliph succeeds at restoring order (fired from decision)
+narrative_event = {
+	id = Plus.1902
+	title = EVTNAME_Plus_1902
+	desc = EVTDESC_Plus_1902
+	picture = GFX_evt_throne_room_arabic
+
+	is_triggered_only = yes
+	major = yes
+	hide_from = yes
+	show_root = yes
+
+	major_trigger = {
+		OR = {
+			religion_group = muslim
+
+			capital_scope = {
+				ROOT = {
+					capital_scope = {
+						distance = {
+							where = PREVPREV
+							value < 600	# Same part of the world
+						}
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1902
+
+		trigger = { has_landed_title = d_sunni }
+		clr_global_flag = anarchy_at_samarra
+
+		hidden_effect = {
+			crownlaw_title = { revoke_law = infighting_0 }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1902
+
+		trigger = {
+			religion_group = muslim
+			NOT = { has_landed_title = d_sunni }
+		}
+
+		if = {
+			limit = { trait = court_anarchy }
+			remove_trait = court_anarchy
+		}
+	}
+
+	option = {
+		name = OK
+
+		trigger = {
+			NOR = {
+				religion_group = muslim
+				has_landed_title = d_sunni
+			}
+		}
+	}
+
+	after = {
+		clear_event_target = imprisoned_regent
+	}
+}
+
+# A random realm lord will declare independence while the anarchy reigns
+character_event = {
+	id = Plus.1903
+
+	is_triggered_only = yes # yearly_pulse, random_events
+	hide_window = yes
+
+	only_playable = yes
+	has_global_flag = anarchy_at_samarra
+	only_men = yes
+
+	trigger = {
+		has_landed_title = d_sunni
+		trait = court_anarchy
+	}
+
+	immediate = {
+		random_vassal = {
+			limit = {
+				war = no
+				in_revolt = no
+			}
+
+			preferred_limit = {
+				real_tier = KING
+				any_neighbor_independent_ruler = { always = yes }
+
+				opinion = {
+					who = ROOT
+					value < 0
+				}
+
+				NOR = {
+					dynasty = ROOT
+					has_character_flag = refuse_caliph_breakaway
+				}
+			}
+
+			preferred_limit = {
+				real_tier = KING
+
+				opinion = {
+					who = ROOT
+					value < 0
+				}
+
+				NOR = {
+					dynasty = ROOT
+					has_character_flag = refuse_caliph_breakaway
+				}
+			}
+
+			preferred_limit = {
+				higher_real_tier_than = COUNT
+				any_neighbor_independent_ruler = { always = yes }
+
+				opinion = {
+					who = ROOT
+					value < 0
+				}
+
+				NOR = {
+					dynasty = ROOT
+					has_character_flag = refuse_caliph_breakaway
+				}
+			}
+
+			preferred_limit = {
+				higher_real_tier_than = COUNT
+
+				opinion = {
+					who = ROOT
+					value < 0
+				}
+
+				NOR = {
+					dynasty = ROOT
+					has_character_flag = refuse_caliph_breakaway
+				}
+			}
+
+			preferred_limit = {
+				higher_real_tier_than = COUNT
+				any_neighbor_independent_ruler = { always = yes }
+
+				opinion = {
+					who = ROOT
+					value < 50
+				}
+
+				NOR = {
+					dynasty = ROOT
+					has_character_flag = refuse_caliph_breakaway
+				}
+			}
+
+			preferred_limit = {
+				higher_real_tier_than = COUNT
+
+				opinion = {
+					who = ROOT
+					value < 50
+				}
+
+				NOR = {
+					dynasty = ROOT
+					has_character_flag = refuse_caliph_breakaway
+				}
+			}
+
+			character_event = { id = Plus.1904 }
+		}
+	}
+}
+
+# Ruler decides whether or not to break free of the caliph
+character_event = {
+	id = Plus.1904
+	desc = EVTDESC_Plus_1904
+	picture = GFX_evt_throne_room
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1904
+
+		log = "[Root.GetBestName] has broken away from [Root.Liege.GetBestName] due to the Anarchy at Samarra"
+		set_defacto_liege = ROOT
+		pf_liege_change_effect = yes
+		FROM = { character_event = { id = Plus.1905 } }
+
+		ai_chance = { factor = 4 }
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1904
+
+		set_character_flag = refuse_caliph_breakaway
+		piety = 50
+
+		ai_chance = { factor = 1 }
+	}
+}
+
+# Caliph hears of the ruler breaking free
+character_event = {
+	id = Plus.1905
+	desc = EVTDESC_Plus_1905
+	picture = GFX_evt_throne_room
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+
+		opinion = {
+			name = opinion_rightful_vassal
+			who = FROM
+			years = 20
+		}
+	}
+}
+
+### KHARIJITE REBELLION
+
+# Kharijite rebels rise up in Mosul during the Anarchy at Samarra
+character_event = {
+	id = Plus.1906
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+	hide_window = yes
+
+	only_playable = yes
+	has_global_flag = anarchy_at_samarra
+
+	trigger = {
+		has_landed_title = d_sunni
+		total_years_played >= 2
+
+		c_mosul = {
+			holder_scope = {
+				OR = {
+					character = ROOT
+					is_vassal_or_below_of = ROOT
+				}
+			}
+
+			location = {
+				NOT = { has_province_flag = kharijite_revolt }
+			}
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 10
+			year >= 866
+		}
+	}
+
+	immediate = {
+		top_liege = {
+			save_event_target_as = uprising_target
+		}
+
+		c_mosul = {
+			location = {
+				set_province_flag = kharijite_revolt
+
+				if = {
+					limit = { NOT = { religion = kharijite } }
+					religion = kharijite
+				}
+
+				create_character = {
+					random_traits = yes
+					dynasty = none
+					name = "Musawir"
+					religion = kharijite
+					culture = THIS
+					female = no
+					age = 32
+
+					attributes = {
+						martial = 15
+						learning = 7
+					}
+
+					add_trait = heresiarch
+					add_trait = zealous
+					add_trait = skilled_tactician
+					add_trait = unyielding_leader
+					add_trait = holy_warrior
+				}
+
+				new_character = {
+					set_character_flag = heretic_revolter
+					save_event_target_as = uprising_leader
+
+					create_title = {
+						tier = DUKE
+						landless = yes
+						temporary = yes
+						rebel = yes
+						culture = PREV # Mosul
+						name = KHARIJITE_REBELLION
+						holder = THIS
+						ruler = IMAM
+						ruler_female = CALIPHA
+						foa = CALIPH_FOA
+					}
+
+					spawn_unit = {
+						province = PREV # Mosul
+						home = PREV # Mosul
+						owner = THIS
+						scaled_by_biggest_garrison = 1.8
+						attrition = 0
+						maintenance_multiplier = 0
+						cannot_inherit = yes
+
+						troops = {
+							archers = { 6 6 }
+							light_cavalry = { 4 4 }
+							light_infantry = { 10 10 }
+						}
+					}
+
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						age = 30
+
+						attributes = {
+							martial = 7
+						}
+
+						add_trait = skilled_tactician
+						add_trait = peasant_leader
+					}
+
+					new_character = {
+						spawn_unit = {
+							province = PREVPREV # Mosul
+							home = PREVPREV # Mosul
+							owner = PREV
+							scaled_by_biggest_garrison = 1.8
+							attrition = 0.0
+							maintenance_multiplier = 0
+							disband_on_peace = yes
+
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 4 4 }
+								light_infantry = { 10 10 }
+							}
+						}
+					}
+
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						age = 23
+
+						attributes = {
+							martial = 7
+						}
+
+						add_trait = skilled_tactician
+						add_trait = peasant_leader
+					}
+
+					new_character = {
+						spawn_unit = {
+							province = PREVPREV # Mosul
+							home = PREVPREV # Mosul
+							owner = PREV
+							scaled_by_biggest_garrison = 1.8
+							attrition = 0.0
+							maintenance_multiplier = 0
+							disband_on_peace = yes
+
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 4 4 }
+								light_infantry = { 10 10 }
+							}
+						}
+					}
+
+					# DoW on the province top liege
+					war = {
+						target = event_target:uprising_target
+						casus_belli = heretic_revolt
+						thirdparty_title = c_mosul
+						tier = DUKE
+					}
+
+					opinion = {
+						name = opinion_evil_tyrant
+						who = event_target:uprising_target
+					}
+				}
+			}
+		}
+
+		# Inform the lieges
+		event_target:uprising_target = {
+			character_event = { id = Plus.1907 }
+		}
+	}
+}
+
+# Rulers informed of the kharajite uprising
+character_event = {
+	id = Plus.1907
+	desc = EVTDESC_Plus_1907
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+	major = yes
+
+	major_trigger = {
+		OR = {
+			same_realm = ROOT
+
+			capital_scope = {
+				ROOT = {
+					capital_scope = {
+						distance = {
+							where = PREVPREV
+							value < 600	# Same part of the world
+						}
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = {
+			text = EVTOPTA_Plus_1907
+			trigger = {
+				NOT = { religion = sunni }
+			}
+		}
+		name = {
+			text = EVTOPTB_Plus_1907
+			trigger = { religion = sunni }
+		}
+	}
+}
+
+### ADDITIONAL DECADENCE EVENTS
+
+# Rulers of a very large empire may gain decadence
+character_event = {
+	id = Plus.1910
+	desc = EVTDESC_Plus_1910
+	picture = GFX_evt_sultan
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	only_independent = yes
+	religion_group = muslim
+	only_men = yes
+
+	trigger = {
+		uses_decadence = yes
+		realm_size >= 150
+		any_dynasty_member = { is_alive = yes count = 3 } # Does not trigger for tiny dynasties
+
+		trigger_if = {
+			limit = { has_character_flag = decadence_change_empire }
+
+			had_character_flag = {
+				flag = decadence_change_empire
+				years >= 10
+			}
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.25
+			realm_size >= 175
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			realm_size >= 200
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			realm_size >= 225
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			realm_size >= 250
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			realm_size >= 275
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			realm_size >= 300
+		}
+
+		mult_modifier = {
+			factor = 0.83
+			decadence >= 50
+		}
+
+		mult_modifier = {
+			factor = 0.83
+			decadence >= 60
+		}
+
+		mult_modifier = {
+			factor = 0.83
+			decadence >= 70
+		}
+
+		mult_modifier = {
+			factor = 0.83
+			decadence >= 80
+		}
+
+		mult_modifier = {
+			factor = 0.83
+			decadence >= 90
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			trait = decadent
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1910
+
+		trigger = { NOT = { trait = decadent } }
+
+		set_character_flag = decadence_change_empire
+		decadence = 5
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1910
+
+		trigger = { trait = decadent }
+
+		set_character_flag = decadence_change_empire
+		decadence = 5
+	}
+}
+
+# Provinces under the ruler of a very decadent dynasty may gain unrest
+province_event = {
+	id = Plus.1911
+
+	hide_window = yes
+
+	trigger = {
+		owner = {
+			top_liege = {
+				religion_group = muslim
+				religion_group = ROOT
+
+				OR = {
+					trait = dynasty_decadence_med
+					trait = dynasty_decadence_high
+				}
+
+				trigger_if = {
+					limit = { has_character_flag = decadence_unrest_event }
+
+					had_character_flag = {
+						flag = decadence_unrest_event
+						years >= 2
+					}
+				}
+			}
+		}
+
+		trigger_if = {
+			limit = { has_province_flag = crushed_decadence_unrest }
+
+			had_province_flag = {
+				flag = crushed_decadence_unrest
+				years >= 10
+			}
+		}
+
+		NOT = { has_province_modifier = decadence_unrest }
+	}
+
+	mean_time_to_happen = {
+		years = 100
+
+		mult_modifier = {
+			factor = 2
+			owner = { top_liege = { trait = dynasty_decadence_med } }
+		}
+
+		mult_modifier = {
+			factor = 1.5
+
+			owner = {
+				top_liege = {
+					any_realm_province = {
+						count = 5
+						has_province_modifier = decadence_unrest
+						held_under_PREV = yes
+					}
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 2.0
+
+			owner = {
+				top_liege = {
+					any_realm_province = {
+						count = 10
+						has_province_modifier = decadence_unrest
+						held_under_PREV = yes
+					}
+				}
+			}
+		}
+	}
+
+	immediate = {
+		owner = {
+			top_liege = {
+				set_character_flag = decadence_unrest_event
+				character_event = { id = Plus.1912 }
+			}
+		}
+	}
+}
+
+character_event = {
+	id = Plus.1912
+	desc = EVTDESC_Plus_1912
+	picture = GFX_evt_imam
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1912 # Ignore it
+
+		FROM = {
+			show_scope_change = no
+
+			add_province_modifier = {
+				name = decadence_unrest
+				years = 5
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 0.5
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = diligent
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = paranoid
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = zealous
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1912 # Deal harshly with those responsible
+
+		FROM = { set_province_flag = crushed_decadence_unrest }
+		tyrant_plus_1_effect = yes
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				NOR = {
+					trait = tyrant4
+					trait = tyrant5
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = kind
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = trusting
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 0.25
+				trait = decadent
+			}
+		}
+	}
+}
+
+# Provinces with decadence unrest calm down if decadence is reduced
+character_event = {
+	id = Plus.1913
+
+	is_triggered_only = yes # on_yearly_pulse
+	hide_window = yes
+
+	only_independent = yes
+
+	trigger = {
+		any_realm_province = {
+			has_province_modifier = decadence_unrest
+			held_under_PREV = yes
+
+			ROOT = {
+				NAND = {
+					religion_group = muslim
+					religion_group = PREV
+
+					OR = {
+						trait = dynasty_decadence_med
+						trait = dynasty_decadence_high
+					}
+				}
+			}
+		}
+	}
+
+	immediate = {
+		any_realm_province = {
+			limit = {
+				has_province_modifier = decadence_unrest
+				held_under_PREV = yes
+			}
+
+			remove_province_modifier = decadence_unrest
+		}
+	}
+}
+
+### KHARIJITE EVENTS
+
+# Liege declares a subject as kafir (triggered via decision)
+letter_event = {
+	id = Plus.1915
+	desc = EVTDESC_Plus_1915
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1915
+
+		add_trait = kharijite_kafir
+		piety = -100
+	}
+}
+
+# Vassal declares a liege as kafir (triggered via decision)
+letter_event = {
+	id = Plus.1916
+	desc = EVTDESC_Plus_1916
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1915
+
+		add_trait = kharijite_kafir
+		piety = -100
+	}
+}
+
+# Public execution (triggered via decision)
+long_character_event = {
+	id = Plus.1917
+	picture = GFX_evt_beheading
+	border = GFX_event_long_frame_religion
+
+	desc = {
+		text = EVTDESC_Plus_1917_family
+		trigger = { ROOT = { has_character_flag = public_execution_family } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_spouse
+		trigger = { ROOT = { has_character_flag = public_execution_spouse } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_dynasty
+		trigger = { ROOT = { has_character_flag = public_execution_dynasty } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_saoshyant
+		trigger = { ROOT = { has_character_flag = public_execution_saoshyant } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_pope
+		trigger = { ROOT = { has_character_flag = public_execution_pope } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_patriarch
+		trigger = { ROOT = { has_character_flag = public_execution_patriarch } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_caliph
+		trigger = { ROOT = { has_character_flag = public_execution_caliph } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_jewish_head
+		trigger = { ROOT = { has_character_flag = public_execution_jewish_head } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_zoro_head
+		trigger = { ROOT = { has_character_flag = public_execution_zoro_head } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_king_israel
+		trigger = { ROOT = { has_character_flag = public_execution_king_israel } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_emperor
+		trigger = { ROOT = { has_character_flag = public_execution_emperor } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_christian_head
+		trigger = { ROOT = { has_character_flag = public_execution_christian_head } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_pagan_head
+		trigger = { ROOT = { has_character_flag = public_execution_pagan_head } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_king
+		trigger = { ROOT = { has_character_flag = public_execution_king } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_crusader
+		trigger = { ROOT = { has_character_flag = public_execution_crusader } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_sayyid
+		trigger = { ROOT = { has_character_flag = public_execution_sayyid } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_duke
+		trigger = { ROOT = { has_character_flag = public_execution_duke } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_kafir
+		trigger = { ROOT = { has_character_flag = public_execution_kafir } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_pirate
+		trigger = { ROOT = { has_character_flag = public_execution_pirate } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_genius
+		trigger = { ROOT = { has_character_flag = public_execution_genius } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_imbecile
+		trigger = { ROOT = { has_character_flag = public_execution_imbecile } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_count
+		trigger = { ROOT = { has_character_flag = public_execution_count } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1917_generic
+		trigger = { ROOT = { has_character_flag = public_execution_generic } }
+	}
+
+	is_triggered_only = yes
+	major = yes
+
+	major_trigger = {
+		OR = {
+			character = FROM
+			is_vassal_or_below_of = ROOT
+			is_vassal_or_below_of = FROM
+			dynasty = ROOT
+			is_close_relative = ROOT
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				OR = {
+					sibling = FROM
+					is_father = FROM
+					is_mother = FROM
+					is_child_of = FROM
+				}
+			}
+			set_character_flag = public_execution_family
+		}
+		else_if = {
+			limit = { is_married = FROM }
+			set_character_flag = public_execution_spouse
+		}
+		else_if = {
+			limit = { dynasty = FROM }
+			set_character_flag = public_execution_dynasty
+		}
+		else_if = {
+			limit = {
+				OR = {
+					trait = saoshyant
+					trait = saoshyant_descendant
+				}
+			}
+			set_character_flag = public_execution_saoshyant
+		}
+		else_if = {
+			limit = { has_landed_title = k_papacy }
+			set_character_flag = public_execution_pope
+		}
+		else_if = {
+			limit = { has_landed_title = k_orthodox }
+			set_character_flag = public_execution_patriarch
+		}
+		else_if = {
+			limit = {
+				controls_religion = yes
+				religion_group = muslim
+			}
+			set_character_flag = public_execution_caliph
+		}
+		else_if = {
+			limit = {
+				controls_religion = yes
+				religion_group = jewish_group
+			}
+			set_character_flag = public_execution_jewish_head
+		}
+		else_if = {
+			limit = {
+				controls_religion = yes
+				religion_group = zoroastrian_group
+			}
+			set_character_flag = public_execution_zoro_head
+		}
+		else_if = {
+			limit = { has_landed_title = k_israel }
+			set_character_flag = public_execution_king_israel
+		}
+		else_if = {
+			limit = { real_tier = EMPEROR }
+			set_character_flag = public_execution_emperor
+		}
+		else_if = {
+			limit = {
+				controls_religion = yes
+				religion_group = christian
+			}
+			set_character_flag = public_execution_christian_head
+		}
+		else_if = {
+			limit = {
+				controls_religion = yes
+				religion_group = pagan_group
+			}
+			set_character_flag = public_execution_pagan_head
+		}
+		else_if = {
+			limit = { real_tier = KING }
+			set_character_flag = public_execution_king
+		}
+		else_if = {
+			limit = { trait = crusader }
+			set_character_flag = public_execution_crusader
+		}
+		else_if = {
+			limit = { trait = sayyid }
+			set_character_flag = public_execution_sayyid
+		}
+		else_if = {
+			limit = { real_tier = DUKE}
+			set_character_flag = public_execution_duke
+		}
+		else_if = {
+			limit = { trait = kharijite_kafir }
+			set_character_flag = public_execution_kafir
+		}
+		else_if = {
+			limit = { trait = viking }
+			set_character_flag = public_execution_pirate
+		}
+		else_if = {
+			limit = { trait = genius }
+			set_character_flag = public_execution_genius
+		}
+		else_if = {
+			limit = { trait = imbecile }
+			set_character_flag = public_execution_imbecile
+		}
+		else_if = {
+			limit = { real_tier = COUNT }
+			set_character_flag = public_execution_count
+		}
+		else = {
+			set_character_flag = public_execution_generic
+		}
+	}
+
+	option = {
+		name = {
+			text = EVTOPTA_Plus_1917_family
+			trigger = { ROOT = { has_character_flag = public_execution_family } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_spouse
+			trigger = { ROOT = { has_character_flag = public_execution_spouse } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_dynasty
+			trigger = { ROOT = { has_character_flag = public_execution_dynasty } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_saoshyant
+			trigger = { ROOT = { has_character_flag = public_execution_saoshyant } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_pope
+			trigger = { ROOT = { has_character_flag = public_execution_pope } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_patriarch
+			trigger = { ROOT = { has_character_flag = public_execution_patriarch } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_caliph
+			trigger = { ROOT = { has_character_flag = public_execution_caliph } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_jewish_head
+			trigger = { ROOT = { has_character_flag = public_execution_jewish_head } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_zoro_head
+			trigger = { ROOT = { has_character_flag = public_execution_zoro_head } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_king_israel
+			trigger = { ROOT = { has_character_flag = public_execution_king_israel } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_emperor
+			trigger = { ROOT = { has_character_flag = public_execution_emperor } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_christian_head
+			trigger = { ROOT = { has_character_flag = public_execution_christian_head } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_pagan_head
+			trigger = { ROOT = { has_character_flag = public_execution_pagan_head } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_king
+			trigger = { ROOT = { has_character_flag = public_execution_king } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_crusader
+			trigger = { ROOT = { has_character_flag = public_execution_crusader } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_sayyid
+			trigger = { ROOT = { has_character_flag = public_execution_sayyid } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_duke
+			trigger = { ROOT = { has_character_flag = public_execution_duke } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_kafir
+			trigger = { ROOT = { has_character_flag = public_execution_kafir } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_pirate
+			trigger = { ROOT = { has_character_flag = public_execution_pirate } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_genius
+			trigger = { ROOT = { has_character_flag = public_execution_genius } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_imbecile
+			trigger = { ROOT = { has_character_flag = public_execution_imbecile } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_count
+			trigger = { ROOT = { has_character_flag = public_execution_count } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1917_generic
+			trigger = { ROOT = { has_character_flag = public_execution_generic } }
+		}
+
+		trigger = { character = FROM }
+
+		if = {
+			limit = { ROOT = { has_character_flag = public_execution_family } }
+			prestige = -50
+			piety = 100
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_spouse } }
+			prestige = -25
+			piety = 50
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_dynasty } }
+			prestige = -25
+			piety = 25
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_saoshyant } }
+			prestige = 100
+			piety = 1000
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_pope } }
+			prestige = 50
+			piety = 500
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_patriarch } }
+			prestige = 50
+			piety = 500
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_caliph } }
+			prestige = 50
+			piety = 500
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_jewish_head } }
+			prestige = 50
+			piety = 500
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_zoro_head } }
+			prestige = 50
+			piety = 500
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_king_israel } }
+			prestige = 50
+			piety = 500
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_emperor } }
+			prestige = 50
+			piety = 250
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_christian_head } }
+			prestige = 50
+			piety = 500
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_pagan_head } }
+			prestige = 50
+			piety = 250
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_king } }
+			prestige = 20
+			piety = 100
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_crusader } }
+			prestige = 20
+			piety = 100
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_sayyid } }
+			prestige = 15
+			piety = 100
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_duke } }
+			prestige = 15
+			piety = 50
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_kafir } }
+			prestige = 10
+			piety = 50
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_pirate } }
+			prestige = 10
+			piety = 50
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_genius } }
+			prestige = 10
+			piety = 25
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_imbecile } }
+			prestige = -50
+			piety = 15
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_count } }
+			prestige = 10
+			piety = 25
+		}
+		else_if = {
+			limit = { ROOT = { has_character_flag = public_execution_generic } }
+			prestige = 10
+			piety = 10
+		}
+
+		# Death happens afterwards, because flags are cleared on death
+		ROOT = {
+			show_scope_change = no
+
+			death = {
+				death_reason = death_execution
+				killer = FROM
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1917
+
+		trigger = { character = ROOT }
+
+		tooltip = {
+			death = {
+				death_reason = death_execution
+				killer = FROM
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_1917
+
+		trigger = {
+			OR = {
+				is_vassal_or_below_of = ROOT
+				dynasty = ROOT
+				is_close_relative = ROOT
+				NOT = { religion_group = muslim }
+			}
+
+			NOR = {
+				character = ROOT
+				character = FROM
+			}
+		}
+
+		tooltip = {
+			ROOT = {
+				show_scope_change = no
+
+				death = {
+					death_reason = death_execution
+					killer = FROM
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTD_Plus_1917
+
+		trigger = {
+			religion_group = muslim
+
+			NOR = {
+				character = ROOT
+				character = FROM
+				is_vassal_or_below_of = ROOT
+				dynasty = ROOT
+				is_close_relative = ROOT
+			}
+		}
+
+		tooltip = {
+			ROOT = {
+				show_scope_change = no
+
+				death = {
+					death_reason = death_execution
+					killer = FROM
+				}
+			}
+		}
+	}
+}
+
+# Bounce for execution event
+character_event = {
+	id = Plus.1918
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		FROM = {
+			long_character_event = { id = Plus.1917 }
+		}
+	}
+}
+
+# Kafir attempts to remove gluttonous
+character_event = {
+	id = Plus.1920
+	desc = EVTDESC_Plus_1920
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1920
+
+		add_character_modifier = {
+			name = do_not_disturb
+			duration = 10
+			hidden = yes
+		}
+
+		character_event = {
+			id = Plus.1921
+			days = 10
+		}
+	}
+}
+
+# Gluttonous removed after fasting completed
+character_event = {
+	id = Plus.1921
+	desc = EVTDESC_Plus_1921
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1921
+
+		remove_trait = gluttonous
+
+		random_list = {
+			10 = {
+				trigger = { is_weak_trigger = no }
+
+				mult_modifier = {
+					factor = 0.5
+					is_strong_trigger = yes
+				}
+
+				add_trait = frail
+			}
+
+			30 = {
+				trigger = { NOT = { trait = temperate } }
+				add_trait_temperate_effect = yes
+			}
+
+			60 = {
+				mult_modifier = {
+					factor = 1.5
+					is_weak_trigger = yes
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					is_strong_trigger = yes
+				}
+
+				health = -1
+			}
+		}
+	}
+}
+
+# Kafir attempts to remove greedy
+character_event = {
+	id = Plus.1922
+	desc = EVTDESC_Plus_1922
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1922
+
+		remove_trait = greedy
+
+		random = {
+			chance = 25
+
+			mult_modifier = {
+				factor = 2
+				trait = kind
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = content
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = cruel
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = envious
+			}
+
+			add_trait = charitable
+		}
+	}
+}
+
+# Kafir attempts to remove slothful
+character_event = {
+	id = Plus.1923
+	desc = EVTDESC_Plus_1923
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1923
+
+		remove_trait = slothful
+
+		random = {
+			chance = 50
+			add_trait_stressed_effect = yes
+		}
+	}
+}
+
+# Kafir attempts to remove arbitrary
+character_event = {
+	id = Plus.1924
+	desc = EVTDESC_Plus_1924
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1924
+
+		remove_trait = arbitrary
+
+		random_list = {
+			50 = { change_stewardship = -1 }
+			35 = { change_stewardship = -2 }
+			15 = { }
+		}
+	}
+}
+
+# Kafir attempts to remove cynical
+character_event = {
+	id = Plus.1925
+	desc = EVTDESC_Plus_1925
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1925
+
+		trigger = { NOT = { trait = deceitful } }
+
+		remove_trait = cynical
+
+		random_list = {
+			50 = { add_trait_fully_deceitful_effect = yes }
+			50 = { add_trait_fully_zealous_effect = yes }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1925
+		tooltip_info = deceitful
+
+		trigger = { trait = deceitful }
+
+		remove_trait = cynical
+	}
+}
+
+# Kafir attempts to remove drunkard
+character_event = {
+	id = Plus.1926
+	desc = EVTDESC_Plus_1926
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1926
+
+		remove_trait = drunkard
+
+		random_list = {
+			50 = {
+				trigger = { NOT = { trait = humble } }
+				add_trait_fully_humble_effect = yes
+			}
+
+			10 = { change_diplomacy = 1 }
+			10 = { change_martial = 1 }
+			10 = { change_intrigue = 1 }
+
+			20 = {
+				mult_modifier = {
+					factor = 1.5
+					is_weak_trigger = yes
+				}
+
+				mult_modifier = {
+					factor = 0.5
+					is_strong_trigger = yes
+				}
+
+				health = -1
+			}
+		}
+	}
+}
+
+# Kafir attempts to remove hedonist
+character_event = {
+	id = Plus.1927
+	desc = EVTDESC_Plus_1927
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1926
+
+		remove_trait = hedonist
+
+		random_list = {
+			50 = {
+				trigger = { NOT = { trait = humble } }
+				add_trait_fully_humble_effect = yes
+			}
+
+			10 = { change_diplomacy = 1 }
+			10 = { change_martial = 1 }
+			10 = { change_intrigue = 1 }
+			20 = { add_trait_fully_chaste_effect = yes }
+		}
+	}
+}
+
+# Kafir attempts to remove decadent
+character_event = {
+	id = Plus.1928
+	desc = EVTDESC_Plus_1928
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1926
+
+		remove_trait = decadent
+
+		random_list = {
+			50 = {
+				trigger = { NOT = { trait = humble } }
+				add_trait_fully_humble_effect = yes
+			}
+
+			10 = { change_diplomacy = 1 }
+			10 = { change_martial = 1 }
+			10 = { change_intrigue = 1 }
+			20 = { }
+		}
+	}
+}
+
+# Kafir clears their name
+character_event = {
+	id = Plus.1929
+	desc = EVTDESC_Plus_1929
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	major_trigger = {
+		ai = no
+		religion = kharijite
+
+		OR = {
+			same_realm = ROOT
+			dynasty = ROOT
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1929
+
+		trigger = { character = ROOT }
+
+		remove_trait = kharijite_kafir
+		piety = 100
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1929
+
+		trigger = { NOT = { character = ROOT } }
+
+		tooltip = {
+			ROOT = {
+				show_scope_change = no
+				remove_trait = kharijite_kafir
+			}
+		}
+	}
+}
+
+### HURUFI EVENTS
+
+# Hurufi writes a Grand Poem
+character_event = {
+	id = Plus.1930
+	desc = EVTDESC_Plus_1930
+	picture = GFX_evt_diwan_poetry
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	religion = hurufi
+	min_age = 20
+	only_men = yes
+	only_capable = yes
+	prisoner = no
+	is_sick = no
+	war = no
+
+	trigger = {
+		OR = {
+			has_focus = focus_scholarship
+			trait = poet
+			trait = hurufi_diwan
+			diplomacy >= 15
+			learning >= 15
+		}
+
+		NOR = {
+			liege = { war = yes }
+			trait = depressed
+			trait = stressed
+			has_character_modifier = writing_epic_poem
+		}
+
+		is_dumb_trigger = no
+		in_command_trigger = no
+		is_inaccessible_trigger = no
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			trait = hurufi_diwan
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			trait = poet
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			trait = diligent
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			trait = slothful
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = content
+		}
+	}
+
+	option = {
+		name = EXCELLENT
+
+		piety = 25
+		prestige = 50
+
+		if = {
+			limit = { NOT = { trait = hurufi_diwan } }
+
+			random = {
+				chance = 20
+				add_trait = hurufi_diwan
+			}
+		}
+
+		random_list = {
+			10 = { change_learning = 1 }
+			10 = { change_intrigue = 1 }
+			10 = { change_diplomacy = 1 }
+			70 = { }
+		}
+	}
+}
+
+# Bounce event for writing Epic Poem
+character_event = {
+	id = Plus.1931
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	religion = hurufi
+
+	trigger = {
+		trait = hurufi_diwan
+		has_character_modifier = writing_epic_poem
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				OR = {
+					is_ill = yes
+					war = yes
+					liege = { war = yes }
+					prisoner = yes
+					is_incapable = yes
+					trait = depressed
+					trait = stressed
+				}
+			}
+			character_event = { id = Plus.1932 }
+		}
+		else_if = {
+			limit = { check_variable = { which = poem_completeness value == 4 } }
+			character_event = { id = Plus.1940 }
+		}
+		else = {
+			random_list = {
+				10 = {
+					trigger = {
+						NOR = {
+							trait = eunuch
+							trait = celibate
+						}
+					}
+
+					character_event = { id = Plus.1935 } # Object of desire
+				}
+
+				10 = { character_event = { id = Plus.1933 } } # Need inspiration
+				10 = { character_event = { id = Plus.1934 } } # Topics of study
+				10 = { character_event = { id = Plus.1936 } } # Writer's Block
+				10 = { character_event = { id = Plus.1937 } } # Giving into despair
+				10 = { character_event = { id = Plus.1938 } } # Giving into procrastination
+				40 = { character_event = { id = Plus.1939 } } #Breakthrough
+			}
+		}
+	}
+}
+
+# Work on the Epic Poem is delayed
+character_event = {
+	id = Plus.1932
+	picture = GFX_evt_diwan_poetry
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_Plus_1932_incapable
+		trigger = { is_incapable = yes }
+	}
+	desc = {
+		text = EVTDESC_Plus_1932_prisoner
+		trigger = {
+			NOT = { is_incapable = yes }
+			prisoner = yes
+		}
+	}
+	desc = {
+		text = EVTDESC_Plus_1932_depressed
+		trigger = {
+			NOT = { trait = incapable }
+			prisoner = no
+			trait = depressed
+		}
+	}
+	desc = {
+		text = EVTDESC_Plus_1932_stressed
+		trigger = {
+			trait = stressed
+			NOT = { trait = depressed }
+			is_incapable = no
+			prisoner = no
+		}
+	}
+	desc = {
+		text = EVTDESC_Plus_1932_sick
+		trigger = {
+			is_ill = yes
+			prisoner = no
+			is_incapable = no
+			NOR = {
+				trait = stressed
+				trait = depressed
+			}
+		}
+	}
+	desc = {
+		text = EVTDESC_Plus_1932_war
+		trigger = {
+			OR = {
+				war = yes
+				liege = { war = yes }
+			}
+			is_incapable = no
+			prisoner = no
+			is_ill = no
+			NOR = {
+				trait = stressed
+				trait = depressed
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+
+		if = {
+			limit = {
+				OR = {
+					trait = incapable
+					prisoner = yes
+				}
+			}
+			remove_character_modifier = writing_epic_poem
+		}
+
+		if = {
+			limit = {
+				OR = {
+					trait = depressed
+					trait = stressed
+				}
+			}
+
+			random = {
+				chance = 50
+				remove_character_modifier = writing_epic_poem
+			}
+		}
+	}
+}
+
+# Need inspiration for the Epic Poem
+character_event = {
+	id = Plus.1933
+	desc = EVTDESC_Plus_1933
+	picture = GFX_evt_diwan_poetry
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = {
+			text = EVTOPTA_Plus_1933_women
+			trigger = { NOT = { trait = homosexual } }
+		}
+		name = {
+			text = EVTOPTA_Plus_1933_men
+			trigger = { trait = homosexual }
+		}
+
+		random_list = {
+			10 = {
+				trigger = { NOT = { trait = decadent } }
+
+				mult_modifier = {
+					factor = 2
+					trait = lustful
+				}
+
+				mult_modifier = {
+					factor = 3
+					trait = hedonist
+				}
+
+				add_trait = decadent
+			}
+
+			90 = {
+				custom_tooltip = {
+					text = EPIC_POEM_ADVANCES
+
+					change_variable = {
+						which = poem_completeness
+						value = 1
+					}
+				}
+			}
+		}
+
+		piety = -50
+
+		if = {
+			limit = { NOT = { trait = lustful } }
+			add_trait = lustful
+		}
+		else_if = {
+			limit = { NOT = { trait = hedonist } }
+			add_trait = hedonist
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1933 # Wine
+
+		random_list = {
+			10 = {
+				trigger = { NOT = { trait = decadent } }
+
+				mult_modifier = {
+					factor = 3
+					trait = drunkard
+				}
+
+				add_trait = decadent
+			}
+
+			90 = {
+				custom_tooltip = {
+					text = EPIC_POEM_ADVANCES
+
+					change_variable = {
+						which = poem_completeness
+						value = 1
+					}
+				}
+			}
+		}
+
+		piety = -50
+
+		if = {
+			limit = { NOT = { trait = drunkard } }
+			add_trait = drunkard
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_1933 # Song
+
+		random_list = {
+			20 = {
+				trigger = { NOT = { trait = decadent } }
+				add_trait = decadent
+			}
+
+			80 = {
+				custom_tooltip = {
+					text = EPIC_POEM_ADVANCES
+
+					change_variable = {
+						which = poem_completeness
+						value = 1
+					}
+				}
+			}
+		}
+
+		piety = -100
+		prestige = -100
+	}
+
+	option = {
+		name = EVTOPTD_Plus_1933 # All At Once!
+
+		random_list = {
+			5 = {
+				trigger = { NOT = { trait = decadent } }
+
+				mult_modifier = {
+					factor = 2
+					trait = drunkard
+				}
+
+				mult_modifier = {
+					factor = 2
+					trait = lustful
+				}
+
+				mult_modifier = {
+					factor = 3
+					trait = hedonist
+				}
+
+				add_trait = decadent
+			}
+
+			60 = {
+				custom_tooltip = {
+					text = EPIC_POEM_ADVANCES
+
+					change_variable = {
+						which = poem_completeness
+						value = 1
+					}
+				}
+			}
+
+			35 = {
+				custom_tooltip = {
+					text = EPIC_POEM_ADVANCES_MORE
+
+					change_variable = {
+						which = poem_completeness
+						value = 2
+					}
+				}
+			}
+		}
+
+		piety = -100
+		prestige = 100
+
+		if = {
+			limit = { NOT = { trait = lustful } }
+			add_trait = lustful
+		}
+		else_if = {
+			limit = { NOT = { trait = hedonist } }
+			add_trait = hedonist
+		}
+
+		if = {
+			limit = { NOT = { trait = drunkard } }
+			add_trait = drunkard
+		}
+	}
+}
+
+# Topics of study for the Epic Poem
+character_event = {
+	id = Plus.1934
+	desc = EVTDESC_Plus_1934
+	picture = GFX_evt_diwan_poetry
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1934 # Study Nobility
+
+		random = {
+			chance = 50
+			change_diplomacy = 1
+		}
+
+		random = {
+			chance = 70
+
+			custom_tooltip = {
+				text = EPIC_POEM_ADVANCES
+
+				change_variable = {
+					which = poem_completeness
+					value = 1
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1934 # Study War
+
+		random = {
+			chance = 50
+			change_martial = 1
+		}
+
+		random = {
+			chance = 70
+
+			custom_tooltip = {
+				text = EPIC_POEM_ADVANCES
+
+				change_variable = {
+					which = poem_completeness
+					value = 1
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_1934 # Study Library
+
+		random = {
+			chance = 50
+			change_learning = 1
+		}
+
+		random = {
+			chance = 70
+
+			custom_tooltip = {
+				text = EPIC_POEM_ADVANCES
+
+				change_variable = {
+					which = poem_completeness
+					value = 1
+				}
+			}
+		}
+	}
+}
+
+# Object of desire appears to be beyond reach
+character_event = {
+	id = Plus.1935
+	picture = GFX_evt_lovers
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_Plus_1935_female
+		trigger = { NOT = { trait = homosexual } }
+	}
+	desc = {
+		text = EVTDESC_Plus_1935_male
+		trigger = { trait = homosexual }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1935 # Visit whorehouse
+
+		if = {
+			limit = { NOT = { trait = lustful } }
+			add_trait = lustful
+		}
+		else_if = {
+			limit = { NOT = { trait = hedonist } }
+			add_trait = hedonist
+		}
+
+		piety = -100
+
+		random = {
+			chance = 60
+
+			custom_tooltip = {
+				text = EPIC_POEM_ADVANCES
+
+				change_variable = {
+					which = poem_completeness
+					value = 1
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1935 # Unrequited love
+
+		piety = 100
+		add_trait_fully_chaste_effect = yes
+
+		random = {
+			chance = 40
+
+			custom_tooltip = {
+				text = EPIC_POEM_ADVANCES
+
+				change_variable = {
+					which = poem_completeness
+					value = 1
+				}
+			}
+		}
+	}
+
+	option = {
+		name = {
+			text = EVTOPTC_Plus_1935_female
+			trigger = { NOT = { trait = homosexual } }
+		}
+		name = {
+			text = EVTOPTC_Plus_1935_male
+			trigger = { trait = homosexual }
+		}
+
+		trigger = { num_of_lovers < 3 }
+
+		piety = -50
+
+		custom_tooltip = {
+			text = EPIC_POEM_ADVANCES
+
+			change_variable = {
+				which = poem_completeness
+				value = 1
+			}
+		}
+
+		random_list = {
+			5 = { add_trait = depressed }
+			5 = { add_trait = stressed }
+
+			20 = {
+				trigger = {
+					is_married = no
+					practical_age < 43
+
+					NOR = {
+						trait = homosexual
+						has_character_modifier = cradle_robber
+					}
+				}
+
+				add_character_modifier = {
+					name = cradle_robber
+					years = 5
+				}
+			}
+
+			20 = {
+				trigger = {
+					is_married = yes
+
+					NOR = {
+						trait = homosexual
+						has_character_modifier = adulterer
+					}
+				}
+
+				add_character_modifier = {
+					name = adulterer
+					years = 10
+				}
+			}
+
+			20 = {
+				trigger = {
+					trait = homosexual
+					NOT = { has_character_modifier = known_sodomite }
+				}
+
+				add_character_modifier = {
+					name = known_sodomite
+					years = 20
+				}
+			}
+
+			30 = {
+				trigger = { NOT = { trait = homosexual } }
+
+				create_random_diplomat = {
+					random_traits = yes
+					dynasty = random
+					female = yes
+					age = 18
+					religion = ROOT
+					culture = ROOT
+					add_trait = attractive
+				}
+
+				add_lover = new_character
+			}
+
+			30 = {
+				trigger = { trait = homosexual }
+
+				create_random_diplomat = {
+					random_traits = yes
+					dynasty = random
+					female = no
+					age = 18
+					religion = ROOT
+					culture = ROOT
+					add_trait = attractive
+				}
+
+				add_lover = new_character
+			}
+		}
+	}
+}
+
+# Suffering from writer's block
+character_event = {
+	id = Plus.1936
+	desc = EVTDESC_Plus_1936
+	picture = GFX_evt_diwan_poetry
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1936 # Enjoy Life!
+
+		prestige = 100
+
+		random_list = {
+			10 = {
+				trigger = {
+					trait = lustful
+					trait = gluttonous
+					trait = drunkard
+					trait = decadent
+				}
+
+				health = -1
+			}
+
+			20 = {
+				trigger = { NOT = { trait = lustful } }
+				add_trait_partially_lustful_effect = yes
+			}
+
+			20 = {
+				trigger = { NOT = { trait = gluttonous } }
+				add_trait_partially_gluttonous_effect = yes
+			}
+
+			20 = {
+				trigger = { NOT = { trait = drunkard } }
+				add_trait = drunkard
+			}
+
+			20 = {
+				trigger = { NOT = { trait = decadent } }
+				add_trait = decadent
+			}
+
+			20 = {
+				custom_tooltip = {
+					text = EPIC_POEM_ADVANCES
+
+					change_variable = {
+						which = poem_completeness
+						value = 1
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1936 # Fast and pray
+
+		piety = 100
+
+		random_list = {
+			20 = {
+				trigger = { NOT = { trait = temperate } }
+				add_trait_partially_temperate_effect = yes
+			}
+
+			20 = { health = -1 }
+			20 = { give_ill_effect = yes }
+
+			20 = {
+				trigger = { NOT = { trait = diligent } }
+				add_trait_partially_diligent_effect = yes
+			}
+
+			20 = {
+				custom_tooltip = {
+					text = EPIC_POEM_ADVANCES
+
+					change_variable = {
+						which = poem_completeness
+						value = 1
+					}
+				}
+			}
+		}
+	}
+}
+
+# Giving into despair
+character_event = {
+	id = Plus.1937
+	desc = EVTDESC_Plus_1937
+	picture = GFX_evt_diwan_poetry
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1937 # Give up
+
+		remove_character_modifier = writing_epic_poem
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1937 # Try even harder
+
+		trigger = { NOT = { trait = slothful } }
+
+		random = {
+			chance = 50
+			add_trait_depressed_effect = yes
+		}
+
+		random = {
+			chance = 50
+			add_trait_stressed_effect = yes
+		}
+
+		random = {
+			chance = 50
+			add_trait_fully_diligent_effect = yes
+		}
+
+		custom_tooltip = {
+			text = EPIC_POEM_ADVANCES
+
+			change_variable = {
+				which = poem_completeness
+				value = 1
+			}
+		}
+	}
+}
+
+# Giving into procrastination
+character_event = {
+	id = Plus.1938
+	desc = EVTDESC_Plus_1938
+	picture = GFX_evt_diwan_poetry
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1938 # I'll get around to it someday
+
+		random = {
+			chance = 50
+			add_trait_fully_slothful_effect = yes
+		}
+
+		random = {
+			chance = 30
+
+			custom_tooltip = {
+				text = EPIC_POEM_ADVANCES
+
+				change_variable = {
+					which = poem_completeness
+					value = 1
+				}
+			}
+		}
+	}
+}
+
+# Break through
+character_event = {
+	id = Plus.1939
+	desc = EVTDESC_Plus_1939
+	picture = GFX_evt_diwan_poetry
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1939 # I'm pretty good at this
+
+		prestige = 50
+
+		custom_tooltip = {
+			text = EPIC_POEM_ADVANCES
+
+			change_variable = {
+				which = poem_completeness
+				value = 1
+			}
+		}
+	}
+}
+
+# Epic Poem is completed!
+character_event = {
+	id = Plus.1940
+	desc = EVTDESC_Plus_1940
+	picture = GFX_evt_diwan_poetry
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1940 # Finally!
+
+		prestige = 1000
+		piety = 500
+		remove_character_modifier = writing_epic_poem
+
+		add_character_modifier = {
+			name = wrote_epic_poem
+			duration = -1
+		}
+
+		hidden_effect = {
+			random_list = {
+				30 = {
+					mult_modifier = {
+						factor = 2
+						trait = decadent
+					}
+
+					mult_modifier = {
+						factor = 1.5
+
+						diplomacy < 15
+						learning < 15
+					}
+
+					character_event = {
+						id = Plus.1941 # Bad Result
+						days = 2
+						random = 2
+					}
+				}
+
+				70 = {
+					mult_modifier = {
+						factor = 1.5
+						diplomacy >= 15
+					}
+
+					mult_modifier = {
+						factor = 1.5
+						diplomacy >= 20
+					}
+
+					character_event = {
+						id = Plus.1942 # Good Result
+						days = 2
+						random = 2
+					}
+				}
+			}
+		}
+	}
+}
+
+# Epic Poem is not received well by the court
+character_event = {
+	id = Plus.1941
+	desc = EVTDESC_Plus_1941
+	picture = GFX_evt_diwan_poetry
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+	show_root = yes
+	hide_from = yes
+
+	major_trigger = {
+		ai = no
+		same_realm = ROOT
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1941
+
+		trigger = { character = ROOT }
+
+		prestige = -200
+
+		random_list = {
+			80 = { add_trait_partially_shy_effect = yes }
+			20 = { add_trait_partially_paranoid_effect = yes }
+		}
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = { NOT = { character = ROOT } }
+	}
+}
+
+# Epic Poem is well-received by the court
+character_event = {
+	id = Plus.1942
+	desc = EVTDESC_Plus_1942
+	picture = GFX_evt_diwan_poetry
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+	show_root = yes
+	hide_from = yes
+
+	major_trigger = {
+		ai = no
+		same_realm = ROOT
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1942
+
+		trigger = { character = ROOT }
+
+		prestige = 100
+
+		random_list = {
+			70 = { change_diplomacy = 1 }
+			30 = { add_trait = genius }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1942
+
+		trigger = { NOT = { character = ROOT } }
+	}
+}
+
+# Bounce event for studying
+character_event = {
+	id = Plus.1943
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	religion = hurufi
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		has_character_modifier = hurufi_studying
+	}
+
+	fail_trigger_effect = {
+		remove_do_not_disturb_effect = yes
+		remove_character_modifier = hurufi_studying
+		clr_character_flag = hurufi_studying_1
+		clr_character_flag = hurufi_studying_2
+		clr_character_flag = hurufi_studying_3
+	}
+
+	immediate = {
+		random_list = {
+			5 = {
+				trigger = { practical_age >= 50 }
+
+				mult_modifier = {
+					factor = 2
+					trait = infirm
+				}
+
+				mult_modifier = {
+					factor = 2
+
+					OR = {
+						has_character_flag = hurufi_studying_2
+						has_character_flag = hurufi_studying_3
+					}
+				}
+
+				character_event = { id = Plus.1944 } # Go blind
+			}
+
+			10 = {
+				trigger = {
+					NOT = { has_character_flag = hurufi_studying_3 }
+				}
+
+				mult_modifier = {
+					factor = 1.5
+					has_character_flag = hurufi_studying_2
+				}
+
+				character_event = { id = Plus.1945 } # Increase attributes
+			}
+
+			15 = {
+				trigger = { is_weak_trigger = no }
+
+				mult_modifier = {
+					factor = 0.65
+					has_character_flag = hurufi_studying_2
+				}
+
+				mult_modifier = {
+					factor = 0.35
+					has_character_flag = hurufi_studying_3
+				}
+
+				character_event = { id = Plus.1946 } # Becomes weak
+			}
+
+			5 = {
+				trigger = {
+					is_smart_trigger = no
+					NOT = { has_character_flag = hurufi_studying_3 }
+				}
+
+				mult_modifier = {
+					factor = 2
+					has_character_flag = hurufi_studying_2
+				}
+
+				character_event = { id = Plus.1947 } # Becomes shrewd
+			}
+
+			10 = {
+				trigger = {
+					lifestyle_traits < 1
+
+					NOR = {
+						has_character_flag = hurufi_studying_2
+						has_character_flag = hurufi_studying_3
+					}
+				}
+
+				character_event = { id = Plus.1948 } # Becomes mystic
+			}
+
+			5 = {
+				trigger = {
+					NOR = {
+						has_character_flag = hurufi_studying_2
+						has_character_flag = hurufi_studying_3
+					}
+				}
+
+				character_event = { id = Plus.1949 } # Becomes depressed
+			}
+
+			10 = {
+				trigger = { NOT = { trait = chaste } }
+
+				mult_modifier = {
+					factor = 0.5
+					has_character_flag = hurufi_studying_3
+				}
+
+				character_event = { id = Plus.1950 } # Becomes chaste
+			}
+
+			5 = {
+				trigger = { has_top_tier_education_trait_trigger = no }
+
+				mult_modifier = {
+					factor = 2
+
+					OR = {
+						has_character_flag = hurufi_studying_2
+						has_character_flag = hurufi_studying_3
+					}
+				}
+
+				character_event = { id = Plus.1951 } # Increases education trait
+			}
+
+			5 = {
+				trigger = {
+					NOR = {
+						trait = genius
+						has_character_flag = hurufi_studying_1
+					}
+				}
+
+				mult_modifier = {
+					factor = 2
+					has_character_flag = hurufi_studying_3
+				}
+
+				character_event = { id = Plus.1952 } # Gains genius
+			}
+
+			10 = {
+				trigger = { is_ill = no }
+				character_event = { id = Plus.1953 } # Becomes ill
+			}
+
+			15 = {
+				trigger = {
+					NOR = {
+						has_character_flag = hurufi_studying_1
+						has_character_flag = hurufi_studying_2
+					}
+				}
+
+				character_event = { id = Plus.1954 } # Wrong omen
+			}
+
+			30 = {
+				trigger = {
+					NOR = {
+						has_character_flag = hurufi_studying_1
+						has_character_flag = hurufi_studying_2
+					}
+				}
+
+				character_event = { id = Plus.1955 } # Good omen
+			}
+
+			15 = {
+				trigger = {
+					NOR = {
+						has_character_flag = hurufi_studying_1
+						has_character_flag = hurufi_studying_2
+					}
+				}
+
+				character_event = { id = Plus.1956 } # Bad omen
+			}
+
+			30 = {
+				character_event = { id = Plus.1957 } # Gains piety
+			}
+		}
+
+		remove_do_not_disturb_effect = yes
+		clr_character_flag = hurufi_studying_1
+		clr_character_flag = hurufi_studying_2
+		clr_character_flag = hurufi_studying_3
+	}
+}
+
+# Studying character becomes blind
+character_event = {
+	id = Plus.1944
+	desc = EVTDESC_Plus_1944
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1944
+
+		remove_character_modifier = hurufi_studying
+		add_trait = blinded
+	}
+}
+
+# Studying character gains attributes
+character_event = {
+	id = Plus.1945
+	desc = EVTDESC_Plus_1945
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				trait = hurufi_mystic_b
+				learning >= 20
+			}
+
+			remove_trait = hurufi_mystic_b
+			add_trait = hurufi_mystic_c
+		}
+		else_if = {
+			limit = {
+				trait = hurufi_mystic_a
+				learning >= 14
+			}
+
+			remove_trait = hurufi_mystic_a
+			add_trait = hurufi_mystic_b
+		}
+		else_if = {
+			limit = {
+				learning >= 8
+
+				NOR = {
+					trait = hurufi_mystic_a
+					trait = hurufi_mystic_b
+					trait = hurufi_mystic_c
+				}
+			}
+
+			add_trait = hurufi_mystic_a
+		}
+	}
+
+	option = {
+		name = EXCELLENT
+
+		remove_character_modifier = hurufi_studying
+		change_learning = 2
+
+		random_list = {
+			20 = { change_diplomacy = 1 }
+			20 = { change_martial = 1 }
+			20 = { change_stewardship = 1 }
+			20 = { change_intrigue = 1 }
+		}
+	}
+}
+
+# Studying character becomes weak
+character_event = {
+	id = Plus.1946
+	desc = EVTDESC_Plus_1946
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				trait = hurufi_mystic_b
+				learning >= 20
+			}
+
+			remove_trait = hurufi_mystic_b
+			add_trait = hurufi_mystic_c
+		}
+		else_if = {
+			limit = {
+				trait = hurufi_mystic_a
+				learning >= 14
+			}
+
+			remove_trait = hurufi_mystic_a
+			add_trait = hurufi_mystic_b
+		}
+		else_if = {
+			limit = {
+				learning >= 8
+
+				NOR = {
+					trait = hurufi_mystic_a
+					trait = hurufi_mystic_b
+					trait = hurufi_mystic_c
+				}
+			}
+
+			add_trait = hurufi_mystic_a
+		}
+	}
+
+	option = {
+		name = CURSES
+
+		remove_character_modifier = hurufi_studying
+		change_learning = 2
+
+		if = {
+			limit = { is_strong_trigger = yes }
+			remove_trait = strong
+			remove_trait = brawny
+		}
+		else_if = {
+			limit = { is_weak_trigger = no }
+			add_trait = frail
+		}
+	}
+}
+
+# Studying character becomes quick
+character_event = {
+	id = Plus.1947
+	desc = EVTDESC_Plus_1947
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				trait = hurufi_mystic_b
+				learning >= 20
+			}
+
+			remove_trait = hurufi_mystic_b
+			add_trait = hurufi_mystic_c
+		}
+		else_if = {
+			limit = {
+				trait = hurufi_mystic_a
+				learning >= 14
+			}
+
+			remove_trait = hurufi_mystic_a
+			add_trait = hurufi_mystic_b
+		}
+		else_if = {
+			limit = {
+				learning >= 8
+
+				NOR = {
+					trait = hurufi_mystic_a
+					trait = hurufi_mystic_b
+					trait = hurufi_mystic_c
+				}
+			}
+
+			add_trait = hurufi_mystic_a
+		}
+	}
+
+	option = {
+		name = EXCELLENT
+
+		remove_character_modifier = hurufi_studying
+		change_learning = 2
+		add_trait = shrewd
+	}
+}
+
+# Studying character becomes mystic
+character_event = {
+	id = Plus.1948
+	desc = EVTDESC_Plus_1948
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				trait = hurufi_mystic_b
+				learning >= 20
+			}
+
+			remove_trait = hurufi_mystic_b
+			add_trait = hurufi_mystic_c
+		}
+		else_if = {
+			limit = {
+				trait = hurufi_mystic_a
+				learning >= 14
+			}
+
+			remove_trait = hurufi_mystic_a
+			add_trait = hurufi_mystic_b
+		}
+		else_if = {
+			limit = {
+				learning >= 8
+
+				NOR = {
+					trait = hurufi_mystic_a
+					trait = hurufi_mystic_b
+					trait = hurufi_mystic_c
+				}
+			}
+
+			add_trait = hurufi_mystic_a
+		}
+	}
+
+	option = {
+		name = EXCELLENT
+
+		remove_character_modifier = hurufi_studying
+		change_learning = 2
+		add_trait = mystic
+	}
+}
+
+# Studying character becomes depressed
+character_event = {
+	id = Plus.1949
+	desc = EVTDESC_Plus_1949
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+
+		remove_character_modifier = hurufi_studying
+		change_learning = -1
+		add_trait = depressed
+	}
+}
+
+# Studying character becomes chaste
+character_event = {
+	id = Plus.1950
+	desc = EVTDESC_Plus_1950
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				trait = hurufi_mystic_b
+				learning >= 20
+			}
+			remove_trait = hurufi_mystic_b
+			add_trait = hurufi_mystic_c
+		}
+		else_if = {
+			limit = {
+				trait = hurufi_mystic_a
+				learning >= 14
+			}
+
+			remove_trait = hurufi_mystic_a
+			add_trait = hurufi_mystic_b
+		}
+		else_if = {
+			limit = {
+				learning >= 8
+
+				NOR = {
+					trait = hurufi_mystic_a
+					trait = hurufi_mystic_b
+					trait = hurufi_mystic_c
+				}
+			}
+
+			add_trait = hurufi_mystic_a
+		}
+	}
+
+	option = {
+		name = OK
+
+		remove_character_modifier = hurufi_studying
+		change_learning = 2
+		add_trait_fully_silently_chaste_effect = yes
+		piety = 50
+	}
+}
+
+# Studying character increases education trait
+character_event = {
+	id = Plus.1951
+	desc = EVTDESC_Plus_1951
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				trait = hurufi_mystic_b
+				learning >= 20
+			}
+
+			remove_trait = hurufi_mystic_b
+			add_trait = hurufi_mystic_c
+		}
+		else_if = {
+			limit = {
+				trait = hurufi_mystic_a
+				learning >= 14
+			}
+
+			remove_trait = hurufi_mystic_a
+			add_trait = hurufi_mystic_b
+		}
+		else_if = {
+			limit = {
+				learning >= 8
+
+				NOR = {
+					trait = hurufi_mystic_a
+					trait = hurufi_mystic_b
+					trait = hurufi_mystic_c
+				}
+			}
+
+			add_trait = hurufi_mystic_a
+		}
+	}
+
+	option = {
+		name = EXCELLENT
+
+		remove_character_modifier = hurufi_studying
+		change_learning = 2
+		upgrade_education_effect = yes
+	}
+}
+
+# Studying character becomes genius
+character_event = {
+	id = Plus.1952
+	desc = EVTDESC_Plus_1952
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				trait = hurufi_mystic_b
+				learning >= 20
+			}
+
+			remove_trait = hurufi_mystic_b
+			add_trait = hurufi_mystic_c
+		}
+		else_if = {
+			limit = {
+				trait = hurufi_mystic_a
+				learning >= 14
+			}
+
+			remove_trait = hurufi_mystic_a
+			add_trait = hurufi_mystic_b
+		}
+		else_if = {
+			limit = {
+				learning >= 8
+
+				NOR = {
+					trait = hurufi_mystic_a
+					trait = hurufi_mystic_b
+					trait = hurufi_mystic_c
+				}
+			}
+
+			add_trait = hurufi_mystic_a
+		}
+	}
+
+	option = {
+		name = EXCELLENT
+
+		remove_character_modifier = hurufi_studying
+		change_learning = 2
+		add_trait = genius
+	}
+}
+
+# Studying character becomes ill
+character_event = {
+	id = Plus.1953
+	desc = EVTDESC_Plus_1953
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				trait = hurufi_mystic_b
+				learning >= 20
+			}
+
+			remove_trait = hurufi_mystic_b
+			add_trait = hurufi_mystic_c
+		}
+		else_if = {
+			limit = {
+				trait = hurufi_mystic_a
+				learning >= 14
+			}
+
+			remove_trait = hurufi_mystic_a
+			add_trait = hurufi_mystic_b
+		}
+		else_if = {
+			limit = {
+				learning >= 8
+
+				NOR = {
+					trait = hurufi_mystic_a
+					trait = hurufi_mystic_b
+					trait = hurufi_mystic_c
+				}
+			}
+
+			add_trait = hurufi_mystic_a
+		}
+	}
+
+	option = {
+		name = OK
+
+		remove_character_modifier = hurufi_studying
+		change_learning = 2
+
+		if = {
+			limit = { has_dlc = "Reapers" }
+			add_symptom_effect = yes
+		}
+		else = {
+			add_trait = ill
+		}
+	}
+}
+
+# Wrong Omen
+character_event = {
+	id = Plus.1954
+	desc = EVTDESC_Plus_1954
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = CURSES
+
+		if = {
+			limit = { has_character_modifier = hurufi_studying }
+
+			remove_character_modifier = hurufi_studying
+			add_trait_silently_depressed_effect = yes
+			change_learning = -1
+		}
+
+		add_character_modifier = {
+			name = wrong_omen
+			years = 1
+		}
+	}
+}
+
+# Good Omen
+character_event = {
+	id = Plus.1955
+	desc = EVTDESC_Plus_1955
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				trait = hurufi_mystic_b
+				learning >= 20
+			}
+
+			remove_trait = hurufi_mystic_b
+			add_trait = hurufi_mystic_c
+		}
+		else_if = {
+			limit = {
+				trait = hurufi_mystic_a
+				learning >= 14
+			}
+
+			remove_trait = hurufi_mystic_a
+			add_trait = hurufi_mystic_b
+		}
+		else_if = {
+			limit = {
+				learning >= 8
+
+				NOR = {
+					trait = hurufi_mystic_a
+					trait = hurufi_mystic_b
+					trait = hurufi_mystic_c
+				}
+			}
+
+			add_trait = hurufi_mystic_a
+		}
+	}
+
+	option = {
+		name = EXCELLENT
+
+		if = {
+			limit = { has_character_modifier = hurufi_studying }
+
+			remove_character_modifier = hurufi_studying
+			change_learning = 2
+		}
+
+		add_character_modifier = {
+			name = good_omen
+			years = 1
+		}
+	}
+}
+
+# Bad Omen
+character_event = {
+	id = Plus.1956
+	desc = EVTDESC_Plus_1956
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		# TODO: Turn into scripted effect
+		if = {
+			limit = {
+				trait = hurufi_mystic_b
+				learning >= 20
+			}
+
+			remove_trait = hurufi_mystic_b
+			add_trait = hurufi_mystic_c
+		}
+		else_if = {
+			limit = {
+				trait = hurufi_mystic_a
+				learning >= 14
+			}
+
+			remove_trait = hurufi_mystic_a
+			add_trait = hurufi_mystic_b
+		}
+		else_if = {
+			limit = {
+				learning >= 8
+
+				NOR = {
+					trait = hurufi_mystic_a
+					trait = hurufi_mystic_b
+					trait = hurufi_mystic_c
+				}
+			}
+
+			add_trait = hurufi_mystic_a
+		}
+	}
+
+	option = {
+		name = OK
+
+		if = {
+			limit = { has_character_modifier = hurufi_studying }
+
+			remove_character_modifier = hurufi_studying
+			change_learning = 2
+		}
+
+		add_character_modifier = {
+			name = bad_omen
+			years = 1
+		}
+	}
+}
+
+# Studying character receives bonus piety
+character_event = {
+	id = Plus.1957
+	desc = EVTDESC_Plus_1957
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				trait = hurufi_mystic_b
+				learning >= 20
+			}
+
+			remove_trait = hurufi_mystic_b
+			add_trait = hurufi_mystic_c
+		}
+		else_if = {
+			limit = {
+				trait = hurufi_mystic_a
+				learning >= 14
+			}
+
+			remove_trait = hurufi_mystic_a
+			add_trait = hurufi_mystic_b
+		}
+		else_if = {
+			limit = {
+				learning >= 8
+
+				NOR = {
+					trait = hurufi_mystic_a
+					trait = hurufi_mystic_b
+					trait = hurufi_mystic_c
+				}
+			}
+
+			add_trait = hurufi_mystic_a
+		}
+	}
+
+	option = {
+		name = EXCELLENT
+
+		if = {
+			limit = { has_character_modifier = hurufi_studying }
+
+			remove_character_modifier = hurufi_studying
+			change_learning = 2
+		}
+
+		piety = 150
+		prestige = 150
+	}
+}
+
+# Bounce event for reading omens
+character_event = {
+	id = Plus.1958
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		remove_do_not_disturb_effect = yes
+
+		add_character_modifier = {
+			name = hurufi_prediction
+			years = 2
+		}
+
+		random_list = {
+			10 = { character_event = { id = Plus.1954 } } # Wrong Omen
+			50 = { character_event = { id = Plus.1955 } } # Good Omen
+			20 = { character_event = { id = Plus.1956 } } # Bad Omen
+			20 = { character_event = { id = Plus.1957 } } # Extra Piety
+		}
+	}
+}
+
+# al-Hurufi appears
+narrative_event = {
+	id = Plus.1959
+	title = EVTNAME_Plus_1959
+	desc = EVTDESC_Plus_1959
+	picture = GFX_evt_imam
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	only_playable = yes
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		year >= 1390
+
+		any_demesne_province = {
+			region = custom_azerbaijan
+			religion_group = muslim
+			NOT = { religion = hurufi }
+			owned_by = PREV
+		}
+
+		NOR = {
+			religion = hurufi
+			has_global_flag = alhurufi
+		}
+	}
+
+	major_trigger = {
+		OR = {
+			religion = hurufi
+
+			capital_scope = {
+				distance = {
+					where = c_shirvan
+					value < 600	# Same part of the world
+				}
+			}
+		}
+	}
+
+	immediate = {
+		set_global_flag = alhurufi
+
+		random_demesne_province = {
+			limit = {
+				region = custom_azerbaijan
+				religion_group = muslim
+				NOT = { religion = hurufi }
+				owned_by = PREV
+			}
+
+			save_event_target_as = hurufi_province
+			religion = hurufi
+
+			add_province_modifier = {
+				name = heretic_stronghold
+				years = 10
+			}
+
+			any_neighbor_province = {
+				limit = {
+					religion_group = muslim
+					NOT = { religion = hurufi }
+				}
+
+				random = {
+					chance = 75
+					religion = hurufi
+				}
+			}
+		}
+
+		create_character = {
+			random_traits = no
+			dynasty = 1000124392 # Astarabadi
+			name = "Fazlallah"
+			culture = persian
+			religion = hurufi
+			age = 40
+			female = no
+
+			attributes = {
+				diplomacy = 12
+				intrigue = 15
+				learning = 15
+			}
+
+			add_trait = quick
+			add_trait = mastermind_theologian
+			add_trait = heresiarch
+			add_trait = hurufi_mystic_c
+			add_trait = diligent
+			add_trait = ambitious
+			add_trait = gregarious
+			add_trait = poet
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1959 # Convert
+
+		trigger = {
+			character = ROOT
+			religion_group = muslim
+			controls_religion = no
+			is_heretic = no
+			NOT = { trait = zealous }
+		}
+
+		piety = -100
+
+		tooltip = { religion = hurufi } # For nicer tooltip
+
+		hurufi = {
+			show_scope_change = no
+
+			religion_authority = { name = ruler_converted_to }
+		}
+
+		religion_authority = { name = ruler_converted_from }
+
+		c_shirvan = {
+			show_scope_change = no
+
+			location = {
+				show_scope_change = no
+
+				remove_province_modifier = heretic_stronghold
+			}
+		}
+
+		hidden_effect = {
+			religion = hurufi
+
+			any_courtier = {
+				limit = {
+					dynasty = ROOT
+					is_adult = no
+					is_ruler = no
+				}
+
+				religion = ROOT
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1959 # Refuse
+
+		trigger = { character = ROOT }
+	}
+
+	option = {
+		name = EVTOPTC_Plus_1959
+
+		trigger = { religion = hurufi }
+	}
+
+	option = {
+		name = EVTOPTD_Plus_1959
+
+		trigger = {
+			religion_group = muslim
+			NOR = {
+				religion = hurufi
+				character = ROOT
+			}
+		}
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = {
+			NOR = {
+				religion_group = muslim
+				character = ROOT
+			}
+		}
+	}
+}
+
+### SHIITE EVENTS
+
+# Shiite Imamah passes on trait to heir
+character_event = {
+	id = Plus.1960
+
+	is_triggered_only = yes # on_death
+	hide_window = yes
+
+	trigger = {
+		trait = shiite_claimant
+	}
+
+	immediate = {
+		remove_trait = shiite_claimant
+
+		any_dynasty_member = {
+			limit = {
+				religion = shiite
+				is_female = no
+				is_incapable = no
+				has_inheritance_blocker = no
+			}
+
+			score_value = {
+				value = 1
+				age_score = yes # Sort by age in each of the groups below
+
+				# Player heir has highest priority, if one exists
+				additive_modifier = {
+					value = 100000
+					ROOT = { player_heir = { character = PREVPREV } }
+				}
+
+				# Try eldest son first
+				additive_modifier = {
+					value = 10000
+					is_child_of = ROOT
+				}
+
+				# Then eldest brother
+				additive_modifier = {
+					value = 8000
+					sibling = ROOT
+				}
+
+				# Then eldest grandson
+				additive_modifier = {
+					value = 6000
+					is_grandchild_of = ROOT
+				}
+
+				# Otherwise fallback to oldest dynasty member
+
+				# Bonuses for Sayyid/Mirza
+				additive_modifier = {
+					value = 500
+					trait = sayyid
+				}
+
+				additive_modifier = {
+					value = 250
+					trait = mirza
+				}
+			}
+
+			set_character_flag = is_shiite_claimant
+			add_trait = shiite_claimant
+
+			if = {
+				limit = { d_shiite = { has_holder = yes } }
+				add_claim = d_shiite
+			}
+		}
+	}
+}
+
+# Existing Shiite Imamah starts uprising
+character_event = {
+	id = Plus.1961
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	religion = shiite
+	only_men = yes
+	min_age = 16
+	max_age = 50
+	only_capable = yes
+	prisoner = no
+	ai = yes
+
+	trigger = {
+		trait = shiite_claimant
+		year >= 870
+		d_shiite = { has_holder = no }
+		lower_real_tier_than = KING
+
+		NOR = {
+			trait = content
+			trait = cynical
+			trait = imbecile
+			trait = inbred
+			has_global_flag = shia_caliphate_revolt
+			has_global_flag = shia_caliphate_revolt_ongoing
+		}
+
+		any_independent_ruler = {
+			higher_real_tier_than = DUKE
+			religion_group = muslim
+			is_landed = yes
+			ai = yes
+			NOT = { religion = shiite }
+
+			trigger_if = {
+				limit = { is_liege_of = ROOT }
+
+				reverse_opinion = {
+					who = ROOT
+					value < 0
+				}
+			}
+
+			capital_scope = {
+				OR = {
+					region = custom_persia
+					region = custom_syria
+					region = custom_egypt
+					region = custom_africa
+					region = custom_algiers
+				}
+			}
+
+			any_realm_province = {
+				OR = {
+					region = custom_persia
+					region = custom_syria
+					region = custom_egypt
+					region = custom_africa
+					region = custom_algiers
+				}
+
+				held_under_PREV = yes
+
+				kingdom = {
+					trigger_if = {
+						limit = { has_holder = yes }
+						holder = PREVPREV
+					}
+
+					num_title_realm_provs = {
+						who = PREVPREV
+						value >= 6
+					}
+				}
+			}
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			trait = ambitious
+		}
+
+		mult_modifier = {
+			factor = 1.33
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			diplomacy < 4
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			diplomacy < 8
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			diplomacy >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			diplomacy >= 14
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			diplomacy >= 16
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			diplomacy >= 18
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			diplomacy >= 20
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			martial < 4
+		}
+
+		mult_modifier = {
+			factor = 0.8
+			martial < 8
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			martial > 12
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			martial >= 14
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			martial >= 16
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			martial >= 18
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			martial >= 20
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			intrigue < 4
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			intrigue < 8
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			intrigue >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			intrigue >= 14
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			intrigue >= 16
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			intrigue >= 18
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			intrigue >= 20
+		}
+
+		mult_modifier = {
+			factor = 0.67
+
+			diplomacy < 12
+			martial < 12
+			intrigue < 12
+		}
+
+		mult_modifier = {
+			factor = 2
+			year >= 900
+		}
+
+		mult_modifier = {
+			factor = 2
+			year >= 950
+		}
+
+		mult_modifier = {
+			factor = 4
+			year >= 1000
+		}
+
+		mult_modifier = {
+			factor = 4
+			year >= 1050
+		}
+
+		mult_modifier = {
+			factor = 4
+			year >= 1100
+		}
+	}
+
+	immediate = {
+		log = "[Root.GetTitledName] is an existing Shiite Imamah who has become the Shiite Caliphate Uprising"
+		set_character_flag = shia_caliphate_pretender
+		set_global_flag = shia_caliphate_revolt
+		save_event_target_as = shiite_revolter
+
+		random_independent_ruler = {
+			limit = {
+				higher_real_tier_than = DUKE
+				religion_group = muslim
+				is_landed = yes
+				ai = yes
+				NOT = { religion = shiite }
+
+				trigger_if = {
+					limit = { is_liege_of = ROOT }
+
+					reverse_opinion = {
+						who = ROOT
+						value < -25
+					}
+				}
+
+				capital_scope = {
+					OR = {
+						region = world_africa
+						region = custom_persia
+						region = custom_syria
+					}
+				}
+
+				any_realm_province = {
+					OR = {
+						region = world_africa
+						region = custom_persia
+						region = custom_syria
+					}
+
+					held_under_PREV = yes
+
+					kingdom = {
+						trigger_if = {
+							limit = { has_holder = yes }
+							holder = PREVPREV
+						}
+
+						num_title_realm_provs = {
+							who = PREVPREV
+							value >= 6
+						}
+					}
+				}
+			}
+
+			# Give priority to coastal North Africa
+			preferred_limit = {
+				capital_scope = {
+					region = world_africa_north
+				}
+
+				any_realm_province = {
+					region = world_africa_north
+					held_under_PREV = yes
+
+					kingdom = {
+						trigger_if = {
+							limit = { has_holder = yes }
+							holder = PREVPREV
+						}
+
+						num_title_realm_provs = {
+							who = PREVPREV
+							value >= 6
+						}
+					}
+				}
+			}
+
+			# Then anywhere else on continental Africa
+			preferred_limit = {
+				capital_scope = {
+					region = world_africa
+				}
+
+				any_realm_province = {
+					region = world_africa
+					held_under_PREV = yes
+
+					kingdom = {
+						trigger_if = {
+							limit = { has_holder = yes }
+							holder = PREVPREV
+						}
+
+						num_title_realm_provs = {
+							who = PREVPREV
+							value >= 6
+						}
+					}
+				}
+			}
+
+			# Failing that, anywhere will do
+
+			save_event_target_as = shiite_revolt_target
+
+			random_realm_province = {
+				limit = {
+					kingdom = {
+						trigger_if = {
+							limit = { has_holder = yes }
+							holder = PREVPREV
+						}
+
+						num_title_realm_provs = {
+							who = PREVPREV
+							value >= 6
+						}
+					}
+
+					held_under_PREV = yes
+				}
+
+				# Give priority to coastal North Africa
+				preferred_limit = {
+					region = world_africa_north
+				}
+
+				# Then anywhere else on continental Africa
+				preferred_limit = {
+					region = custom_africa
+				}
+
+				# Failing that, anywhere will do
+
+				kingdom = { save_event_target_as = shiite_revolt_target_title }
+			}
+		}
+
+		if = {
+			limit = {
+				is_ruler = yes
+				NOT = { de_jure_liege_or_above = event_target:shiite_revolt_target_title }
+			}
+
+			set_character_flag = abdicated_claimant
+			primary_title = { save_event_target_as = abdicated_title }
+
+			transfer_scaled_wealth = {
+				to = current_heir
+				value = all
+			}
+
+			abdicate = yes
+		}
+
+		narrative_event = { id = Plus.1962 }
+	}
+}
+
+# New Shi'a Caliphate Revolt event
+narrative_event = {
+	id = Plus.1962
+	title = EVTNAME39640
+	picture = GFX_evt_bishop_muslim
+	border = GFX_event_narrative_frame_religion
+
+	desc = {
+		text = EVTDESC_Plus_1962_found
+		trigger = {
+			event_target:shiite_revolter = {
+				has_character_flag = found_claimant
+			}
+		}
+	}
+	desc = {
+		text = EVTDESC_Plus_1962_abdicate
+		trigger = {
+			event_target:shiite_revolter = {
+				has_character_flag = abdicated_claimant
+				NOT = { has_character_flag = found_claimant }
+			}
+		}
+	}
+	desc = {
+		text = EVTDESC_Plus_1962
+		trigger = {
+			event_target:shiite_revolter = {
+				NOR = {
+					has_character_flag = found_claimant
+					has_character_flag = abdicated_claimant
+				}
+			}
+		}
+	}
+
+	is_triggered_only = yes
+	major = yes
+	show_root = yes
+	hide_from = yes
+
+	immediate = {
+		set_global_flag = shia_caliphate_revolt_ongoing
+
+		event_target:shiite_revolt_target = {
+			random_realm_province = {
+				limit = {
+					kingdom = { title = event_target:shiite_revolt_target_title }
+					held_under_PREV = yes
+				}
+
+				save_event_target_as = shiite_revolt_home_province
+			}
+		}
+
+		create_title = {
+			tier = KING
+			landless = yes
+			temporary = yes
+			culture = THIS
+			name = SHIA_CALIPHATE_REVOLT
+			holder = THIS
+			ruler = IMAM
+			ruler_female = CALIPHA
+			foa = CALIPH_FOA
+		}
+
+		primary_title = {
+			set_title_flag = non_manual_law_change # No prestige loss
+			add_law = succ_turkish_succession
+			clr_title_flag = non_manual_law_change # No prestige loss
+		}
+
+		any_close_relative = {
+			limit = {
+				dynasty = ROOT
+				is_ruler = no
+			}
+
+			move_character = ROOT
+		}
+
+		while = {
+			count = 9
+
+			create_character = {
+				random_traits = yes
+				dynasty = none
+				religion = THIS
+				culture = THIS
+				female = no
+				age = 23
+			}
+
+			new_character = {
+				random_list = {
+					1 = { }
+					1 = { add_age = 1 }
+					1 = { add_age = 2 }
+					1 = { add_age = 3 }
+					1 = { add_age = 4 }
+					1 = { add_age = 5 }
+					1 = { add_age = 6 }
+					1 = { add_age = 7 }
+					1 = { add_age = 8 }
+					1 = { add_age = 9 }
+					1 = { add_age = 10 }
+					1 = { add_age = 11 }
+					1 = { add_age = 12 }
+				}
+
+				clear_education_trait = yes
+
+				random_list = {
+					33 = { add_trait = brilliant_strategist }
+					67 = { add_trait = skilled_tactician }
+				}
+
+				opinion = {
+					name = loyal_vassal
+					who = event_target:shiite_revolter
+					years = 100
+				}
+			}
+
+		}
+
+		spawn_unit = {
+			province = event_target:shiite_revolt_home_province
+			home = event_target:shiite_revolt_home_province
+			owner = event_target:shiite_revolter
+			match_character = event_target:shiite_revolt_target
+			match_mult = 0.5
+			attrition = 0.25
+			maintenance_multiplier = 0
+			disband_on_peace = yes
+		}
+
+		spawn_unit = {
+			province = event_target:shiite_revolt_home_province
+			home = event_target:shiite_revolt_home_province
+			owner = event_target:shiite_revolter
+			match_character = event_target:shiite_revolt_target
+			match_mult = 0.3
+			attrition = 0.25
+			maintenance_multiplier = 0
+			disband_on_peace = yes
+		}
+
+		while = {
+			count = 7
+
+			spawn_unit = {
+				province = event_target:shiite_revolt_home_province
+				home = event_target:shiite_revolt_home_province
+				owner = event_target:shiite_revolter
+				match_character = event_target:shiite_revolt_target
+				match_mult = 0.15
+				attrition = 0.25
+				maintenance_multiplier = 0
+				disband_on_peace = yes
+			}
+		}
+
+		# Spawn some councillors
+		create_random_priest = {
+			random_traits = yes
+			dynasty = none
+			religion = event_target:shiite_revolter
+			culture = event_target:shiite_revolter
+			female = no
+			age = 50
+		}
+
+		new_character = {
+			opinion = {
+				name = loyal_vassal
+				who = event_target:shiite_revolter
+				years = 100
+			}
+		}
+
+		create_random_diplomat = {
+			random_traits = yes
+			dynasty = none
+			religion = event_target:shiite_revolter
+			culture = event_target:shiite_revolter
+			female = no
+			age = 40
+		}
+
+		new_character = {
+			opinion = {
+				name = loyal_vassal
+				who = event_target:shiite_revolter
+				years = 100
+			}
+		}
+
+		create_random_intriguer = {
+			random_traits = yes
+			dynasty = none
+			religion = event_target:shiite_revolter
+			culture = event_target:shiite_revolter
+			female = no
+			age = 40
+		}
+
+		new_character = {
+			opinion = {
+				name = loyal_vassal
+				who = event_target:shiite_revolter
+				years = 100
+			}
+		}
+
+		war = {
+			target = event_target:shiite_revolt_target
+			casus_belli = shia_caliphate_rising
+			thirdparty_title = event_target:shiite_revolt_home_province
+			tier = KING
+			infamy = 0
+		}
+
+		recalc_succession = yes
+	}
+
+	option = {
+		name = {
+			text = EVTOPTA39640
+			trigger = { character = event_target:shiite_revolt_target }
+		}
+		name = {
+			text = EVTOPTB39640
+			trigger = {
+				religion = shiite
+				NOT = { character = event_target:shiite_revolt_target }
+			}
+		}
+		name = {
+			text = EVTOPTC39640
+			trigger = {
+				religion_group = muslim
+				NOT = { religion = shiite }
+			}
+		}
+		name = {
+			text = EVTOPTD39640
+			trigger = { NOT = { religion_group = muslim } }
+		}
+	}
+}
+
+# Event troops received upon forming the Shiite Caliphate
+character_event = {
+	id = Plus.1963
+	desc = EVTDESC_Plus_1963
+	picture = GFX_evt_bishop_muslim
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		d_shiite = { set_title_flag = shiite_followers }
+
+		# Can't use 'while', since it generates no tooltip
+		spawn_unit = {
+			province = capital_scope
+			home = capital_scope
+			owner = ROOT
+			attrition = 1.0
+			maintenance_multiplier = 0
+			earmark = shiite_claimant
+
+			troops = {
+				light_infantry = { 1600 1600 }
+				light_cavalry = { 840 840 }
+				heavy_infantry = { 210 210 }
+				knights = { 55 55 }
+			}
+		}
+
+		spawn_unit = {
+			province = capital_scope
+			home = capital_scope
+			owner = ROOT
+			attrition = 1.0
+			maintenance_multiplier = 0
+			earmark = shiite_claimant
+
+			troops = {
+				light_infantry = { 1600 1600 }
+				light_cavalry = { 840 840 }
+				heavy_infantry = { 210 210 }
+				knights = { 55 55 }
+			}
+		}
+
+		spawn_unit = {
+			province = capital_scope
+			home = capital_scope
+			owner = ROOT
+			attrition = 1.0
+			maintenance_multiplier = 0
+			earmark = shiite_claimant
+
+			troops = {
+				light_infantry = { 1600 1600 }
+				light_cavalry = { 840 840 }
+				heavy_infantry = { 210 210 }
+				knights = { 55 55 }
+			}
+		}
+	}
+}
+
+# Prompt AI shiite claimant to marry
+character_event = {
+	id = Plus.1970
+
+	is_triggered_only = yes # on_yearly_pulse
+	hide_window = yes
+
+	has_character_flag = is_shiite_claimant
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	ai = yes
+	is_married = no
+	is_sick = no
+
+	trigger = {
+		fertility >= 0.33
+	}
+
+	immediate = {
+		if = {
+			limit = { is_ruler = no }
+
+			create_character = {
+				random_traits = yes
+				dynasty = random
+				female = yes
+				age = 17
+				culture = liege
+				religion = liege
+			}
+		}
+		else = {
+			create_character = {
+				random_traits = yes
+				dynasty = random
+				female = yes
+				age = 17
+				culture = ROOT
+				religion = ROOT
+			}
+		}
+
+		new_character = {
+			log = "[This.GetTitledName] marries [Root.GetTitledName] (Spouse Finder - new character)"
+			add_spouse = ROOT
+		}
+	}
+}
+
+# Prompt AI shiite claimant to have children
+character_event = {
+	id = Plus.1971
+
+	is_triggered_only = yes # on_yearly_pulse
+	hide_window = yes
+
+	has_character_flag = is_shiite_claimant
+	is_married = yes
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	ai = yes
+
+	trigger = {
+		fertility >= 0.33
+
+		NOR = {
+			any_child = {
+				is_female = no
+				has_inheritance_blocker = no
+			}
+
+			any_spouse = { is_pregnant = yes }
+		}
+
+		any_spouse = {
+			fertility >= 0.33
+			is_pregnant = no
+			is_ill = no
+			prisoner = no
+			is_incapable = no
+		}
+	}
+
+	immediate = {
+		random_spouse = {
+			limit = {
+				fertility >= 0.33
+				is_pregnant = no
+				is_ill = no
+				prisoner = no
+				is_incapable = no
+			}
+
+			preferred_limit = { is_main_spouse = yes }
+
+			impregnate = ROOT
+		}
+	}
+}
+
+### DRUZE EVENTS
+
+# Druze becomes Uqqal after studying
+character_event = {
+	id = Plus.1965
+	desc = EVTDESC_Plus_1965
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	religion = druze
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		trait = druze_juhhal
+		learning >= 8
+		piety >= 0
+
+		OR = {
+			has_focus = focus_theology
+			has_ambition = obj_druze_esoteric_learning
+		}
+
+		OR = {
+			trait = just
+			trait = temperate
+			trait = charitable
+			trait = humble
+			has_ambition = obj_druze_esoteric_learning
+		}
+
+		NOR = {
+			trait = druze_uqqal
+			trait = druze_ajawid
+			trait = cynical
+			has_character_flag = no_druze_initiate
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 1.25
+			trait = just
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = temperate
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = charitable
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = arbitrary
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = gluttonous
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = proud
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			piety >= 100
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			learning >= 10
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			learning >= 12
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			learning >= 14
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			learning >= 16
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			learning >= 18
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			learning >= 20
+		}
+
+		mult_modifier = {
+			factor = 2
+
+			has_focus = focus_theology
+			has_ambition = obj_druze_esoteric_learning
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1965
+
+		narrative_event = {
+			id = Plus.1966
+			days = 1
+			random = 2
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1965
+
+		set_character_flag = no_druze_initiate
+		piety = -50
+	}
+}
+
+narrative_event = {
+	id = Plus.1966
+	title = EVTNAME_Plus_1966
+	desc = EVTDESC_Plus_1966
+	picture = GFX_evt_imam
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1966
+
+		add_trait = druze_uqqal
+	}
+}
+
+# Druze Uqqal becomes Ajawid
+character_event = {
+	id = Plus.1967
+	desc = EVTDESC_Plus_1967
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse, random_events
+
+	religion = druze
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		trait = druze_uqqal
+		piety >= 250
+		learning >= 12
+
+		calc_true_if = {
+			amount >= 2
+
+			trait = just
+			trait = temperate
+			trait = charitable
+			trait = humble
+			learning >= 15
+			piety >= 500
+		}
+
+		NOR = {
+			trait = druze_ajawid
+			trait = cynical
+			trait = slothful
+			trait = cruel
+			trait = lunatic
+			trait = decadent
+		}
+	}
+
+	weight_multiplier = {
+		years = 10
+
+		mult_modifier = {
+			factor = 1.25
+			trait = just
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = temperate
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = charitable
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = arbitrary
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = gluttonous
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = greedy
+		}
+
+		mult_modifier = {
+			factor = 0.67
+			trait = proud
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			piety >= 500
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			piety >= 750
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			piety >= 1000
+		}
+
+		mult_modifier = {
+			factor = 2
+			has_focus = focus_theology
+		}
+
+		mult_modifier = {
+			factor = 0.67
+
+			top_liege = {
+				any_realm_character = {
+					trait = druze_ajawid
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			top_liege = {
+				any_realm_character = {
+					trait = druze_ajawid
+					count = 2
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1967
+
+		piety = 200
+		add_trait = druze_ajawid
+	}
+}
+
+# Druze Shaykh becomes religion head
+narrative_event = {
+	id = Plus.1968
+	title = EVTNAME_Plus_1968
+	desc = EVTDESC_Plus_1968
+	picture = GFX_evt_imam
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	immediate = {
+		set_global_flag = druze_shaykh
+		set_parent_religion = { religion = druze parent = 0 }
+	}
+
+	option = {
+		name = {
+			text = EVTOPTA_Plus_1968
+			trigger = { religion = druze }
+		}
+		name = {
+			text = EVTOPTB_Plus_1968
+			trigger = {
+				religion_group = muslim
+				NOT = { religion = druze }
+			}
+		}
+		name = {
+			text = EVTOPTC_Plus_1968
+			trigger = {
+				NOT = { religion_group = muslim }
+			}
+		}
+	}
+}

@@ -1,0 +1,905 @@
+# Titles which are created by event or decision
+
+# Empires
+
+e_bulgaria = {
+	color = { 113 98 121 }
+	color2 = { 255 255 255 }
+	creation_requires_capital = no
+	short_name = yes
+	culture = bulgarian
+
+
+	capital = 530 # Tyrnovo
+
+	allow = {
+		can_create_empire = yes
+		has_titular_requirements = yes
+	}
+}
+
+e_chagatai = {
+	color = { 193 132 27 }
+	color2 = { 255 255 255 }
+	capital = 1086 # Samarkand
+
+	allow = {
+		ai = yes
+		can_create_empire = yes
+		has_titular_requirements = yes
+	}
+
+	culture = mongol
+	religion = tengri_pagan
+}
+
+e_china_west_governor = { #placeholder for the Chinese Empire Western Governor
+	color = { 245 240 10 }
+	color2 = { 220 220 0 }
+
+	capital = 1153 # Dunhuang
+
+	title_female = WESTERN_GOVERNOR_FEMALE
+	title = WESTERN_GOVERNOR_MALE
+	foa = WESTERN_GOVERNOR_TITLE_FOA
+	short_name = yes
+	#location_ruler_title = yes
+
+	# Always exists
+	landless = yes
+
+	# Cannot be vassalized
+	independent = yes
+
+	# Cannot be held as a secondary title
+	primary = yes
+
+	dynasty_title_names = no 	# Will not be named "Seljuk", etc.
+
+	can_be_claimed = no
+	can_be_usurped = no
+
+	extra_ai_eval_troops = 7500
+}
+
+e_golden_horde = {
+	color = { 243 180 17 }
+	color2 = { 255 230 127 }
+	culture = mongol
+	religion = tengri_pagan
+	short_name = yes
+
+	capital = 622 # Saray
+	dynasty_title_names = no
+
+	allow = {
+		can_create_empire = yes
+		has_titular_requirements = yes
+	}
+}
+
+e_hre = { # Created by special decision only
+	color = { 255 255 255 }
+	color2 = { 220 220 20 }
+	dynasty_title_names = no
+	short_name = yes
+	creation_requires_capital = no
+
+	allow = {
+		custom_tooltip = {
+			text = hre_formed
+			has_global_flag = hre_formed
+		}
+
+		e_roman_empire = { has_holder = no }
+		can_create_empire = yes
+		is_heretic = no
+
+		custom_tooltip = {
+			text = catholic_group_christian
+			is_catholic_branch = yes
+		}
+
+		trigger_if = {
+			limit = { FROM = { is_titular = yes } }
+			ROOT = { has_empire_size_trigger = yes }
+		}
+		trigger_else = {
+			has_titular_requirements = yes
+		}
+	}
+
+	k_grand_saxony = {
+		color = { 120 25 25 }
+		color2 = { 74 132 75 }
+
+		capital = 188 # Magdeburg
+		culture = saxon
+
+		title_prefix = GRAND_DUCHY_PREFIX
+		title = GRAND_DUCHY_RULER
+		title_female = GRAND_DUCHY_RULER_FEMALE
+
+		allow = {
+			can_create_kingdom = yes
+
+			trigger_if = {
+				limit = { FROM = { is_titular = yes } }
+
+				ROOT = {
+					lower_tier_than = KING
+					completely_controls_region = custom_hre_saxony
+					german_cultures_trigger = yes
+				}
+			}
+			trigger_else = {
+				has_titular_requirements = yes
+			}
+		}
+
+		catholic = 3000 # Crusade target weight
+		norse_pagan_reformed = 500 # Crusade target weight
+	}
+
+	k_grand_swabia = {
+		color = { 206 203 203 }
+		color2 = { 255 255 255 }
+
+		capital = 233 # Schwaben
+		culture = swabian
+
+		title_prefix = GRAND_DUCHY_PREFIX
+		title = GRAND_DUCHY_RULER
+		title_female = GRAND_DUCHY_RULER_FEMALE
+
+		allow = {
+			can_create_kingdom = yes
+
+			trigger_if = {
+				limit = { FROM = { is_titular = yes } }
+
+				ROOT = {
+					lower_tier_than = KING
+					completely_controls_region = custom_hre_swabia
+					german_cultures_trigger = yes
+				}
+			}
+			trigger_else = {
+				has_titular_requirements = yes
+			}
+		}
+	}
+
+	# CK2Plus
+	k_arch_austria = { # Archduchy of Austria
+		color = { 0 255 238 }
+		capital = 213 # Wien
+		culture = austrian
+		dignity = 10
+		title_prefix = ARCHDUKE_OF
+		title = ARCHDUKE
+		title_female = ARCHDUCHESS
+
+		andalusian_arabic = "Nimsa"
+		anglo-saxon = "Eastrice"
+		aromanian = "Austria"
+		ashkenazi = "Estraykh"
+		austrian = "Ésterreich"
+		bavarian = "Östareich"
+		bedouin_arabic = "Nimsa"
+		bohemian = "Rakúsy"
+		breton = "Aostria"
+		bulgarian = "Avstrija"
+		castilian = "Austria"
+		catalan = "Àustria"
+		colognian = "Österreich"
+		cornish = "Estrych"
+		croatian = "Njemacka"
+		cuman = "Avstriya"
+		danish = "Østrig"
+		dutch = "Oostenrijk"
+		egyptian_arabic = "Nimsa"
+		emilian = "Àustria"
+		english = "Austria"
+		finnish = "Itävalta"
+		flemish = "Oostenrijk"
+		franconian = "Éisträich"
+		french = "Autriche"
+		frisian = "Eastenryk"
+		galatian = "Norig"
+		georgian = "Avstria"
+		german = "Ostarrîchi"
+		greek = "Afstría"
+		gujurati = "Ostriya"
+		han = "Àodìlì"
+		hausa = "Austriya"
+		hindustani = "Ostriya"
+		hungarian = "Osztrák"
+		icelandic = "Austurríki"
+		imperial_german = "Österreich"
+		irish = "An Ostair"
+		israeli = "Óstriya"
+		jolof = "Ótriis"
+		kurdish = "Awistriya"
+		latgalian = "Austrija"
+		levantine_arabic = "Nimsa"
+		lithuanian = "Austrija"
+		lombard = "Àustria"
+		maghreb_arabic = "Nimsa"
+		mongol = "Avstri"
+		nahua = "Tlapcopatlahtohcayotl"
+		nepali = "Avstriya"
+		norman = "Autriche"
+		norse = "Eysturríki"
+		norwegian = "Østerrike"
+		old_gothic = "Australand"
+		persian = "Namsâ"
+		polish = "Niemcy"
+		pomeranian = "Rakuska"
+		pontic_greek = "Afstría"
+		portuguese = "Áustria"
+		prussian = "Austreje"
+		roman = "Noricum"
+		russian = "Niemcy"
+		sardinian = "Àustria"
+		saxon = "Oostnriek"
+		scottish = "An Ostair"
+		serbian = "Nemacka"
+		sicilian_arabic = "Awstrija"
+		sinhala = "Ostriyava"
+		slovene = "Nemcija"
+		somali = "Austriya"
+		swedish = "Österrike"
+		tamil = "Astiriya"
+		telugu = "Astriya"
+		turkish = "Nemçe"
+		uyghur = "Awstiriye"
+		veneto = "Àustria"
+		welsh = "Awstria"
+		yugoslavian = "Njemacka"
+		zenati = "Tutrict"
+
+		allow = {
+			can_create_kingdom = yes
+
+			trigger_if = {
+				limit = { FROM = { is_titular = yes } }
+
+				ROOT = {
+					lower_tier_than = king
+					completely_controls_region = custom_hre_austria
+					german_cultures_trigger = yes
+				}
+			}
+			trigger_else = {
+				has_titular_requirements = yes
+			}
+		}
+	}
+
+	k_brandenburg = { # Margraviate of Brandenburg
+		color = { 145 91 170 }
+		color2 = { 255 255 255 }
+		capital = 725 # Brandenburg
+		culture = saxon
+		dignity = 10
+		title_prefix = MARGRAVE_OF
+		title = MARGRAVE
+		title_female = MARGRAVINE
+
+		allow = {
+			can_create_kingdom = yes
+
+			trigger_if = {
+				limit = { FROM = { is_titular = yes } }
+
+				ROOT = {
+					lower_tier_than = king
+					completely_controls_region = custom_hre_brandenburg
+					german_cultures_trigger = yes
+				}
+			}
+			trigger_else = {
+				has_titular_requirements = yes
+			}
+		}
+	}
+
+	k_grand_bavaria = {
+		color = { 18 121 121 }
+		color2 = { 255 255 255 }
+		capital = 204 # Regensburg
+		culture = bavarian
+		dignity = 10
+		title_prefix = GRAND_DUCHY_PREFIX
+		title = GRAND_DUCHY_RULER
+		title_female = GRAND_DUCHY_RULER_FEMALE
+
+		allow = {
+			can_create_kingdom = yes
+
+			trigger_if = {
+				limit = { FROM = { is_titular = yes } }
+
+				ROOT = {
+					lower_tier_than = KING
+					completely_controls_region = custom_hre_bavaria
+					german_cultures_trigger = yes
+				}
+			}
+			trigger_else = {
+				has_titular_requirements = yes
+			}
+		}
+	}
+
+	k_grand_franconia = {
+		color = { 100 9 170 }
+		color2 = { 255 255 255 }
+		capital = 194 # Mainz
+		culture = franconian
+		dignity = 10
+		title_prefix = GRAND_DUCHY_PREFIX
+		title = GRAND_DUCHY_RULER
+		title_female = GRAND_DUCHY_RULER_FEMALE
+
+		allow = {
+			can_create_kingdom = yes
+
+			trigger_if = {
+				limit = { FROM = { is_titular = yes } }
+
+				ROOT = {
+					lower_tier_than = KING
+					completely_controls_region = custom_hre_franconia
+					german_cultures_trigger = yes
+				}
+			}
+			trigger_else = {
+				has_titular_requirements = yes
+			}
+		}
+	}
+
+	k_grand_luxembourg = { # Grand duchy of Luxembourg
+		color = { 210 100 100 }
+		capital = 249 # Luxembourg
+		culture = franconian
+		dignity = 10
+		title_prefix = GRAND_DUCHY_PREFIX
+		title = GRAND_DUCHY_RULER
+		title_female = GRAND_DUCHY_RULER_FEMALE
+
+		allow = {
+			can_create_kingdom = yes
+
+			trigger_if = {
+				limit = { FROM = { is_titular = yes } }
+
+				ROOT = {
+					lower_tier_than = KING
+					completely_controls_region = custom_hre_luxembourg
+					german_cultures_trigger = yes
+				}
+			}
+			trigger_else = {
+				has_titular_requirements = yes
+			}
+		}
+	}
+
+	k_grand_tuscany = { # Grand duchy of Tuscany
+		color = { 251  255  0 }
+		capital = 457 # Firenze
+		culture = tuscan
+		dignity = 10
+		title_prefix = GRAND_DUCHY_PREFIX
+		title = GRAND_DUCHY_RULER
+		title_female = GRAND_DUCHY_RULER_FEMALE
+		foa = GRANDDUKE_FOA_TUSCANY
+
+		allow = {
+			can_create_kingdom = yes
+
+			trigger_if = {
+				limit = { FROM = { is_titular = yes } }
+
+				ROOT = {
+					lower_tier_than = KING
+					completely_controls_region = custom_hre_tuscany
+
+					OR = {
+						german_cultures_trigger = yes
+						is_italian_trigger = yes
+						culture = longobard
+						culture = sicilian
+					}
+				}
+			}
+			trigger_else = {
+				has_titular_requirements = yes
+			}
+		}
+	}
+
+	k_grand_milan = { # Grand duchy of Milan
+		color = { 216  255  0 }
+		color2 = { 255 255 255 }
+		capital = 442 # Milano
+		culture = lombard
+		dignity = 10
+		title_prefix = GRAND_DUCHY_PREFIX
+		title = GRAND_DUCHY_RULER
+		title_female = GRAND_DUCHY_RULER_FEMALE
+
+		allow = {
+			can_create_kingdom = yes
+
+			trigger_if = {
+				limit = { FROM = { is_titular = yes } }
+
+				ROOT = {
+					lower_tier_than = KING
+					completely_controls = d_milano
+					completely_controls = d_modena
+
+					OR = {
+						german_cultures_trigger = yes
+						is_italian_trigger = yes
+						culture = longobard
+						culture = sicilian
+					}
+				}
+			}
+			trigger_else = {
+				has_titular_requirements = yes
+			}
+		}
+	}
+
+	k_grand_naples = { # Grand Duchy of Naples
+		color = { 216  0  216 }
+		color2 = { 255 255 255 }
+		capital = 473 # Napoli
+		culture = neapolitan
+		dignity = 10
+		title_prefix = GRAND_DUCHY_PREFIX
+		title = GRAND_DUCHY_RULER
+		title_female = GRAND_DUCHY_RULER_FEMALE
+
+		allow = {
+			can_create_kingdom = yes
+
+			trigger_if = {
+				limit = { FROM = { is_titular = yes } }
+
+				ROOT = {
+					lower_tier_than = KING
+					completely_controls = d_capua
+
+					OR = {
+						completely_controls = d_salerno
+						completely_controls = d_benevento
+					}
+
+					OR = {
+						german_cultures_trigger = yes
+						is_italian_trigger = yes
+						culture = longobard
+						culture = sicilian
+					}
+				}
+			}
+			trigger_else = {
+				has_titular_requirements = yes
+			}
+		}
+	}
+
+	k_grand_sicily = { # Grand Duchy of Sicily
+		color = { 233 242 51 }
+		color2 = { 255 255 255 }
+		capital = 486 # Palermo
+		culture = sicilian
+		dignity = 10
+		title_prefix = GRAND_DUCHY_PREFIX
+		title = GRAND_DUCHY_RULER
+		title_female = GRAND_DUCHY_RULER_FEMALE
+
+		allow = {
+			can_create_kingdom = yes
+
+			trigger_if = {
+				limit = { FROM = { is_titular = yes } }
+
+				ROOT = {
+					lower_tier_than = KING
+					completely_controls = d_sicily
+
+					OR = {
+						german_cultures_trigger = yes
+						is_italian_trigger = yes
+						culture = longobard
+						culture = sicilian
+						culture = sicilian_greek
+						culture = sicilian_arabic
+					}
+				}
+			}
+			trigger_else = {
+				has_titular_requirements = yes
+			}
+		}
+	}
+}
+
+e_ilkhanate = {
+	color = { 120 180 20 }
+	color2 = { 165 255 127 }
+	capital = 646 # Esfahan
+	culture = mongol
+	landless = yes # Always exists
+	religion = tengri_pagan
+	short_name = yes
+	dynasty_title_names = no
+	allow = {
+		can_create_empire = yes
+		has_titular_requirements = yes
+		ROOT = { culture = mongol }
+	}
+}
+
+e_india = { # Created by special decision only if entire India is united
+	color = { 255 110 0 }
+	capital = 1335 # Delhi
+	creation_requires_capital = no
+
+	title = SAMRAT_CHAKRAVARTIN # Sets ruler's title
+	title_female = SAMRAJNI_CHAKRAVARTIN # Sets female ruler's title
+
+	dynasty_title_names = no	# Will not be named "Seljuk", etc.
+
+	coptic = "Hent"
+	han = "Tianzhú"
+
+	allow = {
+		can_create_empire = yes
+		has_titular_requirements = yes
+	}
+}
+
+e_slavic_union = {
+	color = { 0 90 30 }
+	color2 = { 255 255 255 }
+	short_name = yes
+
+	capital = 863 # Kiev
+
+	allow = {
+		can_create_empire = yes
+
+		FROM = {
+			show_scope_change = no
+			show_only_failed_conditions = yes
+
+			is_titular = no
+		}
+	}
+}
+
+e_mongol_empire = {
+	color = { 255 255 255 }
+	color2 = { 255 20 20 }
+
+	capital = 1013 # Kara Khorum
+	culture = mongol
+	religion = tengri_pagan
+
+	short_name = yes
+	landless = yes
+
+	allow = {
+		can_create_empire = yes
+		has_titular_requirements = yes
+		ROOT = { culture = mongol }
+	}
+}
+
+e_nicaea = {
+	color = { 240 17 17 }
+	color2 = { 255 255 20 }
+
+	capital = 547 # Nikaea
+
+	culture = greek
+
+	short_name = yes
+
+	has_top_de_jure_capital = yes
+
+	allow = {
+		can_create_empire = yes
+
+		FROM = {
+			show_scope_change = no
+			show_only_failed_conditions = yes
+
+			is_titular = no
+		}
+	}
+}
+
+e_outremer = {
+	color = { 200 200 200 }
+	color2 = { 255 255 255 }
+
+	capital = 1514 # Jerusalem
+	culture = outremer
+	short_name = yes
+
+	allow = {
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				has_empire_size_trigger = yes
+				religion_group = christian
+				OR = {
+					culture = outremer
+					culture = french
+					culture = occitan
+				}
+			}
+		}
+	}
+}
+
+e_roman_empire = {
+	color = { 167 10 100 }
+	color2 = { 255 255 20 }
+	capital = 464 # Roma
+	culture = roman
+	dynasty_title_names = no
+	purple_born_heirs = yes
+	dignity = 100
+	short_name = yes
+	title = TITLE_EMPEROR
+	title_female = TITLE_EMPRESS
+
+	han = "Dai Qin"
+
+	allow = {
+		has_dlc = "Legacy of Rome"
+		can_create_empire = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				culture = roman
+				religion_openly_hellenic_or_reformed_trigger = yes
+				prestige = 3000
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_latium } }
+					completely_controls = d_latium
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_venice } }
+					completely_controls = d_venice
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_sicily } }
+					completely_controls = d_sicily
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_genoa } }
+					completely_controls = d_genoa
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_capua } }
+					completely_controls = d_capua
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_apulia } }
+					completely_controls = d_apulia
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_thrace } }
+					completely_controls = d_thrace
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_karvuna } }
+					completely_controls = d_karvuna
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_thessalonika } }
+					completely_controls = d_thessalonika
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_moesia } }
+					completely_controls = d_moesia
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_antioch } }
+					completely_controls = d_antioch
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_jerusalem } }
+					completely_controls = d_jerusalem
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_alexandria } }
+					completely_controls = d_alexandria
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_hellas } }
+					completely_controls = d_hellas
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_tunis } }
+					completely_controls = d_tunis
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_croatia } }
+					completely_controls = d_croatia
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_hum } }
+					completely_controls = d_hum
+				}
+				conditional_tooltip = {
+					trigger = { NOT = { completely_controls = d_dioclea } }
+					completely_controls = d_dioclea
+				}
+			}
+		}
+	}
+	gain_effect = {
+		if = {
+			limit = {
+				has_dlc = "Legacy of Rome"
+				NOT = { has_global_flag = "rome_restored" }
+			}
+			narrative_event = { id = LoR.20 tooltip = EVTTOOLTIPLoR.20 }
+		}
+	}
+}
+
+e_russia = {
+	color = { 220 60 70 }
+	color2 = { 255 255 255 }
+
+	capital = 813 # Vladimir
+
+	culture = russian
+
+	allow = {
+		always = no # Only created through special event
+	}
+}
+
+e_seljuk_turks = { # Seljuk Turks
+	color = { 0 125 0 }
+	color2 = { 200 200 0 }
+
+	capital = 1449 # Esfahan
+	culture = turkish
+
+	short_name = yes
+
+	allow = {
+		always = no
+	}
+}
+
+e_timurids = {
+	color = { 120 20 20 }
+	color2 = { 255 255 0 }
+	capital = 1449 # Esfahan
+	short_name = yes
+
+	culture = mongol
+	religion = sunni
+}
+
+# Kingdoms
+
+k_antioch = {
+	color = { 255 255 0 }
+	capital = 1499 # Antioch
+	culture = greek
+	dignity = 10
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_tier_than = king
+				culture = greek
+			}
+		}
+	}
+}
+
+k_bosnia = {
+	color = { 0 86 148 }
+	color2 = { 255 255 255 }
+
+	culture = serbian
+	serbian = "Bosna"
+	croatian = "Bosna"
+	slovene = "Bosna"
+	yugoslavian = "Bosna"
+
+	allow = {
+		can_create_kingdom = yes
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_tier_than = king
+				OR = {
+					culture = croatian
+					culture = serbian
+					culture = yugoslavian
+				}
+				OR = {
+					religion = catholic
+					religion = chalcedonian
+					religion = bogomilist
+				}
+			}
+		}
+	}
+}
+
+k_switzerland = {
+	color = { 255 80 80 }
+	color2 = { 200 50 50 }
+
+	capital = 348 # Bern
+
+	short_name = yes
+
+	allow = {
+		FROM = {
+			show_scope_change = no
+			show_only_failed_conditions = yes
+
+			is_titular = no
+		}
+	}
+}
+
+k_austrasia = {
+	color = { 220 138 57 }
+	color2 = { 255 255 255 }
+
+	culture = frankish
+
+	capital = 252 # Julich
+
+	dignity = 200
+
+	allow = {
+		# TODO: Put in actual requirements
+		always = no
+	}
+}
+
+k_neustria = {
+	color = { 110 110 160 }
+	color2 = { 220 220 20 }
+
+	culture = frankish
+
+	capital = 281 # Paris
+
+	dignity = 300
+
+	allow = {
+		# TODO: Put in actual requirements
+		always = no
+	}
+}

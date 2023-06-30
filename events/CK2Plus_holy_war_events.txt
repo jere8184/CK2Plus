@@ -1,0 +1,1105 @@
+namespace = Plus
+
+#reserved: Plus.1650 to Plus.1699
+
+#######################################
+# HOLY WAR EVENTS
+# Written by Rylock
+#######################################
+
+# Ruler requests sanction to declare Holy War
+letter_event = {
+	id = Plus.1650
+	desc = EVTDESC_Plus_1650
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+	show_from_from = yes
+
+	immediate = {
+		if = {
+			limit = { ai = no }
+			set_character_flag = do_not_bug_me
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1650 # Agree
+
+		piety = 50
+
+		event_target:sanction_requester = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.1651
+				days = 10
+				random = 20
+				tooltip = AGREE_HOLY_SANCTION
+			}
+		}
+
+		hidden_effect = {
+			opinion = {
+				name = asked_holy_sanction
+				who = event_target:sanction_requester
+				years = 5
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 0.75
+				event_target:sanction_requester = { has_character_modifier = holy_war_timer }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = event_target:sanction_requester value >= 0 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:sanction_requester value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = just
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = humble
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1650 # Ask for incentive
+
+		event_target:sanction_requester = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.1652
+				days = 10
+				random = 20
+				tooltip = ASK_MORE_HOLY_SANCTION
+			}
+		}
+
+		ai_chance = {
+			factor = 75
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = event_target:sanction_requester value < 0 }
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				opinion = { who = event_target:sanction_requester value >= 0 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				event_target:sanction_requester = { has_character_modifier = holy_war_timer }
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = envious
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = cynical
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_1650 # Refuse
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				trigger_if = {
+					limit = { religion_group = muslim }
+
+					event_target:sanction_target = {
+						NOT = {
+							any_realm_province = {
+								OR = {
+									province_id = c_mecca
+
+									distance = {
+										where = c_mecca
+										value < 300
+									}
+								}
+
+								held_under_PREV = yes
+							}
+						}
+					}
+				}
+				trigger_else_if = {
+					limit = { religion_group = christian }
+
+					event_target:sanction_target = {
+						NOT = {
+							any_realm_province = {
+								OR = {
+									province_id = c_roma
+
+									distance = {
+										where = c_roma
+										value < 300
+									}
+								}
+
+								held_under_PREV = yes
+							}
+						}
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				opinion = { who = event_target:sanction_requester value < -20 }
+			}
+
+			mult_modifier = {
+				factor = 1.2
+				opinion = { who = event_target:sanction_requester value < -40 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = event_target:sanction_requester value < -60 }
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				opinion = { who = event_target:sanction_requester value < -80 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				opinion = { who = event_target:sanction_requester value >= 20 }
+			}
+
+			mult_modifier = {
+				factor = 0.8
+				opinion = { who = event_target:sanction_requester value >= 40 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:sanction_requester value >= 60 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				opinion = { who = event_target:sanction_requester value >= 80 }
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				OR = {
+					is_heresy_of = event_target:sanction_target
+					is_parent_religion = event_target:sanction_target
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				event_target:sanction_target = {
+					any_realm_title = { is_holy_site = ROOT }
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.5
+
+				OR = {
+					vassal_of = event_target:sanction_requester
+					dynasty = event_target:sanction_requester
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = arbitrary
+			}
+
+			mult_modifier = {
+				factor = 1.1
+				trait = kind
+			}
+		}
+
+		prestige = 50
+
+		event_target:sanction_requester = {
+			show_scope_change = no
+
+			letter_event = {
+				id = Plus.1653
+				days = 10
+				random = 20
+				tooltip = REFUSE_HOLY_SANCTION
+			}
+		}
+
+		hidden_effect = {
+			opinion = {
+				name = asked_holy_sanction
+				who = event_target:sanction_requester
+				years = 1
+			}
+		}
+	}
+}
+
+# Religion Head agrees to the request
+letter_event = {
+	id = Plus.1651
+	desc = EVTDESC_Plus_1651
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		log = "[Root.GetTitledName] has been granted holy sanction to war against [sanction_target.GetTitledName]."
+	}
+
+	option = {
+		name = EXCELLENT
+
+		custom_tooltip = {
+			text = WILL_RECEIVE_SANCTION
+
+			opinion = {
+				name = holy_war_sanction
+				who = event_target:sanction_target
+				years = 5
+			}
+
+			opinion = {
+				name = opinion_pleased
+				who = FROM
+				years = 5
+			}
+
+			if = {
+				limit = { ai = yes }
+
+				character_event = {
+					id = Plus.1660 # Start the war
+					days = 10
+				}
+			}
+		}
+	}
+}
+
+# Religion Head needs some convincing
+letter_event = {
+	id = Plus.1652
+	desc = EVTDESC_Plus_1652
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_1652 # Donation
+
+		trigger = {
+			wealth >= 0
+
+			OR = {
+				AND = {
+					monthly_income = 4
+					scaled_wealth = 0.5
+				}
+				AND = {
+					monthly_income < 4
+					wealth = 50
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			trigger = {
+				trigger_if = {
+					limit = { monthly_income >= 4 }
+					wealth >= 100
+				}
+				trigger_else = {
+					scaled_wealth >= 1.0
+				}
+			}
+
+			mult_modifier = {
+				factor = 2.0
+
+				trigger_if = {
+					limit = { monthly_income >= 4 }
+					scaled_wealth >= 2.0
+				}
+				trigger_else = {
+					wealth >= 200
+				}
+			}
+		}
+
+		log = "[Root.GetTitledName] has been granted conditional sanction to war against [sanction_target.GetTitledName]."
+
+		tooltip = {
+			transfer_scaled_wealth = {
+				to = FROM
+				value = 0.5
+				min = 50
+			}
+		}
+
+		custom_tooltip = {
+			text = WILL_RECEIVE_SANCTION
+
+			FROM = {
+				letter_event = { id = Plus.1654 }
+			}
+
+			opinion = {
+				name = holy_war_sanction
+				who = event_target:sanction_target
+				years = 5
+			}
+
+			if = {
+				limit = { ai = yes }
+
+				character_event = {
+					id = Plus.1660 # Start the war
+					days = 10
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1652 # Praise
+
+		trigger = {
+			prestige >= 250
+			NOT = { has_law = investiture_law_1 }
+		}
+
+		log = "[Root.GetTitledName] has been granted conditional sanction to war against [sanction_target.GetTitledName]."
+		prestige = -250
+
+		custom_tooltip = {
+			text = WILL_RECEIVE_SANCTION
+
+			FROM = {
+				letter_event = { id = Plus.1655 }
+			}
+
+			opinion = {
+				name = holy_war_sanction
+				who = event_target:sanction_target
+				years = 5
+			}
+
+			if = {
+				limit = { ai = yes }
+
+				character_event = {
+					id = Plus.1660 # Start the war
+					days = 10
+				}
+			}
+		}
+
+		ai_chance = { factor = 50 }
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1652 # Praise
+
+		trigger = {
+			prestige = 250
+			has_law = investiture_law_1
+		}
+
+		log = "[Root.GetTitledName] has been granted conditional sanction to war against [sanction_target.GetTitledName]."
+		prestige = -250
+
+		primary_title = {
+			set_title_flag = non_manual_law_change # No prestige loss
+			revoke_law = investiture_law_1
+			add_law_w_cooldown = investiture_law_0
+			clr_title_flag = non_manual_law_change # No prestige loss
+		}
+
+		custom_tooltip = {
+			text = WILL_RECEIVE_SANCTION
+
+			FROM = {
+				letter_event = { id = Plus.1655 }
+			}
+
+			opinion = {
+				name = holy_war_sanction
+				who = event_target:sanction_target
+				years = 5
+			}
+
+			if = {
+				limit = { ai = yes }
+
+				character_event = {
+					id = Plus.1660 # Start the war
+					days = 10
+				}
+			}
+		}
+
+		ai_chance = { factor = 25 }
+	}
+
+	option = {
+		name = EVTOPTC_Plus_1652 # The service of a family member
+
+		trigger = {
+			any_courtier = {
+				dynasty = ROOT
+				religion = ROOT
+
+				OR = {
+					diplomacy >= 10
+					martial >= 10
+					stewardship >= 10
+					intrigue >= 10
+					learning >= 10
+				}
+
+				is_adult = yes
+				is_female = no
+				is_married = no
+				is_ruler = no
+				prisoner = no
+				is_incapable = no
+			}
+		}
+
+		log = "[Root.GetTitledName] has been granted conditional sanction to war against [sanction_target.GetTitledName]."
+
+		random_courtier = {
+			show_scope_change = no
+
+			limit = {
+				dynasty = ROOT
+				religion = ROOT
+
+				OR = {
+					diplomacy >= 10
+					martial >= 10
+					stewardship >= 10
+					intrigue >= 10
+					learning >= 10
+				}
+
+				is_adult = yes
+				is_female = no
+				is_married = no
+				is_ruler = no
+				prisoner = no
+				is_incapable = no
+			}
+
+			tooltip = { move_character = FROM }
+			save_event_target_as = sent_to_religion_head
+		}
+
+		custom_tooltip = {
+			text = WILL_RECEIVE_SANCTION
+
+			FROM = {
+				letter_event = { id = Plus.1656 }
+			}
+
+			opinion = {
+				name = holy_war_sanction
+				who = event_target:sanction_target
+				years = 5
+			}
+
+			if = {
+				limit = { ai = yes }
+
+				character_event = {
+					id = Plus.1660 # Start the war
+					days = 10
+				}
+			}
+		}
+
+		ai_chance = { factor = 50 }
+	}
+
+	option = {
+		name = EVTOPTD_Plus_1652 # Give a temple to serve the cause
+
+		trigger = {
+			OR = {
+				prestige < 250
+				wealth < 0
+
+				trigger_if = {
+					limit = { monthly_income = 4 }
+					NOT = { scaled_wealth >= 0.5 }
+				}
+				trigger_else = {
+					wealth < 50
+				}
+			}
+
+			NOR = {
+				has_character_modifier = expelled_d_knights_templar
+				has_character_modifier = expelled_d_knights_hospitaller
+				has_character_modifier = expelled_d_teutonic_order
+				has_character_modifier = expelled_d_jomsvikings
+				has_character_modifier = expelled_d_braedralag
+				has_character_modifier = expelled_d_bektashi
+				has_character_modifier = expelled_d_fedayeen
+				has_character_modifier = expelled_d_holy_sepulchre
+				has_character_modifier = expelled_d_immortals
+				has_character_modifier = expelled_d_zealots
+				has_character_modifier = expelled_d_saint_anthony
+				has_character_modifier = expelled_d_sky_lords
+				has_character_modifier = expelled_d_spirit_guardians
+				has_character_modifier = expelled_d_chosen_perkunas
+				has_character_modifier = expelled_d_sons_kaleva
+				has_character_modifier = expelled_d_huitzilopochtli
+				has_character_modifier = expelled_d_knights_santiago
+				has_character_modifier = expelled_d_knights_calatrava
+				has_character_modifier = expelled_d_saint_addai
+				has_character_modifier = expelled_d_zun_warriors
+				has_character_modifier = expelled_d_haruriyyah
+				has_character_modifier = expelled_d_harii
+			}
+		}
+
+		log = "[Root.GetTitledName] has been granted conditional sanction to war against [sanction_target.GetTitledName]."
+
+		custom_tooltip = {
+			text = SANCTION_PLEDGE_TEMPLE
+			set_character_flag = pledged_temple
+		}
+
+		custom_tooltip = {
+			text = WILL_RECEIVE_SANCTION
+
+			FROM = {
+				letter_event = { id = Plus.1657 }
+			}
+
+			opinion = {
+				name = holy_war_sanction
+				who = event_target:sanction_target
+				years = 5
+			}
+
+			if = {
+				limit = { ai = yes }
+
+				character_event = {
+					id = Plus.1660 # Start the war
+					days = 10
+				}
+			}
+		}
+
+		ai_chance = { factor = 25 }
+	}
+
+	option = {
+		name = EVTOPTE_Plus_1652 # Nothing
+
+		log = "[Root.GetTitledName] asked for holy sanction against [sanction_target.GetTitledName], but refused the religion head's terms."
+
+		hidden_effect = {
+			FROM = {
+				letter_event = { id = Plus.1658 }
+			}
+
+			opinion = {
+				name = opinion_outraged
+				who = FROM
+				years = 5
+			}
+		}
+
+		ai_chance = {
+			factor = 100
+
+			mult_modifier = {
+				factor = 1.5
+				piety >= 100
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+		}
+	}
+}
+
+# Religion Head refuses the request
+letter_event = {
+	id = Plus.1653
+	desc = EVTDESC_Plus_1653
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		log = "[Root.GetTitledName] has been denied holy sanction to war against [sanction_target.GetTitledName]."
+	}
+
+	option = {
+		name = CURSES
+
+		hidden_effect = {
+			opinion = {
+				name = opinion_angry
+				who = FROM
+				years = 5
+			}
+		}
+	}
+}
+
+# Religion Head notified of donation
+letter_event = {
+	id = Plus.1654
+	desc = EVTDESC_Plus_1654
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		transfer_scaled_wealth = {
+			from = FROM
+			value = 0.5
+			min = 50
+		}
+
+		hidden_effect = {
+			opinion = {
+				name = asked_holy_sanction
+				who = FROM
+				years = 5
+			}
+		}
+	}
+}
+
+# Religion Head notified of prestige
+letter_event = {
+	id = Plus.1655
+	desc = EVTDESC_Plus_1655
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		prestige = 250
+
+		hidden_effect = {
+			opinion = {
+				name = asked_holy_sanction
+				who = FROM
+				years = 5
+			}
+		}
+	}
+}
+
+# Religion Head notified of relative
+letter_event = {
+	id = Plus.1656
+	desc = EVTDESC_Plus_1656
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		event_target:sent_to_religion_head = {
+			show_scope_change = no
+
+			move_character = ROOT
+		}
+
+		hidden_effect = {
+			opinion = {
+				name = asked_holy_sanction
+				who = FROM
+				years = 5
+			}
+		}
+	}
+}
+
+# Religion Head notified of promised temple
+letter_event = {
+	id = Plus.1657
+	desc = EVTDESC_Plus_1657
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EXCELLENT
+
+		hidden_effect = {
+			opinion = {
+				who = FROM
+				name = asked_holy_sanction
+				years = 5
+			}
+		}
+	}
+}
+
+# Religion Head notified of refusal
+letter_event = {
+	id = Plus.1658
+	desc = EVTDESC_Plus_1658
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = OK
+
+		hidden_effect = {
+			opinion = {
+				name = asked_holy_sanction
+				who = FROM
+				years = 1
+			}
+		}
+	}
+}
+
+# Ruler reminded of promise to offer a temple
+character_event = {
+	id = Plus.1659
+	desc = EVTDESC_Plus_1659
+	picture = GFX_evt_battle
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	hide_from = yes
+
+	immediate = {
+		random_playable_ruler = {
+			limit = {
+				OR = {
+					ROOT = { rightful_religious_head = PREV }
+
+					AND = {
+						holy_order = yes
+						religion = ROOT
+					}
+				}
+			}
+
+			preferred_limit = {
+				holy_order = yes
+				religion = ROOT
+				vassal_of = ROOT
+			}
+
+			preferred_limit = {
+				holy_order = yes
+				religion = ROOT
+				independent = yes
+			}
+
+			preferred_limit = {
+				holy_order = yes
+				religion = ROOT
+			}
+
+			save_event_target_as = target_grandmaster
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_1659 # Fulfil the promise
+
+		piety = 50
+
+		event_target:target_grandmaster = {
+			show_scope_change = no
+
+			if = {
+				limit = { independent = no }
+				liege = { save_event_target_as = target_grandmaster_liege }
+			}
+
+			grant_title = event_target:granted_temple
+
+			hidden_effect = {
+				if = {
+					limit = { event_target:target_grandmaster_liege = { is_alive = yes } }
+					set_defacto_liege = event_target:target_grandmaster_liege
+					pf_liege_change_effect = yes
+				}
+			}
+		}
+
+		ai_chance = { factor = 100 }
+	}
+
+	option = {
+		name = EVTOPTB_Plus_1659 # Refuse
+
+		trigger = {
+			NOT = { trait = zealous }
+		}
+
+		piety = -100
+
+		if = {
+			limit = { can_excommunicate_trigger = yes }
+			add_trait = excommunicated
+		}
+		else = {
+			rightful_religious_head_scope = {
+				show_scope_change = no
+
+				opinion = {
+					who = ROOT
+					name = opinion_outraged
+					years = 10
+					multiplier = 2
+				}
+			}
+		}
+
+		random = {
+			chance = 50
+			add_trait_fully_cynical_effect = yes
+		}
+
+		random = {
+			chance = 50
+			add_trait_fully_deceitful_effect = yes
+		}
+
+		ai_chance = { factor = 0 }
+	}
+}
+
+# AI uses the Holy War CB
+character_event = {
+	id = Plus.1660
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_independent = yes
+
+	trigger = {
+		has_any_opinion_modifier = holy_war_sanction
+		religion_group = top_liege
+		war = no
+		has_called_crusade = no
+		pacifist = no
+
+		NOR = {
+			has_character_modifier = holy_truce_timer
+			has_character_modifier = holy_war_timer
+			has_character_modifier = holding_epic_tournament
+			has_character_modifier = holding_nomad_wargames
+			trait = on_pilgrimage
+			trait = on_hajj
+		}
+	}
+
+	immediate = {
+		random_opinion_modifier_target = {
+			limit = {
+				reverse_has_opinion_modifier = {
+					name = holy_war_sanction
+					who = ROOT
+				}
+
+				reverse_realm_levy_diff = {
+					who = ROOT
+					value >= 3000
+				}
+
+				trigger_if = {
+					limit = {
+						OR = {
+							religion = hindu
+							religion = buddhist
+						}
+					}
+
+					ROOT = {
+						NOT = { religion_group = indian_group }
+					}
+				}
+
+				trigger_if = {
+					limit = { religion_group = ROOT }
+
+					OR = {
+						is_heresy_of = ROOT
+						is_parent_religion = ROOT
+
+						trigger_if = {
+							limit = { NOT = { religion = ROOT } }
+
+							OR = {
+								religion_group = muslim
+								religion_group = pagan_group
+								religion = paulician
+							}
+						}
+					}
+				}
+
+				NOR = {
+					reverse_has_truce = ROOT
+					has_non_aggression_pact_with = ROOT
+					same_realm = ROOT
+					has_character_modifier = holy_truce_timer
+				}
+			}
+
+			save_event_target_as = holy_war_target
+
+			random_realm_province = {
+				limit = { held_under_PREV = yes }
+
+				preferred_limit = {
+					any_neighbor_province = {
+						has_province_flag = contingent_territory
+
+						owner = {
+							OR = {
+								is_vassal_or_below_of = ROOT
+								character = ROOT
+							}
+						}
+					}
+				}
+
+				preferred_limit = {
+					ROOT = {
+						any_realm_province = {
+							has_province_flag = contingent_territory
+							held_under_PREV = yes
+
+							distance = {
+								where = PREVPREV
+								value < 75
+							}
+
+							owner = {
+								OR = {
+									is_vassal_or_below_of = ROOT
+									character = ROOT
+								}
+							}
+						}
+					}
+				}
+
+				event_target:holy_war_target = {
+					reverse_war = {
+						target = ROOT
+						casus_belli = holy_war
+						thirdparty_title = PREV
+						tier = DUKE
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,495 @@
+# Duchies
+
+d_acre = {
+	color = { 19 180 16 }
+	capital = 1513 # Acre
+	dignity = 10
+	greek = "Ptolemais"
+
+	allow = {
+		can_create_duchy = yes
+		lower_real_tier_than = DUKE
+
+		OR = {
+			religion_group = christian
+			has_titular_requirements = yes
+		}
+	}
+}
+
+d_albania = {
+	color = { 228 30 32 }
+	capital = 516 # Dyrrachion
+	culture = arberian
+	allow = {
+		can_create_duchy = yes
+
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = DUKE
+				culture = arberian
+			}
+		}
+	}
+}
+
+d_aquileia = {
+	color = { 250 175 250 }
+	color2 = { 255 255 255 }
+	capital = 222 # Aquileia
+	dignity = 10
+
+	allow = {
+		can_create_duchy = yes
+		religion_group = christian
+		is_theocracy = yes
+	}
+}
+
+d_bologna = {
+	color = { 219 155 35 }
+
+	capital = 453 # Bologna
+	culture = emilian
+	dignity = 10
+
+	allow = {
+		can_create_duchy = yes
+		is_republic = yes
+		lower_real_tier_than = DUKE
+
+		trigger_if = {
+			limit = { independent = no }
+
+			liege = {
+				is_merchant_republic = no
+				higher_real_tier_than = DUKE
+			}
+		}
+	}
+}
+
+# d_brunswick = {
+# 	color = { 166 72 57 }
+# 	color2 = { 97 255 255 }
+# 	capital = 184 # Braunschweig
+#
+# 	culture = saxon
+#
+# 	german = "Braunschweig"
+# 	saxon = "Braunschweig"
+# 	danish = "Brunesvig"
+# 	norwegian = "Brunesvig"
+# 	swedish = "Brunesvig"
+# 	norse = "Brunesvig"
+#
+# 	allow = {
+# 		can_create_duchy = yes
+#
+# 		OR = {
+# 			has_titular_requirements = yes
+#
+# 			ROOT = {
+# 				lower_real_tier_than = DUKE
+#
+#				OR = {
+# 					german_cultures_trigger = yes
+# 					culture = saxon
+#				}
+# 			}
+# 		}
+# 	}
+# }
+
+d_dublin = {
+	color = { 255 65 20 }
+	capital = 6 # Dublin
+
+	allow = {
+		can_create_duchy = yes
+		lower_real_tier_than = DUKE
+
+		OR = {
+			culture = english_norse
+			culture_group = north_germanic
+			has_titular_requirements = yes
+		}
+	}
+}
+
+d_foix = {
+	color = { 247 211 116 }
+	color2 = { 255 255 255 }
+	capital = 322 # Foix
+
+	allow = {
+		can_create_duchy = yes
+
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = DUKE
+
+				OR = {
+					culture = occitan
+					culture = french
+					culture = catalan
+				}
+			}
+		}
+	}
+}
+
+# d_gilan = {
+# 	color = { 65 90 137 }
+# }
+
+d_gothia = {
+	color = { 29 89 152 }
+	capital = 324 # Narbonne
+	culture = french
+
+	dignity = 10
+
+	title = MARQUIS
+	title_female = MARQUISE
+	title_prefix = MARQUIS_OF
+
+	allow = {
+		can_create_duchy = yes
+		lower_real_tier_than = DUKE
+
+		OR = {
+			culture = french
+			culture = occitan
+			culture = catalan
+			german_cultures_trigger = yes
+			culture = norse
+		}
+	}
+}
+
+d_hamburg = {
+	color = { 147 177 125 }
+
+	capital = 727 # Hamburg
+	dignity = 10
+
+	allow = {
+		can_create_duchy = yes
+		is_republic = yes
+		lower_real_tier_than = DUKE
+
+		trigger_if = {
+			limit = { independent = no }
+
+			liege = {
+				is_merchant_republic = no
+				higher_real_tier_than = DUKE
+			}
+		}
+	}
+}
+
+d_karelians = {
+	color = { 190 246 101 }
+
+	culture = finnish
+	dignity = 10
+
+	title = HIGH_CHIEF
+	foa = HIGH_CHIEF_FOA
+	title_prefix = TRIBE_OF
+}
+
+d_kasogs = {
+	color = { 42 107 17 }
+
+	dynasty_title_names = no
+	culture = khazar
+	dignity = 10
+
+	title = HIGH_CHIEF
+	foa = HIGH_CHIEF_FOA
+	title_prefix = TRIBE_OF
+}
+
+d_kleve = {
+	color = { 232 232 107 }
+	color2 = { 255 255 255 }
+	capital = 255 # Kleve
+
+	culture = dutch
+
+	allow = {
+		can_create_duchy = yes
+	}
+}
+
+# d_limburg = {
+# 	color = { 255 0 0 }
+# 	color2 = { 230 230 230 }
+#
+# 	capital = 1515 # Limburg
+# 	culture = dutch
+#
+# 	allow = {
+# 		can_create_duchy = yes
+# 		lower_real_tier_than = DUKE
+# 	}
+# }
+
+# d_mainz = {
+# 	color = { 150 158 228 }
+# 	color2 = { 255 255 255 }
+#
+# 	capital = 194 # Mainz
+# 	dignity = 10
+#
+# 	allow = {
+# 		can_create_duchy = yes
+# 		religion_group = christian
+# 		is_theocracy = yes
+# 	}
+# }
+
+d_marino = {
+	color = { 0  128  255 }
+
+	capital = 467 # Urbino
+	culture = umbrian
+	dignity = 10
+
+	allow = {
+		can_create_duchy = yes
+		is_republic = yes
+		lower_real_tier_than = DUKE
+
+		trigger_if = {
+			limit = { independent = no }
+
+			liege = {
+				is_merchant_republic = no
+				higher_real_tier_than = DUKE
+			}
+		}
+	}
+}
+
+# d_minsk = {
+# 	color = { 175 44 44 }
+# 	color2 = { 255 255 255 }
+# 	capital = 853 # Minsk
+#
+# 	allow = {
+# 		can_create_duchy = yes
+#
+# 		OR = {
+# 			has_titular_requirements = yes
+#
+# 			ROOT = {
+# 				lower_real_tier_than = DUKE
+# 				culture = russian
+# 			}
+# 		}
+# 	}
+# }
+
+d_oldenburg = {
+	color = { 214 117 117 }
+	color2 = { 255 255 255 }
+	capital = 179 # Oldenburg
+
+	culture = saxon
+
+	allow = {
+		can_create_duchy = yes
+
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = DUKE
+
+				OR = {
+					german_cultures_trigger = yes
+					culture = saxon
+				}
+			}
+		}
+	}
+}
+
+d_pfalz = { # Palatinate
+	color = { 203 150 143 }
+	capital = 195 # Worms
+	culture = franconian
+	short_name = yes
+	dignity = 10
+
+	allow = {
+		can_create_duchy = yes
+		lower_real_tier_than = DUKE
+	}
+}
+
+d_pyrenees = {
+	color = { 224 146 113 }
+	color2 = { 255 255 255 }
+
+	capital = 322 # Foix
+	culture = occitan
+
+	allow = {
+		can_create_duchy = yes
+
+		OR = {
+			has_titular_requirements = yes
+
+			ROOT = {
+				lower_real_tier_than = DUKE
+
+				OR = {
+					culture = occitan
+					culture = catalan
+					culture = basque
+					culture = french
+				}
+			}
+		}
+	}
+}
+
+d_ravenna = {
+	color = { 244 125 85 }
+	color2 = { 255 255 255 }
+
+	capital = 452 # Ravenna
+	dignity = 10
+
+	allow = {
+		can_create_duchy = yes
+		religion_group = christian
+		is_theocracy = yes
+	}
+}
+
+# d_salzburg = {
+# 	color = { 220 220 250 }
+#
+# 	capital = 207 # Salzburg
+# 	dignity = 10
+#
+# 	allow = {
+# 		can_create_duchy = yes
+# 		religion_group = christian
+# 		is_theocracy = yes
+# 	}
+# }
+
+# d_saxony = {
+# 	color = { 150 162 182 }
+# 	color2 = { 255 255 255 }
+#
+# 	culture = saxon
+#
+# 	capital = 723 # Zerbst
+#
+# 	allow = {
+# 		can_create_duchy = yes
+#
+# 		OR = {
+# 			has_titular_requirements = yes
+#
+# 			ROOT = {
+# 				lower_real_tier_than = DUKE
+#
+#				OR = {
+#					german_cultures_trigger = yes
+# 					culture = saxon
+#				}
+# 			}
+# 		}
+# 	}
+# }
+
+d_slesvigholstein = {
+	color = { 240 233 36 }
+	color2 = { 255 255 255 }
+	capital = 174 # Slesvig
+	title_prefix = DUCHIES_OF
+	culture = german
+
+	bohemian = "Šlesvicko-Holštýnsko"
+	colognian = "Schleswij-Holsteijn"
+	danish = "Slesvig-Holsten"
+	dutch = "Sleeswijk-Holstein"
+	english = "Sleswick-Holsatia"
+	flemish = "Sleeswijk-Holstein"
+	franconian = "Schläswisch-Holschdä"
+	french = "Slesvig-Holsace"
+	frisian = "Slaswik-Holstiinj"
+	icelandic = "Slésvík-Holtsetaland"
+	lithuanian = "Šlezvigas-Holšteinas"
+	saxon = "Sleswig-Holsteen"
+	polish = "Szlezwik-Holsztyn"
+	swiss = "Schleswig-Holstei"
+
+	allow = {
+		can_create_duchy = yes
+		has_titular_requirements = yes
+
+		OR = {
+			german_cultures_trigger = yes
+			culture = danish
+		}
+
+		ROOT = {
+			has_landed_title = c_slesvig
+			has_landed_title = c_holstein
+		}
+	}
+}
+
+d_syracuse = {
+	color = { 226 204 28 }
+	capital = 489 # Siracusa
+
+	allow = {
+		can_create_duchy = yes
+		culture_group = byzantine
+
+		OR = {
+			lower_real_tier_than = EMPEROR
+			has_landed_title = e_byzantium
+		}
+	}
+}
+
+d_tobruk = {
+	color = { 10 48 243 }
+}
+
+# d_trier = {
+# 	color = { 10 48 243 }
+#
+# 	dignity = 10
+# 	capital = 243 # Trier
+#
+# 	allow = {
+# 		can_create_duchy = yes
+# 		religion_group = christian
+# 		is_theocracy = yes
+# 	}
+# }
+
+d_tyrone = {
+	color = { 137 14 21 }
+}
+
+# d_ural = {
+# 	color = { 208 178 78 }
+# }

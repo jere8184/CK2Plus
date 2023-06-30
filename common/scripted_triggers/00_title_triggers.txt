@@ -1,0 +1,304 @@
+# Triggers relating to landed titles
+
+# can_create_title
+# can_create_duchy
+# can_create_kingdom
+# can_create_empire
+
+# can_usurp_religion_head
+
+# has_cultural_titular_requirements
+# has_titular_requirements
+
+# muslim_religion_head_trigger
+
+can_create_title = {
+	is_title_active = FROM # Title has to be active to be creatable
+	is_adult = yes
+	has_regent = no
+	war = no
+
+	trigger_if = {
+		limit = {
+			has_imperial_government_trigger = yes
+			independent = no
+		}
+
+		custom_tooltip = {
+			text = NOT_IMPERIAL_GOVERNMENT
+			has_imperial_government_trigger = no
+		}
+	}
+
+	trigger_if = {
+		limit = {
+			FROM = {
+				title = THIS # Here to suppress asserts for 'is_titular' in error.log
+				is_titular = yes
+				NOT = { real_tier = EMPEROR }
+			}
+		}
+
+		lower_real_tier_than = FROM
+	}
+}
+
+can_create_duchy = {
+	show_only_failed_conditions = yes
+	can_create_title = yes
+}
+
+can_create_kingdom = {
+	show_only_failed_conditions = yes
+	can_create_title = yes
+	ruled_years >= 5
+
+	# Kingdom Lockout
+	trigger_if = {
+		limit = {
+			top_liege = { has_law = kingdom_lockout_0 }
+		}
+
+		# These titles are exempt from kingdom lockout but only under the HRE
+		trigger_if = {
+			limit = {
+				FROM = {
+					OR = {
+						title = k_bohemia
+						title = k_arch_austria
+						title = k_brandenburg
+						title = k_grand_bavaria
+						title = k_grand_franconia
+						title = k_grand_luxembourg
+						title = k_grand_saxony
+						title = k_grand_swabia
+						title = k_grand_tuscany
+						title = k_grand_milan
+						title = k_grand_naples
+						title = k_grand_sicily
+					}
+				}
+			}
+
+			top_liege = { has_landed_title = e_hre }
+		}
+		trigger_else = {
+			custom_tooltip = {
+				text = NOT_RESTRICTED_BY_LOCKOUT_LAW
+				always = no
+			}
+		}
+	}
+
+	# AI-only restrictions
+	trigger_if = {
+		limit = { ai = yes }
+
+		# Prevents Aquitaine from constantly being absorbed into France
+		trigger_if = {
+			limit = {
+				FROM = { title = k_aquitaine }
+				has_landed_title = k_france
+			}
+
+			has_character_flag = is_charlemagne
+		}
+
+		# Prevents the AI from forming most titular titles until they're big enough (TODO: See if this is needed)
+		trigger_if = {
+			limit = {
+				FROM = {
+					is_titular = yes
+					NOR = {
+						title = k_bohemia
+						title = k_arch_austria
+						title = k_brandenburg
+						title = k_grand_bavaria
+						title = k_grand_franconia
+						title = k_grand_luxembourg
+						title = k_grand_saxony
+						title = k_grand_swabia
+						title = k_grand_tuscany
+						title = k_grand_milan
+						title = k_grand_naples
+						title = k_grand_sicily
+					}
+				}
+			}
+
+			prestige >= 1000
+			num_of_duke_titles >= 3
+		}
+	}
+}
+
+can_create_empire = {
+	show_only_failed_conditions = yes
+	can_create_title = yes
+	has_empire_size_trigger = yes
+	empire_creation_kingdom_rules_trigger = yes
+	ruled_years >= 5
+	is_nomadic = no
+
+	trigger_if = {
+		limit = {
+			real_tier = EMPEROR
+			primary_title = { is_titular = no }
+		}
+
+		FROM = { is_titular = yes }
+	}
+	trigger_else = {
+		lower_real_tier_than = EMPEROR
+	}
+}
+
+can_usurp_religion_head = {
+	num_of_holy_sites >= 3
+	piety >= 500
+}
+
+has_cultural_titular_requirements = {
+	trigger_if = {
+		limit = { ai = yes }
+		culture = FROM
+	}
+}
+
+has_titular_requirements = {
+	FROM = {
+		OR = {
+			has_holder = yes
+			culture = ROOT
+		}
+	}
+}
+
+muslim_religion_head_trigger = {
+	NOT = { has_global_flag = shia_caliphate_revolt_ongoing }
+
+	trigger_if = {
+		limit = { has_global_flag = destroyed_caliphates }
+
+		custom_tooltip = {
+			text = controls_mecca_medina
+
+			c_mecca = {
+				holder_scope = {
+					OR = {
+						character = ROOT
+						is_vassal_or_below_of = ROOT
+					}
+				}
+			}
+
+			c_medina = {
+				holder_scope = {
+					OR = {
+						character = ROOT
+						is_vassal_or_below_of = ROOT
+					}
+				}
+			}
+		}
+
+		OR = {
+			custom_tooltip = {
+				text = controls_jerusalem_damascus_baghdad
+
+				c_jerusalem = {
+					holder_scope = {
+						OR = {
+							character = ROOT
+							is_vassal_or_below_of = ROOT
+						}
+					}
+				}
+
+				c_damascus = {
+					holder_scope = {
+						OR = {
+							character = ROOT
+							is_vassal_or_below_of = ROOT
+						}
+					}
+				}
+
+				c_baghdad = {
+					holder_scope = {
+						OR = {
+							character = ROOT
+							is_vassal_or_below_of = ROOT
+						}
+					}
+				}
+			}
+
+			AND = {
+				trait = sayyid
+				piety >= 1000
+			}
+		}
+	}
+	trigger_else = {
+		OR = {
+			custom_tooltip = {
+				text = controls_jerusalem_damascus_baghdad
+
+				c_jerusalem = {
+					holder_scope = {
+						OR = {
+							character = ROOT
+							is_vassal_or_below_of = ROOT
+						}
+					}
+				}
+
+				c_damascus = {
+					holder_scope = {
+						OR = {
+							character = ROOT
+							is_vassal_or_below_of = ROOT
+						}
+					}
+				}
+
+				c_baghdad = {
+					holder_scope = {
+						OR = {
+							character = ROOT
+							is_vassal_or_below_of = ROOT
+						}
+					}
+				}
+			}
+
+			custom_tooltip = {
+				text = controls_mecca_medina
+
+				c_mecca = {
+					holder_scope = {
+						OR = {
+							character = ROOT
+							is_vassal_or_below_of = ROOT
+						}
+					}
+				}
+
+				c_medina = {
+					holder_scope = {
+						OR = {
+							character = ROOT
+							is_vassal_or_below_of = ROOT
+						}
+					}
+				}
+			}
+
+			AND = {
+				trait = sayyid
+				piety >= 1000
+			}
+		}
+	}
+}

@@ -1,0 +1,94 @@
+iberian_trade = {
+	wealth = 6			# Total base wealth of the Iberian Trade
+
+	modifier = {			# How the trade route modifies the provinces it passes
+		castle_tax_modifier = 0.025
+		city_tax_modifier = 0.05
+		temple_tax_modifier = 0.025
+		trade_route_value = 0.5
+		local_movement_speed = 0.10
+		tech_growth_modifier = 0.05
+		icon = 98
+	}
+
+	start = { # Start provinces of trade route
+		365 # Barcelona
+		320 # Béarn
+	}
+
+	path = {
+		320 # Béarn
+		371 # Navarra
+	}
+	path = {
+		371 # Navarra
+		373 # Viscaya
+		374 # Asturias de Santillana
+		384 # Asturias de Oviedo
+		386 # Coruña
+		387 # Santiago
+	}
+	path = {
+		365 # Barcelona
+		366 # Tarragona
+		364 # Lleida
+		370 # Alto Aragón
+		369 # Zaragoza
+	}
+	path = {
+		369 # Zaragoza
+		367 # Albaraccin
+		425 # Castellon
+		424 # Valencia
+	}
+	path = {
+		369 # Zaragoza
+		368 # Calatayud
+		412 # Molina
+	}
+	path = {
+		412 # Molina
+		413 # Cuenca
+		410 # Toledo
+	}
+	path = {
+		371 # Navarra
+		372 # Nájera
+		375 # Burgos
+	}
+	path = {
+		375 # Burgos
+		381 # Palencia
+		382 # León
+		383 # Astorga
+		385 # Lugo
+		387 # Santiago
+	}
+	path = {
+		375 # Burgos
+		378 # Valladolid
+		410 # Toledo
+	}
+	path = {
+		375 # Burgos
+		376 # Soria
+		412 # Molina
+	}
+	path = {
+		410 # Toledo
+		415 # Calatrava
+		417 # Jaen
+	}
+	path = {
+		417 # Jaen
+		416 # Cordoba
+		404 # Sevilla
+		402 # Cadiz
+	}
+	path = {
+		417 # Jaen
+		419 # Granada
+		418 # Malaga
+		403 # Algeciras
+	}
+}

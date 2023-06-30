@@ -1,0 +1,7 @@
+962.2.2 = { # HRE divided into historical stem duchies on creation
+	de_jure_liege = k_grand_swabia
+}
+
+1291.7.15 = {
+	active = no
+}

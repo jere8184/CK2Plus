@@ -1,0 +1,3198 @@
+namespace = Plus
+
+#reserved: Plus.2100 to Plus.2199
+
+#######################################
+# ORTHODOX HERESY EVENTS
+# Adapted from Heretic Pride by Rylock
+#######################################
+
+### ICONOCLAST EVENTS
+
+# Iconoclast ruler has an Orthodox province with acheiropoieta
+character_event = {
+	id = Plus.2100
+	title = EVTNAME_Plus_2100
+	desc = EVTDESC_Plus_2100
+	picture = GFX_evt_icon
+
+	is_triggered_only = yes # on_decade_pulse, random_events
+
+	only_playable = yes
+	religion = iconoclast
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		controls_religion = no
+		NOT = { rightful_religious_head = ROOT }
+		d_iconoclast = { has_holder = yes }
+
+		any_demesne_province = {
+			OR = {
+				religion = orthodox
+				religion = chalcedonian
+			}
+
+			NOR = {
+				has_province_flag = acheiropoieta_destroyed
+				has_province_modifier = iconoclast_blowback
+			}
+
+			owned_by = PREV
+		}
+
+		trigger_if = {
+			limit = { has_character_flag = acheiropoieta }
+
+			had_character_flag = {
+				flag = acheiropoieta
+				years >= 5
+			}
+		}
+	}
+
+	weight_multiplier = {
+		factor = 1
+
+		mult_modifier = {
+			factor = 2
+			trait = zealous
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			trait = cynical
+		}
+
+		mult_modifier = {
+			factor = 2
+			trait = iconoclast_trait
+		}
+	}
+
+	immediate = {
+		set_character_flag = acheiropoieta
+
+		random_demesne_province = {
+			limit = {
+				OR = {
+					religion = orthodox
+					religion = chalcedonian
+				}
+
+				NOR = {
+					has_province_flag = acheiropoieta_destroyed
+					has_province_modifier = iconoclast_blowback
+				}
+
+				owned_by = PREV
+			}
+
+			save_event_target_as = acheiropoieta_province
+		}
+
+		d_iconoclast = {
+			holder_scope = {
+				save_event_target_as = iconoclast_patriarch
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2100 # Destroy it
+
+		piety = 100
+
+		if = {
+			limit = { NOT = { trait = iconoclast_trait } }
+			add_trait = iconoclast_trait
+		}
+
+		reverse_opinion = {
+			name = opinion_pleased
+			who = event_target:iconoclast_patriarch
+			years = 5
+		}
+
+		event_target:acheiropoieta_province = {
+			show_scope_change = no
+
+			set_province_flag = acheiropoieta_destroyed
+
+			add_province_modifier = {
+				name = iconoclast_blowback
+				years = 10
+			}
+
+			any_neighbor_province = {
+				show_scope_change = no
+
+				limit = {
+					OR = {
+						religion = orthodox
+						religion = chalcedonian
+					}
+
+					NOT = { has_province_modifier = iconoclast_blowback }
+				}
+
+				add_province_modifier = {
+					name = iconoclast_blowback
+					years = 5
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 75
+
+			mult_modifier = {
+				factor = 2
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = iconoclast_trait
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = diligent
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2100 # Leave it be
+
+		piety = -50
+
+		reverse_opinion = {
+			who = event_target:iconoclast_patriarch
+			name = opinion_disappointed
+			years = 5
+			multiplier = 2
+		}
+
+		if = {
+			limit = { trait = iconoclast_trait }
+			remove_trait = iconoclast_trait
+		}
+
+		ai_chance = {
+			factor = 25
+
+			trigger = {
+				OR = {
+					piety <= 0
+					trait = cynical
+				}
+			}
+
+			mult_modifier = {
+				factor = 3
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = slothful
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = patient
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_2100 # Keep it for myself
+		tooltip_info = greedy
+
+		trigger = { trait = greedy }
+
+		prestige = 25
+		piety = 25
+
+		hidden_effect = {
+			event_target:acheiropoieta_province = {
+				set_province_flag = acheiropoieta_destroyed
+			}
+
+			character_event = {
+				id = Plus.2101 # Chance of going crazy
+				years = 5
+				random = 3650 # 10 years
+			}
+		}
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 1.5
+				intrigue >= 10
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.5
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = temperate
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				trait = content
+			}
+		}
+	}
+}
+
+# Iconoclast ruler who kept the acheiropoieta may go crazy
+character_event = {
+	id = Plus.2101
+	desc = EVTDESC_Plus_2101
+	picture = GFX_evt_icon
+
+	is_triggered_only = yes
+
+	only_rulers = yes
+	religion = iconoclast
+	prisoner = no
+
+	trigger = {
+		NOR = {
+			trait = lunatic
+			trait = possessed
+			trait = incapable
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2101
+
+		random = {
+			chance = 50
+			add_trait = possessed
+		}
+
+		piety = -100
+
+		if = {
+			limit = { higher_real_tier_than = BARON }
+			religion_authority = { name = ruler_converted_from }
+		}
+
+		abandon_heresy = yes
+		set_character_flag = converted_religion
+
+		if = {
+			limit = { higher_real_tier_than = BARON }
+
+			hidden_effect = {
+				religion_authority = { name = ruler_converted_to }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2101
+
+		random_list = {
+			50 = { add_trait_lunatic_effect = yes }
+
+			25 = {
+				trigger = { NOT = { trait = zealous } }
+
+				mult_modifier = {
+					factor = 2
+					trait = cynical
+				}
+
+				add_trait_fully_zealous_effect = yes
+			}
+
+			25 = {
+				trigger = { NOT = { trait = paranoid } }
+
+				mult_modifier = {
+					factor = 2
+					trait = trusting
+				}
+
+				add_trait_fully_paranoid_effect = yes
+			}
+
+			50 = {}
+		}
+	}
+}
+
+# Constantine V's Return
+narrative_event = {
+	id = Plus.2102
+	title = EVTNAME_Plus_2102
+	desc = EVTDESC_Plus_2102
+	picture = GFX_evt_icon
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse
+	major = yes
+
+	only_independent = yes
+	religion_group = christian
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = yes
+
+	trigger = {
+		has_landed_title = e_byzantium
+
+		trigger_if = {
+			limit = { religion = chalcedonian }
+			trait = greek_rites
+		}
+		trigger_else = {
+			religion = orthodox
+		}
+
+		any_war = {
+			OR = {
+				using_cb = holy_war
+				using_cb = crusade
+				using_cb = invasion
+				using_cb = tribal_invasion
+				using_cb = manifest_destiny_invasion
+			}
+
+			OR = {
+				AND = {
+					war_score < -50
+					attacker = { character = ROOT }
+				}
+
+				AND = {
+					war_score >= 50
+					defender = { character = ROOT }
+				}
+			}
+		}
+
+		NOR = {
+			has_global_flag = constantines_return
+			has_character_flag = renounced_iconoclasm
+			has_character_flag = converted_religion
+		}
+
+		c_70501 = { # Constantine V
+			is_alive = no
+
+			trigger_if = {
+				limit = { religion = chalcedonian }
+				trait = iconoclast_rites
+			}
+			trigger_else = {
+				religion = iconoclast
+			}
+		}
+	}
+
+	major_trigger = {
+		same_realm = ROOT
+	}
+
+	immediate = {
+		set_global_flag = constantines_return
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2102 # End the worship of icons
+
+		trigger = { has_landed_title = e_byzantium }
+
+		set_character_flag = renounced_iconoclasm
+		set_character_flag = converted_religion
+
+		if = {
+			limit = { has_global_flag = great_schism_happened }
+			tooltip = { religion = iconoclast } # For nicer tooltip
+		}
+		else = {
+			add_trait = iconoclast_rites
+		}
+
+		add_trait = zealous
+
+		if = {
+			limit = { has_global_flag = great_schism_happened }
+
+			religion_authority = { name = ruler_converted_from }
+
+			hidden_effect = {
+				religion = iconoclast
+				religion_authority = { name = ruler_converted_to }
+			}
+
+			if = {
+				limit = { NOT = { is_title_active = d_iconoclast } }
+
+				activate_title = {
+					title = d_iconoclast
+					status = yes
+				}
+			}
+		}
+
+		hidden_effect = {
+			b_hagiasophia = {
+				holder_scope = {
+					if = {
+						limit = {
+							vassal_of = ROOT
+							is_theocracy = yes
+							religion = ROOT
+						}
+
+						if = {
+							limit = { has_global_flag = great_schism_happened }
+
+							grant_title = d_iconoclast
+							iconoclast = { save_event_target_as = target_religion }
+							convert_religion_failsafe_effect = yes
+							set_defacto_liege = ROOT
+							pf_liege_change_effect = yes
+						}
+						else_if = {
+							limit = { trait = greek_rites }
+							add_trait = iconoclast_rites
+						}
+					}
+				}
+			}
+
+			any_realm_province = {
+				if = {
+					limit = {
+						religion = iconoclast
+						held_under_PREV = yes
+					}
+
+					add_province_modifier = {
+						name = appeased_religious
+						years = 5
+					}
+				}
+			}
+
+			any_realm_character = {
+				limit = { NOT = { has_landed_title = b_hagiasophia } }
+
+				character_event = {
+					id = Plus.2103
+					days = 1
+				}
+			}
+		}
+
+		spawn_unit = {
+			province = capital_scope
+			home = capital_scope
+			owner = ROOT
+			attrition = 1.0
+			maintenance_multiplier = 0
+			cannot_inherit = yes
+
+			troops = {
+				light_infantry = { 1426 1426 }
+				heavy_infantry = { 275 275 }
+				archers = { 425 425 }
+			}
+		}
+
+		ai_chance = {
+			factor = 30
+
+			trigger = {
+				NOT = { trait = zealous }
+			}
+
+			mult_modifier = {
+				factor = 2
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				year >= 950
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				year >= 1000
+			}
+
+			mult_modifier = {
+				factor = 0.5
+				year >= 1100
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2102 # That is not why we are losing
+
+		trigger = { has_landed_title = e_byzantium }
+
+		piety = -100
+		prestige = -250
+
+		if = {
+			limit = { trait = strong_basileus }
+
+			remove_trait = strong_basileus
+			add_trait = weak_basileus
+		}
+
+		ai_chance = { factor = 70 }
+	}
+
+	option = {
+		name = EVTOPTC_Plus_2102 # That does not bode well...
+
+		trigger = {
+			NOT = { has_landed_title = e_byzantium }
+		}
+	}
+}
+
+# Byzantine subjects respond to the emperor's embracing of iconoclasm heresy
+character_event = {
+	id = Plus.2103
+	desc = EVTDESC_Plus_2103
+	picture = GFX_evt_icon
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	prisoner = no
+
+	option = {
+		name = EVTOPTA_Plus_2103 # Agree
+
+		trigger = {
+			religion_group = christian
+			can_change_religion = yes
+
+			NOR = {
+				religion = iconoclast
+				trait = iconoclast_rites
+			}
+		}
+
+		if = {
+			limit = { religion = chalcedonian }
+			add_trait = iconoclast_rites
+		}
+		else = {
+			tooltip = {
+				religion = iconoclast # For nicer tooltip
+			}
+		}
+
+		if = {
+			limit = {
+				higher_real_tier_than = BARON
+				NOT = { religion = chalcedonian }
+			}
+
+			religion_authority = { name = ruler_converted_from }
+
+			hidden_effect = {
+				religion = iconoclast
+				set_character_flag = converted_religion
+				religion_authority = { name = ruler_converted_to }
+			}
+		}
+
+		ai_chance = {
+			factor = 3
+
+			mult_modifier = {
+				factor = 2
+				trait = cynical
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				NOR = {
+					religion = orthodox
+					religion = chalcedonian
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2103 # Refuse
+
+		trigger = {
+			religion_group = christian
+			can_change_religion = yes
+
+			NOR = {
+				religion = iconoclast
+				trait = iconoclast_rites
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+
+			mult_modifier = {
+				factor = 10
+				trait = zealous
+			}
+
+			mult_modifier = {
+				factor = 3
+				is_priest = yes
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_2103
+
+		trigger = { religion = iconoclast }
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2103
+
+		trigger = {
+			religion_group = christian
+			can_change_religion = no
+
+			NOR = {
+				religion = iconoclast
+				trait = iconoclast_rites
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTD_Plus_2103
+
+		trigger = { NOT = { religion_group = christian } }
+	}
+}
+
+### PAULICIAN EVENTS
+
+# Paulicians spread in the Byzantine Empire due to effective patriarch
+narrative_event = {
+	id = Plus.2105
+	title = EVTNAME_Plus_2105
+	desc = EVTDESC_Plus_2105
+	picture = GFX_evt_heretic
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes # on_yearly_pulse
+	major = yes
+
+	only_playable = yes
+	religion = paulician
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	war = no
+
+	trigger = {
+		has_landed_title = d_paulician
+		year >= 800
+
+		calc_true_if = {
+			amount >= 2
+
+			diplomacy >= 10
+			diplomacy >= 15
+			trait = zealous
+		}
+
+		e_byzantium = {
+			holder_scope = {
+				OR = {
+					religion = orthodox
+					religion = chalcedonian
+				}
+
+				war = no
+				NOT = { religion_authority >= 0.8 }
+
+				any_realm_province = {
+					OR = {
+						province_id = c_koloneia
+
+						AND = {
+							culture = armenian
+							region = custom_armenia
+
+							OR = {
+								religion = chalcedonian
+								religion = orthodox
+								religion = iconoclast
+							}
+						}
+					}
+
+					held_under_PREV = yes
+				}
+			}
+		}
+
+		NOT = { has_global_flag = sergius_tychus }
+	}
+
+	major_trigger = {
+		OR = {
+			has_landed_title = e_byzantium
+			any_liege = { has_landed_title = e_byzantium }
+			any_liege = { has_landed_title = d_paulician }
+			religion = chalcedonian
+			religion = orthodox
+			religion = iconoclast
+			religion = paulician
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2105
+
+		trigger = { has_landed_title = e_byzantium }
+
+		set_global_flag = sergius_tychus
+		piety = -100
+
+		any_realm_province = {
+			show_scope_change = no
+
+			limit = {
+				OR = {
+					province_id = c_koloneia
+
+					AND = {
+						culture = armenian
+						region = custom_armenia
+
+						OR = {
+							religion = chalcedonian
+							religion = orthodox
+							religion = iconoclast
+						}
+					}
+				}
+
+				held_under_PREV = yes
+			}
+
+			religion = paulician
+		}
+
+		hidden_effect = {
+			random_realm_province = {
+				limit = {
+					OR = {
+						culture = armenian
+						province_id = c_koloneia
+					}
+
+					religion = paulician
+					held_under_PREV = yes
+				}
+
+				add_province_modifier = {
+					name = heretic_stronghold
+					years = 10
+				}
+			}
+		}
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = {
+			NOR = {
+				has_landed_title = e_byzantium
+				has_landed_title = d_paulician
+			}
+		}
+	}
+
+	option = {
+		name = OK
+
+		trigger = { has_landed_title = d_paulician }
+
+		piety = 500
+		add_trait = zealous
+		add_trait = ambitious
+		change_diplomacy = 5
+
+		religion_authority = {
+			name = sergius_tychus
+			years = 30
+		}
+	}
+}
+
+# Byzantine Emperor persecutes the Paulicians
+character_event = {
+	id = Plus.2106
+	desc = EVTDESC_Plus_2106
+	picture = GFX_evt_burning_house
+
+	is_triggered_only = yes
+	major = yes
+
+	major_trigger = {
+		OR = {
+			has_landed_title = e_byzantium
+			has_landed_title = d_paulician
+			any_liege = { has_landed_title = e_byzantium }
+			religion = chalcedonian
+			religion = orthodox
+			religion = paulician
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2106 # Hopefully that will take care of it
+
+		trigger = { has_landed_title = e_byzantium }
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2106 # A rather extreme measure...
+
+		trigger = {
+			any_liege = { has_landed_title = e_byzantium }
+			NOT = { religion = paulician }
+		}
+
+		any_courtier = {
+			show_scope_change = no
+
+			limit = {
+				religion = paulician
+				is_adult = yes
+				is_ruler = no
+				prisoner = no
+			}
+
+			banish = yes
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_2106 # This is an outrage!
+
+		trigger = {
+			religion = paulician
+			any_liege = { has_landed_title = e_byzantium }
+		}
+
+		opinion = {
+			name = opinion_outraged
+			who = ROOT
+			years = 20
+		}
+
+		reverse_opinion = {
+			name = mad_heretic
+			who = ROOT
+			years = 20
+		}
+	}
+
+	option = {
+		name = EVTOPTC_Plus_2106 # This is an outrage!
+
+		trigger = { has_landed_title = d_paulician }
+
+		opinion = {
+			name = opinion_outraged
+			who = ROOT
+			years = 20
+		}
+
+		reverse_opinion = {
+			name = mad_heretic
+			who = ROOT
+			years = 20
+		}
+
+		add_rival = ROOT
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = {
+			NOR = {
+				has_landed_title = e_byzantium
+				has_landed_title = d_paulician
+				any_liege = { has_landed_title = e_byzantium }
+			}
+		}
+	}
+}
+
+# Paulician Patriarch appears
+narrative_event = {
+	id = Plus.2107
+	title = EVTNAME_Plus_2107
+	desc = EVTDESC_Plus_2107
+	picture = GFX_evt_heretic
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	option = {
+		name = {
+			text = EVTOPTA_Plus_2107
+			trigger = { religion = paulician }
+		}
+		name = {
+			text = EVTOPTB_Plus_2107
+			trigger = {
+				religion_group = christian
+				NOT = { religion = paulician }
+			}
+		}
+		name = {
+			text = EVTOPTC_Plus_2107
+			trigger = {
+				NOT = { religion_group = christian }
+			}
+		}
+	}
+}
+
+### BOGOMILIST EVENTS
+
+# Bogomil appears in Tyrnovo
+narrative_event = {
+	id = Plus.2110
+	title = EVTNAME_Plus_2110
+	desc = EVTDESC_Plus_2110
+	picture = GFX_evt_heretic
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	only_playable = yes
+	religion_group = christian
+
+	trigger = {
+		has_landed_title = k_bulgaria
+		year < 940
+
+		c_tyrnovo = {
+			holder_scope = { same_realm = ROOT }
+
+			location = {
+				OR = {
+					religion = chalcedonian
+					religion = orthodox
+					religion = iconoclast
+					religion = monothelite
+				}
+
+				NOR = {
+					culture = greek
+					has_province_modifier = heretic_stronghold
+				}
+			}
+		}
+
+		NOR = {
+			religion = bogomilist
+			has_global_flag = bogomil_lives
+		}
+	}
+
+	major_trigger = {
+		OR = {
+			same_realm = ROOT
+			religion = bogomilist
+			religion = chalcedonian
+			religion = orthodox
+			religion = iconoclast
+			religion = monothelite
+
+			capital_scope = {
+				distance = {
+					where = c_tyrnovo
+					value < 600 # Same part of the world
+				}
+			}
+		}
+	}
+
+	immediate = {
+		set_global_flag = bogomil_lives
+		religion_authority = { name = bogomilism_spreading }
+
+		create_character = {
+			name = "Bogomil"
+			random_traits = yes
+			dynasty = none
+			religion = bogomilist
+			culture = bulgarian
+			female = no
+			age = 40
+			add_trait = mastermind_theologian
+			add_trait = possessed
+			add_trait = zealous
+			add_trait = gregarious
+			add_trait = heresiarch
+			add_trait = scholar
+			add_trait = perfecti
+
+			attributes = {
+				learning = 12
+				diplomacy = 10
+			}
+		}
+
+		new_character = {
+			religion_authority = { name = bogomil_appears }
+		}
+
+		c_tyrnovo = {
+			location = {
+				religion = bogomilist
+
+				add_province_modifier = {
+					name = heretic_stronghold
+					years = 10
+				}
+
+				any_neighbor_province = {
+					limit = {
+						culture = PREV
+						NOT = { has_province_modifier = heretic_stronghold }
+
+						OR = {
+							religion = chalcedonian
+							religion = orthodox
+							religion = iconoclast
+							religion = monothelite
+						}
+					}
+
+					random = {
+						chance = 50
+						religion = bogomilist
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2110 # Convert
+
+		trigger = {
+			has_landed_title = k_bulgaria
+			controls_religion = no
+			NOT = { rightful_religious_head = ROOT }
+			mercenary = no
+			holy_order = no
+			prisoner = no
+			is_adult = yes
+			is_incapable = no
+			OR = {
+				religion = chalcedonian
+				religion = orthodox
+				religion = iconoclast
+				religion = monothelite
+			}
+			NOR = {
+				trait = zealous
+				culture = greek
+				has_character_flag = converted_religion
+			}
+		}
+
+		tooltip = {
+			religion = bogomilist
+		}
+
+		religion_authority = { name = ruler_converted_from }
+
+		hidden_effect = {
+			religion = bogomilist
+			set_character_flag = converted_religion
+			religion_authority = { name = ruler_converted_to }
+		}
+
+		capital_scope = {
+			show_scope_change = no
+
+			if = {
+				limit = {
+					any_neighbor_province = { religion = bogomilist }
+					NOT = { has_province_modifier = heretic_stronghold }
+
+					OR = {
+						religion = chalcedonian
+						religion = orthodox
+						religion = iconoclast
+						religion = monothelite
+					}
+				}
+			}
+
+			religion = bogomilist
+		}
+
+		random_realm_province = {
+			show_scope_change = no
+
+			limit = {
+				any_neighbor_province = { religion = bogomilist }
+				NOT = { has_province_modifier = heretic_stronghold }
+				held_under_PREV = yes
+
+				OR = {
+					religion = chalcedonian
+					religion = orthodox
+					religion = iconoclast
+					religion = monothelite
+				}
+			}
+
+			religion = bogomilist
+		}
+
+		random_realm_province = {
+			show_scope_change = no
+
+			limit = {
+				any_neighbor_province = { religion = bogomilist }
+				NOT = { has_province_modifier = heretic_stronghold }
+				held_under_PREV = yes
+
+				OR = {
+					religion = chalcedonian
+					religion = orthodox
+					religion = iconoclast
+					religion = monothelite
+				}
+			}
+
+			religion = bogomilist
+		}
+
+		hidden_effect = {
+			e_byzantium = {
+				holder_scope = {
+					if = {
+						limit = {
+							OR = {
+								religion = chalcedonian
+								religion = orthodox
+								religion = iconoclast
+								religion = monothelite
+							}
+
+							NOR = {
+								has_landed_title = k_bulgaria
+								has_claim = k_bulgaria
+								trait = cynical
+							}
+						}
+
+						add_claim = k_bulgaria
+					}
+				}
+			}
+
+			any_courtier = {
+				limit = {
+					dynasty = ROOT
+					is_adult = no
+					is_ruler = no
+				}
+
+				religion = ROOT
+			}
+
+			primary_title = { add_law = bogomilist_church_0 }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2110 # Don't Convert
+
+		trigger = { has_landed_title = k_bulgaria }
+	}
+
+	option = {
+		name = EVTOPTC_Plus_2110
+
+		trigger = {
+			religion = bogomilist
+			NOT = { has_landed_title = k_bulgaria }
+		}
+	}
+
+	option = {
+		name = EVTOPTD_Plus_2110
+
+		trigger = {
+			religion_group = christian
+			NOR = {
+				has_landed_title = k_bulgaria
+				religion = bogomilist
+			}
+		}
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = {
+			NOR = {
+				has_landed_title = k_bulgaria
+				has_landed_title = e_byzantium
+				religion_group = christian
+			}
+		}
+	}
+}
+
+# Initialization event for Bogomilist laws
+# TODO: Figure out if this can't be handled by the game's hardcoded functions to find default laws
+character_event = {
+	id = Plus.2111
+
+	is_triggered_only = yes # on_yearly_pulse, on_new_holder(_inheritance/usurpation)
+	hide_window = yes
+
+	religion = bogomilist
+	only_playable = yes
+
+	trigger = {
+		higher_real_tier_than = BARON
+
+		OR = {
+			AND = {
+				is_title_active = d_bogomilist
+				NOT = { has_law = bogomilist_church_4 }
+			}
+
+			AND = {
+				has_global_flag = bogomilist_formalized
+				NOR = {
+					has_law = bogomilist_church_3
+					has_law = bogomilist_church_4
+				}
+			}
+
+			AND = {
+				has_global_flag = bogomilist_organized
+				NOR = {
+					has_law = bogomilist_church_2
+					has_law = bogomilist_church_3
+					has_law = bogomilist_church_4
+				}
+			}
+
+			AND = {
+				has_law = bogomilist_church_0
+				any_demesne_title = { has_law = bogomilist_church_1 }
+			}
+
+			AND = {
+				has_law = bogomilist_church_0
+				any_liege = { has_law = bogomilist_church_1 }
+			}
+
+			NOR = {
+				has_law = bogomilist_church_0
+				has_law = bogomilist_church_1
+				has_law = bogomilist_church_2
+				has_law = bogomilist_church_3
+				has_law = bogomilist_church_4
+			}
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				is_title_active = d_bogomilist
+				NOT = { has_law = bogomilist_church_4 }
+			}
+			primary_title = { add_law = bogomilist_church_4 }
+		}
+		else_if = {
+			limit = {
+				has_global_flag = bogomilist_formalized
+				NOR = {
+					has_law = bogomilist_church_3
+					has_law = bogomilist_church_4
+				}
+			}
+			primary_title = { add_law = bogomilist_church_3 }
+		}
+		else_if = {
+			limit = {
+				has_global_flag = bogomilist_organized
+				NOR = {
+					has_law = bogomilist_church_2
+					has_law = bogomilist_church_3
+					has_law = bogomilist_church_4
+				}
+			}
+			primary_title = { add_law = bogomilist_church_2 }
+		}
+		else_if = {
+			limit = {
+				has_law = bogomilist_church_0
+				any_demesne_title = { has_law = bogomilist_church_1 }
+			}
+			primary_title = { add_law = bogomilist_church_1 }
+		}
+		else_if = {
+			limit = {
+				any_liege = { has_law = bogomilist_church_1 }
+				has_law = bogomilist_church_0
+			}
+			primary_title = { add_law = bogomilist_church_1 }
+		}
+		else_if = {
+			limit = {
+				NOR = {
+					has_law = bogomilist_church_0
+					has_law = bogomilist_church_1
+					has_law = bogomilist_church_2
+					has_law = bogomilist_church_3
+					has_law = bogomilist_church_4
+				}
+			}
+			primary_title = { add_law = bogomilist_church_0 }
+		}
+	}
+}
+
+# Formalization of Bogomilism begins
+character_event = {
+	id = Plus.2112
+	desc = EVTDESC_Plus_2112
+	picture = GFX_evt_monastery_monks
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2112
+
+		custom_tooltip = {
+			text = BOGO_BEGIN_FORMALIZATION
+
+			change_variable = {
+				which = global_bogomil_formalization
+				value = 1
+			}
+		}
+	}
+}
+
+# Formalization of Bogomilism ends
+character_event = {
+	id = Plus.2113
+	picture = GFX_evt_monastery_monks
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		text = EVTDESC_Plus_2113_religion
+		trigger = { NOT = { religion = bogomilist } }
+	}
+	desc = {
+		text = EVTDESC_Plus_2113_rule
+		trigger = { religion = bogomilist }
+	}
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_character_modifier = formalizing_bogomilist
+
+		trigger_if = {
+			limit = {
+				religion = bogomilist
+				is_ruler = yes
+			}
+
+			lower_real_tier_than = KING
+		}
+	}
+
+	option = {
+		name = OK
+
+		remove_character_modifier = formalizing_bogomilist
+	}
+}
+
+# Formalization: Support Common Liturgy
+character_event = {
+	id = Plus.2114
+	desc = EVTDESC_Plus_2114
+	picture = GFX_evt_monastery_monks
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	only_playable = yes
+	religion = bogomilist
+
+	trigger = {
+		higher_real_tier_than = DUKE
+		has_character_modifier = formalizing_bogomilist # This should've been a flag
+		check_variable = { which = global_bogomil_formalization value < 4 }
+		NOT = { has_global_flag = bogomil_common_liturgy }
+	}
+
+	major_trigger = {
+		religion = bogomilist
+	}
+
+	option = {
+		name = EXCELLENT
+
+		trigger = { character = ROOT }
+
+		if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 3 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION4 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 2 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION3 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 1 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION2 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 0 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION1 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value < 0 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION0 }
+		}
+
+		hidden_effect = {
+			change_variable = { which = global_bogomil_formalization value = 1 }
+			set_global_flag = bogomil_common_liturgy
+		}
+
+		piety = 50
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = { NOT = { character = ROOT } }
+	}
+}
+
+# Formalization: Canonicalize Bible
+character_event = {
+	id = Plus.2115
+	desc = EVTDESC_Plus_2115
+	picture = GFX_evt_book_carolingian_script
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	only_playable = yes
+	religion = bogomilist
+
+	trigger = {
+		higher_real_tier_than = DUKE
+		has_character_modifier = formalizing_bogomilist
+		check_variable = { which = global_bogomil_formalization value < 4 }
+		NOT = { has_global_flag = bogomil_bible_canon }
+	}
+
+	major_trigger = {
+		religion = bogomilist
+	}
+
+	option = {
+		name = EXCELLENT
+
+		trigger = { character = ROOT }
+
+		if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 3 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION4 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 2 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION3 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 1 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION2 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 0 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION1 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value < 0 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION0 }
+		}
+
+		hidden_effect = {
+			change_variable = { which = global_bogomil_formalization value = 1 }
+			set_global_flag = bogomil_bible_canon
+		}
+
+		piety = 100
+		prestige = 100
+		change_learning = 1
+		set_dynasty_flag = bogomil_canon_bible
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = { NOT = { character = ROOT } }
+	}
+}
+
+# Formalization: Church Councils
+character_event = {
+	id = Plus.2116
+	desc = EVTDESC_Plus_2116
+	picture = GFX_evt_monastery_monks
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_playable = yes
+	religion = bogomilist
+
+	trigger = {
+		higher_real_tier_than = DUKE
+		has_character_modifier = formalizing_bogomilist
+		scaled_wealth = 1.0
+		check_variable = { which = global_bogomil_formalization value < 4 }
+		NOT = { has_global_flag = bogomil_church_councils }
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2116
+
+		if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 3 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION4 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 2 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION3 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 1 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION2 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 0 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION1 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value < 0 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION0 }
+		}
+
+		hidden_effect = {
+			change_variable = { which = global_bogomil_formalization value = 1 }
+			set_global_flag = bogomil_church_councils
+		}
+
+		scaled_wealth = -1.0
+		piety = 100
+		character_event = { id = Plus.2117 }
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2116
+
+		prestige = -50
+	}
+}
+
+character_event = {
+	id = Plus.2117
+	desc = EVTDESC_Plus_2117
+	picture = GFX_evt_monastery_monks
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	major_trigger = {
+		ai = no
+		religion = bogomilist
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2117
+	}
+}
+
+# Formalization: Seminary Schools
+character_event = {
+	id = Plus.2118
+	desc = EVTDESC_Plus_2118
+	picture = GFX_evt_monastery_monks
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_playable = yes
+	religion = bogomilist
+
+	trigger = {
+		higher_real_tier_than = DUKE
+		has_character_modifier = formalizing_bogomilist
+		scaled_wealth = 0.5
+		check_variable = { which = global_bogomil_formalization value < 4 }
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2118
+
+		if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 3 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION4 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 2 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION3 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 1 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION2 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 0 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION1 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value < 0 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION0 }
+		}
+
+		hidden_effect = {
+			change_variable = { which = global_bogomil_formalization value = 1 }
+		}
+
+		scaled_wealth = -0.5
+		piety = 50
+		character_event = { id = Plus.2119 }
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2118
+
+		piety = -50
+	}
+}
+
+character_event = {
+	id = Plus.2119
+	desc = EVTDESC_Plus_2119
+	picture = GFX_evt_monastery_monks
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	major_trigger = {
+		ai = no
+		religion = bogomilist
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2117
+	}
+}
+
+# Formalization: Endorsed by Priest
+character_event = {
+	id = Plus.2120
+	desc = EVTDESC_Plus_2120
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	only_playable = yes
+	religion = bogomilist
+
+	trigger = {
+		higher_real_tier_than = DUKE
+		has_character_modifier = formalizing_bogomilist
+		piety >= 100
+		check_variable = { which = global_bogomil_formalization value < 4 }
+	}
+
+	major_trigger = {
+		religion = bogomilist
+	}
+
+	option = {
+		name = EXCELLENT
+
+		trigger = { character = ROOT }
+
+		if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 3 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION4 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 2 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION3 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 1 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION2 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 0 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION1 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value < 0 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION0 }
+		}
+
+		hidden_effect = {
+			change_variable = { which = global_bogomil_formalization value = 1 }
+		}
+
+		piety = 25
+		prestige = 25
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = { NOT = { character = ROOT } }
+	}
+}
+
+# Formalization: Public Speech
+character_event = {
+	id = Plus.2121
+	desc = EVTDESC_Plus_2121
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	only_playable = yes
+	religion = bogomilist
+
+	trigger = {
+		higher_real_tier_than = DUKE
+		has_character_modifier = formalizing_bogomilist
+		diplomacy >= 12
+		has_regent = no
+		check_variable = { which = global_bogomil_formalization value < 4 }
+	}
+
+	major_trigger = {
+		ai = no
+		religion = bogomilist
+	}
+
+	option = {
+		name = EXCELLENT
+
+		trigger = { character = ROOT }
+
+		if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 3 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION4 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 2 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION3 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 1 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION2 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 0 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION1 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value < 0 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION0 }
+		}
+
+		hidden_effect = {
+			change_variable = { which = global_bogomil_formalization value = 1 }
+		}
+
+		piety = 25
+		prestige = 25
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = { NOT = { character = ROOT } }
+	}
+}
+
+# Formalization: Ruler Writes Text
+character_event = {
+	id = Plus.2122
+	desc = EVTDESC_Plus_2122
+	picture = GFX_evt_book_carolingian_script
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	only_playable = yes
+	religion = bogomilist
+
+	trigger = {
+		higher_real_tier_than = DUKE
+		has_character_modifier = formalizing_bogomilist
+		learning >= 12
+		NOT = { trait = blinded }
+		has_regent = no
+		check_variable = { which = global_bogomil_formalization value < 4 }
+	}
+
+	major_trigger = {
+		religion = bogomilist
+	}
+
+	option = {
+		name = EXCELLENT
+
+		trigger = { character = ROOT }
+
+		if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 3 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION4 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 2 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION3 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 1 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION2 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 0 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION1 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value < 0 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION0 }
+		}
+
+		hidden_effect = {
+			change_variable = { which = global_bogomil_formalization value = 1 }
+		}
+
+		piety = 25
+		prestige = 25
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = { NOT = { character = ROOT } }
+	}
+}
+
+# Formalization: Troublemaker Sect
+character_event = {
+	id = Plus.2123
+	desc = EVTDESC_Plus_2123
+	picture = GFX_evt_monastery_monks
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_playable = yes
+	religion = bogomilist
+
+	trigger = {
+		higher_real_tier_than = DUKE
+		has_character_modifier = formalizing_bogomilist
+
+		check_variable = { which = global_bogomil_formalization value < 4 }
+		check_variable = { which = global_bogomil_formalization value > 0 }
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2123
+
+		if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 3 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION2 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 2 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION1 }
+		}
+		else = {
+			custom_tooltip = { text = BOGO_FORMALIZATION0 }
+		}
+
+		hidden_effect = {
+			change_variable = { which = global_bogomil_formalization value = -1 }
+		}
+
+		piety = 50
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2123
+
+		prestige = -100
+		piety = -100
+	}
+}
+
+# Formalization: Traditionalist Revival
+character_event = {
+	id = Plus.2124
+	desc = EVTDESC_Plus_2124
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_playable = yes
+	religion = bogomilist
+
+	trigger = {
+		higher_real_tier_than = DUKE
+		has_character_modifier = formalizing_bogomilist
+
+		check_variable = { which = global_bogomil_formalization value < 4 }
+		check_variable = { which = global_bogomil_formalization value > 0 }
+	}
+
+	option = {
+		name = CURSES
+
+		if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 3 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION2 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 2 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION1 }
+		}
+		else = {
+			custom_tooltip = { text = BOGO_FORMALIZATION0 }
+		}
+
+		hidden_effect = {
+			change_variable = { which = global_bogomil_formalization value = -1 }
+		}
+
+		prestige = -50
+	}
+}
+
+# Formalization: Demand For Reversal
+character_event = {
+	id = Plus.2125
+	desc = EVTDESC_Plus_2125
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	only_playable = yes
+	religion = bogomilist
+
+	trigger = {
+		higher_real_tier_than = DUKE
+		has_character_modifier = formalizing_bogomilist
+
+		any_realm_province = {
+			religion = bogomilist
+			NOT = { has_province_modifier = religious_unrest }
+			held_under_PREV = yes
+		}
+
+		check_variable = { which = global_bogomil_formalization value < 4 }
+		check_variable = { which = global_bogomil_formalization value > 0 }
+	}
+
+	immediate = {
+		random_realm_province = {
+			limit = {
+				religion = bogomilist
+				NOT = { has_province_modifier = religious_unrest }
+				held_under_PREV = yes
+			}
+
+			save_event_target_as = demand_province
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2125
+
+		if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 3 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION2 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 2 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION1 }
+		}
+		else = {
+			custom_tooltip = { text = BOGO_FORMALIZATION0 }
+		}
+
+		hidden_effect = {
+			change_variable = { which = global_bogomil_formalization value = -1 }
+		}
+
+		prestige = -100
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2125
+
+		event_target:demand_province = {
+			show_scope_change = no
+
+			add_province_modifier = {
+				name = religious_unrest
+				years = 3
+			}
+		}
+	}
+}
+
+# Formalization: Blamed by Priest
+character_event = {
+	id = Plus.2126
+	desc = EVTDESC_Plus_2126
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	# major = yes
+
+	only_playable = yes
+	religion = bogomilist
+
+	trigger = {
+		higher_real_tier_than = DUKE
+		has_character_modifier = formalizing_bogomilist
+		piety < 100
+
+		check_variable = { which = global_bogomil_formalization value < 4 }
+		check_variable = { which = global_bogomil_formalization value > 0 }
+	}
+
+	# major_trigger = {
+	#	religion = bogomilist
+	# }
+
+	option = {
+		name = CURSES
+
+		if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 3 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION2 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 2 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION1 }
+		}
+		else = {
+			custom_tooltip = { text = BOGO_FORMALIZATION0 }
+		}
+
+		hidden_effect = {
+			change_variable = { which = global_bogomil_formalization value = -1 }
+		}
+
+		prestige = -50
+	}
+}
+
+# Formalization: Learned Priest Objects
+character_event = {
+	id = Plus.2127
+	desc = EVTDESC_Plus_2127
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	# major = yes
+
+	only_playable = yes
+	religion = bogomilist
+
+	trigger = {
+		higher_real_tier_than = DUKE
+		has_character_modifier = formalizing_bogomilist
+		learning < 12
+
+		check_variable = { which = global_bogomil_formalization value < 4 }
+		check_variable = { which = global_bogomil_formalization value > 0 }
+	}
+
+	# major_trigger = {
+	#	religion = bogomilist
+	# }
+
+	option = {
+		name = CURSES
+
+		if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 3 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION2 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 2 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION1 }
+		}
+		else = {
+			custom_tooltip = { text = BOGO_FORMALIZATION0 }
+		}
+
+		hidden_effect = {
+			change_variable = { which = global_bogomil_formalization value = -1 }
+		}
+
+		prestige = -50
+		piety = -25
+	}
+}
+
+# Formalization: Major Battle Won
+character_event = {
+	id = Plus.2128
+	desc = EVTDESC_Plus_2128
+	picture = GFX_evt_battle
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	religion = bogomilist
+
+	trigger = {
+		OR = {
+			AND = {
+				religion = bogomilist
+				higher_real_tier_than = DUKE
+				has_character_modifier = formalizing_bogomilist
+			}
+
+			any_liege = {
+				religion = bogomilist
+				higher_real_tier_than = DUKE
+				has_character_modifier = formalizing_bogomilist
+			}
+		}
+
+		OR = {
+			any_war = {
+				OR = {
+					using_cb = crusade
+					using_cb = holy_war
+					using_cb = religious_revolt
+				}
+			}
+
+			any_liege = {
+				any_war = {
+					OR = {
+						using_cb = crusade
+						using_cb = holy_war
+						using_cb = religious_revolt
+					}
+				}
+			}
+		}
+
+		check_variable = { which = global_bogomil_formalization value < 4 }
+	}
+
+	major_trigger = {
+		religion = bogomilist
+	}
+
+	option = {
+		name = EXCELLENT
+
+		trigger = {
+			OR = {
+				character = ROOT
+				same_realm = ROOT
+			}
+
+			has_character_modifier = formalizing_bogomilist
+		}
+
+		if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 3 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION4 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 2 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION3 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 1 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION2 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 0 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION1 }
+		}
+		else = {
+			custom_tooltip = { text = BOGO_FORMALIZATION0 }
+		}
+
+		hidden_effect = {
+			if = {
+				limit = { character = ROOT }
+
+				change_variable = { which = global_bogomil_formalization value = 1 }
+			}
+		}
+
+		piety = 50
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = {
+			OR = {
+				NOT = { has_character_modifier = formalizing_bogomilist }
+				NOR = {
+					character = ROOT
+					same_realm = ROOT
+				}
+			}
+		}
+	}
+}
+
+# Formalization: Major Battle Lost
+character_event = {
+	id = Plus.2129
+	desc = EVTDESC_Plus_2129
+	picture = GFX_evt_battle
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	religion = bogomilist
+
+	trigger = {
+		OR = {
+			AND = {
+				religion = bogomilist
+				higher_tier_than = DUKE
+				has_character_modifier = formalizing_bogomilist
+			}
+
+			any_liege = {
+				religion = bogomilist
+				higher_tier_than = DUKE
+				has_character_modifier = formalizing_bogomilist
+			}
+		}
+
+		OR = {
+			any_war = {
+				OR = {
+					using_cb = crusade
+					using_cb = holy_war
+					using_cb = religious_revolt
+				}
+			}
+
+			any_liege = {
+				any_war = {
+					OR = {
+						using_cb = crusade
+						using_cb = holy_war
+						using_cb = religious_revolt
+					}
+				}
+			}
+		}
+
+		check_variable = { which = global_bogomil_formalization value < 4 }
+		check_variable = { which = global_bogomil_formalization value > 0 }
+	}
+
+	major_trigger = {
+		religion = bogomilist
+	}
+
+	option = {
+		name = CURSES
+
+		trigger = {
+			OR = {
+				character = ROOT
+				same_realm = ROOT
+			}
+
+			has_character_modifier = formalizing_bogomilist
+		}
+
+		if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 3 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION2 }
+		}
+		else_if = {
+			limit = { check_variable = { which = global_bogomil_formalization value == 2 } }
+			custom_tooltip = { text = BOGO_FORMALIZATION1 }
+		}
+		else = {
+			custom_tooltip = { text = BOGO_FORMALIZATION0 }
+		}
+
+		hidden_effect = {
+			if = {
+				limit = { character = ROOT }
+
+				change_variable = { which = global_bogomil_formalization value = -1 }
+			}
+		}
+
+		piety = 50
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = {
+			NAND = {
+				OR = {
+					character = ROOT
+					same_realm = ROOT
+				}
+
+				has_character_modifier = formalizing_bogomilist
+			}
+		}
+	}
+}
+
+# Bogomilist Faith Organized
+narrative_event = {
+	id = Plus.2130
+	title = EVTNAME_Plus_2130
+	desc = EVTDESC_Plus_2130
+	picture = GFX_evt_monastery_monks
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	major_trigger = {
+		religion = bogomilist
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2130
+
+		trigger = { character = ROOT }
+	}
+
+	option = {
+		name = I_SEE
+
+		trigger = { NOT = { character = ROOT } }
+
+		tooltip = {
+			religion_authority = { name = bogomilism_organized }
+		}
+
+		if = {
+			limit = {
+				primary_title = { NOT = { has_law = bogomilist_church_2 } }
+			}
+
+			primary_title = { add_law = bogomilist_church_2 }
+		}
+
+		if = {
+			limit = { ai = yes }
+
+			random_list = {
+				25 = {
+					trigger = {
+						ROOT = { is_heretic = no }
+						is_adult = yes
+						can_change_religion = yes
+						prisoner = no
+						is_incapable = no
+
+						NOR = {
+							trait = zealous
+							trait = perfecti
+						}
+					}
+
+					become_heretic = yes
+				}
+
+				25 = {
+					trigger = {
+						ROOT = { is_heretic = yes }
+						is_adult = yes
+						can_change_religion = yes
+						prisoner = no
+						is_incapable = no
+
+						NOR = {
+							trait = zealous
+							trait = perfecti
+						}
+					}
+
+					abandon_heresy = yes
+				}
+
+				50 = {
+					mult_modifier = {
+						factor = 0.5
+						trait = cynical
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						trait = wroth
+					}
+
+					mult_modifier = {
+						factor = 2
+						trait = patient
+					}
+
+					mult_modifier = {
+						factor = 2
+						is_priest = yes
+					}
+				}
+			}
+		}
+
+		random_demesne_province = {
+			show_scope_change = no
+
+			limit = {
+				religion = bogomilist
+				NOT = { has_province_modifier = religious_unrest }
+				owned_by = PREV
+			}
+
+			random_list = {
+				50 = {
+					add_province_modifier = {
+						name = religious_unrest
+						years = 2
+					}
+				}
+
+				25 = {
+					trigger = {
+						ROOT = { is_heretic = no }
+					}
+
+					become_heretic = yes
+
+					add_province_modifier = {
+						name = religious_unrest
+						years = 2
+					}
+				}
+
+				25 = {
+					trigger = {
+						ROOT = { is_heretic = yes }
+					}
+
+					abandon_heresy = yes
+
+					add_province_modifier = {
+						name = religious_unrest
+						years = 2
+					}
+				}
+
+				75 = {}
+			}
+		}
+	}
+}
+
+# Bogomilist Faith Formalized by force
+narrative_event = {
+	id = Plus.2131
+	title = EVTNAME_Plus_2131
+	desc = EVTDESC_Plus_2131
+	picture = GFX_evt_monastery_monks
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	major_trigger = {
+		religion = bogomilist
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2131
+
+		trigger = { character = ROOT }
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2131
+
+		trigger = { NOT = { character = ROOT } }
+
+		tooltip = {
+			religion_authority = { name = bogomilism_formalized }
+		}
+
+		if = {
+			limit = {
+				primary_title = { NOT = { has_law = bogomilist_church_3 } }
+			}
+
+			primary_title = { add_law = bogomilist_church_3 }
+		}
+
+		if = {
+			limit = { ai = yes }
+
+			random_list = {
+				50 = {
+					trigger = {
+						ROOT = { is_heretic = no }
+						is_adult = yes
+						can_change_religion = yes
+						prisoner = no
+						is_incapable = no
+
+						NOR = {
+							trait = zealous
+							trait = perfecti
+						}
+					}
+
+					become_heretic = yes
+				}
+
+				50 = {
+					trigger = {
+						ROOT = { is_heretic = yes }
+						is_adult = yes
+						can_change_religion = yes
+						prisoner = no
+						is_incapable = no
+
+						NOR = {
+							trait = zealous
+							trait = perfecti
+						}
+					}
+
+					abandon_heresy = yes
+				}
+
+				50 = {
+					mult_modifier = {
+						factor = 0.5
+						trait = cynical
+					}
+
+					mult_modifier = {
+						factor = 0.5
+						trait = wroth
+					}
+
+					mult_modifier = {
+						factor = 2
+						trait = patient
+					}
+
+					mult_modifier = {
+						factor = 2
+						is_priest = yes
+					}
+
+					random = {
+						chance = 20
+						add_trait_fully_cynical_effect = yes
+					}
+				}
+			}
+		}
+
+		random_demesne_province = {
+			show_scope_change = no
+
+			limit = {
+				religion = bogomilist
+				NOT = { has_province_modifier = religious_unrest }
+				owned_by = PREV
+			}
+
+			random_list = {
+				50 = {
+					add_province_modifier = {
+						name = religious_unrest
+						years = 2
+					}
+				}
+
+				50 = {
+					trigger = {
+						ROOT = { is_heretic = no }
+					}
+
+					become_heretic = yes
+
+					add_province_modifier = {
+						name = religious_unrest
+						years = 2
+					}
+				}
+
+				50 = {
+					trigger = {
+						ROOT = { is_heretic = yes }
+					}
+
+					abandon_heresy = yes
+
+					add_province_modifier = {
+						name = religious_unrest
+						years = 2
+					}
+				}
+
+				50 = {}
+			}
+		}
+	}
+}
+
+# Bogomilist Faith Formalized
+narrative_event = {
+	id = Plus.2132
+	title = EVTNAME_Plus_2131
+	desc = EVTDESC_Plus_2132
+	picture = GFX_evt_monastery_monks
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	major_trigger = {
+		religion = bogomilist
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2130
+		trigger = { character = ROOT }
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2130
+
+		trigger = { NOT = { character = ROOT } }
+
+		tooltip = {
+			religion_authority = { name = bogomilism_formalized }
+		}
+
+		if = {
+			limit = {
+				primary_title = { NOT = { has_law = bogomilist_church_3 } }
+			}
+
+			primary_title = { add_law = bogomilist_church_3 }
+		}
+	}
+}
+
+# A Bogomilist Patriarch is elected (fired from decision)
+character_event = {
+	id = Plus.2133
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		random_realm_character = {
+			limit = {
+				religion = bogomilist
+				trait = perfecti
+				learning >= 12
+				prisoner = no
+				is_incapable = no
+			}
+
+			preferred_limit = {
+				is_ruler = yes
+				is_theocracy = yes
+			}
+
+			save_event_target_as = new_bogomilist_patriarch
+			grant_title = d_bogomilist
+
+			ROOT = {
+				random_realm_title = {
+					limit = { is_holy_site = ROOT }
+					gain_title = event_target:new_bogomilist_patriarch
+				}
+			}
+
+			set_defacto_liege = ROOT
+			pf_liege_change_effect = yes
+		}
+
+		if = {
+			limit = { NOT = { event_target:new_bogomilist_patriarch = { always = yes } } }
+
+			create_random_priest = {
+				random_traits = yes
+				dynasty = random
+				religion = bogomilist
+				culture = ROOT
+				age = 40
+				health = 7
+				add_trait = quick
+				add_trait = zealous
+				add_trait = perfecti
+				add_trait = scholar
+				add_trait = mastermind_theologian
+
+				attributes = {
+					learning = 5
+					diplomacy = 5
+					martial = 2
+					stewardship = 5
+					intrigue = 5
+				}
+			}
+
+			new_character = {
+				grant_title = d_bogomilist
+				save_event_target_as = new_bogomilist_patriarch
+
+				ROOT = {
+					random_realm_title = {
+						limit = { is_holy_site = ROOT }
+						gain_title = event_target:new_bogomilist_patriarch
+					}
+				}
+
+				set_defacto_liege = ROOT
+			}
+		}
+
+		narrative_event = { id = Plus.2134 }
+	}
+}
+
+# The rest of the world is told about the new Bogomilist Patriarch
+narrative_event = {
+	id = Plus.2134
+	title = EVTTITLE_Plus_2134
+	desc = EVTDESC_Plus_2134
+	picture = GFX_evt_icon
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+
+	option = {
+		name = EVTOPTA_Plus_2134
+
+		trigger = {
+			religion_group = christian
+			NOT = { religion = bogomilist }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_Plus_2134
+
+		trigger = { NOT = { religion_group = christian } }
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2130
+
+		trigger = { religion = bogomilist }
+
+		if = {
+			limit = {
+				primary_title = { NOT = { has_law = bogomilist_church_4 } }
+			}
+
+			primary_title = { add_law = bogomilist_church_4 }
+		}
+	}
+}
+
+# Church of St. Bogomil Construction Begun
+province_event = {
+	id = Plus.2135
+	desc = EVTDESC_Plus_2135
+	picture = GFX_evt_castle_construction
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_Plus_2135
+	}
+}
+
+province_event = {
+	id = Plus.2136
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		if = {
+			limit = {
+				owner = { war = yes }
+			}
+
+			repeat_event = {
+				id = Plus.2136
+				days = 60
+				random = 120
+			}
+		}
+
+		if = {
+			limit = {
+				owner = { NOT = { religion = bogomilist } }
+			}
+
+			remove_province_modifier = building_st_bogomil
+		}
+
+		if = {
+			limit = { has_province_modifier = building_st_bogomil }
+
+			set_province_flag = church_of_st_bogomil_built
+			remove_province_modifier = building_st_bogomil
+
+			owner = {
+				narrative_event = { id = Plus.2137 }
+			}
+		}
+	}
+}
+
+# Church of St. Bogomil Built
+narrative_event = {
+	id = Plus.2137
+	title = EVTNAME_Plus_2137
+	desc = EVTDESC_Plus_2137
+	picture = GFX_evt_cathedral
+	border = GFX_event_narrative_frame_religion
+
+	is_triggered_only = yes
+	major = yes
+	hide_from = yes
+
+	immediate = {
+		c_tyrnovo = {
+			location = {
+				if = {
+					limit = { num_of_empty_holdings >= 1 }
+
+					build_holding = {
+						title = b_st_bogomil
+						type = temple
+						holder = ROOT
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_Plus_2137
+
+		trigger = { religion = bogomilist }
+
+		if = {
+			limit = { character = ROOT }
+
+			prestige = 500
+			piety = 500
+			religion_authority = { name = church_st_bogomil_built }
+		}
+
+		if = {
+			limit = {
+				higher_real_tier_than = DUKE
+				has_character_modifier = formalizing_bogomilist
+				check_variable = { which = global_bogomil_formalization value < 4 }
+			}
+
+			if = {
+				limit = { check_variable = { which = global_bogomil_formalization value == 3  } }
+				custom_tooltip = { text = BOGO_FORMALIZATION4 }
+			}
+			else_if = {
+				limit = { check_variable = { which = global_bogomil_formalization value == 2 } }
+				custom_tooltip = { text = BOGO_FORMALIZATION3 }
+			}
+			else_if = {
+				limit = { check_variable = { which = global_bogomil_formalization value == 1 } }
+				custom_tooltip = { text = BOGO_FORMALIZATION2 }
+			}
+			else_if = {
+				limit = { check_variable = { which = global_bogomil_formalization value == 0 }  }
+				custom_tooltip = { text = BOGO_FORMALIZATION1 }
+			}
+			else = {
+				custom_tooltip = { text = BOGO_FORMALIZATION0 }
+			}
+
+			hidden_effect = {
+				change_variable = { which = global_bogomil_formalization value = 1 }
+			}
+		}
+		else = {
+			tooltip = {
+				religion_authority = { name = church_st_bogomil_built }
+			}
+		}
+	}
+
+	option = {
+		name = OK
+
+		trigger = { NOT = { religion = bogomilist } }
+	}
+}
+
+# Bogomilist missionaries move into a neighboring realm
+character_event = {
+	id = Plus.2138
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_independent = yes
+	religion = bogomilist
+
+	trigger = {
+		any_realm_province = {
+			religion = bogomilist
+			county = { is_occupied = no }
+			held_under_PREV = yes
+
+			any_neighbor_province = {
+				county = { is_occupied = no }
+				NOT = { religion = bogomilist }
+
+				owner = {
+					NOR = {
+						war_with = ROOT
+						reverse_has_truce = ROOT
+						has_non_aggression_pact_with = ROOT
+						same_realm = ROOT
+						any_courtier = { has_character_flag = bogomilist_missionary }
+					}
+				}
+			}
+		}
+	}
+
+	weight_multiplier = {
+		days = 1
+
+		mult_modifier = {
+			factor = 0.75
+			war = yes
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			has_law = bogomilist_church_0
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			has_law = bogomilist_church_2
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			has_law = bogomilist_church_3
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			has_law = bogomilist_church_4
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			lower_real_tier_than = DUKE
+		}
+
+		mult_modifier = {
+			factor = 1.5
+			real_tier = EMPEROR
+		}
+	}
+
+	immediate = {
+		random_realm_province = {
+			limit = {
+				religion = bogomilist
+				county = { is_occupied = no }
+				held_under_PREV = yes
+
+				any_neighbor_province = {
+					county = { is_occupied = no }
+					NOT = { religion = bogomilist }
+
+					owner = {
+						NOR = {
+							war_with = ROOT
+							reverse_has_truce = ROOT
+							has_non_aggression_pact_with = ROOT
+							same_realm = ROOT
+							any_courtier = { has_character_flag = bogomilist_missionary }
+						}
+					}
+				}
+			}
+
+			random_neighbor_province = {
+				limit = {
+					county = { is_occupied = no }
+					NOT = { religion = bogomilist }
+
+					owner = {
+						NOR = {
+							war_with = ROOT
+							reverse_has_truce = ROOT
+							has_non_aggression_pact_with = ROOT
+							same_realm = ROOT
+							any_courtier = { has_character_flag = bogomilist_missionary }
+						}
+					}
+				}
+
+				owner = {
+					create_random_diplomat = {
+						random_traits = yes
+						dynasty = none
+						religion = ROOT
+						culture = PREVPREV
+						female = no
+						age = 40
+						add_trait = zealous
+						add_trait = gregarious
+						add_trait = perfecti
+
+						attributes = {
+							learning = 5
+							diplomacy = 5
+						}
+					}
+
+					new_character = {
+						set_character_flag = bogomilist_missionary
+					}
+				}
+			}
+		}
+	}
+}

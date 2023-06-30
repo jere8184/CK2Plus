@@ -1,0 +1,76 @@
+decisions = {
+	go_on_hajj_pagan = {
+		ai_check_interval = 24
+		is_high_prio = yes
+
+		only_playable = yes
+
+		potential = {
+			religion_openly_arabic_or_reformed_trigger = yes
+			has_dlc = "The Old Gods"
+			has_dlc = "The Sword of Islam"
+
+			NOR = {
+				trait = hajjaj_pagan
+				has_character_flag = preparing_hajj
+				has_character_flag = planning_nerge
+				has_character_flag = planning_tiger_hunt
+
+				any_demesne_title = {
+					lower_real_tier_than = DUKE
+					is_occupied = yes
+				}
+			}
+		}
+
+		allow = {
+			is_adult = yes
+			scaled_wealth = 1.0
+			prisoner = no
+			war = no
+			in_command_trigger = no
+			is_abroad = no
+			is_not_in_regency_trigger = yes
+			is_inaccessible_trigger = no
+			is_healthy_for_travel_trigger = yes
+		}
+
+		effect = {
+			log = "[Root.GetTitledName] is going on hajj"
+			scaled_wealth = -1.0
+			clr_character_flag = promise_hajj
+
+			if = {
+				limit = { trait = decadent }
+				remove_trait = decadent
+			}
+
+			letter_event = {
+				id = Plus.4500
+				tooltip = PREPARE_FOR_HAJJ
+			}
+		}
+
+		ai_will_do = {
+			factor = 0.1
+
+			mult_modifier = {
+				factor = 3
+				trait = zealous
+			}
+
+			trigger = {
+				scaled_wealth = 10.0
+				age >= 30
+
+				NOR = {
+					trait = cynical
+					trait = slothful
+					trait = proud
+					trait = deceitful
+					trait = decadent
+				}
+			}
+		}
+	}
+}

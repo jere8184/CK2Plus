@@ -1,0 +1,1529 @@
+namespace = Plus
+
+#######################################
+# NOTE: These will be broken into groups upon further clean-up
+# Maintenance Events
+# ID Plus.300 - Plus.399
+#######################################
+#
+# INDEX
+#
+# 329: Norman conquest of England cleanup - Victory: France loses claims
+# 330: Norman conquest of England cleanup - Loss: English provinces (back) to England
+# 332: Stops construction of the Third Temple if it is underway
+# 333: Finishes construction of the Third Temple
+# 340: Clean up 'children serving in holy orders' chains upon appropriate parent death
+# 341: Ultimatum to overthrown rulers who re-inherit the throne
+# 342: Ultimatum to overthrown rulers who re-inherit the throne
+# 348: Viceroys will try to pass on wealth to a relative instead of their liege
+# 349: Annual maintenance fixes
+# 353: Adds Away From Court modifier when leading armies away from the capital
+# 354: Removes Away From Court modifier
+# 355: Removes child's strong claim to viceroyalty
+# 362: Rebel/Adventurer imprisoned after loss
+# 363: Rebel/Adventurer imprisoned after loss
+# 364: Copy liege inheritance laws after giving title
+# 365: Copy liege inheritance laws after giving title
+# 368: Deal with landed varangians
+#
+#######################################
+
+# 329: Norman conquest of England cleanup - Victory: France loses claims
+character_event = {
+	id = Plus.329
+
+	hide_window = yes
+	is_triggered_only = yes
+
+	only_playable = yes
+	has_global_flag = witan_abolished
+
+	trigger = {
+		has_landed_title = k_france
+		start_date == 1066.9.15 # Stamford Bridge bookmark
+
+		any_claim = {
+			OR = {
+				location = { region = custom_england }
+				capital_scope = { region = custom_england }
+				title = d_normandy
+				de_jure_liege_or_above = d_normandy
+			}
+		}
+	}
+
+	immediate = {
+		clr_global_flag = bm_stamford
+
+		any_claim = {
+			limit = {
+				OR = {
+					location = { region = custom_england }
+					capital_scope = { region = custom_england }
+					title = d_normandy
+					de_jure_liege_or_above = d_normandy
+				}
+			}
+			remove_claim = ROOT
+		}
+	}
+}
+
+# 330: Norman conquest of England cleanup - Loss: English provinces (back) to England
+character_event = {
+	id = Plus.330
+
+	hide_window = yes
+	is_triggered_only = yes
+
+	only_playable = yes
+	war = no
+
+	trigger = {
+		has_landed_title = d_normandy
+		start_date == 1066.9.15 # Stamford Bridge bookmark
+		NOT = { has_global_flag = witan_abolished }
+
+		k_england = { holder_scope = { culture = anglo-saxon } }
+
+		any_realm_title = {
+			OR = {
+				location = { region = custom_england }
+				capital_scope = { region = custom_england }
+			}
+		}
+
+	}
+
+	immediate = {
+		clr_global_flag = bm_stamford
+
+		k_england = {
+			holder_scope = {
+				k_england = {
+					any_de_jure_vassal_title = {
+						limit = {
+							holder_scope = {
+								OR = {
+									character = ROOT
+									is_vassal_or_below_of = ROOT
+								}
+							}
+						}
+
+						gain_title = PREVPREV
+					}
+				}
+			}
+		}
+
+		if = {
+			limit = { NOT = { has_claim = k_england } }
+			add_claim = k_england
+		}
+	}
+}
+
+# TODO: Change The Third Temple into a Wonder
+# 332: Stops construction of the Third Temple if it is underway
+province_event = {
+	id = Plus.332
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		has_province_modifier = third_temple_builder
+		religion = jewish
+
+		owner = {
+			top_liege = {
+				religion = jewish
+				completely_controls = c_jerusalem
+			}
+		}
+	}
+
+	fail_trigger_effect = {
+		remove_province_modifier = third_temple_builder
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				NOT = { has_province_modifier = third_temple_builder }
+				owner = { war = no }
+				top_liege = { war = no }
+			}
+
+			# Finishes construction
+			set_global_flag = third_temple_built
+
+			top_liege = {
+				top_liege = { narrative_event = { id = SoA.101 } } # Restore priesthood
+			}
+		}
+		else = {
+			repeat_event = {
+				id = Plus.332
+				days = 1
+			}
+		}
+	}
+}
+
+# 340: Clean up 'children serving in holy orders' chains upon appropriate parent death
+character_event = {# called on_death (so succession has not yet resolved?)
+	id = Plus.340
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	has_dlc = "The Old Gods"
+
+	trigger = {
+		any_child = {
+			has_opinion_modifier = {
+				name = allowed_to_serve_holy_order
+				who = ROOT
+			}
+
+			OR = {
+				has_character_flag = wants_gwydion
+				has_character_flag = serving_varangian
+				has_character_flag = wants_tirnanog
+				has_character_flag = serving_celtic_order
+			}
+
+			is_heir = no
+		}
+	}
+
+	immediate = {
+		any_child = {
+			limit = {
+				has_opinion_modifier = {
+					name = allowed_to_serve_holy_order
+					who = ROOT
+				}
+
+				is_heir = no
+
+				OR = {
+					has_character_flag = serving_celtic_order
+					has_character_flag = wants_gwydion
+					has_character_flag = wants_tirnanog
+				}
+			}
+
+			if = {
+				limit = { has_character_flag = serving_celtic_order }
+
+				random_list = {
+					120 = {
+						trigger = {
+							NOT = { trait = scarred }
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = brave
+						}
+
+						mult_modifier = {
+							factor = 0.8
+							trait = craven
+						}
+
+						character_event = { id = ancrel.124 }
+					}
+
+					75 = {
+						trigger = { is_maimed_trigger = no }
+						character_event = { id = ancrel.128 }
+					}
+
+					120 = {
+						trigger = {
+							OR = {
+								trait = misguided_warrior
+								trait = tough_soldier
+								trait = skilled_tactician
+							}
+
+							NOT = { trait = brilliant_strategist }
+						}
+
+						mult_modifier = {
+							factor = 2
+							trait = genius
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = diligent
+						}
+
+						mult_modifier = {
+							factor = 1.33
+
+							OR = {
+								trait = quick
+								trait = shrewd
+							}
+						}
+
+						mult_modifier = {
+							factor = 0.66
+							is_dumb_trigger = yes
+						}
+
+						character_event = { id = ancrel.130 }
+					}
+
+					110 = {
+						trigger = {
+							NOT = { trait = depressed }
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = kind
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = poet
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = just
+						}
+
+						character_event = { id = ancrel.132 }
+					}
+
+					110 = {
+						mult_modifier = {
+							factor = 1.33
+							trait = lustful
+						}
+
+						character_event = { id = ancrel.134 }
+					}
+
+					120 = {
+						trigger = {
+							NOT = { trait = zealous }
+						}
+
+						mult_modifier = {
+							factor = 0.5
+							trait = cynical
+						}
+
+						character_event = { id = ancrel.136 }
+					}
+
+					140 = {
+						mult_modifier = {
+							factor = 1.33
+							trait = brave
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							is_strong_trigger = yes
+						}
+
+						mult_modifier = {
+							factor = 1.33
+
+							OR = {
+								trait = quick
+								trait = shrewd
+							}
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = genius
+						}
+
+						mult_modifier = {
+							factor = 0.66
+							trait = slothful
+						}
+
+						mult_modifier = {
+							factor = 0.66
+							is_dumb_trigger = yes
+						}
+
+						character_event = { id = ancrel.138 }
+					}
+
+					100 = {
+						mult_modifier = {
+							factor = 1.33
+							trait = brave
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = wroth
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = head1
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = head2
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = head3
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = head4
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = head5
+						}
+
+						mult_modifier = {
+							factor = 0.8
+							trait = craven
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = drunkard
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = consumption
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = slow_fever
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = camp_fever
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = bubonic_plague
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = measles
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = smallpox
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							trait = wounded
+						}
+
+						mult_modifier = {
+							factor = 2
+							trait = infirm
+						}
+
+						mult_modifier = {
+							factor = 2
+							is_incapable = yes
+						}
+
+						character_event = { id = ancrel.140 }
+					}
+
+					120 = {
+						mult_modifier = {
+							factor = 1.33
+							trait = greedy
+						}
+
+						mult_modifier = {
+							factor = 1.33
+							stewardship >= 10
+						}
+
+						character_event = { id = ancrel.142 }
+					}
+
+					1000 = {
+						# Child stays with order, clean up flags
+						clr_character_flag = serving_celtic_order
+					}
+				}
+			}
+
+			if = {
+				limit = {
+					OR = {
+						has_character_flag = wants_gwydion
+						has_character_flag = wants_tirnanog
+					}
+				}
+
+				# Chance to stay with the order (and eventually gain their veteran trait) or leave without it
+				random_list = {
+					50 = { # Stay
+						mult_modifier = {
+							factor = 1.25
+							trait = zealous
+						}
+
+						mult_modifier = {
+							factor = 1.25
+							trait = brave
+						}
+					}
+
+					50 = { # Leave
+						mult_modifier = {
+							factor = 1.25
+							trait = ambitious
+						}
+
+						clr_character_flag = wants_gwydion
+						clr_character_flag = wants_tirnanog
+						move_character = ROOT
+					}
+				}
+			}
+		}
+
+		any_child = {
+			limit = {
+				has_character_flag = serving_varangian
+
+				has_opinion_modifier = {
+					name = allowed_to_serve_holy_order
+					who = ROOT
+				}
+			}
+
+			if = {
+				limit = { any_heir_title = { holder = ROOT } }
+				move_character = ROOT
+				character_event = { id = TOG.3134 }
+			}
+			else = {
+				character_event = { id = TOG.3135 }
+			}
+		}
+	}
+}
+
+# 341: Ultimatum to overthrown rulers who re-inherit the throne
+# ROOT is the character, FROM is the title, FROMFROM is the old holder
+character_event = {
+	id = Plus.341
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		character_event = {
+			id = Plus.342
+			days = 3
+		}
+	}
+}
+
+# 342: Ultimatum to overthrown rulers who re-inherit the throne
+# ROOT/FROM is the new holder, FROMFROM is the title
+character_event = {
+	id = Plus.342
+	desc = EVTDESC_Plus_341
+	picture = GFX_evt_council
+
+	is_triggered_only = yes
+
+	trigger = {
+		FROMFROM = {
+			has_holder = yes
+			is_primary_holder_title_tier = yes
+		}
+
+		any_vassal = {
+			has_opinion_modifier = {
+				name = overthrown_ruler
+				who = ROOT
+			}
+
+			relative_power = {
+				who = ROOT
+				power >= 0.25
+			}
+		}
+	}
+
+	immediate = {
+		# Assess power of demanders
+		hidden_tooltip = {
+			set_variable = { which = ultimatum_power value = 0 }
+
+			any_realm_character = {
+				limit = {
+					has_opinion_modifier = {
+						name = overthrown_ruler
+						who = ROOT
+					}
+
+					de_jure_liege_or_above = ROOT
+					is_landed = yes
+				}
+
+				if = {
+					limit = { relative_power = { who = ROOT power >= 1 } }
+					ROOT = { change_variable = { which = ultimatum_power value = 1 } }
+				}
+				else_if = {
+					limit = { relative_power = { who = ROOT power >= 0.75 } }
+					ROOT = { change_variable = { which = ultimatum_power value = 0.75 } }
+				}
+				else_if = {
+					limit = { relative_power = { who = ROOT power >= 0.5 } }
+					ROOT = { change_variable = { which = ultimatum_power value = 0.5 } }
+				}
+				else_if = {
+					limit = { relative_power = { who = ROOT power >= 0.25 } }
+					ROOT = { change_variable = { which = ultimatum_power value = 0.25 } }
+				}
+			}
+		}
+	}
+
+	option = { # Abdicate to next in line
+		name = EVTDEMANDYES
+
+		transfer_scaled_wealth = {
+			to = player_heir
+			value = all
+		}
+
+		# TODO: Also transfer all artifacts, preferably by means of scripted effect
+
+		abdicate = yes
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 1.25
+				is_weak_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = craven
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = humble
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = kind
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = charitable
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = patient
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = content
+			}
+		}
+	}
+
+	option = {
+		name = EVTDEMANDNO # Reject demand
+
+		ai_chance = {
+			factor = 50
+
+			mult_modifier = {
+				factor = 1.25
+				is_strong_trigger = yes
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = brave
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = proud
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = envious
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = greedy
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = wroth
+			}
+
+			mult_modifier = {
+				factor = 1.25
+				trait = ambitious
+			}
+
+			mult_modifier = {
+				factor = 5.0
+				check_variable = { which = ultimatum_power value < 1 }
+			}
+
+			mult_modifier = {
+				factor = 0.75
+				check_variable = { which = ultimatum_power value >= 1 }
+			}
+		}
+
+		# A direct-vassal demander with sufficient power declares war, other demanders follow suit
+		random_vassal = {
+			show_scope_change = no
+
+			limit = {
+				de_jure_liege = ROOT
+
+				has_opinion_modifier = {
+					name = overthrown_ruler
+					who = ROOT
+				}
+
+				relative_power = {
+					who = ROOT
+					power >= 0.25
+				}
+			}
+
+			war = {
+				target = ROOT
+				casus_belli = overthrow_ruler
+			}
+
+			ROOT = {
+				show_scope_change = no
+
+				any_vassal = {
+					show_scope_change = no
+
+					limit = {
+						has_opinion_modifier = {
+							name = overthrown_ruler
+							who = ROOT
+						}
+					}
+
+					join_attacker_wars = PREVPREV
+				}
+			}
+		}
+	}
+}
+
+# 348: Viceroys will try to pass on wealth to a relative instead of their liege
+# TODO: Update for new mechanics
+character_event = {
+	id = Plus.348
+
+	is_triggered_only = yes # on_death
+	hide_window = yes
+
+	trigger = {
+		any_demesne_title = { is_vice_royalty = yes }
+		player_heir = { always = yes }
+	}
+
+	immediate = {
+		any_demesne_title = {
+			limit = { is_vice_royalty = yes }
+
+			save_event_target_as = lose_strong
+
+			ROOT = {
+				any_child = {
+					limit = {
+						is_alive = yes
+						NOT = { has_strong_claim = PREVPREV }
+					}
+
+					character_event = {
+						id = Plus.355 # Remove child's strong claim on viceroyalty
+						days = 1
+					}
+				}
+			}
+		}
+
+		if = {
+			limit = { player_heir = { always = yes } }
+
+			if = {
+				limit = {
+					check_variable = {
+						which = loan_amount
+						value > 0
+					}
+				}
+
+				player_heir = {
+					change_variable = {
+						which = loan_amount
+						which = ROOT
+					}
+
+					# TODO: Notify the heir of assuming the debt
+					if = {
+						limit = { NOT = { has_character_modifier = loan_timer } }
+
+						add_character_modifier = {
+							name = loan_timer
+							years = 2
+						}
+					}
+				}
+
+				if = {
+					limit = { has_character_modifier = borrowed_from_jews }
+
+					player_heir = {
+						add_character_modifier = {
+							name = borrowed_from_jews
+							duration = -1
+							inherit = yes
+							hidden = yes
+						}
+					}
+
+					remove_character_modifier = borrowed_from_jews
+				}
+			}
+
+			transfer_scaled_wealth = {
+				to = player_heir
+				value = all
+			}
+
+			# TODO: Also transfer artifacts, preferably by scripted effect
+		}
+		else = {
+			clear_wealth = yes
+			remove_character_modifier = loan_timer
+			remove_character_modifier = borrowed_from_jews
+		}
+	}
+}
+
+# 349: Annual maintenance fixes
+character_event = {
+	id = Plus.349
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_playable = yes
+
+	immediate = {
+		# Track years_of_peace variable for the ambition
+		if = {
+			limit = { war = yes }
+			set_variable = { which = years_of_peace value = 0 }
+		}
+		else = {
+			change_variable = { which = years_of_peace value = 1 }
+		}
+
+		# Fix primary titles that have become inactive
+		if = {
+			limit = {
+				primary_title = { NOT = { is_title_active = THIS } }
+			}
+
+			primary_title = {
+				log = "---> (Annual Maintenance) [This.GetFullName] was set to active, as it is currently held"
+				activate_title = { title = THIS status = yes }
+			}
+		}
+
+		# Remove 'do not destroy' flag on titles that have raised crown authority
+		any_demesne_title = {
+			limit = {
+				has_title_flag = do_not_destroy
+
+				OR = {
+					has_law = crown_authority_1
+					has_law = crown_authority_2
+					has_law = crown_authority_3
+					has_law = crown_authority_4
+				}
+			}
+
+			clr_title_flag = do_not_destroy
+			log = "---> (Annual Maintenance) [This.GetFullName] had the do_not_destroy flag removed, as it has raised Crown Authority"
+		}
+
+		# Remove 'destroy' flag on titles which were not destroyed
+		any_demesne_title = {
+			limit = {
+				had_title_flag = {
+					flag = destroy_title
+					days >= 7
+				}
+			}
+
+			clr_title_flag = destroy_title
+		}
+
+		# Remove imperial decadence if not emperor
+		if = {
+			limit = {
+				lower_real_tier_than = EMPEROR
+
+				OR = {
+					has_character_modifier = imperial_decadence_1
+					has_character_modifier = imperial_decadence_2
+					has_character_modifier = imperial_decadence_3
+					has_character_modifier = imperial_decadence_4
+					has_character_modifier = imperial_decadence_5
+					has_character_modifier = imperial_decadence_6
+					has_character_modifier = imperial_decadence_7
+					has_character_modifier = imperial_decadence_8
+				}
+			}
+
+			remove_character_modifier = imperial_decadence_1
+			remove_character_modifier = imperial_decadence_2
+			remove_character_modifier = imperial_decadence_3
+			remove_character_modifier = imperial_decadence_4
+			remove_character_modifier = imperial_decadence_5
+			remove_character_modifier = imperial_decadence_6
+			remove_character_modifier = imperial_decadence_7
+			remove_character_modifier = imperial_decadence_8
+
+			set_variable = {
+				which = imperial_decadence
+				value = 0
+			}
+		}
+	}
+}
+
+# 353: Manage Away From Court modifier when leading armies away from the capital
+# TODO: Add notification events?
+# TODO: Also activate when raiding?
+character_event = {
+	id = Plus.353
+
+	is_triggered_only = yes # on_unit_entering_province
+	hide_window = yes
+
+	only_rulers = yes
+
+	trigger = {
+		OR = {
+			war = yes
+			any_liege = { war = yes }
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				has_character_modifier = away_from_court
+				at_location = capital_scope
+			}
+
+			remove_character_modifier = away_from_court
+		}
+		else_if = {
+			limit = {
+				NOR = {
+					has_character_modifier = away_from_court
+					at_location = capital_scope
+				}
+			}
+
+			add_character_modifier = {
+				name = away_from_court
+				duration = -1
+			}
+
+			character_event = {
+				id = Plus.360 # Remove if no longer needed
+				days = 1
+			}
+		}
+	}
+}
+
+character_event = {
+	id = Plus.354
+
+	is_triggered_only = yes # on_command_(sub_)unit
+	hide_window = yes
+
+	only_rulers = yes
+
+	trigger = {
+		OR = {
+			war = yes
+			any_liege = { war = yes }
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				has_character_modifier = away_from_court
+				at_location = capital_scope
+			}
+
+			remove_character_modifier = away_from_court
+		}
+		else_if = {
+			limit = {
+				NOR = {
+					has_character_modifier = away_from_court
+					at_location = capital_scope
+				}
+			}
+
+			add_character_modifier = {
+				name = away_from_court
+				duration = -1
+			}
+
+			character_event = {
+				id = Plus.360 # Remove if no longer needed
+				days = 1
+			}
+		}
+	}
+}
+
+character_event = {
+	id = Plus.356
+
+	is_triggered_only = yes # on_war_started
+	hide_window = yes
+
+	immediate = {
+		ROOT = {
+			if = {
+				limit = {
+					in_command = yes
+
+					NOR = {
+						has_character_modifier = away_from_court
+						at_location = capital_scope
+					}
+				}
+
+				add_character_modifier = {
+					name = away_from_court
+					duration = -1
+				}
+
+				character_event = {
+					id = Plus.360 # Remove if no longer needed
+					days = 1
+				}
+			}
+
+			any_realm_lord = {
+				if = {
+					limit = {
+						in_command = yes
+
+						NOR = {
+							has_character_modifier = away_from_court
+							at_location = capital_scope
+						}
+					}
+
+					add_character_modifier = {
+						name = away_from_court
+						duration = -1
+					}
+
+					character_event = {
+						id = Plus.360 # Remove if no longer needed
+						days = 1
+					}
+				}
+			}
+		}
+
+		FROM = {
+			if = {
+				limit = {
+					in_command = yes
+
+					NOR = {
+						has_character_modifier = away_from_court
+						at_location = capital_scope
+					}
+				}
+
+				add_character_modifier = {
+					name = away_from_court
+					duration = -1
+				}
+
+				character_event = {
+					id = Plus.360 # Remove if no longer needed
+					days = 1
+				}
+			}
+
+			any_realm_lord = {
+				if = {
+					limit = {
+						in_command = yes
+
+						NOR = {
+							has_character_modifier = away_from_court
+							at_location = capital_scope
+						}
+					}
+
+					add_character_modifier = {
+						name = away_from_court
+						duration = -1
+					}
+
+					character_event = {
+						id = Plus.360 # Remove if no longer needed
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
+
+character_event = {
+	id = Plus.357
+
+	is_triggered_only = yes # on_war_ended_victory/whitepeace/defeat/invalid
+	hide_window = yes
+
+	immediate = {
+		ROOT = {
+			if = {
+				limit = {
+					has_character_modifier = away_from_court
+					war = no
+					NOT = { any_liege = { war = yes } }
+				}
+
+				remove_character_modifier = away_from_court
+			}
+
+			any_realm_lord = {
+				if = {
+					limit = {
+						has_character_modifier = away_from_court
+						war = no
+						NOT = { any_liege = { war = yes } }
+					}
+
+					add_character_modifier = {
+						name = away_from_court
+						duration = -1
+					}
+
+					character_event = {
+						id = Plus.360 # Remove if no longer needed
+						days = 1
+					}
+				}
+			}
+		}
+
+		FROM = {
+			if = {
+				limit = {
+					has_character_modifier = away_from_court
+					war = no
+					NOT = { any_liege = { war = yes } }
+				}
+
+				add_character_modifier = {
+					name = away_from_court
+					duration = -1
+				}
+
+				character_event = {
+					id = Plus.360 # Remove if no longer needed
+					days = 1
+				}
+			}
+
+			any_realm_lord = {
+				if = {
+					limit = {
+						has_character_modifier = away_from_court
+						war = no
+						NOT = { any_liege = { war = yes } }
+					}
+
+					add_character_modifier = {
+						name = away_from_court
+						duration = -1
+					}
+
+					character_event = {
+						id = Plus.360 # Remove if no longer needed
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
+
+character_event = {
+	id = Plus.358
+
+	is_triggered_only = yes # on_unlanded
+	hide_window = yes
+
+	trigger = {
+		has_character_modifier = away_from_court
+		is_ruler = no
+	}
+
+	immediate = {
+		remove_character_modifier = away_from_court
+	}
+}
+
+character_event = {
+	id = Plus.359
+
+	is_triggered_only = yes # on_become_imprisoned_any_reason
+	hide_window = yes
+
+	trigger = {
+		has_character_modifier = away_from_court
+	}
+
+	immediate = {
+		remove_character_modifier = away_from_court
+	}
+}
+
+character_event = {
+	id = Plus.360
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		has_character_modifier = away_from_court
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				NAND = {
+					in_command = yes
+					NOT = { at_location = capital_scope }
+
+					OR = {
+						war = yes
+						any_liege = { war = yes }
+					}
+				}
+			}
+
+			remove_character_modifier = away_from_court
+		}
+		else = {
+			# Check again tomorrow
+			repeat_event = {
+				id = Plus.360
+				days = 1
+			}
+		}
+	}
+}
+
+# 355: Removes child's strong claim to viceroyalty
+character_event = {
+	id = Plus.355
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		has_strong_claim = event_target:lose_strong
+	}
+
+	immediate = {
+		remove_claim = event_target:lose_strong
+		add_weak_pressed_claim = event_target:lose_strong
+	}
+}
+
+# 362: Rebel/Adventurer imprisoned after loss
+character_event = {
+	id = Plus.362
+
+	is_triggered_only = yes # on_battle_lost_owner
+	hide_window = yes
+
+	war = yes
+
+	trigger = {
+		primary_title = { temporary = yes }
+		NOT = { any_demesne_title = { temporary = no } }
+	}
+
+	immediate = {
+		character_event = {
+			id = Plus.363
+			days = 7
+		}
+	}
+}
+
+# 363: Rebel/Adventurer imprisoned after loss
+character_event = {
+	id = Plus.363
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	war = yes
+	prisoner = no
+
+	trigger = {
+		primary_title = { temporary = yes }
+		is_at_sea = no
+
+		NOR = {
+			any_demesne_title = { temporary = no }
+		}
+	}
+
+	immediate = {
+		log = "INFO: [Root.GetBestName] has lost all forces and is now imprisoned by [From.GetBestName]"
+
+		any_war = {
+			limit = { attacker = { character = ROOT } }
+
+			defender = {
+				reverse_imprison = ROOT
+			}
+		}
+	}
+}
+
+# ROOT is the character receiving the title
+# FROM is the title being given
+# FROMFROM is character giving the title
+# 364: Copy liege inheritance laws after giving title
+character_event = {
+	id = Plus.364
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	ai = yes # Don't force a player to change inheritance rules
+
+	trigger = {
+		always = no # Temporarily disabled for causing issues due to copying laws that shouldn't be copied (imperial administration, etc.)
+
+		FROM = {
+			is_primary_holder_title = yes
+			higher_real_tier_than = BARON
+			is_theocracy = no
+			NOT = { title = k_papacy }
+		}
+
+		FROMFROM = {
+			is_liege_of = ROOT
+			is_alive = yes
+			is_offmap_trigger = no
+		}
+	}
+
+	immediate = {
+		FROMFROM = { primary_title = { save_event_target_as = liege_primary_title } }
+		log = "---> INFO: Correcting laws for [From.GetID]"
+		character_event = { id = Plus.365 days = 1 } # Needs to be delayed a day as this won't work on the first day of inheritance
+	}
+}
+
+# 365: Copy liege inheritance laws after giving title
+character_event = {
+	id = Plus.365
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		if = {
+			limit = {
+				higher_real_tier_than = COUNT # Don't want those below Duke getting the wrong succession types
+
+				event_target:liege_primary_title = { # Don't want to copy special Empire-tier succession laws
+					NOR = {
+						has_law = succ_hre_elective
+						has_law = succ_byzantine_elective
+					}
+				}
+			}
+
+			primary_title = {
+				set_title_flag = non_manual_law_change
+				copy_title_laws = event_target:liege_primary_title
+				clr_title_flag = non_manual_law_change
+			}
+
+		}
+		# Only copy the gender laws for lower than duke or for vassals in Princely/Imperial Elective realms
+		else = {
+			primary_title = { adjust_gender_law_effect = yes }
+		}
+
+		recalc_succession = yes
+	}
+}
+
+# 368: Deal with landed varangians
+character_event = {
+	id = Plus.368
+
+	is_triggered_only = yes # on_new_holder(_inheritance/usurpation)
+	hide_window = yes
+
+	has_character_flag = serving_varangian
+	culture_group = north_germanic
+	only_men = yes
+	min_age = 16
+	only_capable = yes
+	ai = yes
+	prisoner = no
+	has_dlc = "The Old Gods"
+
+	immediate = {
+		random_list = {
+			120 = {
+				trigger = {
+					NOT = { trait = scarred }
+				}
+
+				character_event = { id = TOG.3114 } # Son returns scarred but seasoned
+			}
+
+			110 = {
+				trigger = {
+					NOT = { trait = homosexual }
+				}
+
+				character_event = { id = TOG.3116 } # Son returns with notions of Greek love
+			}
+
+			75 = {
+				trigger = {
+					NOR = {
+						trait = eunuch
+						trait = blinded
+					}
+				}
+
+				character_event = { id = TOG.3118 } # Son returns castrated and blinded
+			}
+
+			120 = {
+				trigger = {
+					OR = {
+						trait = misguided_warrior
+						trait = tough_soldier
+						trait = skilled_tactician
+					}
+
+					NOT = { trait = brilliant_strategist }
+				}
+
+				character_event = { id = TOG.3120 } # Son returns as excellent strategist
+			}
+
+			110 = {
+				trigger = {
+					NOT = { trait = depressed }
+				}
+
+				character_event = { id = TOG.3122 } # Son returns with PTSD
+			}
+
+			110 = {
+				trigger = { is_married = no }
+				character_event = { id = TOG.3124 } # Son returns home with Greek wife
+			}
+
+			120 = {
+				trigger = { religion_group = pagan_group }
+				character_event = { id = TOG.3126 } # Son returns home as a Christian zealot
+			}
+
+			140 = {
+				character_event = { id = TOG.3128 } # Son returns home as a seasoned warrior
+			}
+
+			120 = {
+				character_event = { id = TOG.3132 } # Son returns with loot
+			}
+
+			500 = {
+				clr_character_flag = serving_varangian # Nothing happens, just cleanup
+			}
+		}
+	}
+}

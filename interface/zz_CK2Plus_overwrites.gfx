@@ -1,0 +1,76 @@
+spriteTypes = {
+
+	spriteType = {
+		name = "GFX_character_background"
+		textureFile = "gfx\\characters\\shared\\backgrounds.dds"
+		noOfFrames = 22
+		noRefCount = yes
+		can_be_lowres = yes
+	}
+
+	# Religious Clothing & Headgear:
+
+	spriteType = {
+		name = "GFX_religious_male_clothes"
+		textureFile = "gfx\\characters\\religious_male_clothes.dds"
+		noOfFrames = 12
+		noRefCount = yes
+		can_be_lowres = yes
+	}
+
+	spriteType = {
+		name = "GFX_religious_male_clothes_behind"
+		textureFile = "gfx\\characters\\religious_male_clothes_behind.dds"
+		noOfFrames = 12
+		noRefCount = yes
+		can_be_lowres = yes
+	}
+
+	spriteType = {
+		name = "GFX_religious_male_headgear"
+		textureFile = "gfx\\characters\\religious_male_headgear.dds"
+		noOfFrames = 12
+		noRefCount = yes
+		can_be_lowres = yes
+	}
+
+	spriteType = {
+		name = "GFX_religious_male_headgear_behind"
+		textureFile = "gfx\\characters\\religious_male_headgear_behind.dds"
+		noOfFrames = 12
+		noRefCount = yes
+		can_be_lowres = yes
+	}
+
+	spriteType = {
+		name = "GFX_religious_female_clothes"
+		textureFile = "gfx\\characters\\religious_female_clothes.dds"
+		noOfFrames = 12
+		noRefCount = yes
+		can_be_lowres = yes
+	}
+
+	spriteType = {
+		name = "GFX_religious_female_clothes_behind"
+		textureFile = "gfx\\characters\\religious_female_clothes_behind.dds"
+		noOfFrames = 12
+		noRefCount = yes
+		can_be_lowres = yes
+	}
+
+	spriteType = {
+		name = "GFX_religious_female_headgear"
+		textureFile = "gfx\\characters\\religious_female_headgear.dds"
+		noOfFrames = 12
+		noRefCount = yes
+		can_be_lowres = yes
+	}
+
+	spriteType = {
+		name = "GFX_religious_female_headgear_behind"
+		textureFile = "gfx\\characters\\religious_female_headgear_behind.dds"
+		noOfFrames = 12
+		noRefCount = yes
+		can_be_lowres = yes
+	}
+}

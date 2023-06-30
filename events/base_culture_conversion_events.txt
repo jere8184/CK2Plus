@@ -1,0 +1,1388 @@
+#################################################
+#
+# PROVINCE EVENTS AND EVENTS AFFECTING PROVINCES
+#
+#################################################
+
+# Province culture changes
+province_event = {
+	id = 55000
+
+	hide_window = yes
+
+	trigger = {
+		religion = owner
+		NOT = { culture = owner }
+
+		owner = {
+			any_demesne_province = {
+				NOR = {
+					has_province_flag = recent_depopulation_1
+					has_province_flag = recent_depopulation_2
+					has_province_flag = recent_depopulation_3
+				}
+
+				owned_by = PREV
+			}
+
+			# Does not apply to vassals of a different culture than their liege
+			trigger_if = {
+				limit = { independent = no }
+
+				NOT = {
+					any_liege = {
+						NOT = { culture = PREV }
+					}
+				}
+			}
+
+			# Do not change culture for rulers with papal type succession
+			NOT = { has_law = succ_papal_succession }
+		}
+
+		# Either the owner's capital or there is a neighbor province of that culture
+		OR = {
+			is_capital = yes
+
+			any_neighbor_province = {
+				has_owner = yes
+
+				owner = {
+					ROOT = {
+						owner = {
+							culture = PREVPREV
+							culture = PREVPREVPREV
+						}
+					}
+				}
+			}
+		}
+
+		# English melting pot
+		trigger_if = {
+			limit = {
+				region = custom_england
+
+				OR = {
+					culture = norman
+					culture = french
+					culture = occitan
+					culture = anglo-saxon
+					culture = english
+				}
+			}
+
+			owner = {
+				NOR = {
+					culture = norman
+					culture = french
+					culture = occitan
+					culture = anglo-saxon
+				}
+			}
+		}
+
+		# Sicilian melting pot
+		trigger_if = {
+			limit = {
+				region = custom_sicily
+
+				OR = {
+					culture = greek
+					culture_group = arabic
+					culture_group = maghrebi
+					culture = norman
+					culture = sicilian
+					culture = sicilian_greek
+					culture = sicilian_arabic
+				}
+			}
+
+			owner = {
+				NOR = {
+					culture = norman
+					culture = greek
+					is_italian_trigger = yes
+
+					AND = {
+						OR = {
+							culture_group = arabic
+							culture_group = maghrebi
+						}
+
+						NOT = { culture = sicilian_arabic }
+					}
+				}
+			}
+		}
+
+		# Anglo-Norse melting pot
+		trigger_if = {
+			limit = {
+				region = custom_england
+
+				OR = {
+					culture = anglo-saxon
+					culture = norse
+					culture = english_norse
+				}
+			}
+
+			owner = {
+				NOR = {
+					culture = anglo-saxon
+					culture = norse
+				}
+			}
+		}
+
+		# Gallawa melting pot
+		trigger_if = {
+			limit = {
+				OR = {
+					region = custom_scotland
+					region = world_europe_west_ireland
+					region = custom_wales
+					region = custom_brittany
+					region = custom_cornwall
+					region = custom_north_sea
+				}
+
+				OR = {
+					culture_group = north_germanic
+					culture = pictish
+					culture = breton
+					culture = cumbric
+					culture = cornish
+					culture = gallawa
+					culture = scottish
+					culture = irish
+					culture = welsh
+				}
+
+				owner = {
+					OR = {
+						culture_group = north_germanic
+						culture = pictish
+						culture = breton
+						culture = cumbric
+						culture = cornish
+						culture = scottish
+						culture = irish
+						culture = welsh
+					}
+				}
+			}
+
+			culture_group = owner
+		}
+
+		# Russian melting pot
+		trigger_if = {
+			limit = {
+				has_global_flag = russian_melting_pot
+
+				OR = {
+					region = custom_ruthenia
+					region = custom_novgorod
+					region = custom_muscovy
+				}
+
+				OR = {
+					culture_group = east_slavic
+					culture = norse
+					culture = russian
+				}
+			}
+
+			owner = {
+				NOR = {
+					culture_group = east_slavic
+					culture = norse
+				}
+			}
+		}
+
+		# Norman melting pot
+		trigger_if = {
+			limit = {
+				region = world_europe_west_francia
+
+				OR = {
+					culture = norse
+					culture = french
+					culture = breton
+					culture = occitan
+					culture = norman
+				}
+			}
+
+			owner = {
+				NOR = {
+					culture = norse
+					culture = french
+					culture = breton
+					culture = occitan
+				}
+			}
+		}
+
+		# Carantanian emergence
+		trigger_if = {
+			limit = {
+				region = custom_slovenia
+
+				OR = {
+					culture = croatian
+					culture = serbian
+					culture = bohemian
+					culture = yugoslavian
+					culture = slovene
+				}
+			}
+
+			owner = {
+				NOR = {
+					culture = croatian
+					culture = serbian
+					culture = yugoslavian
+					culture = bohemian
+				}
+			}
+		}
+
+		# Yugoslavian melting pot
+		trigger_if = {
+			limit = {
+				OR = {
+					region = custom_croatia
+					region = custom_bulgaria
+					region = custom_serbia
+					region = custom_slovenia
+				}
+
+				OR = {
+					culture = croatian
+					culture = serbian
+					culture = bulgarian
+					culture = yugoslavian
+					culture = slovene
+				}
+			}
+
+			owner = {
+				NOR = {
+					culture = croatian
+					culture = serbian
+					culture = bulgarian
+					culture = slovene
+				}
+			}
+		}
+
+		# Dalmatian melting pot
+		trigger_if = {
+			limit = {
+				region = custom_dalmatian_region
+
+				OR = {
+					is_dalmatian_meltingpot_culture_yugoslav = yes
+					is_dalmatian_meltingpot_culture_italian = yes
+					culture = dalmatian
+				}
+			}
+
+			owner = {
+				is_dalmatian_meltingpot_culture_yugoslav = no
+				is_dalmatian_meltingpot_culture_italian = no
+			}
+		}
+
+		# Greco-Persian melting pot
+		trigger_if = {
+			limit = {
+				OR = {
+					region = world_asia_minor
+					region = world_persia
+					region = custom_byzantium
+					region = custom_mesopotamia
+					region = custom_syria
+				}
+
+				OR = {
+					is_greekpersian_meltingpot_greek = yes
+					is_greekpersian_meltingpot_persian = yes
+					culture = grecopersian
+				}
+			}
+
+			owner = {
+				is_greekpersian_meltingpot_greek = no
+				is_greekpersian_meltingpot_persian = no
+			}
+		}
+
+		# No flipping back to Norse culture before 1150
+		trigger_if = {
+			limit = {
+				owner = {
+					culture = norse
+				}
+
+				OR = {
+					culture = swedish
+					culture = norwegian
+					culture = danish
+					culture = icelandic
+				}
+			}
+
+			has_global_flag = norse_culture_flipping
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 550
+
+		mult_modifier = {
+			factor = 10
+
+			owner = {
+				top_liege = {
+					has_law = culture_conversion_0
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			owner = {
+				top_liege = {
+					has_law = culture_conversion_2
+					culture = PREV
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 10
+
+			owner = { independent = no }
+
+			NOT = {
+				any_neighbor_province = {
+					has_owner = yes
+
+					owner = {
+						ROOT = {
+							owner = {
+								culture = PREVPREV
+								culture = PREVPREVPREV
+							}
+						}
+					}
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 5
+
+			owner = { independent = yes }
+
+			NOT = {
+				any_neighbor_province = {
+					has_owner = yes
+					owner = {
+						ROOT = {
+							owner = {
+								culture = PREVPREV
+								culture = PREVPREVPREV
+							}
+						}
+					}
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.80
+			owner = { has_ambition = obj_civilize_province }
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			owner = { learning < 1 }
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			owner = { learning < 2 }
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			owner = { learning < 3 }
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			owner = { learning < 4 }
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			owner = { learning < 5 }
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			owner = { learning < 6 }
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			owner = { learning < 7 }
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			owner = { learning < 8 }
+		}
+
+		mult_modifier = {
+			factor = 1.05
+			owner = { learning < 9 }
+		}
+
+		mult_modifier = {
+			factor = 0.95
+			owner = { learning >= 11 }
+		}
+
+		mult_modifier = {
+			factor = 0.95
+			owner = { learning >= 12 }
+		}
+
+		mult_modifier = {
+			factor = 0.95
+			owner = { learning >= 13 }
+		}
+
+		mult_modifier = {
+			factor = 0.95
+			owner = { learning >= 14 }
+		}
+
+		mult_modifier = {
+			factor = 0.95
+			owner = { learning >= 15 }
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			owner = { learning >= 16 }
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			owner = { learning >= 17 }
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			owner = { learning >= 18 }
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			owner = { learning >= 19 }
+		}
+
+		mult_modifier = {
+			factor = 0.85
+			owner = { learning >= 20 }
+		}
+
+		mult_modifier = {
+			factor = 0.85
+			owner = { learning >= 21 }
+		}
+
+		mult_modifier = {
+			factor = 0.85
+			owner = { learning >= 22 }
+		}
+
+		mult_modifier = {
+			factor = 0.85
+			owner = { learning >= 23 }
+		}
+
+		mult_modifier = {
+			factor = 0.85
+			owner = { learning >= 24 }
+		}
+
+		mult_modifier = {
+			factor = 0.85
+			owner = { learning >= 25 }
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			owner = { trait = gregarious }
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			owner = { trait = shy }
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			owner = { trait = poet }
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			owner = { trait = diligent }
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			owner = { trait = humble }
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			owner = { trait = content }
+		}
+
+		mult_modifier = {
+			factor = 0.25
+
+			OR = {
+				region = custom_nikaea
+				region = custom_trebizond
+				region = custom_armenia
+			}
+
+			owner = { culture = turkish }
+
+			year < 1200
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			culture_group = altaic
+			owner = { culture = mongol }
+			year < 1300
+		}
+
+		mult_modifier = {
+			factor = 2.0
+
+			owner = { culture = mongol }
+			NOT = { culture_group = altaic }
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			owner = { religion_group = muslim }
+		}
+
+		mult_modifier = {
+			factor = 0.4 # Altaic nomad steppe bonus vs non-Altaics
+
+			owner = {
+				culture_group = altaic
+			}
+
+			OR = {
+				owner = {
+					is_capital = ROOT
+				}
+
+				trigger_if = {
+					limit = { culture_group = altaic }
+					terrain = steppe
+				}
+			}
+		}
+
+		# Catholics
+		mult_modifier = {
+			factor = 5
+
+			OR = {
+				culture_group = north_germanic
+				culture_group = central_germanic
+				culture_group = west_germanic
+				culture_group = latin
+				culture_group = iberian
+				culture_group = celtic
+				culture_group = west_slavic
+				culture_group = magyar
+			}
+
+			owner = {
+				NOR = {
+					culture_group = north_germanic
+					culture_group = central_germanic
+					culture_group = west_germanic
+					culture_group = latin
+					culture_group = iberian
+					culture_group = celtic
+					culture_group = west_slavic
+					culture_group = magyar
+				}
+			}
+		}
+
+		# Orthodox
+		mult_modifier = {
+			factor = 5
+
+			OR = {
+				culture_group = byzantine
+				culture_group = east_slavic
+				culture_group = south_slavic
+			}
+
+			owner = {
+				NOR = {
+					culture = turkish #special
+					culture_group = byzantine
+					culture_group = east_slavic
+					culture_group = south_slavic
+				}
+			}
+		}
+
+		# Baltic pagans
+		mult_modifier = {
+			factor = 5
+
+			OR = {
+				culture_group = finno_ugric
+				culture_group = baltic
+			}
+
+			owner = {
+				NOR = {
+					culture_group = finno_ugric
+					culture_group = baltic
+				}
+			}
+		}
+
+		# Turks
+		mult_modifier = {
+			factor = 5
+
+			culture_group = altaic
+			NOT = { culture_group = owner }
+		}
+
+		# Arabs
+		mult_modifier = {
+			factor = 5
+
+			culture_group = arabic
+			NOT = { culture_group = owner }
+		}
+
+		# Persians
+		mult_modifier = {
+			factor = 5
+
+			culture_group = iranian
+			NOT = { culture_group = owner }
+		}
+
+		# Africa
+		mult_modifier = {
+			factor = 5
+
+			culture_group = west_african
+			NOT = { culture_group = owner }
+		}
+
+		mult_modifier = {
+			factor = 5
+
+			culture_group = east_african
+			NOT = { culture_group = owner }
+		}
+
+		mult_modifier = {
+			factor = 0.75
+			has_province_flag = recent_depopulation_1
+		}
+
+		mult_modifier = {
+			factor = 0.5
+			has_province_flag = recent_depopulation_2
+		}
+
+		mult_modifier = {
+			factor = 0.25
+			has_province_flag = recent_depopulation_3
+		}
+
+		mult_modifier = {
+			factor = 3
+
+			OR = {
+				has_game_rule = {
+					name = culture_conversion
+					value = slower_normal
+				}
+
+				has_game_rule = {
+					name = culture_conversion
+					value = faster_melting_pots_and_slower_normal
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.25
+
+			OR = {
+				culture = zhangzhung
+				culture = sumpa
+			}
+
+			owner = {
+				culture = bodpa
+
+				OR = {
+					any_owned_bloodline = {
+						has_bloodline_flag = bloodline_songtsen_gampo
+						bloodline_is_active_for = PREV
+					}
+
+					top_liege = {
+						any_owned_bloodline = {
+							has_bloodline_flag = bloodline_songtsen_gampo
+							bloodline_is_active_for = PREV
+						}
+					}
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.6
+
+			owner = {
+		    	any_owned_bloodline = {
+    				has_bloodline_flag = cultural_saintly_bloodline
+					bloodline_is_active_for = PREV
+
+    				founder = {
+    					culture = PREVPREV
+    				}
+    			}
+			}
+		}
+
+		mult_modifier = { # Roman Renaissance
+			factor = 0.5
+
+			has_global_flag = flag_started_roman_renaissance
+			liege = { culture = roman }
+			location = { county = { culture_group = latin } }
+		}
+
+		mult_modifier = { # Greek culture is more impervious to Romanization
+			factor = 2
+
+			liege = { culture = roman }
+			location = { county = { culture = greek } }
+		}
+
+		# Effect of wonder upgrades
+		mult_modifier = {
+			factor = 0.75
+
+			owner = {
+				top_liege = {
+					any_realm_wonder_upgrade = {
+						has_wonder_upgrade_flag = culture_conversion_faster
+						is_active = yes
+
+						wonder = {
+							original_wonder_owner = {
+								culture_group = PREVPREVPREV
+							}
+						}
+					}
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.95
+
+			owner = {
+				job_treasurer = {
+					stewardship < 10
+					stewardship >= 8
+					has_job_action = action_administer_realm
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.75
+
+			owner = {
+				job_treasurer = {
+					stewardship >= 10
+					has_job_action = action_administer_realm
+				}
+			}
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = { has_province_flag = may_switch_culture }
+
+			clr_province_flag = may_switch_culture
+			save_event_target_as = converted_province
+
+			add_province_modifier = {
+				name = recent_culture_change
+				duration = -1
+			}
+
+			culture = owner
+
+			owner = {
+				if = {
+					limit = { has_ambition = obj_civilize_province }
+
+					set_character_flag = civilized_province
+				}
+
+				top_liege = {
+					if = {
+						limit = {
+							NOT = { character = PREV }
+							has_ambition = obj_civilize_province
+							culture = PREV
+						}
+					}
+
+					set_character_flag = civilized_province
+				}
+			}
+		}
+		else = {
+			set_province_flag = may_switch_culture
+		}
+	}
+}
+
+# Ruler goes native
+character_event = {
+	id = 55001
+	desc = EVTDESC55001
+	picture = GFX_evt_throne_room
+
+	only_rulers = yes
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+
+	trigger = {
+		is_nomadic = no
+		religion = capital_scope
+
+		NOR = {
+			culture = capital_scope
+			has_character_flag = gone_native
+		}
+
+		capital_scope = {
+			NOT = {
+				any_neighbor_province = {
+					has_owner = yes
+					culture = ROOT
+				}
+			}
+
+			trigger_if = {
+				limit = {
+					OR = {
+						culture = greek
+						culture = levantine_arabic
+						culture = egyptian_arabic
+						culture = bedouin_arabic
+					}
+				}
+
+				ROOT = {
+					is_catholic_branch = no
+					NOT = { religion = chalcedonian }
+				}
+			}
+
+			trigger_if = {
+				limit = { culture = anglo-saxon }
+
+				ROOT = {
+					NOR = {
+						culture_group = north_germanic
+						culture = norman
+						culture = french
+						culture = occitan
+					}
+				}
+			}
+
+			trigger_if = {
+				limit = { region = custom_sicily }
+
+				ROOT = {
+					NOR = {
+						culture = greek
+						culture = maghreb_arabic
+						culture = norman
+					}
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 400
+
+		mult_modifier = {
+			factor = 0.8
+			age < 20
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			age < 30
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			age >= 40
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			age >= 50
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			age >= 60
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			age >= 70
+		}
+
+		mult_modifier = {
+			factor = 2.0
+			age >= 80
+		}
+
+		mult_modifier = {
+			factor = 0.75
+
+			NOT = {
+				any_demesne_province = {
+					culture = ROOT
+					owned_by = PREV
+				}
+			}
+		}
+
+		mult_modifier = {
+			factor = 2.0
+
+			independent = no
+			NOT = { culture = top_liege }
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			demesne_size = 2
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			demesne_size = 4
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			demesne_size = 6
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			demesne_size = 8
+		}
+
+		mult_modifier = {
+			factor = 1.1
+			demesne_size = 10
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			trait = gregarious
+		}
+
+		mult_modifier = {
+			factor = 1.25
+			trait = shy
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			trait = poet
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			trait = diligent
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			trait = humble
+		}
+
+		mult_modifier = {
+			factor = 0.9
+			trait = content
+		}
+
+		mult_modifier = {
+			factor = 5.0
+			culture = turkish
+			year < 1200
+		}
+
+		mult_modifier = {
+			factor = 5.0
+			culture = mongol
+			year < 1300
+		}
+
+		mult_modifier = {
+			factor = 10
+
+			top_liege = {
+				has_law = culture_conversion_0
+			}
+		}
+
+		mult_modifier = {
+			factor = 0.5
+
+			top_liege = {
+				has_law = culture_conversion_2
+				culture = ROOT
+			}
+		}
+	}
+
+	immediate = {
+		capital_scope = {
+			save_event_target_as = target_culture
+		}
+	}
+
+	option = {
+		name = EVTOPTA55001
+
+		ai_chance = {
+			factor = 75
+
+			trigger = {
+				trigger_if = {
+					limit = {
+						top_liege = {
+							culture = ROOT
+							has_law = culture_conversion_2
+						}
+					}
+
+					opinion = {
+						who = top_liege
+						value < 0
+					}
+				}
+
+				trigger_if = {
+					limit = { culture = top_liege }
+
+					opinion = {
+						who = top_liege
+						value < 50
+					}
+				}
+			}
+
+			mult_modifier = {
+				factor = 1.2
+
+				top_liege = {
+					has_law = culture_conversion_0
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.2
+
+				top_liege = {
+					has_law = culture_conversion_2
+					culture = ROOT
+				}
+			}
+
+			mult_modifier = {
+				factor = 0.1
+
+				dynasty = top_liege
+				culture = top_liege
+			}
+		}
+
+		culture = event_target:target_culture
+
+		any_child = {
+			show_scope_change = no
+
+			limit = {
+				is_adult = no
+				is_vassal_or_below_of = ROOT
+			}
+
+			culture = event_target:target_culture
+		}
+
+		set_character_flag = gone_native
+		prestige = -10
+	}
+
+	option = {
+		name = EVTOPTB55001
+
+		ai_chance = {
+			factor = 25
+
+			mult_modifier = {
+				factor = 10
+				real_tier = EMPEROR
+			}
+
+			mult_modifier = {
+				factor = 5
+				real_tier = KING
+			}
+
+			mult_modifier = {
+				factor = 2
+				real_tier = DUKE
+			}
+
+			# Germanic + Latin
+			mult_modifier = {
+				factor = 5
+
+				OR = {
+					culture_group = north_germanic
+					culture_group = central_germanic
+					culture_group = west_germanic
+					culture_group = latin
+					culture_group = iberian
+				}
+
+				capital_scope = {
+					NOR = {
+						culture_group = north_germanic
+						culture_group = central_germanic
+						culture_group = west_germanic
+						culture_group = latin
+						culture_group = iberian
+					}
+				}
+			}
+
+			# West slavs
+			mult_modifier = {
+				factor = 5
+
+				OR = {
+					culture_group = west_slavic
+					culture_group = magyar
+				}
+
+				capital_scope = {
+					NOR = {
+						culture_group = west_slavic
+						culture_group = magyar
+					}
+				}
+			}
+
+			# Celts
+			mult_modifier = {
+				factor = 5
+
+				culture_group = celtic
+				NOT = { culture_group = capital_scope }
+			}
+
+			# Orthodox
+			mult_modifier = {
+				factor = 5
+
+				OR = {
+					culture_group = byzantine
+					culture_group = east_slavic
+					culture_group = south_slavic
+				}
+
+				capital_scope = {
+					NOR = {
+						culture_group = byzantine
+						culture_group = east_slavic
+						culture_group = south_slavic
+					}
+				}
+
+			}
+			# Baltic pagans
+			mult_modifier = {
+				factor = 5
+
+				OR = {
+					culture_group = finno_ugric
+					culture_group = baltic
+				}
+
+				capital_scope = {
+					NOR = {
+						culture_group = finno_ugric
+						culture_group = baltic
+					}
+				}
+			}
+
+			# Turks
+			mult_modifier = {
+				factor = 5
+
+				culture_group = altaic
+				NOT = { culture_group = capital_scope }
+			}
+
+			# Arabs
+			mult_modifier = {
+				factor = 5
+
+				culture_group = arabic
+				NOT = { culture_group = capital_scope }
+			}
+
+			# Persians
+			mult_modifier = {
+				factor = 5
+
+				culture_group = iranian
+				NOT = { culture_group = capital_scope }
+			}
+
+			# Africa
+			mult_modifier = {
+				factor = 5
+				culture_group = west_african
+				NOT = { culture_group = capital_scope }
+			}
+
+			mult_modifier = {
+				factor = 5
+
+				culture_group = east_african
+				NOT = { culture_group = capital_scope }
+			}
+		}
+
+		set_character_flag = gone_native
+		prestige = 10
+	}
+}
+
+# Notification to ruler of tribal changing government
+character_event = {
+	id = 55100
+	desc = EVTDESC55100
+	picture = GFX_evt_courier
+
+	desc = {
+		text = EVTDESC55100
+		trigger = {
+			FROM = {
+				OR = {
+					government = feudal_government
+					government = theocratic_feudal_government
+				}
+			}
+		}
+	}
+
+	desc = {
+		text = EVTDESC55100_muslim
+		trigger = {
+			FROM = { government = muslim_government }
+		}
+	}
+
+	desc = {
+		text = EVTDESC55100_merchant
+		trigger = {
+			FROM = { government = merchant_republic_government }
+		}
+	}
+
+	desc = {
+		text = EVTDESC55100_city
+		trigger = {
+			FROM = { government = republic_government }
+		}
+	}
+
+	desc = {
+		text = EVTDESC55100_theocracy
+		trigger = {
+			FROM = { government = theocracy_government }
+		}
+	}
+
+	notification = yes
+	is_triggered_only = yes
+
+	ai = no
+
+	option = {
+		name = OK
+	}
+}

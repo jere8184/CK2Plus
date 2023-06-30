@@ -1,0 +1,394 @@
+# Settlement decisions are possible vs _all_ settlements and are shown in the Settlement Diplomacy View, not the Intrigue View. The taker is in the FROM scope.
+#
+# filter = [capital/owned/vassal_owned/sub_realm_owned/realm_owned/dynasty_owned/all]
+# ai_target_filter = [capital/owned/vassal_owned/sub_realm_owned/realm_owned/dynasty_owned/all] (which settlements for which the AI evaluates the decision.)
+#	owned: all settlements owned by the AI
+#	vassal_owned: all settlements owned by direct vassal rulers of the AI's employer
+#	sub_realm_owned: all settlements below the AI's employer
+#	realm_owned: all settlements in the same top realm as the AI
+#	dynasty_owned: all settlements owned by members of the same dynasty
+#	all: all settlements (Avoid if possible. VERY CPU-HEAVY!)
+#
+
+settlement_decisions = {
+
+	get_rid_of_settlement = {
+		filter = owned
+		ai_target_filter = owned
+
+		ai = no
+
+		from_potential = {
+			is_nomadic = no
+		}
+
+		potential = {
+			holder = FROM
+		}
+
+		allow = {
+			controlled_by = FROM
+			has_siege = no
+			is_capital = no
+
+			FROM = {
+				war = no
+				independent = yes
+			}
+
+			custom_tooltip = {
+				text = ONE_OTHER_HOLDING_TYPE
+
+				trigger_if = {
+					limit = { holding_type = castle }
+
+					location = {
+						any_province_holding = {
+							holding_type = castle
+							count = 2
+						}
+					}
+				}
+				trigger_else_if = {
+					limit = { holding_type = city }
+
+					location = {
+						any_province_holding = {
+							holding_type = city
+							count = 2
+						}
+					}
+				}
+				trigger_else = {
+					holding_type = temple
+
+					location = {
+						any_province_holding = {
+							holding_type = temple
+							count = 2
+						}
+					}
+				}
+			}
+
+			location = {
+				NOT = { has_province_modifier = province_chaos }
+				owner = { character = FROM }
+				duchy = { holder = FROM }
+			}
+		}
+
+		effect = {
+			destroy_settlement = THIS
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	nomad_absorb_tribal = {
+		filter = vassal_owned
+		ai_target_filter = vassal_owned
+		is_high_prio = yes
+		ai_check_interval = 3
+
+		only_playable = yes
+
+		from_potential = {
+			is_nomadic = yes
+		}
+
+		potential = {
+			holding_type = tribal
+			has_siege = no
+
+			holder_scope = {
+				real_tier = BARON
+				vassal_of = FROM
+			}
+		}
+
+		allow = {
+			FROM = { war = no }
+
+			location = {
+				culture = FROM
+				religion = FROM
+			}
+		}
+
+		effect = {
+			holder_scope = { save_event_target_as = old_holder }
+			location = { county = { save_event_target_as = county_title } }
+
+			FROM = {
+				show_scope_change = no
+
+				wealth = 10
+
+				random_list = {
+					10 = { military_techpoints = 2 }
+					10 = { economy_techpoints = 2 }
+					10 = { culture_techpoints = 2 }
+				}
+			}
+
+			destroy_settlement = THIS
+
+			hidden_effect = {
+				event_target:old_holder = {
+					if = {
+						limit = {
+							culture = FROM
+							religion = FROM
+						}
+
+						move_character = FROM
+					}
+					else = {
+						add_pressed_claim = event_target:county_title
+						banish = yes
+
+						opinion = {
+							name = opinion_hate
+							who = FROM
+						}
+
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	# Vanilla decision to continuously pillage no longer ends up destroying settlements automatically. This decision must be used instead.
+	pillage_settlement_destroy = {
+		filter = all
+		ai_target_filter = realm_owned
+		is_high_prio = yes
+		ai_check_interval = 3
+
+		only_playable = yes
+
+		from_potential = {
+			OR = {
+				is_nomadic = yes
+				is_tribal = yes
+			}
+
+			has_dlc = "Horse Lords"
+		}
+
+		potential = {
+			OR = {
+				holder = FROM
+				controlled_by = FROM # Not available to AI, due to filters
+			}
+
+			trigger_if = {
+				limit = { holding_type = tribal }
+				FROM = { is_tribal = no }
+			}
+
+			tier = BARON # Here because the next line causes the game to spew all over error.log for some reason
+			num_of_buildings == 0
+
+			NOR = {
+				holding_type = nomad
+				is_allowed_holding_type = FROM # Not if allowed holding
+			}
+		}
+
+		allow = {
+			location = {
+				NOT = { has_province_modifier = recently_burnt_the_land }
+
+				OR = {
+					owner = { character = FROM }
+					NOT = { has_province_modifier = recently_burnt_the_land_not_owner }
+				}
+			}
+
+			OR = {
+				custom_tooltip = {
+					text = PROVINCE_SAME_RELIGION_CULTURE
+
+					location = {
+						culture = FROM
+						religion = FROM
+					}
+				}
+
+				custom_tooltip = {
+					text = NOT_LAST_NON_NOMAD_HOLDING
+
+					location = {
+						any_province_holding = {
+							NOR = {
+								title = ROOT
+								holding_type = nomad
+							}
+						}
+					}
+				}
+			}
+		}
+
+		effect = {
+			log = "[From.GetTitledName] has pillaged [Root.GetName], destroying it"
+
+			if = {
+				limit = { holding_type = tribal }
+
+				if = {
+					limit = { holder = FROM }
+
+					FROM = {
+						show_scope_change = no
+
+						wealth = 25
+
+						random_list = {
+							10 = { military_techpoints = 2 }
+							10 = { economy_techpoints = 2 }
+							10 = { culture_techpoints = 2 }
+						}
+					}
+				}
+				else = {
+					FROM = {
+						show_scope_change = no
+
+						wealth = 5
+
+						random_list = {
+							10 = { military_techpoints = 2 }
+							10 = { economy_techpoints = 2 }
+							10 = { culture_techpoints = 2 }
+						}
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = {
+						location = { owned_by = FROM }
+					}
+
+					FROM = {
+						show_scope_change = no
+
+						wealth = 50
+
+						random_list = {
+							10 = { military_techpoints = 10 }
+							10 = { economy_techpoints = 10 }
+							10 = { culture_techpoints = 10 }
+						}
+					}
+				}
+				else = {
+					FROM = {
+						show_scope_change = no
+
+						wealth = 10
+
+						random_list = {
+							10 = { military_techpoints = 10 }
+							10 = { economy_techpoints = 10 }
+							10 = { culture_techpoints = 10 }
+						}
+					}
+				}
+			}
+
+			location = {
+				show_scope_change = no
+
+				if = {
+					limit = {
+						OR = {
+							has_castle = yes
+							has_city = yes
+							has_temple = yes
+							has_tribal = yes
+						}
+					}
+
+					add_province_modifier = {
+						name = burnt_the_land
+						years = 8
+						stacking = yes
+					}
+
+					add_province_modifier = {
+						name = recently_burnt_the_land
+						months = 6
+					}
+				}
+			}
+
+			hidden_effect = {
+				location = { save_event_target_as = target_location }
+
+				FROM = {
+					if = {
+						limit = {
+							has_nickname = no
+							is_adult = yes
+							is_incapable = no
+						}
+
+						random_list = {
+							5 = { give_nickname = nick_the_destroyer }
+							5 = { give_nickname = nick_the_terror_of_provincename }
+
+							5 = {
+								give_nickname = nick_the_scourge_of_god
+								trigger = { NOT = { religion = event_target:target_location } }
+							}
+
+							5 = {
+								give_nickname = nick_the_slayer_of_culture
+								trigger = { NOT = { culture = event_target:target_location } }
+							}
+
+							5 = {
+								give_nickname = nick_the_culture_marauder
+								trigger = { NOT = { culture = event_target:target_location } }
+							}
+
+							75 = {}
+						}
+					}
+				}
+			}
+
+			destroy_settlement = THIS
+
+			location = {
+				if = {
+					limit = { owned_by = FROM }
+					province_event = { id = HL.4814 } # Notify, flavour - TODO: Add event/option for provinces not owned by FROM?
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+
+			trigger = { # Only for tribal holdings
+				holding_type = tribal
+
+				NAND = { # Some historical guidance
+					kingdom = { title = k_carpathia }
+					FROM = { culture = hungarian }
+				}
+			}
+		}
+	}
+}

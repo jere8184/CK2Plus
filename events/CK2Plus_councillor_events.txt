@@ -1,0 +1,1771 @@
+
+namespace = Plus
+
+#reserved: Plus.3000 to Plus.3099
+
+#######################################
+# COUNCILLOR AI EVENTS
+# Written by Rylock
+#######################################
+
+# Setting job for chancellor
+character_event = {
+	id = Plus.3000
+
+	hide_window = yes
+
+	only_playable = yes
+	only_capable = yes
+	prisoner = no
+	ai = yes
+
+	trigger = {
+		is_landed = yes
+		has_regent = no
+
+		trigger_if = {
+			limit = { independent = no }
+			higher_real_tier_than = COUNT
+		}
+
+		job_chancellor = {
+			diplomacy >= 8
+			in_command_trigger = no
+
+			trigger_if = {
+				limit = { has_character_flag = assigned_councillor_job }
+
+				had_character_flag = {
+					flag = assigned_councillor_job
+					months >= 6
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 1
+	}
+
+	immediate = {
+		job_chancellor = {
+			set_character_flag = assigned_councillor_job
+			save_event_target_as = my_chancellor
+		}
+
+		# First priority: improve relations with powerful faction leaders
+		if = {
+			limit = { pf_war_flag_trigger = no }
+
+			random_vassal = {
+				limit = {
+					trigger_if = {
+						limit = { leads_faction = faction_court }
+						faction_power = { faction = faction_court power >= 0.5 }
+					}
+					trigger_else_if = {
+						limit = { leads_faction = faction_prosperity }
+						faction_power = { faction = faction_prosperity power >= 0.5 }
+					}
+					trigger_else_if = {
+						limit = { leads_faction = faction_glory }
+						faction_power = { faction = faction_glory power >= 0.5 }
+					}
+					trigger_else = {
+						leads_faction = faction_tradition
+						faction_power = { faction = faction_tradition power >= 0.5 }
+					}
+
+					in_command_trigger = no
+					is_theocracy = no
+					opinion = { who = ROOT value < 10 }
+					opinion = { who = ROOT value >= -40 }
+
+					NOR = {
+						character = event_target:my_chancellor
+
+						has_opinion_modifier = {
+							name = opinion_coerced_into_leaving_faction
+							who = ROOT
+						}
+					}
+
+					trigger_if = {
+						limit = { has_character_flag = faction_negotiate }
+
+						had_character_flag = {
+							flag = faction_negotiate
+							years >= 5
+						}
+					}
+				}
+
+				capital_scope = { save_event_target_as = target_province }
+
+				random = {
+					chance = 75
+
+					event_target:my_chancellor = {
+						set_job_action = {
+							action = action_improve_relations
+							where = event_target:target_province
+						}
+					}
+
+					break = yes
+				}
+			}
+		}
+
+		# Second priority: improve clan sentiment
+		if = {
+			limit = {
+				is_nomadic = yes
+				clan_title = { clan = yes }
+			}
+
+			top_liege = {
+				random_vassal = {
+					limit = {
+						is_nomadic = yes
+						clan_title = { clan = yes }
+						reverse_clan_opinion = { who = ROOT value >= -25 }
+						clan_opinion = { who = ROOT value < 50 }
+
+						NOR = {
+							has_feud_with = ROOT
+							character = event_target:my_chancellor
+						}
+					}
+
+					capital_scope = { save_event_target_as = target_province }
+
+					random = {
+						chance = 75
+
+						event_target:my_chancellor = {
+							set_job_action = {
+								action = action_clan_sentiment
+								where = event_target:target_province
+							}
+						}
+
+						break = yes
+					}
+				}
+			}
+		}
+
+		# Third priority: improve relations with powerful vassals
+		random_vassal = {
+			limit = {
+				among_most_powerful_vassals = 5
+				relative_power_to_liege >= 0.10
+				has_regent = no
+				is_theocracy = no
+				is_playable = yes
+				opinion = { who = ROOT value >= -40 }
+				opinion = { who = ROOT value < 0 }
+				NOT = { character = event_target:my_chancellor }
+			}
+
+			capital_scope = { save_event_target_as = target_province }
+
+			random = {
+				chance = 75
+
+				event_target:my_chancellor = {
+					set_job_action = {
+						action = action_improve_relations
+						where = event_target:target_province
+					}
+				}
+
+				break = yes
+			}
+		}
+
+		# Fourth priority: fabricate a claim on a neighboring county
+		if = {
+			limit = {
+				prestige >= 0
+				wealth >= 100
+				practical_age < 50
+				is_nomadic = no
+
+				OR = {
+					trait = ambitious
+					trait = envious
+					trait = greedy
+				}
+
+				NOR = {
+					trait = content
+					trait = craven
+				}
+
+				job_chancellor = {
+					NOR = {
+						is_child_of = ROOT
+						is_primary_heir = ROOT
+					}
+				}
+			}
+
+			if = {
+				limit = { independent = yes }
+
+				random_realm_province = {
+					limit = {
+						held_under_PREV = yes
+
+						any_neighbor_province = {
+							owner = { is_within_diplo_range = ROOT }
+
+							OR = {
+								county = {
+									NOT = { claimed_by = ROOT }
+
+									holder_scope = {
+										NOR = {
+											character = ROOT
+											character = event_target:my_chancellor
+											is_vassal_or_below_of = event_target:my_chancellor
+										}
+									}
+								}
+
+								duchy = {
+									NOT = { claimed_by = ROOT }
+
+									holder_scope = {
+										NOR = {
+											character = ROOT
+											character = event_target:my_chancellor
+											is_vassal_or_below_of = event_target:my_chancellor
+										}
+									}
+								}
+							}
+
+							# TODO:
+							#	Check it's not a county ROOT could (potentially, crown law allowing) declare a de jure war for
+							#	Maybe don't fabricate claims on targets who could be holy warred instead?
+							#	Prefer counties close to personal demesne?
+							#	Prefer counties in duchies in which we already own at least another county, but not yet > 50% ?
+							#	Prefer counties not owned by close relatives/dynasty members if vassal or below?
+						}
+					}
+
+					random_neighbor_province = {
+						limit = {
+							owner = { is_within_diplo_range = ROOT }
+
+							OR = {
+								county = {
+									NOT = { claimed_by = ROOT }
+
+									holder_scope = {
+										NOR = {
+											character = ROOT
+											character = event_target:my_chancellor
+											is_vassal_or_below_of = event_target:my_chancellor
+										}
+									}
+								}
+
+								duchy = {
+									NOT = { claimed_by = ROOT }
+
+									holder_scope = {
+										NOR = {
+											character = ROOT
+											character = event_target:my_chancellor
+											is_vassal_or_below_of = event_target:my_chancellor
+										}
+									}
+								}
+							}
+
+							# TODO:
+							#	Check it's not a county ROOT could (potentially, crown law allowing) declare a de jure war for
+							#	Maybe don't fabricate claims on targets who could be holy warred instead?
+							#	Prefer counties close to personal demesne?
+							#	Prefer counties in duchies in which we already own at least another county, but not yet > 50% ?
+							#	Prefer counties not owned by close relatives/dynasty members if vassal or below?
+						}
+
+						save_event_target_as = target_province
+
+						random = {
+							chance = 75
+
+							event_target:my_chancellor = {
+								set_job_action = {
+									action = action_fabricate_claims
+									where = event_target:target_province
+								}
+							}
+
+							break = yes
+						}
+					}
+				}
+			}
+			else = {
+				random_demesne_province = {
+					limit = {
+						owned_by = PREV
+
+						any_neighbor_province = {
+							owner = { is_within_diplo_range = ROOT }
+
+							OR = {
+								county = {
+									NOT = { claimed_by = ROOT }
+
+									holder_scope = {
+										NOR = {
+											character = ROOT
+											character = event_target:my_chancellor
+											is_vassal_or_below_of = event_target:my_chancellor
+										}
+									}
+								}
+
+								duchy = {
+									NOT = { claimed_by = ROOT }
+
+									holder_scope = {
+										NOR = {
+											character = ROOT
+											character = event_target:my_chancellor
+											is_vassal_or_below_of = event_target:my_chancellor
+										}
+									}
+								}
+							}
+
+							# TODO:
+							#	Check it's not a county ROOT could (potentially, crown law allowing) declare a de jure war for
+							#	Maybe don't fabricate claims on targets who could be holy warred instead?
+							#	Prefer counties close to personal demesne?
+							#	Prefer counties in duchies in which we already own at least another county, but not yet > 50% ?
+							#	Prefer counties not owned by close relatives/dynasty members if vassal or below?
+						}
+					}
+
+					random_neighbor_province = {
+						limit = {
+							owner = { is_within_diplo_range = ROOT}
+
+							OR = {
+								county = {
+									NOT = { claimed_by = ROOT }
+
+									holder_scope = {
+										NOR = {
+											character = ROOT
+											character = event_target:my_chancellor
+											is_vassal_or_below_of = event_target:my_chancellor
+										}
+									}
+								}
+
+								duchy = {
+									NOT = { claimed_by = ROOT }
+
+									holder_scope = {
+										NOR = {
+											character = ROOT
+											character = event_target:my_chancellor
+											is_vassal_or_below_of = event_target:my_chancellor
+										}
+									}
+								}
+							}
+
+							# TODO:
+							#	Check it's not a county ROOT could (potentially, crown law allowing) declare a de jure war for
+							#	Maybe don't fabricate claims on targets who could be holy warred instead?
+							#	Prefer counties close to personal demesne?
+							#	Prefer counties in duchies in which we already own at least another county, but not yet > 50% ?
+							#	Prefer counties not owned by close relatives/dynasty members if vassal or below?
+						}
+
+						save_event_target_as = target_province
+
+						random = {
+							chance = 75
+
+							ROOT = {
+								job_chancellor = {
+									set_job_action = {
+										action = action_fabricate_claims
+										where = event_target:target_province
+									}
+								}
+							}
+
+							break = yes
+						}
+					}
+				}
+			}
+		}
+
+		# Fifth priority: sow dissent in neighboring realms
+		if = {
+			limit = {
+				independent = yes
+
+				OR = {
+					trait = deceitful
+					trait = master_schemer
+					trait = paranoid
+					intrigue >= 12
+				}
+
+				NOR = {
+					trait = trusting
+					trait = honest
+					trait = kind
+					trait = imbecile
+				}
+
+				job_spymaster = {
+					religion = ROOT
+
+					NOR = {
+						is_child_of = ROOT
+						is_primary_heir = ROOT
+					}
+				}
+			}
+
+			random_independent_ruler = {
+				limit = {
+					religion = ROOT
+
+					OR = {
+						war_with = ROOT
+						is_rival = ROOT
+						reverse_has_truce = ROOT
+
+						reverse_opinion = {
+							who = ROOT
+							value < -50
+						}
+					}
+
+					any_vassal = {
+						is_playable = yes
+
+						opinion = {
+							who = liege
+							value >= 0
+						}
+					}
+				}
+
+				capital_scope = {
+					save_event_target_as = target_province
+
+					random = {
+						chance = 75
+
+						event_target:my_chancellor = {
+							set_job_action = {
+								action = action_sow_dissent
+								where = event_target:target_province
+							}
+						}
+
+						break = yes
+					}
+				}
+			}
+		}
+	}
+}
+
+# Setting job for steward
+character_event = {
+	id = Plus.3001
+
+	hide_window = yes
+
+	only_playable = yes
+	only_capable = yes
+	prisoner = no
+	ai = yes
+
+	trigger = {
+		is_landed = yes
+		has_regent = no
+
+		trigger_if = {
+			limit = { independent = no }
+			higher_real_tier_than = COUNT
+		}
+
+		job_treasurer = {
+			stewardship >= 8
+			in_command_trigger = no
+
+			trigger_if = {
+				limit = { has_character_flag = assigned_councillor_job }
+
+				had_character_flag = {
+					flag = assigned_councillor_job
+					months >= 6
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 1
+	}
+
+	immediate = {
+		job_treasurer = {
+			set_character_flag = assigned_councillor_job
+			save_event_target_as = my_steward
+		}
+
+		# First priority: settle the tribe for tribals
+		if = {
+			limit = {
+				is_tribal = yes
+
+				OR = {
+					wealth >= 25
+					prestige >= 100
+					trait = ambitious
+				}
+
+				NOT = {
+					any_demesne_province = {
+						has_province_modifier = building_new_city
+						owned_by = PREV
+					}
+				}
+			}
+
+			random_demesne_province = {
+				limit = {
+					culture = ROOT
+					has_city = no
+					num_of_empty_holdings >= 1
+					county = { is_occupied = no }
+					owned_by = PREV
+				}
+
+				preferred_limit = {
+					is_capital = yes
+				}
+
+				save_event_target_as = target_province
+
+				random = {
+					chance = 75
+
+					event_target:my_steward = {
+						set_job_action = {
+							action = action_settle_tribe
+							where = event_target:target_province
+						}
+					}
+
+					break = yes
+				}
+			}
+		}
+
+		# Second priority: change province culture for tribals/nomads
+		if = {
+			limit = {
+				OR = {
+					is_tribal = yes
+					is_nomadic = yes
+				}
+			}
+
+			random_demesne_province = {
+				limit = {
+					county = { is_occupied = no }
+					NOT = { culture = ROOT }
+					owned_by = PREV
+				}
+
+				preferred_limit = {
+					is_capital = yes
+				}
+
+				save_event_target_as = target_province
+
+				random = {
+					chance = 75
+
+					event_target:my_steward = {
+						set_job_action = {
+							action = action_settle_tribe
+							where = event_target:target_province
+						}
+					}
+
+					break = yes
+				}
+			}
+		}
+
+		# Third priority: squeeze peasants
+		if = {
+			limit = {
+				is_tribal = no
+				is_nomadic = no
+
+				OR = {
+					trait = greedy
+					trait = cruel
+					trait = decadent
+					wealth < 0
+				}
+			}
+
+			random_demesne_province = {
+				limit = {
+					county = { is_occupied = no }
+					owned_by = PREV
+
+					NOR = {
+						has_province_modifier = high_taxes
+						has_province_modifier = peasant_unrest
+						has_province_modifier = religious_unrest
+						has_province_modifier = cultural_unrest
+						has_province_modifier = decadence_unrest
+					}
+				}
+
+				save_event_target_as = target_province
+
+				random = {
+					chance = 50
+
+					event_target:my_steward = {
+						set_job_action = {
+							action = action_squeeze_peasants
+							where = event_target:target_province
+						}
+					}
+
+					break = yes
+				}
+			}
+		}
+
+		# Fourth priority: collect tribute
+		if = {
+			limit = {
+				is_nomadic = yes
+
+				OR = {
+					trait = greedy
+					trait = cruel
+					trait = decadent
+					wealth < 0
+				}
+			}
+
+			random_vassal = {
+				limit = {
+					capital_scope = {
+						num_of_settlements >= 1
+						county = { is_occupied = no }
+					}
+
+					NOR = {
+						character = event_target:my_steward
+						has_character_modifier = hidden_extra_tribute
+					}
+				}
+
+				capital_scope = {
+					save_event_target_as = target_province
+				}
+
+				random = {
+					chance = 50
+
+					event_target:my_steward = {
+						set_job_action = {
+							action = action_collect_tribute
+							where = event_target:target_province
+						}
+					}
+
+					break = yes
+				}
+			}
+		}
+
+		# Fifth priority: build legend
+		if = {
+			limit = {
+				is_tribal = yes
+				is_adult = yes
+				prisoner = no
+				prestige >= 10
+				is_incapable = no
+
+				trigger_if = {
+					limit = { has_character_flag = tribal_build_legend_troops }
+
+					had_character_flag = {
+						flag = tribal_build_legend_troops
+						years >= 5
+					}
+				}
+
+				capital_scope = {
+					county = { is_occupied = no }
+				}
+			}
+
+			capital_scope = { save_event_target_as = target_province }
+
+			random = {
+				chance = 50
+
+				job_treasurer = {
+					set_job_action = {
+						action = action_build_legend
+						where = event_target:target_province
+					}
+				}
+
+				break = yes
+			}
+		}
+
+		# Sixth priority: Research economy tech
+		if = {
+			limit = {
+				is_tribal = no
+				is_nomadic = no
+				capital_scope = { technology_can_spread = yes }
+			}
+
+			capital_scope = {
+				save_event_target_as = target_province
+			}
+
+			job_treasurer = {
+				set_job_action = {
+					action = action_advance_eco_tech
+					where = event_target:target_province
+				}
+			}
+		}
+	}
+}
+
+# Setting job for spymaster
+character_event = {
+	id = Plus.3002
+
+	hide_window = yes
+
+	only_playable = yes
+	only_capable = yes
+	prisoner = no
+	ai = yes
+
+	trigger = {
+		is_landed = yes
+		has_regent = no
+
+		trigger_if = {
+			limit = { independent = no }
+			higher_real_tier_than = COUNT
+		}
+
+		job_spymaster = {
+			intrigue >= 8
+			in_command_trigger = no
+
+			trigger_if = {
+				limit = { has_character_flag = assigned_councillor_job }
+
+				had_character_flag = {
+					flag = assigned_councillor_job
+					months >= 6
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 1
+	}
+
+	immediate = {
+		job_spymaster = {
+			set_character_flag = assigned_councillor_job
+			save_event_target_as = my_spymaster
+		}
+
+		# First priority: scheme against problematic factions' leaders
+		if = {
+			limit = {
+				OR = {
+					trait = deceitful
+					trait = master_schemer
+					trait = paranoid
+					trait = cruel
+					intrigue >= 12
+				}
+
+				NOR = {
+					trait = trusting
+					trait = honest
+					trait = kind
+					trait = imbecile
+				}
+			}
+
+			random_vassal = {
+				limit = {
+					opinion = {
+						who = ROOT
+						value < -20
+					}
+
+					OR = {
+						AND = {
+							leads_faction = faction_court
+							faction_power = { faction = faction_court power >= 0.5 }
+							event_target:my_spymaster = { NOT = { in_faction = faction_court } }
+						}
+
+						AND = {
+							leads_faction = faction_prosperity
+							faction_power = { faction = faction_prosperity power >= 0.5 }
+							event_target:my_spymaster = { NOT = { in_faction = faction_prosperity } }
+						}
+
+						AND = {
+							leads_faction = faction_glory
+							faction_power = { faction = faction_glory power >= 0.5 }
+							event_target:my_spymaster = { NOT = { in_faction = faction_glory } }
+						}
+
+						AND = {
+							leads_faction = faction_tradition
+							faction_power = { faction = faction_tradition power >= 0.5 }
+							event_target:my_spymaster = { NOT = { in_faction = faction_tradition } }
+						}
+					}
+
+					trigger_if = {
+						limit = { has_character_flag = faction_undermine }
+
+						had_character_flag = {
+							flag = faction_undermine
+							years >= 5
+						}
+					}
+
+					NOR = {
+						character = event_target:my_spymaster
+
+						has_opinion_modifier = {
+							name = opinion_coerced_into_leaving_faction
+							who = ROOT
+						}
+					}
+				}
+
+				capital_scope = {
+					save_event_target_as = target_province
+				}
+
+				random = {
+					chance = 75
+
+					event_target:my_spymaster = {
+						set_job_action = {
+							action = action_uncover_plots
+							where = event_target:target_province
+						}
+					}
+
+					break = yes
+				}
+			}
+		}
+
+		# Second priority: build up spy network
+		if = {
+			limit = {
+				OR = {
+					trait = decadent
+					trait = deceitful
+					trait = ambitious
+					trait = paranoid
+					trait = master_schemer
+					trait = game_master
+					has_education_intrigue_trigger = yes
+					intrigue >= 12
+				}
+
+				NOR = {
+					trait = honest
+					trait = just
+				}
+			}
+
+			capital_scope = { save_event_target_as = target_province }
+
+			random = {
+				chance = 75
+
+				job_spymaster = {
+					set_job_action = {
+						action = action_organize_spies
+						where = event_target:target_province
+					}
+				}
+
+				break = yes
+			}
+		}
+
+		# Third priority: look for technology to steal
+		if = {
+			limit = {
+				OR = {
+					is_smart_trigger = yes
+					trait = envious
+					trait = scholar
+					trait = architect
+					learning >= 12
+					intrigue >= 12
+					stewardship >= 12
+				}
+
+				job_spymaster = {
+					intrigue >= 12
+
+					NOR = {
+						is_child_of = ROOT
+						is_primary_heir = ROOT
+					}
+				}
+			}
+
+			random_list = {
+				150 = { # Vassals prefer getting technology elsewhere inside the realm, closeby if possible
+					trigger = {
+						independent = no
+
+						liege = {
+							any_vassal = {
+								any_realm_province = {
+									has_higher_tech_than = ROOT
+									held_under_PREV = yes
+								}
+							}
+						}
+					}
+
+					liege = {
+						random_vassal = {
+							limit = {
+								any_realm_province = {
+									has_higher_tech_than = ROOT
+									held_under_PREV = yes
+								}
+							}
+
+							preferred_limit = {
+								shares_realm_border_with = ROOT
+							}
+
+							random_realm_province = {
+								limit = {
+									has_higher_tech_than = ROOT
+									held_under_PREV = yes
+								}
+
+								preferred_limit = {
+									owned_by = PREV
+									is_capital = yes
+								}
+
+								preferred_limit = { owned_by = PREV }
+								preferred_limit = { is_capital = yes }
+
+								save_event_target_as = target_province
+							}
+						}
+					}
+				}
+
+				50 = { # Everyone can look to nearby realms for better tech, again closeby if possible
+					trigger = {
+						any_neighbor_independent_ruler = {
+							shares_realm_border_with = ROOT
+
+							any_realm_province = {
+								has_higher_tech_than = ROOT
+								held_under_PREV = yes
+							}
+						}
+					}
+
+					random_neighbor_independent_ruler = {
+						limit = {
+							shares_realm_border_with = ROOT
+
+							any_realm_province = {
+								has_higher_tech_than = ROOT
+								held_under_PREV = yes
+							}
+						}
+
+						preferred_limit = {
+							any_realm_province = {
+								has_higher_tech_than = ROOT
+								owner = { shares_realm_border_with = ROOT }
+								held_under_PREV = yes
+							}
+						}
+
+						random_realm_province = {
+							limit = {
+								has_higher_tech_than = ROOT
+								held_under_PREV = yes
+							}
+
+							preferred_limit = {
+								owner = { shares_realm_border_with = ROOT }
+								is_capital = yes
+							}
+
+							preferred_limit = {
+								owner = { shares_realm_border_with = ROOT }
+							}
+
+							preferred_limit = {
+								is_capital = yes
+							}
+
+							save_event_target_as = target_province
+						}
+					}
+				}
+			}
+
+			if = {
+				limit = { event_target:target_province = { always = yes } }
+
+				random = {
+					chance = 75
+
+					event_target:my_spymaster = {
+						set_job_action = {
+							action = action_study_technology
+							where = event_target:target_province
+						}
+					}
+
+					break = yes
+				}
+			}
+		}
+
+		# Fourth priority: scheme against problematic vassals
+		random_vassal = {
+			limit = {
+				among_most_powerful_vassals = 5
+				relative_power_to_liege >= 0.10
+				has_regent = no
+				is_playable = yes
+				opinion = { who = ROOT value < -20 }
+				NOT = { character = event_target:my_spymaster }
+			}
+
+			capital_scope = { save_event_target_as = target_province }
+
+			random = {
+				chance = 75
+
+				event_target:my_spymaster = {
+					set_job_action = {
+						action = action_uncover_plots
+						where = event_target:target_province
+					}
+				}
+
+				break = yes
+			}
+		}
+	}
+}
+
+# Setting job for lord spiritual
+character_event = {
+	id = Plus.3003
+
+	hide_window = yes
+
+	only_playable = yes
+	only_capable = yes
+	prisoner = no
+	ai = yes
+
+	trigger = {
+		is_landed = yes
+		has_regent = no
+
+		trigger_if = {
+			limit = { independent = no }
+			higher_real_tier_than = COUNT
+		}
+
+		job_spiritual = {
+			learning >= 8
+			in_command_trigger = no
+
+			trigger_if = {
+				limit = { has_character_flag = assigned_councillor_job }
+
+				had_character_flag = {
+					flag = assigned_councillor_job
+					months >= 6
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 1
+	}
+
+	immediate = {
+		job_spiritual = {
+			set_character_flag = assigned_councillor_job
+			save_event_target_as = my_spiritual
+		}
+
+		# First priority: convert heretic provinces
+		if = {
+			limit = {
+				top_liege = {
+					NAND = {
+						OR = {
+							has_landed_title = e_ilkhanate
+							has_landed_title = e_golden_horde
+							has_landed_title = e_chagatai
+						}
+
+						religion = tengri_pagan
+					}
+				}
+			}
+
+			if = {
+				limit = {
+					capital_scope = {
+						num_of_settlements >= 1
+
+						OR = {
+							is_heresy_of = ROOT
+							is_parent_religion = ROOT
+						}
+
+						NAND = {
+							event_target:my_spiritual = { has_character_modifier = spiritual_refused_pagans }
+							owner = { religion_group = pagan_group }
+						}
+					}
+				}
+
+				capital_scope = { save_event_target_as = target_province }
+
+				event_target:my_spiritual = {
+					set_job_action = {
+						action = action_inquisition
+						where = event_target:target_province
+					}
+				}
+			}
+			else = {
+				random_realm_province = {
+					limit = {
+						num_of_settlements >= 1
+						held_under_PREV = yes
+
+						OR = {
+							is_heresy_of = ROOT
+							is_parent_religion = ROOT
+						}
+
+						any_province_lord = {
+							OR = {
+								character = ROOT
+								is_vassal_or_below_of = ROOT
+							}
+						}
+
+						NAND = {
+							event_target:my_spiritual = { has_character_modifier = spiritual_refused_pagans }
+							owner = { religion_group = pagan_group }
+						}
+					}
+
+					save_event_target_as = target_province
+
+					random = {
+						chance = 75
+
+						event_target:my_spiritual = {
+							set_job_action = {
+								action = action_inquisition
+								where = event_target:target_province
+							}
+						}
+
+						break = yes
+					}
+				}
+			}
+		}
+
+		# Second priority: convert provinces
+		if = {
+			limit = {
+				NOR = {
+					religion_group = muslim
+
+					top_liege = {
+						religion = tengri_pagan
+
+						OR = {
+							has_landed_title = e_ilkhanate
+							has_landed_title = e_golden_horde
+							has_landed_title = e_chagatai
+						}
+					}
+				}
+			}
+
+			if = {
+				limit = {
+					capital_scope = {
+						num_of_settlements >= 1
+
+						NOT = { religion = ROOT }
+
+						NAND = {
+							event_target:my_spiritual = { has_character_modifier = spiritual_refused_pagans }
+							owner = { religion_group = pagan_group }
+						}
+					}
+				}
+
+				capital_scope = { save_event_target_as = target_province }
+
+				event_target:my_spiritual = {
+					set_job_action = {
+						action = action_inquisition
+						where = event_target:target_province
+					}
+				}
+
+				break = yes
+			}
+
+			random_realm_province = {
+				limit = {
+					num_of_settlements >= 1
+					NOT = { religion = ROOT }
+					held_under_PREV = yes
+
+					any_province_lord = {
+						OR = {
+							character = ROOT
+							is_vassal_or_below_of = ROOT
+						}
+					}
+
+					NAND = {
+						event_target:my_spiritual = { has_character_modifier = spiritual_refused_pagans }
+						owner = { religion_group = pagan_group }
+					}
+				}
+
+				save_event_target_as = target_province
+
+				random = {
+					chance = 75
+
+					event_target:my_spiritual = {
+						set_job_action = {
+							action = action_inquisition
+							where = event_target:target_province
+						}
+					}
+
+					break = yes
+				}
+			}
+		}
+
+		# Third priority: improve relations with powerful religious vassals
+		random_vassal = {
+			limit = {
+				among_most_powerful_vassals = 5
+				is_theocracy = yes
+				relative_power_to_liege >= 0.10
+				has_regent = no
+				opinion = { who = ROOT value >= -40 }
+				opinion = { who = ROOT value < 0 }
+				NOT = { character = event_target:my_spiritual }
+			}
+
+			capital_scope = { save_event_target_as = target_province }
+
+			random = {
+				chance = 75
+
+				event_target:my_spiritual = {
+					set_job_action = {
+						action = action_improve_rel_relations
+						where = event_target:target_province
+					}
+				}
+
+				break = yes
+			}
+		}
+
+		# Fourth priority: try to convert pagans
+		if = {
+			limit = {
+				trigger_if = {
+					limit = { independent = no }
+					higher_real_tier_than = DUKE
+				}
+				trigger_else = {
+					higher_real_tier_than = COUNT
+				}
+
+				OR = {
+					trait = zealous
+					is_theocracy = yes
+					real_tier = EMPEROR
+				}
+
+				is_not_unreformed_pagan_trigger = yes
+
+				NOR = {
+					religion_group = muslim
+					religion_group = indian_group
+
+					top_liege = {
+						religion = tengri_pagan
+
+						OR = {
+							has_landed_title = e_ilkhanate
+							has_landed_title = e_golden_horde
+							has_landed_title = e_chagatai
+						}
+					}
+				}
+			}
+
+			random_neighbor_independent_ruler = {
+				limit = {
+					is_unreformed_pagan_trigger = yes
+					controls_religion = no
+
+					NOR = {
+						religion = ROOT
+						rightful_religious_head = THIS
+						is_heresy_of = ROOT
+						is_parent_religion = ROOT
+
+						has_opinion_modifier = {
+							name = opinion_sent_preacher
+							who = ROOT
+						}
+					}
+				}
+
+				capital_scope = { save_event_target_as = target_province }
+
+				random = {
+					chance = 75
+
+					event_target:my_spiritual = {
+						set_job_action = {
+							action = action_inquisition
+							where = event_target:target_province
+						}
+					}
+
+					break = yes
+				}
+			}
+		}
+
+		# Fifth priority: charity for Muslims
+		if = {
+			limit = {
+				religion_group = muslim
+				NOT = { trait = decadent }
+
+				OR = {
+					trait = charitable
+					trait = zealous
+					piety < 0
+				}
+			}
+
+			random_demesne_province = {
+				limit = {
+					religion = ROOT
+					num_of_settlements >= 1
+					owned_by = PREV
+				}
+
+				save_event_target_as = target_province
+
+				random = {
+					chance = 75
+
+					event_target:my_spiritual = {
+						set_job_action = {
+							action = action_charity
+							where = event_target:target_province
+						}
+					}
+
+					break = yes
+				}
+			}
+		}
+
+		# Sixth priority: build zeal for tribals
+		if = {
+			limit = {
+				is_tribal = yes
+				is_adult = yes
+				NOT = { trait = cynical }
+				capital_scope = { county = { is_occupied = no } }
+				prisoner = no
+				is_incapable = no
+
+				trigger_if = {
+					limit = { has_character_flag = tribal_build_zeal_troops }
+
+					had_character_flag = {
+						flag = tribal_build_zeal_troops
+						years >= 5
+					}
+				}
+
+				trigger_if = {
+					limit = { war = yes }
+
+					any_war = {
+						OR = {
+							using_cb = crusade
+							using_cb = holy_war
+							using_cb = religious_revolt
+							using_cb = manifest_destiny_invasion
+						}
+					}
+				}
+			}
+
+			capital_scope = { save_event_target_as = target_province }
+
+			random = {
+				chance = 75
+
+				job_spiritual = {
+					set_job_action = {
+						action = action_build_zeal
+						where = event_target:target_province
+					}
+				}
+
+				break = yes
+			}
+		}
+
+		# Seventh priority: build culture tech
+		if = {
+			limit = {
+				is_tribal = no
+				capital_scope = { technology_can_spread = yes }
+
+				NOR = {
+					trait = imbecile
+					trait = cynical
+				}
+			}
+
+			capital_scope = { save_event_target_as = target_province }
+
+			job_spiritual = {
+				set_job_action = {
+					action = action_advance_cul_tech
+					where = event_target:target_province
+				}
+			}
+
+			break = yes
+		}
+	}
+}
+
+# Setting job for marshal
+character_event = {
+	id = Plus.3004
+
+	hide_window = yes
+
+	only_playable = yes
+	only_capable = yes
+	prisoner = no
+	ai = yes
+
+	trigger = {
+		is_landed = yes
+		has_regent = no
+
+		trigger_if = {
+			limit = { independent = no }
+			higher_real_tier_than = COUNT
+		}
+
+		job_marshal = {
+			martial >= 8
+			in_command_trigger = no
+
+			trigger_if = {
+				limit = { has_character_flag = assigned_councillor_job }
+
+				had_character_flag = {
+					flag = assigned_councillor_job
+					months >= 6
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 1
+	}
+
+	immediate = {
+		job_marshal = {
+			set_character_flag = assigned_councillor_job
+			save_event_target_as = my_marshal
+		}
+
+		# First priority: reduce revolt risk
+		if = {
+			limit = {
+				NOR = {
+					war = yes
+					trait = slothful
+					trait = trusting
+				}
+			}
+
+			random_realm_province = {
+				limit = {
+					held_under_PREV = yes
+
+					owner = {
+						OR = {
+							character = ROOT
+							is_vassal_or_below_of = ROOT
+						}
+					}
+
+					trigger_if = {
+						limit = {
+							culture_group = ROOT
+							religion_group = ROOT
+						}
+
+						OR = {
+							has_province_modifier = heretic_stronghold
+							has_province_modifier = peasant_unrest
+							has_province_modifier = religious_unrest
+							has_province_modifier = cultural_unrest
+							has_province_modifier = extra_tax
+							has_province_modifier = active_inquisition
+							has_province_modifier = decadence_unrest
+							has_province_modifier = iconoclast_blowback
+							has_province_modifier = paulician_suppression
+						}
+					}
+
+					NOR = {
+						has_province_modifier = recent_revolt
+						has_province_modifier = theological_dialogue
+						has_province_modifier = recent_county_uprising
+						has_province_modifier = wald_charity
+						has_province_modifier = marshal_province_angry
+						has_province_modifier = marshal_province_cowed
+					}
+				}
+
+				preferred_limit = {
+					owned_by = ROOT
+					is_capital = yes
+				}
+
+				preferred_limit = {
+					owned_by = ROOT
+				}
+
+				save_event_target_as = target_province
+
+				random = {
+					chance = 75
+
+					event_target:my_marshal = {
+						set_job_action = {
+							action = action_assist_arrest
+							where = event_target:target_province
+						}
+					}
+
+					break = yes
+				}
+			}
+		}
+
+		# Second priority: organize raid for tribals
+		if = {
+			limit = {
+				is_tribal = yes
+				is_adult = yes
+				prisoner = no
+				is_incapable = no
+				is_weak_trigger = no
+
+				NOR = {
+					trait = craven
+					trait = content
+					trait = humble
+				}
+
+				trigger_if = {
+					limit = { has_character_flag = tribal_organize_raid_troops }
+
+					had_character_flag = {
+						flag = tribal_organize_raid_troops
+						years >= 10
+					}
+				}
+			}
+
+			capital_scope = { save_event_target_as = target_province }
+
+			random = {
+				chance = 75
+
+				job_marshal = {
+					set_job_action = {
+						action = action_organize_raid
+						where = event_target:target_province
+					}
+				}
+
+				break = yes
+			}
+		}
+
+		# Third priority: train troops for non-nomadic
+		if = {
+			limit = {
+				is_nomadic = no
+
+				any_demesne_province = {
+					NOT = { has_province_modifier = levy_reinforcements }
+					owned_by = PREV
+				}
+			}
+
+			random_demesne_province = {
+				limit = {
+					NOT = { has_province_modifier = levy_reinforcements }
+					owned_by = PREV
+				}
+
+				preferred_limit = { is_capital = yes }
+
+				save_event_target_as = target_province
+			}
+
+			random = {
+				chance = 75
+
+				job_marshal = {
+					set_job_action = {
+						action = action_train_troops
+						where = event_target:target_province
+					}
+				}
+
+				break = yes
+			}
+		}
+
+		# Fourth priority: train troops for nomadic
+		if = {
+			limit = { is_nomadic = yes }
+
+			capital_scope = { save_event_target_as = target_province }
+
+			random = {
+				chance = 75
+
+				job_marshal = {
+					set_job_action = {
+						action = action_train_troops_nomadic
+						where = event_target:target_province
+					}
+				}
+
+				break = yes
+			}
+		}
+
+		# Fifth priority: research military tech
+		if = {
+			limit = { is_tribal = no }
+
+			capital_scope = { save_event_target_as = target_province }
+
+			job_marshal = {
+				set_job_action = {
+					action = action_advance_mil_tech
+					where = event_target:target_province
+				}
+			}
+
+			break = yes
+		}
+	}
+}

@@ -1,0 +1,134 @@
+french_trade = {
+	wealth = 6			# Total base wealth of the French Trade
+
+	modifier = {			# How the trade route modifies the provinces it passes
+		castle_tax_modifier = 0.025
+		city_tax_modifier = 0.05
+		temple_tax_modifier = 0.025
+		trade_route_value = 0.5
+		local_movement_speed = 0.10
+		tech_growth_modifier = 0.05
+		icon = 98
+	}
+
+	start = { # Start provinces of trade route
+		270	# Guines
+		268	# Brugge
+		308	# Nantes
+		253	# Köln
+		193	# Frankfurt
+		299	# Caen
+	}
+
+	path = {
+		253 # Köln
+		252 # Jülich
+		250 # Liège
+		265 # Brabant
+		267 # Gent
+		268 # Brugge
+	}
+	path = {
+		308 # Nantes
+		291 # Anjou
+		289 # Touraine
+	}
+	path = {
+		268 # Brugge
+		269 # Yperen
+		272 # Artois
+	}
+	path = {
+		272 # Artois
+		275 # Amiens
+		280 # Senlis
+		281 # Paris
+	}
+	path = {
+		270 # Guines
+		272 # Artois
+	}
+	path = {
+		272 # Artois
+		276 # Vermandois
+		277 # Reims
+		247 # Bar
+	}
+	path = {
+		299 # Caen
+		# 298 # Rouen
+		295 # Ëvreux
+		286 # Chartres
+		281 # Paris
+	}
+	path = {
+		193 # Frankfurt
+		243 # Trier
+		244 # Metz
+		248 # Verdun
+		247 # Bar
+	}
+	path = {
+		247 # Bar
+		246 # Saintois
+		336 # Dijon
+	}
+	path = {
+		336 # Dijon
+		342 # Amous
+		341 # Varais
+		347 # Vaud
+		349 # Valais
+		350 # Aosta
+		438 # Piemonte
+		440 # Monferrato
+		436 # Noli
+	}
+	path = {
+		336 # Dijon
+		339 # Chalons
+		# 338 # Macon
+		353 # Lyon
+		355 # Vienne
+		357 # Venaissin
+	}
+	path = {
+		281 # Paris
+		283 # Orléans
+		284 # Blois
+		289 # Touraine
+	}
+	path = {
+		289 # Touraine
+		311 # Poitiers
+		# 312 # Lusignan
+		313 # Saintonge
+		317 # Bordeaux
+	}
+	path = {
+		317 # Bordeaux
+		316 # Agen
+		327 # Toulouse
+		324 # Narbonne
+	}
+	path = {
+		324 # Narbonne
+		361 # Rosello
+		362 # Empuries
+		365 # Barcelona
+	}
+	path = {
+		317 # Bordeaux
+		318 # Marsan
+		320 # Béarn
+	}
+	path = {
+		357 # Venaissin
+		325 # Melgueil
+		324 # Narbonne
+	}
+	path = {
+		357 # Venaissin
+		359 # Provence
+	}
+}

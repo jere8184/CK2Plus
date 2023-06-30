@@ -1,0 +1,16 @@
+911.9.20 = { # Bavaria incorporated into Germany as Duchy
+	de_jure_liege = k_germany
+}
+
+962.2.2 = { # HRE divided into historical stem duchies on creation
+	de_jure_liege = k_grand_bavaria
+}
+
+1220.1.1 = {
+	liege = e_hre
+	holder = 212382
+}
+
+1253.7.22 = {
+	holder = 0
+}

@@ -1,0 +1,208 @@
+#	Example:
+#
+#	example_trigger = {
+#		year = 1066
+#		num_of_spouses = 2
+#	}
+#
+#
+#	In a script file:
+#
+#	trigger = {
+#		example_trigger = yes
+#	}
+#
+# Naming convention:  xxxx_trigger
+
+# Scopes from attacker
+can_attack_patriarch_trigger = {
+	trigger_if = {
+		limit = {
+			religion_group = christian
+			has_pentarchy = yes
+
+			PREV = {
+				is_holy_site = ROOT # generally speaking, the holy sites are the pentarchies
+				holder_scope = { religion = ROOT }
+			}
+		}
+
+		higher_real_tier_than = DUKE
+		NOT = { same_realm = FROM }
+	}
+}
+
+# Scopes from attacker
+can_attack_tributary_trigger = {
+	trigger_if = {
+		limit = {
+			any_tributary = {
+				OR = {
+					character = FROM
+					is_liege_or_above_of = FROM
+				}
+			}
+		}
+
+		OR = {
+			trait = deceitful
+			trait = arbitrary
+		}
+	}
+}
+
+# Scopes from attacker
+can_attack_religion_head_trigger = {
+	trigger_if = {
+		limit = {
+			rightful_religious_head = FROM
+			OR = {
+				religion_group = christian
+				religion_group = jewish_group
+			}
+		}
+
+		OR = {
+			trait = cynical
+			trait = lunatic
+			trait = excommunicated
+			has_character_modifier = voice_of_satan
+		}
+	}
+}
+
+# Should be at the start of most CBs
+# Scopes from attacker for ease of use
+can_use_cb_preamble = {
+	NOT = { has_character_modifier = holy_truce_timer }
+
+	FROM = {
+		NOT = { has_character_modifier = holy_truce_timer }
+
+		trigger_if = {
+			limit = {
+				is_tributary = yes
+				NOT = { pays_tribute_to = PREV }
+			}
+
+			suzerain = {
+				NOR = {
+					has_non_aggression_pact_with = PREVPREV
+					is_allied_with = PREVPREV
+				}
+			}
+		}
+	}
+}
+
+# Current scope is potential attacker
+# FROM is potential defender
+can_use_holy_war_cb = {
+	pacifist = no
+
+	# Basic Requirements
+	trigger_if = {
+		limit = { religion_group = FROM }
+
+		NOT = { religion = FROM }
+
+		OR = {
+			is_heresy_of = FROM
+			is_parent_religion = FROM
+			religion_group = indian_group
+			religion_group = muslim
+			religion_group = pagan_group
+			religion = paulician
+		}
+	}
+
+	# Same Realm
+	trigger_if = {
+		limit = { same_realm = FROM }
+
+		# Bon and Buddhist may holy war each other, even within the same realm, due to their antagonistic tendencies with each other
+		same_liege = FROM
+		culture_group = tibetan_group
+
+		trigger_if = {
+			limit = { religion = buddhist }
+			FROM = { religion = bon_pagan }
+		}
+		trigger_else = {
+			religion = bon_pagan
+			FROM = { religion = buddhist }
+		}
+	}
+
+	# Specific Religion Requirements
+	trigger_if = { # Pagans
+		limit = { religion_group = pagan_group }
+
+		OR = {
+			is_reformed_religion = yes
+			num_of_holy_sites >= 3
+		}
+	}
+	trigger_else_if = { # Buddhist and Hindu
+		limit = {
+			OR = {
+				religion = buddhist
+				religion = hindu
+			}
+
+			FROM = { religion_group = indian_group }
+		}
+
+		FROM = {
+			NOR = {
+				religion = buddhist
+				religion = hindu
+				religion = jain
+			}
+		}
+	}
+	trigger_else_if = { # Cathar
+		limit = { religion = cathar }
+		has_global_flag = cathar_war
+	}
+	trigger_else = {
+		NOT = { religion = taoist }
+	}
+
+	# Patricians
+	trigger_if = {
+		limit = { is_patrician = yes }
+		independent = yes
+	}
+}
+
+# Scopes from attacker
+in_command_trigger = {
+	trigger_if = {
+		limit = {
+			OR = {
+				any_liege = { war = yes }
+				war = yes
+			}
+		}
+
+		in_command = yes
+	}
+	trigger_else = {
+		hidden_trigger = { always = no }
+	}
+}
+
+# Scopes from attacker
+sufficient_treasury_for_war_trigger = {
+	# Does not have an outstanding loan
+	NOT = {
+		check_variable = {
+			which = loan_amount
+			value >= 50
+		}
+	}
+
+	# Should have enough treasury to wage war
+	scaled_wealth = 0.5
+}

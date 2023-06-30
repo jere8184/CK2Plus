@@ -1,0 +1,63 @@
+is_sea_trade_route_trigger = { # These are allowed to build Custom Houses
+	OR = {
+		trade_route = mediterranean_trade
+		trade_route = atlantic_trade
+		trade_route = baltic_sea
+	}
+}
+
+is_land_trade_route_trigger = { # These are allowed to build Toll Booths and Roads
+	OR = {
+		trade_route = amber_road
+		trade_route = salt_road
+		trade_route = french_trade
+		trade_route = iberian_trade
+		trade_route = british_trade
+		trade_route = grand_trunk_road
+		trade_route = timbuktu_trade
+		trade_route = rus_road
+	}
+}
+
+is_caspian_port = {
+	sea_zone = {
+		OR = {
+			province = 1878 # Caspian Sea
+			province = 1879 # Kara-Bogaz Gol
+			province = 1880 # Isle of Koulali
+			province = 1881 # Gulf of Astrabat
+			province = 1882 # BLue Sea
+			province = 1883 # Coast of Itil
+			province = 1884 # Agragan Riviera
+			province = 1885 # Shirvan Coast
+			province = 1886 # Balkan Gulf
+		}
+	}
+}
+
+patrician_is_in_caspian = { # Check if a patrician's realm holds any of the Caspian ports
+	FROM = {
+		is_patrician = yes
+
+		top_liege = {
+			any_realm_province = {
+				is_caspian_port = yes # Port check skipped as all is_caspian_port provinces are ports anyways
+				held_under_PREV = yes
+			}
+		}
+	}
+}
+
+patrician_is_outside_caspian = { # Check if a patrician's realm holds any non-Caspian ports
+	FROM = {
+		is_patrician = yes
+
+		top_liege = {
+			any_realm_province = {
+				is_coastal = yes
+				is_caspian_port = no # Port check necessary as this isn't as exclusive as the opposite
+				held_under_PREV = yes
+			}
+		}
+	}
+}
