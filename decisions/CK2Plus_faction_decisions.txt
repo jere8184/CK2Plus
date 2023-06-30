@@ -1820,7 +1820,7 @@ plot_decisions = {
 
 	faction_separatist_war = {
 		is_high_prio = yes
-		ai_check_interval = 3
+		ai_check_interval = 1
 
 		only_playable = yes
 
@@ -1980,7 +1980,7 @@ plot_decisions = {
 			}
 
 			mult_modifier = {
-				factor = 0.5
+				factor = 1.0
 
 				faction_power = {
 					faction = faction_separatist
@@ -1998,7 +1998,7 @@ plot_decisions = {
 			}
 
 			mult_modifier = {
-				factor = 2
+				factor = 3
 
 				faction_power = {
 					faction = faction_separatist
@@ -2007,7 +2007,7 @@ plot_decisions = {
 			}
 
 			mult_modifier = {
-				factor = 2
+				factor = 3
 
 				faction_power = {
 					faction = faction_separatist
@@ -2016,7 +2016,7 @@ plot_decisions = {
 			}
 
 			mult_modifier = {
-				factor = 2
+				factor = 3
 
 				faction_power = {
 					faction = faction_separatist
