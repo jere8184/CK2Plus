@@ -1857,7 +1857,7 @@ targeted_decisions = {
 			}
 		}
 
-		ai_will_do = { factor = 0 }
+		ai_will_do = { factor = 0.05 }
 	}
 
 	vassalize_tributary = {
