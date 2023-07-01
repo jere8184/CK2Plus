@@ -10,6 +10,7 @@ faction_court = {
 
 	# Plotter scope
 	potential = {
+		always = no
 		is_playable = yes
 		is_landed = yes # Need a barony/county so they can potentially rebel- just a family palace doesn't count, had problems with these kind of patricians revolting
 		is_adult = yes
@@ -342,6 +343,7 @@ faction_prosperity = {
 
 	# Plotter scope
 	potential = {
+		always = no
 		is_playable = yes
 		is_landed = yes # Need a barony/county so they can potentially rebel- just a family palace doesn't count, had problems with these kind of patricians revolting
 		is_adult = yes
@@ -674,6 +676,7 @@ faction_glory = {
 
 	# Plotter scope
 	potential = {
+		always = no
 		is_playable = yes
 		is_landed = yes # Need a barony/county so they can potentially rebel- just a family palace doesn't count, had problems with these kind of patricians revolting
 		is_adult = yes
@@ -1055,6 +1058,7 @@ faction_tradition = {
 
 	# Plotter scope
 	potential = {
+		always = no
 		is_playable = yes
 		religion = liege
 		is_landed = yes # Need a barony/county so they can potentially rebel- just a family palace doesn't count, had problems with these kind of patricians revolting
