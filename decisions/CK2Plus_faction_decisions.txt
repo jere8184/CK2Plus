@@ -1267,7 +1267,7 @@ plot_decisions = {
 
 	faction_claimant_prepare = {
 		is_high_prio = yes
-		ai_check_interval = 3
+		ai_check_interval = 1
 
 		only_playable = yes
 
@@ -1379,7 +1379,7 @@ plot_decisions = {
 			factor = 0.1
 
 			trigger = {
-				total_years_played >= 2
+				total_years_played >= 0
 				supported_claimant_title = { is_contested = no }
 
 				trigger_if = {
@@ -1447,25 +1447,16 @@ plot_decisions = {
 			}
 
 			mult_modifier = {
-				factor = 0.5
+				factor = 3
 
 				faction_power = {
 					faction = faction_pretender
-					power < 1.25
+					power >= 1.25
 				}
 			}
 
 			mult_modifier = {
-				factor = 2
-
-				faction_power = {
-					faction = faction_pretender
-					power >= 1.5
-				}
-			}
-
-			mult_modifier = {
-				factor = 2
+				factor = 4
 
 				faction_power = {
 					faction = faction_pretender
@@ -1474,7 +1465,7 @@ plot_decisions = {
 			}
 
 			mult_modifier = {
-				factor = 2
+				factor = 5
 
 				faction_power = {
 					faction = faction_pretender
@@ -1483,7 +1474,7 @@ plot_decisions = {
 			}
 
 			mult_modifier = {
-				factor = 2
+				factor = 6
 
 				faction_power = {
 					faction = faction_pretender
@@ -1980,25 +1971,16 @@ plot_decisions = {
 			}
 
 			mult_modifier = {
-				factor = 1.0
-
-				faction_power = {
-					faction = faction_separatist
-					power < 1.25
-				}
-			}
-
-			mult_modifier = {
-				factor = 2
-
-				faction_power = {
-					faction = faction_separatist
-					power >= 1.5
-				}
-			}
-
-			mult_modifier = {
 				factor = 3
+
+				faction_power = {
+					faction = faction_separatist
+					power >= 1.25
+				}
+			}
+
+			mult_modifier = {
+				factor = 4
 
 				faction_power = {
 					faction = faction_separatist
@@ -2007,7 +1989,7 @@ plot_decisions = {
 			}
 
 			mult_modifier = {
-				factor = 3
+				factor = 5
 
 				faction_power = {
 					faction = faction_separatist
@@ -2016,7 +1998,7 @@ plot_decisions = {
 			}
 
 			mult_modifier = {
-				factor = 3
+				factor = 6
 
 				faction_power = {
 					faction = faction_separatist
@@ -2822,7 +2804,7 @@ plot_decisions = {
 			factor = 0.1
 
 			trigger = {
-				total_years_played >= 2
+				total_years_played >= 0
 
 				faction_power = {
 					faction = faction_succ_feudal_elective
