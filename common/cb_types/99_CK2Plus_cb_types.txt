@@ -7469,9 +7469,9 @@ magyar_invasion = {
 				if = {
 					limit = {
 						OR = {
-							character = c_159136 # Árpád
-							character = c_159137 # Álmos
-							dynasty = 708 # Árpád
+							character = c_159136 # ï¿½rpï¿½d
+							character = c_159137 # ï¿½lmos
+							dynasty = 708 # ï¿½rpï¿½d
 						}
 
 						has_dlc = "Holy Fury"
@@ -8415,77 +8415,7 @@ cb_faction_overthrow_ruler = {
 	}
 
 	is_valid = {
-		ROOT = {
-			OR = {
-				independent = yes
-				same_liege = FROM
-			}
-
-			has_opinion_modifier = {
-				name = revolting_against
-				who = FROM
-			}
-		}
-
-		FROM = {
-			in_revolt = no
-
-			liege_before_war = {
-				in_revolt = no
-
-				liege_before_war = {
-					in_revolt = no
-				}
-			}
-		}
-
-		OR = {
-			# Never invalidate the revolt due to demands being impossible to fulfill if still the original liege
-			ROOT = { has_character_flag = original_war_liege }
-
-			# Succession law wars are invalid if the non-original liege doesn't hold the succession title
-			NOT = { FROM = { has_character_flag = faction_succession_war } }
-
-			AND = {
-				ROOT = { has_character_flag = demands_seniority }
-				FROM = {
-					any_demesne_title = {
-						higher_real_tier_than = COUNT
-						has_title_flag = change_seniority
-					}
-				}
-			}
-
-			AND = {
-				ROOT = { has_character_flag = demands_primogeniture }
-				FROM = {
-					any_demesne_title = {
-						higher_real_tier_than = COUNT
-						has_title_flag = change_primogeniture
-					}
-				}
-			}
-
-			AND = {
-				ROOT = { has_character_flag = demands_gavelkind }
-				FROM = {
-					any_demesne_title = {
-						higher_real_tier_than = COUNT
-						has_title_flag = change_gavelkind
-					}
-				}
-			}
-
-			AND = {
-				ROOT = { has_character_flag = demands_feudal_elective }
-				FROM = {
-					any_demesne_title = {
-						higher_real_tier_than = COUNT
-						has_title_flag = change_feudal_elective
-					}
-				}
-			}
-		}
+		always = yes
 	}
 
 	on_add = {
