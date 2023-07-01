@@ -224,6 +224,14 @@ NDefines.NMilitary.GALLEYS_MAINTENANCE = 50                             -- vanil
 NDefines.NMilitary.MAX_RIVER_MOVEMENT_FORT_LEVEL = 15.0                 -- vanilla: 10
 NDefines.NMilitary.OUTSIDE_LIEGE_LEVY_MULT = 0.35						-- vanilla:	0.25	-- Multiplier to liege levies outside all capital regions
 
+
+NDefines.NMilitary.MAX_COMMANDERS_BARON = 3
+NDefines.NMilitary.MAX_COMMANDERS_COUNT = 6						-- How many commanders can a count have ( can also always assign self and marshal )
+NDefines.NMilitary.MAX_COMMANDERS_DUKE = 8
+NDefines.NMilitary.MAX_COMMANDERS_KING = 10
+NDefines.NMilitary.MAX_COMMANDERS_EMPEROR = 12
+
+
 NDefines.NDisease.INFECTION_CHANCE_MODIFIER_TRADEPOST = 0.03            -- vanilla: 0.05
 NDefines.NDisease.INFECTION_CHANCE_MODIFIER_TRADEROUTE = 0.03           -- vanilla: 0.5
 
