@@ -67,7 +67,9 @@ NDefines.NCharacter.NATURAL_DEATH_CHANCE_AGE_70 = 1400					-- vanilla:	4400	-- N
 NDefines.NCharacter.NATURAL_DEATH_CHANCE_AGE_80 = 3500					-- vanilla:	3500	-- Natural deaths per decade out of 10000 people: Age 80-90
 NDefines.NCharacter.NATURAL_DEATH_CHANCE_AGE_90 = 5000					-- vanilla:	7000	-- Natural deaths per decade out of 10000 people: Age 90-99
 NDefines.NCharacter.NATURAL_DEATH_CHANCE_AGE_100 = 8160					-- vanilla:	9000	-- Natural deaths per decade out of 10000 people: Age 100+
-NDefines.NCharacter.NOT_SPOUSE_FERTILITY_MULT = 0.25					-- vanilla:	0.50	-- Applied to fertility when the two characters are not married
+NDefines.NCharacter.NOT_SPOUSE_FERTILITY_MULT = 0.50					-- vanilla:	0.50	-- Applied to fertility when the two characters are not married
+NDefines.NCharacter.FERTILITY_BASE_MULT = 1.00,
+
 NDefines.NCharacter.INFANT_DEATH_CHANCE = 0								-- vanilla:	0.0		-- Chance of stillbirth / death at birth TODO: simulate 0.03% chance via event using "cancel_pregnancy"
 NDefines.NCharacter.TRIBAL_EMPTY_HOLDING_TAX_MULTIPLIER = 0.5           -- vanilla: 0.5
 NDefines.NCharacter.TRIBAL_EMPTY_HOLDING_LEVY_MULTIPLIER = 0.5          -- vanilla: 0.5
