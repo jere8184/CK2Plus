@@ -1379,7 +1379,6 @@ plot_decisions = {
 			factor = 0.1
 
 			trigger = {
-				total_years_played >= 0
 				supported_claimant_title = { is_contested = no }
 
 				trigger_if = {
@@ -1405,32 +1404,34 @@ plot_decisions = {
 				}
 
 				liege = {
-					any_war = {
-						trigger_if = {
-							limit = {
-								defender = { character = PREVPREV }
-							}
+					NOT = {
+						any_war = {
+							trigger_if = {
+								limit = {
+									defender = { character = PREVPREV }
+								}
 
-							OR = {
-								using_cb = depose_liege
-								using_cb = overthrow_ruler
-								using_cb = overthrow_ruler_no_calls
-								using_cb = claim_on_liege_plot
-								using_cb = other_claim_on_liege_plot
-								using_cb = cb_faction_overthrow_ruler
+								NOR = {
+									using_cb = depose_liege
+									using_cb = overthrow_ruler
+									using_cb = overthrow_ruler_no_calls
+									using_cb = claim_on_liege_plot
+									using_cb = other_claim_on_liege_plot
+									using_cb = cb_faction_overthrow_ruler
+								}
 							}
-						}
-						trigger_else_if = {
-							limit = {
-								attacker = { character = PREVPREV }
-							}
+							trigger_else_if = {
+								limit = {
+									attacker = { character = PREVPREV }
+								}
 
-							NOR = {
-								using_cb = invasion
-								using_cb = holy_war
-								using_cb = tribal_invasion
-								using_cb = manifest_destiny_invasion
-								using_cb = viking_invasion
+								NOR = {
+									using_cb = invasion
+									using_cb = holy_war
+									using_cb = tribal_invasion
+									using_cb = manifest_destiny_invasion
+									using_cb = viking_invasion
+								}
 							}
 						}
 					}
@@ -1904,8 +1905,6 @@ plot_decisions = {
 			factor = 0.1
 
 			trigger = {
-				total_years_played >= 2
-
 				trigger_if = {
 					limit = {
 						faction_power = {
@@ -1929,32 +1928,34 @@ plot_decisions = {
 				}
 
 				liege = {
-					any_war = {
-						trigger_if = {
-							limit = {
-								defender = { character = PREVPREV }
-							}
+					NOT = {
+						any_war = {
+							trigger_if = {
+								limit = {
+									defender = { character = PREVPREV }
+								}
 
-							OR = {
-								using_cb = depose_liege
-								using_cb = overthrow_ruler
-								using_cb = overthrow_ruler_no_calls
-								using_cb = claim_on_liege_plot
-								using_cb = other_claim_on_liege_plot
-								using_cb = cb_faction_overthrow_ruler
+								OR = {
+									using_cb = depose_liege
+									using_cb = overthrow_ruler
+									using_cb = overthrow_ruler_no_calls
+									using_cb = claim_on_liege_plot
+									using_cb = other_claim_on_liege_plot
+									using_cb = cb_faction_overthrow_ruler
+								}
 							}
-						}
-						trigger_else_if = {
-							limit = {
-								attacker = { character = PREVPREV }
-							}
+							trigger_else_if = {
+								limit = {
+									attacker = { character = PREVPREV }
+								}
 
-							NOR = {
-								using_cb = invasion
-								using_cb = holy_war
-								using_cb = tribal_invasion
-								using_cb = manifest_destiny_invasion
-								using_cb = viking_invasion
+								NOR = {
+									using_cb = invasion
+									using_cb = holy_war
+									using_cb = tribal_invasion
+									using_cb = manifest_destiny_invasion
+									using_cb = viking_invasion
+								}
 							}
 						}
 					}
