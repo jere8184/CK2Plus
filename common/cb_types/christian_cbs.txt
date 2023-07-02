@@ -37,6 +37,7 @@ excommunicated_ruler = {
 
 			# CK2Plus
 			NOT = { is_vassal_or_below_of = FROM }
+			always = no
 		}
 
 		# Defender
