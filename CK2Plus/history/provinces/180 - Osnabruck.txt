@@ -1,27 +1,23 @@
-# 180 - Osnabrück
-
-# County Title
+# 180 - OsnabrÃ¼ck
 title = c_osnabruck
+terrain = plains
 
-# Settlements
-max_settlements = 4
-b_tecklenburg = tribal
-b_osnabruck = temple
-
-#b_bentheim = castle
-#b_lingen = city
-#b_wildeshausen = castle
-#b_minden = castle
-#b_quackenbruck = castle
-#b_meppen = castle
-
-# Misc
+# Initial setup
 culture = saxon
 religion = german_pagan
 
+max_settlements = 4
+b_tecklenburg = tribal
+b_osnabruck = temple
+# b_lingen
+# b_bentheim
+# b_wildeshausen
+# b_quackenbruck
+# b_meppen
+
 # History
 772.1.1 = {
-	b_osnabruck = temple # diocese of Osnabrück founded by Karl
+	b_osnabruck = temple # diocese of OsnabrÃ¼ck founded by Karl
 }
 
 777.1.1 = { # start of mass conversion by Anglo-Saxon/Frisian missionaries
@@ -45,9 +41,9 @@ religion = german_pagan
 	religion = catholic
 }
 
-#1224.1.1 = {
-#	capital = b_osnabruck # raised into Prince-Bishopric
-#}
+1224.1.1 = {
+	capital = b_osnabruck # raised into Prince-Bishopric
+}
 
 1205.1.1 = {
 	b_bentheim = castle

@@ -467,6 +467,10 @@
 
 900.1.1 = {
 	holder = 7841
+	effect = {
+		# Latin Christians started requiring Unleavened Bread for Eucharist in the 9th or 10th century
+		set_global_flag = eucharist_conflict
+	}
 }
 
 903.7.1 = {
@@ -573,6 +577,13 @@
 	holder = 7933
 }
 
+1014.1.1 = {
+	effect = {
+		# Rome incorporates Filioque into liturgial practice
+		set_global_flag = filioque_adopted
+	}
+}
+
 1024.8.9 = {
 	holder = 7934
 }
@@ -671,7 +682,7 @@
 	holder = 2017
 }
 
-# Antipope Grégoire VIII : 1000094047
+# Antipope GrÃ©goire VIII : 1000094047
 
 1119.1.28 = {
 	holder = 294

@@ -1044,7 +1044,6 @@ plot_decisions = {
 
 		effect = {
 			set_character_flag = faction_regular_ultimatum_taken
-			pf_punish_deceitful_player_effect = yes
 
 			if = {
 				limit = {
@@ -1206,7 +1205,6 @@ plot_decisions = {
 
 		effect = {
 			log = "[Root.GetTitledName] started a civil war to overthrow [Root.Liege.GetTitledName]"
-			pf_punish_deceitful_player_effect = yes
 
 			liege = {
 				tooltip = {
@@ -1505,6 +1503,7 @@ plot_decisions = {
 			NOR = {
 				has_character_flag = civil_war_faction_leader
 				has_character_flag = civil_war_faction_member
+				has_character_flag = preparing_religious_faction_war
 			}
 		}
 
@@ -1523,7 +1522,7 @@ plot_decisions = {
 			liege = {
 				custom_tooltip = {
 					text = HAS_NO_CIVIL_WAR
-					hidden_tooltip = { pf_war_flag_trigger = no }
+					pf_war_flag_trigger = no
 				}
 
 				trigger_if = {
@@ -1561,10 +1560,16 @@ plot_decisions = {
 		}
 
 		effect = {
+			set_character_flag = civil_war_faction_leader
 			set_character_flag = preparing_religious_faction_war
 
 			character_event = {
 				id = PlusFaction.464 # preparing_religious_faction_war flag removal
+				days = 1
+			}
+
+			character_event = {
+				id = PlusFaction.461 # civil_war_faction_leader flag removal
 				days = 1
 			}
 
@@ -1775,7 +1780,6 @@ plot_decisions = {
 
 		effect = {
 			log = "[Root.GetTitledName] has issued a religious faction ultimatum to [Root.Liege.GetTitledName]"
-			pf_punish_deceitful_player_effect = yes
 			clr_character_flag = preparing_religious_faction_war
 			set_character_flag = faction_religious_ultimatum_taken
 

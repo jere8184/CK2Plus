@@ -477,36 +477,18 @@ holy_war = {
 						trigger_if = {
 							limit = {
 								religion_group = christian
-								NOT = {
-									has_game_rule = {
-										name = crusade_rules
-										value = activate_immediately
-									}
-								}
 							}
 							has_global_flag = christian_crusades_unlocked
 						}
 						trigger_else_if = {
 							limit = {
 								religion_group = muslim
-								NOT = {
-									has_game_rule = {
-										name = crusade_rules
-										value = activate_immediately
-									}
-								}
 							}
 							has_global_flag = muslim_jihads_unlocked
 						}
 						trigger_else_if = {
 							limit = {
 								religion_group = pagan_group
-								NOT = {
-									has_game_rule = {
-										name = crusade_rules
-										value = activate_immediately
-									}
-								}
 							}
 							is_reformed_religion = yes
 							has_global_flag = pagan_ghws_unlocked
@@ -517,7 +499,7 @@ holy_war = {
 								FROM = { religion_group = pagan_group }
 								NOT = {
 									has_game_rule = {
-										name = crusade_rules
+										name = crusade_timing
 										value = activate_immediately
 									}
 								}
@@ -7458,9 +7440,9 @@ magyar_invasion = {
 				if = {
 					limit = {
 						OR = {
-							character = c_159136 # ¡rp·d
-							character = c_159137 # ¡lmos
-							dynasty = 708 # ¡rp·d
+							character = c_159136 # √Årp√°d
+							character = c_159137 # √Ålmos
+							dynasty = 708 # √Årp√°d
 						}
 
 						has_dlc = "Holy Fury"
